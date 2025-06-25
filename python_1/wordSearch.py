@@ -1,46 +1,3 @@
-<<<<<<< HEAD
-import sys
-from PyQt6.QtWidgets import QApplication, QWidget, QGridLayout, QPushButton, QLineEdit, QVBoxLayout
-
-def __init__(self):
-   layout = QVBoxLayout()
-   # Create a QLineEdit widget
-   self.input_box = QLineEdit(self)
-   self.input_box.setPlaceholderText("Enter your name...") # Optional placeholder text
-   layout.addWidget(self.input_box)
-   
-   # Create a button to process the input
-   self.submit_button = QPushButton("Submit", self)
-   self.submit_button.clicked.connect(self.process_input)
-   layout.addWidget(self.submit_button)
-
-   self.setLayout(layout)
-
-def process_input(self):
-    entered_text = self.input_box.text()
-    print(f"You entered: {entered_text}")
-    # You can now use 'entered_text' for further processing in your application
-
-
-def window():
-   app = QApplication(sys.argv)
-   win = QWidget()
-   grid = QGridLayout()
-
-   for i in range(1, 10):
-      for j in range(1, 10):
-         grid.addWidget(QPushButton("B" + str(i) + str(j)), i, j)
-
-   win.setLayout(grid)
-   win.setLayout(layout)
-   win.setGeometry(100, 100, 200, 100)
-   win.setWindowTitle("PyQt")
-   win.show()
-   sys.exit(app.exec())
-
-if __name__ == '__main__':
-   window()
-=======
 import tkinter as tk
 from tkinter import font
 import random
@@ -147,5 +104,3 @@ button2.grid(row=5, column=1, padx=5, pady=5, sticky='ew')
 
 
 tk.mainloop()
-    
->>>>>>> master
