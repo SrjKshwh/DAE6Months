@@ -5,8 +5,13 @@ import string
 
 #----------------------------------------LOGIC ON GUI INITIAL LOADING----------------------------------------------------
 # getting random words from text file
-i=1
+matrixSize=15
+rows = []
+grid_cells = [[random.choice(string.ascii_lowercase) for _ in range(matrixSize)] for _ in range(matrixSize)]
+coordinates = []
 rndWordList=[]
+
+
 with open("C:/Users/saroj/OneDrive/Desktop/course/python_1/listTextFile.txt", "r") as file:
     allText = file.read()
     words = list(map(str, allText.split()))
@@ -28,19 +33,57 @@ def addToList():
     rndWordList.append(e2.get())
     rndWordList.append(e3.get())
     print(rndWordList)
-    listbox=tk.Listbox(master)
+    listbox=tk.Listbox(right_frame)
     for item in rndWordList:
         listbox.insert(tk.END, item)
-    listbox.grid(row=8, column=1, padx=10, pady=10)
+    listbox.grid(row=7, column=1, padx=10, pady=10)
     #e1.grid_forget()
-    #e2.grid_forget()
+    #e2.grid_forget()   button1=tk.Button(right_frame, text='Quit', command=master.quit)    button1.grid(row=6, column=1, padx=5, pady=5, sticky='ew')
     #e3.grid_forget()
     button2.grid_forget()
+
+    for wrds in rndWordList:
+        randomCoordinate=random.choice(coordinates)
+        #print(randomCoordinate)
+        x,y=map(int, randomCoordinate.split(","))
+        print(x,y)
+        if x>matrixSize/2 and y>matrixSize/2:
+            print("1 down right")
+            setWordFromDownRight(x,y,wrds)
+        if x>matrixSize/2 and y<matrixSize/2:
+            print("2 down left")
+        if x<matrixSize/2 and y<matrixSize/2:
+            print("3 up left")
+        if x<matrixSize/2 and y>matrixSize/2:
+            print("4 up right")
+
+    for r in range(matrixSize):
+        for c in range(matrixSize):
+            tk.Label(left_frame, text=grid_cells[r][c], padx=6, pady=4, bg='lightblue').grid(row=r, column=c)
+       
+
+def setWordFromDownRight(x,y,wrd):
+    length=len(wrd)
+    print(length)
+    chars=list(wrd)
+    print("----",x,y)
+    for i in range(length):
+        if 0 <= x < len(grid_cells) and 0 <= y < len(grid_cells[0]):
+            grid_cells[x][y]=chars[i]
+        cordi=f"{x},{y}"
+        if cordi in coordinates:
+            coordinates.remove(cordi)
+        x-=1
+        y+=1
+        
+
+
+
 
 #----------------------------------------CREATING GUI---------------------------------------------------- 
 # creating main tkinter interface and dividing into left and right panel
 master = tk.Tk()
-
+master.title("Wordsearch (falling into words)")
 left_frame = tk.Frame(master, width=400, height=400, bg='lightblue')
 left_frame.grid(row=0, column=0, padx=20, pady=20)
 right_frame = tk.Frame(master, width=400, height=400, bg='lightgray')
@@ -56,22 +99,23 @@ right_frame.option_add("*Entry.Font", default_font)
 right_frame.option_add("*Listbox.Font", default_font)
 
 #--------------------------LEFT PANEL CONTENT STARTS------------------------------------------- 
-matrixSize=5
-rows = []
-grid_cells = []
 
 for r in range(matrixSize):
     for c in range(matrixSize):
         # word search logic
         random_char=random.choice(string.ascii_lowercase)
         #print(random_char)
-        tk.Label(left_frame, text=random_char, padx=5, pady=5, bg='lightblue').grid(row=r, column=c)
+        tk.Label(left_frame, text=random_char, padx=6, pady=4, bg='lightblue').grid(row=r, column=c)
         rows.append(random_char)
-    print(rows)
+        cordi=f"{r},{c}"
+        coordinates.append(cordi)
+    #print(rows)
     #print("\n")
 grid_cells.append(rows)
+#print(grid_cells)
+#print(coordinates)
 
-print(grid_cells)
+
 
 #--------------------------LEFT PANEL CONTENT ENDS--------------------------------------------- 
 
