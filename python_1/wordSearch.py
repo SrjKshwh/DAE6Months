@@ -11,8 +11,7 @@ grid_cells = [[random.choice(string.ascii_uppercase) for _ in range(matrixSize)]
 coordinates = []
 rndWordList=[]
 
-
-with open("C:/Users/saroj/OneDrive/Desktop/course/python_1/listTextFile.txt", "r") as file:
+with open("C:/Users/saroj/OneDrive/Desktop/course/FirstSetup/python_1/listTextFile.txt", "r") as file:
     allText = file.read()
     words = list(map(str, allText.split()))
     for i in range(7):
@@ -29,16 +28,16 @@ print(rndWordList)
 # add user given words to random above list
 def addToList():
     print("1--: %s\n2--: %s\n3--: %s" % (e1.get(), e2.get(), e3.get()))
-    rndWordList.append(e1.get())
-    rndWordList.append(e2.get())
-    rndWordList.append(e3.get())
+    rndWordList.append(e1.get().upper())
+    rndWordList.append(e2.get().upper())
+    rndWordList.append(e3.get().upper())
     print(rndWordList)
     listbox=tk.Listbox(right_frame)
     for item in rndWordList:
         listbox.insert(tk.END, item)
     listbox.grid(row=7, column=1, padx=10, pady=10)
     #e1.grid_forget()
-    #e2.grid_forget()   button1=tk.Button(right_frame, text='Quit', command=master.quit)    button1.grid(row=6, column=1, padx=5, pady=5, sticky='ew')
+    #e2.grid_forget()  
     #e3.grid_forget()
     button2.grid_forget()
 
@@ -131,6 +130,7 @@ def setWordFromUpLeft(x,y,wrd):
 # creating main tkinter interface and dividing into left and right panel
 master = tk.Tk()
 master.title("Wordsearch (falling into words)")
+
 left_frame = tk.Frame(master, width=400, height=400, bg='lightblue')
 left_frame.grid(row=0, column=0, padx=20, pady=20)
 right_frame = tk.Frame(master, width=400, height=400, bg='lightgray')
