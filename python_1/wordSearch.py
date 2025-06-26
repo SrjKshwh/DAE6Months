@@ -46,36 +46,52 @@ def addToList():
         randomCoordinate=random.choice(coordinates)
         #print(randomCoordinate)
         x,y=map(int, randomCoordinate.split(","))
-        print(x,y)
-        if x>matrixSize/2 and y>matrixSize/2:
-            print("1 down right")
+        #print(x,y)
+        if x>matrixSize/2 and y>matrixSize/2: #8 8    
+            print(x,y,"down right")
             setWordFromDownRight(x,y,wrds)
-        if x>matrixSize/2 and y<matrixSize/2:
-            print("2 down left")
-        if x<matrixSize/2 and y<matrixSize/2:
-            print("3 up left")
+        if x>matrixSize/2 and y<matrixSize/2: # 9 4
+            print(x,y,"down left")
+        if x<matrixSize/2 and y<matrixSize/2:   # 
+            print(x,y,"up left")
         if x<matrixSize/2 and y>matrixSize/2:
-            print("4 up right")
+            print(x,y,"up right")
+            setWordFromUpRight(x,y,wrds)
 
     for r in range(matrixSize):
         for c in range(matrixSize):
             tk.Label(left_frame, text=grid_cells[r][c], padx=6, pady=4, bg='lightblue').grid(row=r, column=c)
        
 
+
 def setWordFromDownRight(x,y,wrd):
     length=len(wrd)
     print(length)
     chars=list(wrd)
-    print("----",x,y)
+    print("----",x,y,wrd)
     for i in range(length):
-        if 0 <= x < len(grid_cells) and 0 <= y < len(grid_cells[0]):
-            grid_cells[x][y]=chars[i]
+        grid_cells[x][y]=chars[i]
         cordi=f"{x},{y}"
         if cordi in coordinates:
             coordinates.remove(cordi)
         x-=1
-        y+=1
-        
+        y-=1
+    
+
+def setWordFromUpRight(x,y,wrd):
+    length=len(wrd)
+    print(length)
+    chars=list(wrd)
+    print("---------",x,y,wrd)
+    for i in range(length):
+        grid_cells[x][y]=chars[i]
+        print("---------",x,y,chars[i])
+        cordi=f"{x},{y}"
+        if cordi in coordinates:
+            coordinates.remove(cordi)
+        x+=1
+        y-=1
+           
 
 
 
