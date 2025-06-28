@@ -4,7 +4,8 @@ import random
 import string
 
 #----------------------------------------LOGIC ON GUI INITIAL LOADING----------------------------------------------------
-# getting random words from text file
+
+# Global variables
 matrixSize=20
 rows = []
 grid_cells = [[random.choice(string.ascii_uppercase) for _ in range(matrixSize)] for _ in range(matrixSize)]
@@ -14,6 +15,7 @@ usedCoordinates=[]
 tempCoord=[]
 wordsAlloted=[]
 
+# getting random words from text file
 with open("C:/Users/saroj/OneDrive/Desktop/course/FirstSetup/python_1/listTextFile.txt", "r") as file:
     allText = file.read()
     words = list(map(str, allText.split()))
@@ -25,9 +27,7 @@ with open("C:/Users/saroj/OneDrive/Desktop/course/FirstSetup/python_1/listTextFi
             rndWordList.append(randomWord)
 print(rndWordList)
 
-
 #----------------------------------------DEFINING FUNCTIONS---------------------------------------------------- 
-
 # add user given words to random above list
 def addToList():
     print("1--: %s\n2--: %s\n3--: %s" % (e1.get(), e2.get(), e3.get()))
@@ -50,17 +50,14 @@ def addToList():
     for wrds in rndWordList:
         allotWordsToGrid(wrds)
     
-
     for checkWord in rndWordList:
         if checkWord not in wordsAlloted:
-            allotWordsToGrid(checkWord)
-    
+            allotWordsToGrid(checkWord)   
 
     for r in range(matrixSize):
         for c in range(matrixSize):
             tk.Label(left_frame, text=grid_cells[r][c], padx=6, pady=4, bg='lightblue').grid(row=r, column=c)
 
-       
 
 def allotWordsToGrid(wrds):
     
@@ -86,7 +83,6 @@ def allotWordsToGrid(wrds):
         setWordFromUpRight(x,y,wrds,leng)
 
 
-
 def setWordFromDownRight(x,y,wrd,leng):
     chars=list(wrd)
     for i in range(leng):
@@ -103,7 +99,6 @@ def setWordFromDownRight(x,y,wrd,leng):
         usedCoordinates.append(cordi)
     print("setWordFromDownRight done--",wrd)
     wordsAlloted.append(wrd)
-
 
 
 def setWordFromDownLeft(x,y,wrd,leng):
@@ -124,7 +119,6 @@ def setWordFromDownLeft(x,y,wrd,leng):
     wordsAlloted.append(wrd)
 
 
-
 def setWordFromUpRight(x,y,wrd,leng):
     chars=list(wrd)
     for i in range(leng):
@@ -142,7 +136,6 @@ def setWordFromUpRight(x,y,wrd,leng):
     print("setWordFromUpRight done--",wrd)
     wordsAlloted.append(wrd)
            
-
 
 def setWordFromUpLeft(x,y,wrd,leng):
     chars=list(wrd)
@@ -162,7 +155,6 @@ def setWordFromUpLeft(x,y,wrd,leng):
     wordsAlloted.append(wrd)
            
 
-
 #----------------------------------------CREATING GUI---------------------------------------------------- 
 # creating main tkinter interface and dividing into left and right panel
 master = tk.Tk()
@@ -172,7 +164,6 @@ left_frame = tk.Frame(master, width=400, height=400, bg='lightblue')
 left_frame.grid(row=0, column=0, padx=20, pady=20)
 right_frame = tk.Frame(master, width=400, height=400, bg='lightgray')
 right_frame.grid(row=0, column=1, padx=20, pady=20)
-
 
 default_font = font.Font(family="Arial", size=12)
 # Set default font for Label, Entry and Button widgets
