@@ -1,0 +1,100 @@
+Last login: Thu Jun 12 11:14:58 on console
+Adult@DAEDMAC17 ~ % pwd
+/Users/adult
+Adult@DAEDMAC17 ~ % git config --global user.name "SrjKshwh"
+Adult@DAEDMAC17 ~ % git config --global user.email "kush786srj@gmail.com"
+Adult@DAEDMAC17 ~ % git config --global --list
+user.name=SrjKshwh
+user.email=kush786srj@gmail.com
+Adult@DAEDMAC17 ~ % ls
+Applications	Documents	Library		Music		Public
+Desktop		Downloads	Movies		Pictures
+Adult@DAEDMAC17 ~ % cd Desktop
+Adult@DAEDMAC17 Desktop % ls
+Brianna
+Python Network Scanner.png
+Rasheed-DAE-Projects
+Screenshot 2025-04-23 at 1.52.13 PM.png
+Screenshot 2025-04-23 at 1.52.35 PM.png
+Screenshot 2025-04-23 at 1.56.55 PM.png
+Screenshot 2025-04-28 at 1.42.45 PM.png
+Screenshot 2025-04-28 at 1.50.30 PM.png
+Screenshot 2025-04-29 at 11.53.22 AM.png
+Trace the Breach
+opencti
+webdev-backend-intro
+Adult@DAEDMAC17 Desktop % ls
+Brianna
+Python Network Scanner.png
+Rasheed-DAE-Projects
+Screenshot 2025-04-23 at 1.52.13 PM.png
+Screenshot 2025-04-23 at 1.52.35 PM.png
+Screenshot 2025-04-23 at 1.56.55 PM.png
+Screenshot 2025-04-28 at 1.42.45 PM.png
+Screenshot 2025-04-28 at 1.50.30 PM.png
+Screenshot 2025-04-29 at 11.53.22 AM.png
+SrjKshwh
+Trace the Breach
+opencti
+webdev-backend-intro
+Adult@DAEDMAC17 Desktop % cd SrjKshwh
+Adult@DAEDMAC17 SrjKshwh % git init
+Initialized empty Git repository in /Users/adult/Desktop/SrjKshwh/.git/
+Adult@DAEDMAC17 SrjKshwh % git add.
+git: 'add.' is not a git command. See 'git --help'.
+
+The most similar command is
+	add
+Adult@DAEDMAC17 SrjKshwh % git add .
+Adult@DAEDMAC17 SrjKshwh % git commit -m "this is my git setting up process"
+On branch main
+
+Initial commit
+
+nothing to commit (create/copy files and use "git add" to track)
+Adult@DAEDMAC17 SrjKshwh % git add .                                        
+Adult@DAEDMAC17 SrjKshwh % git commit -m "this is my git setting up process"
+[main (root-commit) c5b426d] this is my git setting up process
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 "Screenshot 2025-04-28 at 1.42.45\342\200\257PM.png"
+Adult@DAEDMAC17 SrjKshwh % git remote add origin https://github.com/SrjKshwh/FirstSetup.git
+Adult@DAEDMAC17 SrjKshwh % git push --all
+remote: Permission to SrjKshwh/FirstSetup.git denied to Multifandonlife.
+fatal: unable to access 'https://github.com/SrjKshwh/FirstSetup.git/': The requested URL returned error: 403
+Adult@DAEDMAC17 SrjKshwh % git push --all
+remote: Permission to SrjKshwh/FirstSetup.git denied to Multifandonlife.
+fatal: unable to access 'https://github.com/SrjKshwh/FirstSetup.git/': The requested URL returned error: 403
+Adult@DAEDMAC17 SrjKshwh % git push --all
+remote: Permission to SrjKshwh/FirstSetup.git denied to Multifandonlife.
+fatal: unable to access 'https://github.com/SrjKshwh/FirstSetup.git/': The requested URL returned error: 403
+Adult@DAEDMAC17 SrjKshwh % git push --all
+Username for 'https://github.com': SrjKshwh
+Password for 'https://SrjKshwh@github.com': 
+Enumerating objects: 3, done.
+Counting objects: 100% (3/3), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 423.14 KiB | 22.27 MiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/SrjKshwh/FirstSetup.git
+ * [new branch]      main -> main
+Adult@DAEDMAC17 SrjKshwh % git add .     
+Adult@DAEDMAC17 SrjKshwh % git commit -m "adding a screenshot to my newly crerated 4 more folders"
+[main 9165d4a] adding a screenshot to my newly crerated 4 more folders
+ 5 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 .DS_Store
+ create mode 100644 "logic_1/Screenshot 2025-04-28 at 1.42.45\342\200\257PM.png"
+ create mode 100644 "prompt_engineering_1/Screenshot 2025-04-28 at 1.42.45\342\200\257PM.png"
+ create mode 100644 "python_1/Screenshot 2025-04-28 at 1.42.45\342\200\257PM.png"
+ create mode 100644 "version_control_1/Screenshot 2025-04-28 at 1.42.45\342\200\257PM.png"
+Adult@DAEDMAC17 SrjKshwh % git push --all
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 1.09 KiB | 1.09 MiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/SrjKshwh/FirstSetup.git
+   c5b426d..9165d4a  main -> main
+Adult@DAEDMAC17 SrjKshwh % 
+
