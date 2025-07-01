@@ -169,8 +169,6 @@ def addToList():
     print("checking char-----10,10",grid_cells[10][10])
 
 
-
-
 #------ function to allot word-------------------------------
 def allotWordsToGrid(wrds):
     '''This function is used to allot the words on the grid with following steps:
