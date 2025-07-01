@@ -75,7 +75,7 @@ def undoClicks():
 
 #----This is the main function to start the timer----------
 def startTime():
-    '''When this function is called, it checks if global variable is False, it will make it True and call another function
+    '''This function checks if global variable is False, it will make it True and call another function
     to increase the seconds and prints the time'''
     global timerRunning
     if not timerRunning:
@@ -83,7 +83,7 @@ def startTime():
         updateTimer()
 
 def updateTimer():
-    '''When this function is called it increaments the seconds shown on the tkinter widget by 1 after every 1000miliseconds'''
+    '''This function increaments the seconds shown on the tkinter widget by 1 after every 1000miliseconds'''
     global seconds, timerRunning
     if timerRunning:
         seconds +=1
@@ -91,7 +91,7 @@ def updateTimer():
         right_frame.after(1000, updateTimer)
 
 def stopTime():
-    '''When this funtion is called it pauses the timer shown also clears the string containing containing all the clicks'''
+    '''This funtion pauses the timer shown also clears the string containing containing all the clicks'''
     global timerRunning, makeStringFromLetters
     makeStringFromLetters=""
     timerRunning=False
@@ -126,7 +126,8 @@ def addToList():
     '''This function does the following things:
     Step 1 : adds 3 words given by user to the list(rndWordList)
     Step 2 : then it creates a ListBox widget and shows all 10 words in that listbox 
-    Step 3 : for each word in list call allotWordsToGrid() function to allot the words on the grid
+    Step 3 : reversing the list(rndWordList) in descending order of word length, so that we can allot the big words first on the grid for each word in 
+             list call allotWordsToGrid() function to allot the words on the grid
     Step 4 : checking whether all the words are alloted on the grid or not; if not alloted then callallotWordsToGrid() for that particular word
     Step 5 : finally print all the alloted word on the grid with mouseEnter, mouseLeave, and mouseClick events'''
 
@@ -172,8 +173,14 @@ def addToList():
 
 #------ function to allot word-------------------------------
 def allotWordsToGrid(wrds):
-    leng=len(wrds)
+    '''This function is used to allot the words on the grid with following steps:
+    Step 1 : first it will find the length the word; 
+    Step 2 : if the wordLength is too big for the matrix then it will throw an exception; then return back safely to the function from where it is invoked
+    Step 3 : if the wordLength falls in bigWordRange(which is matrixSize-6) then it will call allotLogWordToGrid to allt the words;  then return to the calling function
+    Step 4 : else find a random coordinate and depending on which quadrant the coordinate belong call the function to allot the word by passing the 
+             parameters (xcoordinate, ycoordinate, word, wordLength)'''
 
+    leng=len(wrds)
     if leng>=matrixSize-2:         #-------- HANDLE OUT OF RANGE WORDS INSIDE TRY, EXCEPT, AND FINALLY BLOCK----------
         try:
             setWordFromDownRight(xCoordi,yCoordi,wrds,leng)
@@ -207,8 +214,11 @@ def allotWordsToGrid(wrds):
         setWordFromUpRight(xCoordi,yCoordi,wrds,leng)
         return
 
-
+# ------------------------------ Function to allot long words-----------------------------
 def allotLogWordToGrid(wrd,leng):     
+    '''Step 1 : first find the random coordinate for the long words; and convert the word into list of characters
+       Step 2 : for the length of the word make all the future coordinates (if any of the future coordinate is used then search new coordinates)
+       Step 3 : assign word characters to future coordinates; make the future coordinates as usedCoordinates and add the word in list(wordsAlloted)    '''
     randomCoordinate=random.choice(coordiForLongWord)
     print(randomCoordinate)
     xCoordi,yCoordi=map(int, randomCoordinate.split(","))
@@ -231,6 +241,9 @@ def allotLogWordToGrid(wrd,leng):
 
 
 def setWordFromDownRight(x,y,wrd,leng):
+    '''Step 1 : convert the word into list of characters
+       Step 2 : for the length of the word make all the future coordinates (if any of the future coordinate is used then search new coordinates)
+       Step 3 : assign word characters to future coordinates; make the future coordinates as usedCoordinates and add the word in list(wordsAlloted)'''
     chars=list(wrd)
     for indexForLoop in range(leng):
         tempX=x-indexForLoop
@@ -249,6 +262,9 @@ def setWordFromDownRight(x,y,wrd,leng):
 
 
 def setWordFromDownLeft(x,y,wrd,leng):
+    '''Step 1 : convert the word into list of characters
+       Step 2 : for the length of the word make all the future coordinates (if any of the future coordinate is used then search new coordinates)
+       Step 3 : assign word characters to future coordinates; make the future coordinates as usedCoordinates and add the word in list(wordsAlloted)'''    
     chars=list(wrd)
     for indexForLoop in range(leng):
         tempX=x-indexForLoop
@@ -267,6 +283,9 @@ def setWordFromDownLeft(x,y,wrd,leng):
 
 
 def setWordFromUpRight(x,y,wrd,leng):
+    '''Step 1 : convert the word into list of characters
+       Step 2 : for the length of the word make all the future coordinates (if any of the future coordinate is used then search new coordinates)
+       Step 3 : assign word characters to future coordinates; make the future coordinates as usedCoordinates and add the word in list(wordsAlloted)'''
     chars=list(wrd)
     for indexForLoop in range(leng):
         tempX=x+indexForLoop
@@ -285,6 +304,9 @@ def setWordFromUpRight(x,y,wrd,leng):
            
 
 def setWordFromUpLeft(x,y,wrd,leng):
+    '''Step 1 : convert the word into list of characters
+       Step 2 : for the length of the word make all the future coordinates (if any of the future coordinate is used then search new coordinates)
+       Step 3 : assign word characters to future coordinates; make the future coordinates as usedCoordinates and add the word in list(wordsAlloted)'''
     chars=list(wrd)
     for indexForLoop in range(leng):
         tempX=x+indexForLoop
