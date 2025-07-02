@@ -257,3 +257,19 @@ $ echo $0
 /usr/bin/bash
 
 
+PS C:\Users\saroj> cmd
+Microsoft Windows [Version 10.0.26100.4349]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\saroj>ver
+
+Microsoft Windows [Version 10.0.26100.4349]
+
+C:\Users\saroj>powershell
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\saroj>
+

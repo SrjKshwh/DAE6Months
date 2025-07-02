@@ -240,14 +240,14 @@ def allotLogWordToGrid(wrd,leng):
     wordsAlloted.append(wrd)
 
 
-def setWordFromDownRight(x,y,wrd,leng):
+def setWordFromDownRight(xCord,yCord,wrd,leng):
     '''Step 1 : convert the word into list of characters
        Step 2 : for the length of the word make all the future coordinates (if any of the future coordinate is used then search new coordinates)
        Step 3 : assign word characters to future coordinates; make the future coordinates as usedCoordinates and add the word in list(wordsAlloted)'''
     chars=list(wrd)
     for indexForLoop in range(leng):
-        tempX=x-indexForLoop
-        tempY=y-indexForLoop
+        tempX=xCord-indexForLoop
+        tempY=yCord-indexForLoop
         print("--------",tempX,tempY,chars[indexForLoop])
         cordi=f"{tempX},{tempY}"
         if cordi in usedCoordinates or tempX<0 or tempX>matrixSize-1 or tempY<0 or tempY>matrixSize-1:
@@ -261,14 +261,14 @@ def setWordFromDownRight(x,y,wrd,leng):
     wordsAlloted.append(wrd)
 
 
-def setWordFromDownLeft(x,y,wrd,leng):
+def setWordFromDownLeft(xCord,yCord,wrd,leng):
     '''Step 1 : convert the word into list of characters
        Step 2 : for the length of the word make all the future coordinates (if any of the future coordinate is used then search new coordinates)
        Step 3 : assign word characters to future coordinates; make the future coordinates as usedCoordinates and add the word in list(wordsAlloted)'''    
     chars=list(wrd)
     for indexForLoop in range(leng):
-        tempX=x-indexForLoop
-        tempY=y+indexForLoop
+        tempX=xCord-indexForLoop
+        tempY=yCord+indexForLoop
         print("-- * ///----",tempX,tempY,chars[indexForLoop])
         cordi=f"{tempX},{tempY}"
         if cordi in usedCoordinates or tempX<0 or tempX>matrixSize-1 or tempY<0 or tempY>matrixSize-1:
@@ -282,14 +282,14 @@ def setWordFromDownLeft(x,y,wrd,leng):
     wordsAlloted.append(wrd)
 
 
-def setWordFromUpRight(x,y,wrd,leng):
+def setWordFromUpRight(xCord,yCord,wrd,leng):
     '''Step 1 : convert the word into list of characters
        Step 2 : for the length of the word make all the future coordinates (if any of the future coordinate is used then search new coordinates)
        Step 3 : assign word characters to future coordinates; make the future coordinates as usedCoordinates and add the word in list(wordsAlloted)'''
     chars=list(wrd)
     for indexForLoop in range(leng):
-        tempX=x+indexForLoop
-        tempY=y-indexForLoop
+        tempX=xCord+indexForLoop
+        tempY=yCord-indexForLoop
         print("-----/// * ---",tempX,tempY,chars[indexForLoop])
         cordi=f"{tempX},{tempY}"
         if cordi in usedCoordinates or tempX<0 or tempX>matrixSize-1 or tempY<0 or tempY>matrixSize-1:
@@ -303,14 +303,14 @@ def setWordFromUpRight(x,y,wrd,leng):
     wordsAlloted.append(wrd)
            
 
-def setWordFromUpLeft(x,y,wrd,leng):
+def setWordFromUpLeft(xCord,yCord,wrd,leng):
     '''Step 1 : convert the word into list of characters
        Step 2 : for the length of the word make all the future coordinates (if any of the future coordinate is used then search new coordinates)
        Step 3 : assign word characters to future coordinates; make the future coordinates as usedCoordinates and add the word in list(wordsAlloted)'''
     chars=list(wrd)
     for indexForLoop in range(leng):
-        tempX=x+indexForLoop
-        tempY=y+indexForLoop
+        tempX=xCord+indexForLoop
+        tempY=yCord+indexForLoop
         print("-++++++++---",tempX,tempY,chars[indexForLoop])
         cordi=f"{tempX},{tempY}"
         if cordi in usedCoordinates or tempX<0 or tempX>matrixSize-1 or tempY<0 or tempY>matrixSize-1:
