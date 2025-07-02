@@ -1,0 +1,259 @@
+
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ git add . && git commit -m "updated docString comments and copied python_1 to python_2" && git push --all
+[master dcadd9b] updated docString comments and copied python_1 to python_2
+ 2 files changed, 4 deletions(-)
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 402 bytes | 402.00 KiB/s, done.
+Total 4 (delta 3), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+To https://github.com/SrjKshwh/DAE6Months.git
+   6cb7795..dcadd9b  master -> master
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ whoami
+saroj
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ who
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ echo 'this is command line interface'
+this is command line interface
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ echo -n 'this is command line interface'
+this is command line interface
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ wh
+WhoUses.exe   where.exe     which.exe     who.exe
+whealogr.dll  whhelper.dll  while         whoami.exe
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ wh
+WhoUses.exe   where.exe     which.exe     who.exe
+whealogr.dll  whhelper.dll  while         whoami.exe
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ wh
+bash: wh: command not found
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ mkdir unix_2
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ cd
+
+saroj@Moksha MINGW64 ~
+$ ls
+ AppData/
+'Application Data'@
+ Contacts/
+ Cookies@
+ Documents/
+ Downloads/
+ Favorites/
+ FineScreenRecorder.Infatica.dat
+ Links/
+'Local Settings'@
+ Music/
+'My Documents'@
+ NTUSER.DAT
+ NTUSER.DAT{2ad838bc-efea-11ee-a54d-000d3a94eaa1}.TM.blf
+ NTUSER.DAT{2ad838bc-efea-11ee-a54d-000d3a94eaa1}.TMContainer00000000000000000001.regtrans-ms
+ NTUSER.DAT{2ad838bc-efea-11ee-a54d-000d3a94eaa1}.TMContainer00000000000000000002.regtrans-ms
+ NetHood@
+ OneDrive/
+ PrintHood@
+ PycharmProjects/
+ Recent@
+'Saved Games'/
+ Searches/
+ SendTo@
+'Start Menu'@
+ Templates@
+ Videos/
+ ntuser.dat.LOG1
+ ntuser.dat.LOG2
+ ntuser.ini
+
+saroj@Moksha MINGW64 ~
+$ cd OneDrive
+
+saroj@Moksha MINGW64 ~/OneDrive
+$ ls
+ Attachments/      'Document 3.docx'       Pictures/                             desktop.ini
+ Desktop/           Document.docx         'Resume_PradeepKushwah_review 1.doc'
+'Document 1.docx'   Documents/            'Resume_PradeepKushwah_review 2.doc'
+'Document 2.docx'  'Personal Vault.lnk'*   Resume_PradeepKushwah_review.doc
+
+saroj@Moksha MINGW64 ~/OneDrive
+$ cd Desktop
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop
+$ ls
+'GitHub Desktop.lnk'*         'OfficeSuite Slides.lnk'*  'Saroj - Chrome.lnk'*       course/
+'OfficeSuite Documents.lnk'*  'Roblox Player.lnk'*       'Visual Studio Code.lnk'*   desktop.ini
+'OfficeSuite Mail.lnk'*       'Roblox Studio.lnk'*       'WhatsApp Web.lnk'*
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop
+$ cd course
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course
+$ ls
+ FirstSetup/       'Hi, I have worked remotely as a dat.txt'   gitadd.txt   unixComm24June.txt
+ FirstSetup-main/  'Using Bedrock to generate.txt'             python_1/    unix_2/
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course
+$ cd FirstSetup
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ ls
+logic_1/               python_1/  secondFile.txt  unix_1/  version_control_1/
+prompt_engineering_1/  python_2/  text.txt        unix_2/
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ cd unix_2
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_2 (master)
+$ touch readme.md
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_2 (master)
+$ touch unixCommands.txt
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_2 (master)
+$ cd..
+bash: cd..: command not found
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_2 (master)
+$ cd..
+bash: cd..: command not found
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_2 (master)
+$ cd ..
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup (master)
+$ cd unix_1
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ ls
+readme.md  text.txt
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ cp text.txt copyOfTextUsingUnix.txt
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ less -N readme.md
+
+
+      1 # Unix_1
+      2 ## Description
+      3    This is all about the unix commands I have used my semester 1 till now.
+      4
+      5    - cd - change directory
+      6      ```
+      7      % cd SrjKshwh
+      8      ```
+      9
+     10    - ls - list directories/files
+     11      ```
+     12      % ls
+     13      ```
+     14
+     15
+     16    - touch - creates a file
+     17      ```
+     18      % touch secondFile.txt
+     19      ```
+     20
+     21
+     22    - cat - add some content to existing file
+     23      ```
+:
+ Scroll with:
+
+Arrow keys (↑ ↓)
+
+Page Up / Page Down
+
+Spacebar (next page)
+
+Then press q to exit and return to the terminal.
+
+
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ ls
+copyOfTextUsingUnix.txt  readme.md  text.txt
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ mv text.txt unixCommands.txt
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ ls
+copyOfTextUsingUnix.txt  readme.md  unixCommands.txt
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ cp unixCommands.txt copyToDelete.txt
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ ls
+copyOfTextUsingUnix.txt  copyToDelete.txt  readme.md  unixCommands.txt
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ rm copyToDelete.txt
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ ls
+copyOfTextUsingUnix.txt  readme.md  unixCommands.txt
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ ls -la
+total 25
+drwxr-xr-x 1 saroj 197609    0 Jul  2 12:04 ./
+drwxr-xr-x 1 saroj 197609    0 Jul  2 11:24 ../
+-rw-r--r-- 1 saroj 197609 4425 Jul  2 11:51 copyOfTextUsingUnix.txt
+-rw-r--r-- 1 saroj 197609  615 Jun 24 14:41 readme.md
+-rw-r--r-- 1 saroj 197609 4425 Jun 24 14:41 unixCommands.txt
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ alias lla='ls -la'
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ lla
+total 25
+drwxr-xr-x 1 saroj 197609    0 Jul  2 12:04 ./
+drwxr-xr-x 1 saroj 197609    0 Jul  2 11:24 ../
+-rw-r--r-- 1 saroj 197609 4425 Jul  2 11:51 copyOfTextUsingUnix.txt
+-rw-r--r-- 1 saroj 197609  615 Jun 24 14:41 readme.md
+-rw-r--r-- 1 saroj 197609 4425 Jun 24 14:41 unixCommands.txt
+
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ echo $SHELL
+/usr/bin/bash
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ echo $0
+/usr/bin/bash
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ ps -p $$
+      PID    PPID    PGID     WINPID   TTY         UID    STIME COMMAND
+     1278    1277    1278       2748  pty0      197609   Jun 24 /usr/bin/bash
+
+saroj@Moksha MINGW64 ~/OneDrive/Desktop/course/FirstSetup/unix_1 (master)
+$ cd
+
+saroj@Moksha MINGW64 ~
+$ echo $0
+/usr/bin/bash
+
+
