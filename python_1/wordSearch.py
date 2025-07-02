@@ -36,7 +36,7 @@ def unHighlightText(event):
 
 #--- Mouse click event function for checking whether word is in tk.listbox or not
 def changeLabelColor(event):
-    '''In this function we are checking whether a word is in the tkinter listbox or not; if the word is present
+    '''In this function we are checking whether a word (or reverse word) is in the tkinter listbox or not; if the word is present
     in list then change the color of the word to the given color in the variable - changedColor'''
     global makeStringFromLetters, listbox
     orignalColor="lightblue"
@@ -56,21 +56,30 @@ def changeLabelColor(event):
     if makeStringFromLetters in rndWordList:
         index = listbox.get(0, tk.END).index(makeStringFromLetters)         # Search the listbox for the word
         # Configure the item at the found index to have green foreground color
+        print("***********",makeStringFromLetters)
+        print("----------",makeStringFromLetters[::-1])
         listbox.itemconfig(index, {'fg': 'lightgreen'})
         makeStringFromLetters=""
+    if makeStringFromLetters[::-1] in rndWordList:
+        index = listbox.get(0, tk.END).index(makeStringFromLetters[::-1])         # Search the listbox for the word
+        # Configure the item at the found index to have green foreground color
+        print("***********",makeStringFromLetters)
+        print("----------",makeStringFromLetters[::-1])
+        listbox.itemconfig(index, {'fg': 'lightgreen'})
+        makeStringFromLetters=""        
         
 
-def undoClicks():
+def undoAllClicks():
     '''This function clears all the clicked and highlighted letter back to normal; and loads the fresh grid of letters'''
     global makeStringFromLetters
     makeStringFromLetters=""
-    for rowCounter in range(matrixSize):
-        for columnCounter in range(matrixSize):
-            gridLabel=tk.Label(left_frame, text=grid_cells[rowCounter][columnCounter], padx=6, pady=4, bg='lightblue')
-            gridLabel.grid(row=rowCounter, column=columnCounter)
-            gridLabel.bind('<Enter>', highLightText)
-            gridLabel.bind('<Leave>', unHighlightText)
-            gridLabel.bind('<Button-1>', changeLabelColor)
+    bgColor='lightblue'
+    printMatrix(bgColor)
+
+
+def undoRandonClicks():
+    global makeStringFromLetters
+    print(makeStringFromLetters)
 
 
 #----This is the main function to start the timer----------
@@ -102,6 +111,16 @@ def resetTime():
     timerRunning=False
     seconds=0
     timerLabel.config(text="Time 0 sec")
+
+def printMatrix(backgroundColor):
+    for rowCounter in range(matrixSize):
+        for columnCounter in range(matrixSize):
+            gridLabel=tk.Label(left_frame, text=grid_cells[rowCounter][columnCounter], padx=6, pady=4, bg=backgroundColor)
+            gridLabel.grid(row=rowCounter, column=columnCounter)
+            gridLabel.bind('<Enter>', highLightText)
+            gridLabel.bind('<Leave>', unHighlightText)
+            gridLabel.bind('<Button-1>', changeLabelColor)
+
 
 # getting random words from text file
 def getWordsFromFile():
@@ -159,16 +178,10 @@ def addToList():
             allotWordsToGrid(checkWord)   
 
    #----------print grid with the all ten words--------------------------
-    for rowCounter in range(matrixSize):
-        for columnCounter in range(matrixSize):
-            gridLabel=tk.Label(left_frame, text=grid_cells[rowCounter][columnCounter], padx=6, pady=4, bg='lightblue')
-            gridLabel.grid(row=rowCounter, column=columnCounter)
-            gridLabel.bind('<Enter>', highLightText)
-            gridLabel.bind('<Leave>', unHighlightText)
-            gridLabel.bind('<Button-1>', changeLabelColor)
+    bgColor='lightblue'
+    printMatrix(bgColor)
+
     print("checking char-----10,10",grid_cells[10][10])
-
-
 
 
 #------ function to allot word-------------------------------
@@ -412,7 +425,8 @@ timerLabel.grid(row=9, column=0, padx=5, pady=5)
 tk.Button(right_frame, text='Start ', command=startTime).grid(row=9, column=1, padx=5, pady=5, sticky='ew')
 tk.Button(right_frame, text='Pause', command=stopTime).grid(row=9, column=2, padx=5, pady=5, sticky='ew')
 tk.Button(right_frame, text='Reset', command=resetTime).grid(row=9, column=3, padx=5, pady=5, sticky='ew')
-tk.Button(right_frame, text='Undo clicks', command=undoClicks).grid(row=10, column=1, padx=5, pady=5, sticky='ew')
+tk.Button(right_frame, text='Undo all clicks', command=undoAllClicks).grid(row=10, column=1, padx=5, pady=5, sticky='ew')
+tk.Button(right_frame, text='Undo random clicks', command=undoRandonClicks).grid(row=10, column=2, padx=5, pady=5, sticky='ew')
 
 #--------------------------RIGHT PANEL CONTENT ENDS------------------------------------------- 
 
