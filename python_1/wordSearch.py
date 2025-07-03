@@ -18,6 +18,9 @@ coordiForLongWord=[]
 seconds=0
 timerRunning=False
 makeStringFromLetters=""
+score=0
+numOfFoundWords=0
+foundGreenWords=[]
 
 #----------------------------------------DEFINING FUNCTIONS---------------------------------------------------- 
 
@@ -38,7 +41,7 @@ def unHighlightText(event):
 def changeLabelColor(event):
     '''In this function we are checking whether a word (or reverse word) is in the tkinter listbox or not; if the word is present
     in list then change the color of the word to the given color in the variable - changedColor'''
-    global makeStringFromLetters, listbox
+    global makeStringFromLetters, listbox, numOfFoundWords
     orignalColor="lightblue"
     changedColor="lightgreen"
     label=event.widget
@@ -60,13 +63,17 @@ def changeLabelColor(event):
         print("----------",makeStringFromLetters[::-1])
         listbox.itemconfig(index, {'fg': 'lightgreen'})
         makeStringFromLetters=""
+        numOfFoundWords+=1
+        foundGreenWords.append(makeStringFromLetters)
     if makeStringFromLetters[::-1] in rndWordList:
         index = listbox.get(0, tk.END).index(makeStringFromLetters[::-1])         # Search the listbox for the word
         # Configure the item at the found index to have green foreground color
         print("***********",makeStringFromLetters)
         print("----------",makeStringFromLetters[::-1])
         listbox.itemconfig(index, {'fg': 'lightgreen'})
-        makeStringFromLetters=""        
+        makeStringFromLetters=""   
+        numOfFoundWords+=1     
+        foundGreenWords.append(makeStringFromLetters[::-1])
         
 
 def undoAllClicks():
@@ -77,9 +84,9 @@ def undoAllClicks():
     printMatrix(bgColor)
 
 
-def undoRandonClicks():
-    global makeStringFromLetters
-    print(makeStringFromLetters)
+#def undoRandomClicks():
+#    global makeStringFromLetters
+#    print(makeStringFromLetters)
 
 
 #----This is the main function to start the timer----------
@@ -90,6 +97,8 @@ def startTime():
     if not timerRunning:
         timerRunning=True
         updateTimer()
+        startTimeButton.grid_forget()
+        stopTimeButton.grid(row=9, column=2, padx=5, pady=5, sticky='ew')
 
 def updateTimer():
     '''This function increaments the seconds shown on the tkinter widget by 1 after every 1000miliseconds'''
@@ -104,13 +113,20 @@ def stopTime():
     global timerRunning, makeStringFromLetters
     makeStringFromLetters=""
     timerRunning=False
+    stopTimeButton.grid_forget()
+    startTimeButton.grid(row=9, column=1, padx=5, pady=5, sticky='ew')
 
-def resetTime():
-    '''This function reset the timer and set it to zero'''
-    global seconds, timerRunning
+def resetTimeShowScore():
+    '''This function shows the score and then reset the time to zero '''
+    global seconds, timerRunning, score, numOfFoundWords
+    score=numOfFoundWords*seconds
+    scoreLabel.config(text=f"Score : {score}")
     timerRunning=False
     seconds=0
     timerLabel.config(text="Time 0 sec")
+    print(numOfFoundWords)
+    print(score)
+
 
 def printMatrix(backgroundColor):
     for rowCounter in range(matrixSize):
@@ -181,7 +197,7 @@ def addToList():
     bgColor='lightblue'
     printMatrix(bgColor)
 
-    print("checking char-----10,10",grid_cells[10][10])
+    #print("checking char-----10,10",grid_cells[10][10])
 
 
 #------ function to allot word-------------------------------
@@ -355,7 +371,7 @@ if len(rndWordList)>7 or len(rndWordList)<7:
     getWordsFromFile()
 
 
-print("checking char-----10,10",grid_cells[10][10])
+#print("checking char-----10,10",grid_cells[10][10])
 
 
 #----------------------------------------CREATING GUI---------------------------------------------------- 
@@ -387,6 +403,7 @@ for rowCounter in range(matrixSize):
         tk.Label(left_frame, text=grid_cells[rowCounter][columnCounter], padx=6, pady=4, bg='lightblue').grid(row=rowCounter, column=columnCounter)  
         cordi=f"{rowCounter},{columnCounter}"
         coordinates.append(cordi)
+        
 #print(grid_cells)
 #print(coordinates)
 
@@ -398,9 +415,10 @@ for rowCounter in range(matrixSize):
 
 #--------------------------RIGHT PANEL CONTENT STARTS------------------------------------------- 
 # creating labels for text box and adding to the grid
-tk.Label(right_frame, text="1st word", bg='lightgray').grid(row=1)
-tk.Label(right_frame, text="2nd word", bg='lightgray').grid(row=2)
-tk.Label(right_frame, text="3rd word", bg='lightgray').grid(row=3)
+tk.Label(right_frame, text="Step 1: Input 3 words in below 3 text boxes and click the button 'Add to list'", bg='lightgray').grid(row=0, column=0, columnspan=4, padx=10, pady=15)
+tk.Label(right_frame, text="1st word", bg='lightgray').grid(row=1, column=0)
+tk.Label(right_frame, text="2nd word", bg='lightgray').grid(row=2, column=0)
+tk.Label(right_frame, text="3rd word", bg='lightgray').grid(row=3, column=0)
 
 # creating input boxes
 inputBox1 = tk.Entry(right_frame)
@@ -413,20 +431,29 @@ inputBox2.grid(row=2, column=1)
 inputBox3.grid(row=3, column=1)
 
 # creating buttons and adding to the grid
-buttonQuit=tk.Button(right_frame, text='Quit', command=master.quit)
+buttonQuit=tk.Button(right_frame, text='Quit (Closes the game window)', command=master.quit)
 buttonQuit.grid(row=6, column=1, padx=5, pady=5, sticky='ew')
 
 buttonAddToList=tk.Button(right_frame, text='Add to list', command=addToList)
 buttonAddToList.grid(row=5, column=1, padx=5, pady=5, sticky='ew')
-
+tk.Label(right_frame, text="Step 2: Click the 'Start' button and start searching the words; if you need \n a break you can use 'Pause' button to pause the timer", bg='lightgray').grid(row=8, column=0, columnspan=4, padx=10, pady=15)
 timerLabel=tk.Label(right_frame, text='Time : 0 sec')
 timerLabel.grid(row=9, column=0, padx=5, pady=5)
 
-tk.Button(right_frame, text='Start ', command=startTime).grid(row=9, column=1, padx=5, pady=5, sticky='ew')
-tk.Button(right_frame, text='Pause', command=stopTime).grid(row=9, column=2, padx=5, pady=5, sticky='ew')
-tk.Button(right_frame, text='Reset', command=resetTime).grid(row=9, column=3, padx=5, pady=5, sticky='ew')
-tk.Button(right_frame, text='Undo all clicks', command=undoAllClicks).grid(row=10, column=1, padx=5, pady=5, sticky='ew')
-tk.Button(right_frame, text='Undo random clicks', command=undoRandonClicks).grid(row=10, column=2, padx=5, pady=5, sticky='ew')
+startTimeButton=tk.Button(right_frame, text='Start ', command=startTime)
+startTimeButton.grid(row=9, column=1, padx=5, pady=5, sticky='ew')
+
+stopTimeButton=tk.Button(right_frame, text='Pause', command=stopTime)
+#stopTimeButton.grid(row=9, column=2, padx=5, pady=5, sticky='ew')
+
+tk.Label(right_frame, text="Info: 'Show score & Reset' will reset the time to '0' and show the score \n 'Undo all clicks' will remove all the green labels you have clicked till now", bg='lightgray').grid(row=11, column=0, columnspan=4, padx=10, pady=15)
+
+scoreLabel=tk.Label(right_frame, text='Score : 0')
+scoreLabel.grid(row=12, column=0, padx=5, pady=5)
+
+tk.Button(right_frame, text='Show score & Reset', command=resetTimeShowScore).grid(row=12, column=1, padx=5, pady=5, sticky='ew')
+tk.Button(right_frame, text='Undo all clicks', command=undoAllClicks).grid(row=12, column=2, padx=5, pady=5, sticky='ew')
+#tk.Button(right_frame, text='Undo random clicks', command=undoRandomClicks).grid(row=10, column=2, padx=5, pady=5, sticky='ew')
 
 #--------------------------RIGHT PANEL CONTENT ENDS------------------------------------------- 
 
