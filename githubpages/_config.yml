@@ -1,11 +1,3 @@
 title: My GitHub Pages Site
-
-
-
-#theme : cayman
-#layout : default
-#title : GitHubPages
-#description : Showcasing my work
-#author:
-#  name : Saroj Kushwaha
-#  email : saroj24786@gmail.com
+theme: minima
+markdown: kramdown
