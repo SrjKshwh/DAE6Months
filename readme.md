@@ -21,3 +21,5 @@ Step 1: Input 3 words in below 3 text boxes and click the button 'Add to list'.
 Step 2: Click the 'Start' button and start searching the words; if you need a break you can use 'Pause' button to pause the timer.
 
 "Info: 'Show score & Reset' will reset the time to '0' and show the score \n 'Undo all clicks' will remove all the green labels you have clicked till now.
+
+# This is the Demo for Branching and Pulling - Abhinav Piratla
