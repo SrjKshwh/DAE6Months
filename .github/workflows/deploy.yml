@@ -1,14 +1,17 @@
-name: Deploy website
+name: Deploy from githubpages
+
 on:
   push:
     branches:
-      - master 
-  pull_request:
+      - main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
