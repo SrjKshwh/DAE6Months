@@ -15,3 +15,4 @@ This is a simple site served from a Markdown file (`index.md`) using GitHub Page
 ---
 
 🔗 [View my GitHub profile](https://github.com/srjkshwh)
+🔗 [View my Linkedin profile](www.linkedin.com/in/saroj-kushwaha-7ba25726a)
