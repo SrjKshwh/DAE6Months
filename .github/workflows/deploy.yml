@@ -3,11 +3,12 @@ name: Deploy GitHub Pages from githubpages/
 on:
   push:
     branches:
-      - master
+      - master  # Use 'main' if your default branch is 'main'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
