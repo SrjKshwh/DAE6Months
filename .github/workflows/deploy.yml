@@ -2,7 +2,7 @@ name: Deploy website
 on:
   push:
     branches:
-      - main  # Or your default branch
+      - master 
   pull_request:
 jobs:
   deploy:
@@ -13,5 +13,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./githubpages  # Replace with your folder
-  
+          publish_dir: ./githubpages
