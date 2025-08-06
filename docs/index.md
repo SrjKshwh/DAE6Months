@@ -10,9 +10,17 @@ I am person having combined experience in web design, development, freelancing, 
 ## 🛠 Technical skills
 
 Programming Languages - Python, SOQL, Apex Language (Classes, Trigger, Batch, Schedule), PHP, JAVA
+
+
 Web Technologies - HTML, HTML5, XHTML, XML, JavaScript, XML, AJAX, Jquery CSS, and Photoshop
+
+
 Application Server - Tomcat, WAMP5/XAMPP
+
+
 Database - MySQL, Oracle 8i
+
+
 Salesforce CRM - Workflow rules, Approval Processes, LWC, Lighting, Profiles, Roles, Permission sets, Relationships, Validation Rules, Custom objects, Dashboards, Reports, Search Layouts, Page Layouts, Record Types, Process builders, Flows, OmniScript, OmniStudio
 
 ---
@@ -22,3 +30,10 @@ Salesforce CRM - Workflow rules, Approval Processes, LWC, Lighting, Profiles, Ro
 🔗 [View my Linkedin profile](www.linkedin.com/in/saroj-kushwaha-7ba25726a)
 
 🔗 [View my website](www.linke26a)
+
+<div> 
+ <a href="https://github.com/SrjKshwh/DAE6Months">Github Repository</a>
+ <a href="www.linkedin.com/in/saroj-kushwaha-7ba25726a">My Linkedin</a>
+
+</div>
+
