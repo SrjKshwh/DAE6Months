@@ -25,19 +25,13 @@ Salesforce CRM - Workflow rules, Approval Processes, LWC, Lighting, Profiles, Ro
 
 ---
 
-🔗 [View my GitHub profile](https://github.com/srjkshwh)
-
-🔗 [View my Linkedin profile](www.linkedin.com/in/saroj-kushwaha-7ba25726a)
-
-🔗 [View my website](www.linke26a)
+🔗 [View my GitHub profile](https://github.com/SrjKshwh/DAE6Months)
 
 <div> 
 
- <a href="https://github.com/SrjKshwh/DAE6Months" style="color: black; text-decoration: none; padding: 5px; margin:5px" onmouseover="this.style.color='gray';">Github Repository</a>
+ <a href="https://www.linkedin.com/in/saroj-kushwaha-7ba25726a" style="color: black; text-decoration: none; padding: 5px; margin:5px; background-color: lightgray;">My Linkedin</a>
 
- <a href="https://www.linkedin.com/in/saroj-kushwaha-7ba25726a" style="color: black; text-decoration: none; padding: 5px; margin:5px" onmouseover="this.style.color='gray';">My Linkedin</a>
-
- <a href="https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf" style="color: black; text-decoration: none; padding: 5px; margin:5px" onmouseover="this.style.color='gray';">Resume</a>
+ <a href="https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf" style="color: black; text-decoration: none; padding: 5px; margin:5px; ">Resume</a>
 
 </div>
 
