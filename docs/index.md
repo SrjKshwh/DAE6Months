@@ -31,7 +31,7 @@ Salesforce CRM - Workflow rules, Approval Processes, LWC, Lighting, Profiles, Ro
 
  <a href="https://www.linkedin.com/in/saroj-kushwaha-7ba25726a" style="color: black; text-decoration: none; padding: 5px; margin:5px; background-color: lightgray;">My Linkedin</a>
 
- <a href="https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf" style="color: black; text-decoration: none; padding: 5px; margin:5px; ">Resume</a>
+ <a href="https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf" style="color: black; text-decoration: none; padding: 5px; margin:5px; background-color: lightgray;">Resume</a>
 
 </div>
 
