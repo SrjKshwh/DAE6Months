@@ -1,7 +1,8 @@
 # Semester_2
 
 ### Contents of this folder are
-
+  (clickable links are as follows)
+  
 [Github pages site](https://srjkshwh.github.io/DAE6Months/)
 
 [Job description](https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/Job%20description.pdf)
