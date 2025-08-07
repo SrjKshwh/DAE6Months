@@ -1,6 +1,6 @@
-#title: My GitHub Pages Site
+title: My GitHub Pages Site
 description: Simple documentation site with markdown
 theme: minima
 
 header_pages:
-   - index.md
+  - index.md
