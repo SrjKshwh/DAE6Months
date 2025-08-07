@@ -11,4 +11,4 @@
 
 [Resume](https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf)
 
-[Linkedin](https://www.linkedin.com/in/saroj-kushwaha-7ba25726a)
+[LinkedIn](https://www.linkedin.com/in/saroj-kushwaha-7ba25726a)
