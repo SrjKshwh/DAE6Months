@@ -4,3 +4,16 @@ theme: minima
 
 header_pages:
   - index.md
+  - about.md
+  - projects.md
+
+author:
+  name: "Saroj Kushwaha"
+  avatar: "/assets/img/dddddcd.png"
+  email: "kush786srj@gmail.com"
+  link: 
+     -label: "LinkedIn"
+      icon: 
+     url
+
+logo: "assets/img"

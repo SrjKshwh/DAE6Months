@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: splash
 title: Home
 ---
 
@@ -35,3 +35,5 @@ Salesforce CRM - Workflow rules, Approval Processes, LWC, Lighting, Profiles, Ro
 
 </div>
 
+
+![dae logo]()
