@@ -15,35 +15,23 @@ title: Home
     </div>
 </div>
 
-
-
+<div class="container">
 
 ## 🛠 Technical skills
+------
 
-Programming Languages - Python, SOQL, Apex Language (Classes, Trigger, Batch, Schedule), PHP, JAVA
+- Programming Languages - Python, SOQL, Apex Language (Classes, Trigger, Batch, Schedule), PHP, JAVA
 
+- Web Technologies - HTML, HTML5, XHTML, XML, JavaScript, XML, AJAX, Jquery CSS, and Photoshop
 
-Web Technologies - HTML, HTML5, XHTML, XML, JavaScript, XML, AJAX, Jquery CSS, and Photoshop
+- Application Server - Tomcat, WAMP5/XAMPP
 
+- Database - MySQL, Oracle 8i
 
-Application Server - Tomcat, WAMP5/XAMPP
-
-
-Database - MySQL, Oracle 8i
-
-
-Salesforce CRM - Workflow rules, Approval Processes, LWC, Lighting, Profiles, Roles, Permission sets, Relationships, Validation Rules, Custom objects, Dashboards, Reports, Search Layouts, Page Layouts, Record Types, Process builders, Flows, OmniScript, OmniStudio
+- Salesforce CRM - Workflow rules, Approval Processes, LWC, Lighting, Profiles, Roles, Permission sets, Relationships, Validation Rules, Custom objects, Dashboards, Reports, Search Layouts, Page Layouts, Record Types, Process builders, Flows, OmniScript, OmniStudio
 
 ---
 
-🔗 [View my GitHub profile](https://github.com/SrjKshwh/DAE6Months)
-
-<div> 
-
- <a href="https://www.linkedin.com/in/saroj-kushwaha-7ba25726a" class="aHrefLinks">My Linkedin</a>
-
- <a href="https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf" class="aHrefLinks">Resume</a>
+{% include footer-note.html %}
 
 </div>
-
-![dae logo](assets/img/dae-web.jpg)
