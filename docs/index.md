@@ -15,6 +15,7 @@ title: Home
 </div>
 
 <div class="container">
+
   ## 🛠 Technical skills
   ------
   - Programming Languages - Python, SOQL, Apex Language (Classes, Trigger, Batch, Schedule), PHP, JAVA
