@@ -28,6 +28,6 @@ permalink: /
 
 ---
 
-{% include footer-note.html %}
+{% include _includes/footer-note.html %}
 
 </div>
