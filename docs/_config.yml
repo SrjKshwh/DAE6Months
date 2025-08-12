@@ -1,13 +1,13 @@
-title: My GitHub Pages Site
-description: Simple documentation site with markdown
-remote_theme: jekyll/minima@1e8a445
+title: "My GitHub Pages Site"
+description: "Simple documentation site with markdown"
+
+remote_theme: jekyll/minima
 
 header_pages:
   - index.md
   - about.md
   - projects.md
   - resume.md
-
 
 author:
   name: "Saroj Kushwaha"
@@ -17,4 +17,4 @@ author:
       icon: "fa-linkedin"
       url: "https://www.linkedin.com/in/saroj-kushwaha-7ba25726a"
 
-logo: "assets/img/dae-web.png"
+logo: "/assets/img/dae-web.png"
