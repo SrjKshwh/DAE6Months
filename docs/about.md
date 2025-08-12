@@ -1,4 +1,8 @@
-
+---
+layout: default
+title: About
+permalink: /about/
+---
 
 <img src="assets/img/headShot.jpg" width="350" height="470" align="center" class="headShotImg">
 

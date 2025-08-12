@@ -1,3 +1,9 @@
+---
+layout: default
+title: Resume
+permalink: /resume/
+---
+
 # Saroj Kushwaha
 - saroj24786@gmail.com 
 - (475)232-3515 
