@@ -1,0 +1,21 @@
+.aHrefLinks{
+    color: black;
+    text-decoration: none;
+    padding: 5px;
+    margin:5px;
+    background-color: lightgray;
+}
+.headShotImg{
+    display: block;
+    margin: 0 auto;
+}
+.container{
+  display: flex;
+  /* Optional: You can add a gap between the columns */
+  gap: 5px;
+}
+.column{
+  /* This tells each column to take up an equal portion of the available space */
+  flex: 1;
+  margin: auto, auto;
+}

@@ -2,10 +2,21 @@
 layout: splash
 title: Home
 ---
+<link rel="stylesheet" href="assets/css/custom.css">
 
 # 👋 Welcome to My GitHub Pages Site
 
-I am person having combined experience in web design, development, freelancing, and teaching in both India and the USA, holding certifications as a Salesforce Platform Developer-1 and Administrator, with strong skills in various programming languages, web technologies, and databases. Currently enhancing their expertise through a 6-Month Tech Career Readiness Program, including a cybersecurity GRC project, they are seeking a challenging, stable, and remote-friendly role.
+<div class="container">
+    <div class="column">
+         <img src="assets/img/headShot.jpg" width="350" height="470" align="center" class="headShotImg">
+    </div>
+    <div class="column">
+      I am person having combined experience in web design, development, freelancing, and teaching in both India and the USA, holding certifications as a Salesforce Platform Developer-1 and Administrator, with strong skills in various programming languages, web technologies, and databases. Currently enhancing their expertise through a 6-Month Tech Career Readiness Program, including a cybersecurity GRC project, they are seeking a challenging, stable, and remote-friendly role.
+    </div>
+</div>
+
+
+
 
 ## 🛠 Technical skills
 
@@ -29,11 +40,11 @@ Salesforce CRM - Workflow rules, Approval Processes, LWC, Lighting, Profiles, Ro
 
 <div> 
 
- <a href="https://www.linkedin.com/in/saroj-kushwaha-7ba25726a" style="color: black; text-decoration: none; padding: 5px; margin:5px; background-color: lightgray;">My Linkedin</a>
+ <a href="https://www.linkedin.com/in/saroj-kushwaha-7ba25726a" class="aHrefLinks">My Linkedin</a>
 
- <a href="https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf" style="color: black; text-decoration: none; padding: 5px; margin:5px; background-color: lightgray;">Resume</a>
+ <a href="https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf" class="aHrefLinks">Resume</a>
 
 </div>
 
 
-![dae logo](assets/img/dae-web.avif)
+![dae logo](assets/img/dae-web.jpg)
