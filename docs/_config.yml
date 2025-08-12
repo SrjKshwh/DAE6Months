@@ -6,10 +6,10 @@ header_pages:
   - index.md
   - about.md
   - projects.md
+  - resume.md
 
 author:
   name: "Saroj Kushwaha"
-  avatar: "/assets/img/dddddcd.png"
   email: "kush786srj@gmail.com"
   links:
     - label: "LinkedIn"

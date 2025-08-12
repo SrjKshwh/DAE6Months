@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Home
+permalink: /index/
 ---
 
 # 👋 Welcome to My GitHub Pages Site
