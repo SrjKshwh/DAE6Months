@@ -1,0 +1,29 @@
+.aHrefLinks{
+  color: black;
+  text-decoration: none;
+  padding: 5px;
+  margin: 5px;
+  background-color: lightgray;
+}
+
+.headShotImg{
+  display: block;
+  margin: 0 auto;
+}
+
+.container{
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.column{
+  /* This tells each column to take up an equal portion of the available space */
+  flex: 1;
+  /* Removed invalid margin syntax and the redundant gap */
+  margin: auto;
+}
