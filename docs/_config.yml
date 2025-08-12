@@ -1,6 +1,6 @@
 title: My GitHub Pages Site
 description: Simple documentation site with markdown
-remote_theme: "jekyll/minima@1e8a445"
+remote_theme: jekyll/minima@1e8a445
 
 header_pages:
   - index.md
