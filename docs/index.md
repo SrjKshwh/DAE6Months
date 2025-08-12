@@ -31,4 +31,4 @@ title: Home
   <a href="https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf" class="button-link">Resume</a>
 </div>
 
-{% include _includes/footer-note.html %}
+{% include _includes/footerNote.html %}
