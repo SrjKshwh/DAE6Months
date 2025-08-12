@@ -422,7 +422,7 @@ for rowCounter in range(matrixSize):
 
 #--------------------------RIGHT PANEL CONTENT STARTS------------------------------------------- 
 # creating labels for text box and adding to the grid
-tk.Label(right_frame, text="Step 1: Input 3 words in below 3 text boxes and click the button 'Add to list'", bg='lightgray').grid(row=0, column=0, columnspan=4, padx=10, pady=15)
+tk.Label(right_frame, text="Step 1: Input 3 words in below 3 text boxes and click the button 'Add to list' \n (input boxes will accept only 12 characters) ", bg='lightgray').grid(row=0, column=0, columnspan=4, padx=10, pady=15)
 tk.Label(right_frame, text="1st word", bg='lightgray').grid(row=1, column=0)
 tk.Label(right_frame, text="2nd word", bg='lightgray').grid(row=2, column=0)
 tk.Label(right_frame, text="3rd word", bg='lightgray').grid(row=3, column=0)
@@ -432,7 +432,7 @@ tk.Label(right_frame, text="3rd word", bg='lightgray').grid(row=3, column=0)
 # 1. Register the validation function with the root window.
 # This creates a Tcl-compatible command string for our Python function.
 # The `%S` substitution code passes the new character to the function.
-vcmd = (tk.register(validate_input), "%P")
+vcmd = (master.register(validate_input), "%P")
 
 # 2. Create the Entry widgets and configure them to use the validation command.
 # The 'validate="key"' option tells the Entry widget to validate on every keystroke.

@@ -128,6 +128,13 @@ def resetTimeShowScore():
     print(score)
 
 
+def validate_input(new_value):
+    """Allow only a-z / A-Z and max length 12."""
+    if len(new_value) > 12:
+        return False
+    return new_value.isalpha() or new_value == ""
+
+
 def printMatrix(backgroundColor):
     for rowCounter in range(matrixSize):
         for columnCounter in range(matrixSize):
@@ -415,15 +422,24 @@ for rowCounter in range(matrixSize):
 
 #--------------------------RIGHT PANEL CONTENT STARTS------------------------------------------- 
 # creating labels for text box and adding to the grid
-tk.Label(right_frame, text="Step 1: Input 3 words in below 3 text boxes and click the button 'Add to list'", bg='lightgray').grid(row=0, column=0, columnspan=4, padx=10, pady=15)
+tk.Label(right_frame, text="Step 1: Input 3 words in below 3 text boxes and click the button 'Add to list' \n (input boxes will accept only 12 characters) ", bg='lightgray').grid(row=0, column=0, columnspan=4, padx=10, pady=15)
 tk.Label(right_frame, text="1st word", bg='lightgray').grid(row=1, column=0)
 tk.Label(right_frame, text="2nd word", bg='lightgray').grid(row=2, column=0)
 tk.Label(right_frame, text="3rd word", bg='lightgray').grid(row=3, column=0)
 
 # creating input boxes
-inputBox1 = tk.Entry(right_frame)
-inputBox2 = tk.Entry(right_frame)
-inputBox3 = tk.Entry(right_frame)
+    
+# 1. Register the validation function with the root window.
+# This creates a Tcl-compatible command string for our Python function.
+# The `%S` substitution code passes the new character to the function.
+vcmd = (master.register(validate_input), "%P")
+
+# 2. Create the Entry widgets and configure them to use the validation command.
+# The 'validate="key"' option tells the Entry widget to validate on every keystroke.
+# The 'validatecommand=vcmd' option specifies our registered validation function.
+inputBox1 = tk.Entry(right_frame, validate="key", validatecommand=vcmd)
+inputBox2 = tk.Entry(right_frame, validate="key", validatecommand=vcmd)
+inputBox3 = tk.Entry(right_frame, validate="key", validatecommand=vcmd)
 
 # adding input boxes to the grid
 inputBox1.grid(row=1, column=1)
