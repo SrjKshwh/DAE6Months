@@ -31,9 +31,4 @@ title: Home
   <a href="https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf" class="button-link">Resume</a>
 </div>
 
-<img src="assets/img/daeWebLogo.png" alt="daeLogo">
-
-<footer style="margin-top: 2rem; text-align: center; color: #6c757d;">
-  <p>&copy; 2025 Saroj Kushwaha. All rights reserved.</p>
-  
-</footer>
+{% include _includes/footerNote.html %}
