@@ -34,6 +34,6 @@ title: Home
 <img src="assets/img/daeWebLogo.png" alt="daeLogo">
 
 <footer style="margin-top: 2rem; text-align: center; color: #6c757d;">
-  <p>&copy; 2024 Saroj Kushwaha. All rights reserved.</p>
+  <p>&copy; 2025 Saroj Kushwaha. All rights reserved.</p>
   
 </footer>
