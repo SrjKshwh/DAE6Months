@@ -72,6 +72,15 @@ This work included teaching and explaining projects to final year university stu
 
 ## EDUCATION CREDENTIALS
 - 6-Month Tech Career Readiness Program, Computer and Information Systems Security/Information Assurance from District Arts and Education Stamford, CT, USA - June 2025 to November 2025
+
 - Master of Computer Applications (M.C.A.) from Shree Dadaji Institute of Technology and Science Khandwa (affiliated by RGPV, Bhopal, India.) - 2010.
+
 - Bachelor Computer Applications(B.C.A) from Poonamchand Gupta Vocational College Khandwa (affiliated by DAVV, Indore, India.) - 2007.
 Place: Stamford, CT 06901 (EDT/EST) Saroj Kushwaha
+
+<img src="assets/img/daeWebLogo.png" alt="daeLogo">
+
+<footer style="margin-top: 2rem; text-align: center; color: #6c757d;">
+  <p>&copy; 2024 Saroj Kushwaha. All rights reserved.</p>
+  
+</footer>
