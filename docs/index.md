@@ -7,7 +7,7 @@ title: Home
 
 <div class="container">
   <div class="column">
-    <img src="assets/img/headShot.jpg" width="350" height="470" class="headShotImg">
+    <img src="assets/img/headShot.jpg" width="330" height="450" class="headShotImg">
   </div>
   <div class="column">
     I am a person with combined experience in web design, development, freelancing, and teaching in both India and the USA, holding certifications as a Salesforce Platform Developer-1 and Administrator, with strong skills in various programming languages, web technologies, and databases. Currently enhancing their expertise through a 6-Month Tech Career Readiness Program, including a cybersecurity GRC project, they are seeking a challenging, stable, and remote-friendly role.
@@ -31,4 +31,4 @@ title: Home
   <a href="https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf" class="button-link">Resume</a>
 </div>
 
-{% include includes/footerNote.html %}
+{% include _includes/footer-note.html %}
