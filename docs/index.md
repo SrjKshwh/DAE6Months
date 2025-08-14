@@ -19,17 +19,19 @@ title: Home
 
 
 <div class="container">
-  ## 🛠 Technical skills
-  ------
-  - Programming Languages - Python, SOQL, Apex Language (Classes, Trigger, Batch, Schedule), PHP, JAVA
 
-  - Web Technologies - HTML, HTML5, XHTML, XML, JavaScript, XML, AJAX, Jquery CSS, and Photoshop
+## 🛠 Technical skills
+------
 
-  - Application Server - Tomcat, WAMP5/XAMPP
+- Programming Languages - Python, SOQL, Apex Language (Classes, Trigger, Batch, Schedule), PHP, JAVA
 
-  - Database - MySQL, Oracle 8i
+- Web Technologies - HTML, HTML5, XHTML, XML, JavaScript, XML, AJAX, Jquery CSS, and Photoshop
 
-  - Salesforce CRM - Workflow rules, Approval Processes, LWC, Lighting, Profiles, Roles, Permission sets, Relationships, Validation Rules, Custom objects, Dashboards, Reports, Search Layouts, Page Layouts, Record Types, Process builders, Flows, OmniScript, OmniStudio
+- Application Server - Tomcat, WAMP5/XAMPP
+
+- Database - MySQL, Oracle 8i
+
+- Salesforce CRM - Workflow rules, Approval Processes, LWC, Lighting, Profiles, Roles, Permission sets, Relationships, Validation Rules, Custom objects, Dashboards, Reports, Search Layouts, Page Layouts, Record Types, Process builders, Flows, OmniScript, OmniStudio
 </div>
 
 <div class="container">
