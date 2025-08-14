@@ -4,6 +4,14 @@ title: Projects
 permalink: /projects
 ---
 
+## Cybersecurity Compliance Checker (with Security Risk Register with Heat Map) (DAE semester_3,4,5 project (Aug-Oct 2025))
+This project aims to build a web-based cybersecurity compliance checker that analyzes uploaded policy or configuration files against industry-standard frameworks (e.g., GLBA, NIST CSF, PCI DSS, etc). It automatically identifies non-compliant items, generates a security risk register, and visualizes the risks using a dynamic heat map, helping organizations prioritize and remediate security issues efficiently.
+
+## WordSearch game (DAE semester_1 project (July 2025))
+This project is about the interactive word search, in which we will ask 3 words from the user and rest of the 7 words from my predefined list. On the base of these total 10 words, the word search grid will be arranged using my Python program. 
+
+This grid will be shown on the left side of the GUI. On the right side of the GUI, there will be an input box, below that it will be a timer, and there will be the list of 10 words with a cross or tick. So, as soon as the user starts working on it, they will start the timer, and if the user successfully found a word, then the word will automatically turn green in the list.
+
 ## MEDIKIGAI INC 2024 (Medical Document Analyst)
 Involved in data analysis and reporting of patient reports, lab testing results, hospitalization, physician notes, etc. Worked within the healthcare team to ensure data reporting and reconciliation.
 

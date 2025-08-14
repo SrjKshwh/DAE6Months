@@ -1,9 +1,9 @@
 # Logic 1 
 
 # Documentation for WordSearch project
-My project is about the interactive word search, in which we will ask 3 words from the user and rest of the 7 words from my predefined list. On the base of these total 10 words, the word search grid will be arranged using my Python program. 
+This project is about the interactive word search, in which we will ask 3 words from the user and rest of the 7 words from my predefined list. On the base of these total 10 words, the word search grid will be arranged using my Python program. 
 
-This grid will be shown on the left side of the GUI. On the right side of the GUI, there will be an input box, below that it will be a timer, and there will be the list of 10 words with a cross or tick. So, as soon as the user starts working on it, they will start the timer, and if they find a new word, they will check out that word from the list below.
+This grid will be shown on the left side of the GUI. On the right side of the GUI, there will be an input box, below that it will be a timer, and there will be the list of 10 words with a cross or tick. So, as soon as the user starts working on it, they will start the timer, and if the user successfully found a word, then the word will automatically turn green in the list.
 
 ## Core Features Recap
 - User Inputs 3 Words
