@@ -48,7 +48,7 @@ Help-on.net is a link management directory. Here website owners can submit link 
 This work included teaching and explaining projects to final year university students using Android simulators. They had projects with minor mistakes; I provided direction and guidance via skype. Also developed video tutorials for reference and study. 
 
 
-<img src="assets/img/daeWebLogo.png" alt="daeLogo">
+<img src="assets/img/daeWebLogo.png" alt="daeLogo" style="display: block; margin: 0 auto;">
 
 <footer style="margin-top: 2rem; text-align: center; color: #6c757d;">
   <p>&copy; 2024 Saroj Kushwaha. All rights reserved.</p>

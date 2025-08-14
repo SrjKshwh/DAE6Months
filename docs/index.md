@@ -18,7 +18,7 @@ title: Home
 </table>
 
 
-<div class="container">
+<div>
 
 ## 🛠 Technical skills
 
@@ -40,14 +40,14 @@ title: Home
 </div>
 
 
-<div class="container">
+<div>
   <a href="https://github.com/SrjKshwh/DAE6Months" class="button-link">View my GitHub profile</a>
   <a href="https://www.linkedin.com/in/saroj-kushwaha-7ba25726a" class="button-link">My Linkedin</a>
   <a href="https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf" class="button-link">Resume</a>
 </div>
 
 <img src="assets/img/daeWebLogo.png" alt="daeLogo">
-
+<img src="assets/img/daeWebLogo.png" alt="daeLogo" style="display: block; margin: 0 auto;">
 <footer style="margin-top: 2rem; text-align: center; color: #6c757d;">
   <p>&copy; 2025 Saroj Kushwaha. All rights reserved.</p>
   

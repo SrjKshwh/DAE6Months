@@ -18,7 +18,7 @@ In some technical words - I am person having combined experience in web design, 
 
 ---
 
-<img src="assets/img/daeWebLogo.png" style="display: block; margin: 0 auto;" alt="daeLogo">
+<img src="assets/img/daeWebLogo.png" alt="daeLogo" style="display: block; margin: 0 auto;">
 
 
 <footer style="margin-top: 2rem; text-align: center; color: #6c757d;">
