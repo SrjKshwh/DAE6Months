@@ -32,12 +32,12 @@ Database - MySQL, Oracle 8i
 
 IDE Tools - Notepad++, MyEclipse, Macromedia Dreamweaver8
 
-### Experience
+## Experience
 
-#### MEDIKIGAI INC 2024 (Medical Document Analyst)
+### MEDIKIGAI INC 2024 (Medical Document Analyst)
 Involved in data analysis and reporting of patient reports, lab testing results, hospitalization, physician notes, etc. Worked within the healthcare team to ensure data reporting and reconciliation.
 
-#### PHP Web Developer & Designer (Maven Group, Hyderabad, India  2013 – 2014)
+### PHP Web Developer & Designer (Maven Group, Hyderabad, India  2013 – 2014)
 Created an advertising website for a client which included analysis of project, development of web pages, connecting to database, and testing functionality.
 
 Roles and responsibilities-
@@ -48,7 +48,7 @@ Roles and responsibilities-
 - Provided ongoing support for website applications including programming support for site enhancement and technical support to members.
 Environment: MySql, JavaScript, jQuery, AngularJS, PHP, Html5, Git, Adobe Dreamweaver.
 
-#### Salesforce Admin & Developer (GOPIO CT and American Hindu RCO (VOLUNTEER EXPERIENCE April 2022 to Dec 2022))
+### Salesforce Admin & Developer (GOPIO CT and American Hindu RCO (VOLUNTEER EXPERIENCE April 2022 to Dec 2022))
 I worked as an admin, developer, and QA for both the below organization’s website and enhanced the digital experience of the community-developed LWR (Lightning web runtime).
 
 Roles and responsibilities-
@@ -81,6 +81,6 @@ Place: Stamford, CT 06901 (EDT/EST) Saroj Kushwaha
 <img src="assets/img/daeWebLogo.png" alt="daeLogo">
 
 <footer style="margin-top: 2rem; text-align: center; color: #6c757d;">
-  <p>&copy; 2024 Saroj Kushwaha. All rights reserved.</p>
+  <p>&copy; 2025 Saroj Kushwaha. All rights reserved.</p>
   
 </footer>
