@@ -8,9 +8,11 @@ permalink: /contact/
 
 
 You can reach me at my email or on my professional networks.
-- Email: [kush786srj@gmail.com] (mailto:kush786srj@gmail.com)
-- LinkedIn: [https://www.linkedin.com/in/saroj-kushwaha-7ba25726a] (https://www.linkedin.com/in/saroj-kushwaha-7ba25726a)
-
+<div>
+  <a href="https://github.com/SrjKshwh/DAE6Months" class="button-link">View my GitHub profile</a>
+  <a href="https://www.linkedin.com/in/saroj-kushwaha-7ba25726a" class="button-link">My Linkedin</a>
+  <a href="https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf" class="button-link">Resume</a>
+</div>
 
 <img src="assets/img/daeWebLogo.png" alt="daeLogo" style="display: block; margin: 0 auto;">
 
