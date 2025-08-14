@@ -3,14 +3,14 @@
 
 @import "minima";
 
-/* Your custom styles go here */
-.site-title {
-  color: #007bff;
+// --- My Custom CSS Below This Line ---
+h1 {
+  color: #3498db; /* A nice blue color */
 }
 
 body {
-  font-family: "Helvetica", sans-serif;
-  color: aqua;
+  background-color: #f8f9fa; /* A light gray background */
+  color:blue;  // for blue fontcolor
 }
 
 .aHrefLinks{
