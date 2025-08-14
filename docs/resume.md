@@ -10,12 +10,20 @@ permalink: /resume/
 
 I am an IT professional with a combined experience in web design, development, freelancing, and teaching in both India and the USA, holding certifications as a Salesforce Platform Developer-1 and Administrator, with strong skills in various programming languages, web technologies, and databases. Currently enhancing expertise through a 6-Month Tech Career Readiness Program, including a cybersecurity GRC project, seeking a challenging, stable, and remote-friendly role.
 
+--------
+
+
+
 ### CERTIFICATIONS & PROFESSIONAL TRAINING
 ● Certified Salesforce Platform Developer-1 (Credential ID:2218067)
 
 ● Certified Salesforce Administrator (Credential ID:2192384)
 
 ● Trailer Blazer URL – https://trailblazer.me/id/sarojkushwaha
+
+--------
+
+
 
 ### TECHNICAL SKILLS
 Operating System - All major Windows operating systems
@@ -31,6 +39,10 @@ Application Server - Tomcat, WAMP5/XAMPP
 Database - MySQL, Oracle 8i
 
 IDE Tools - Notepad++, MyEclipse, Macromedia Dreamweaver8
+
+--------
+
+
 
 ## Experience
 
@@ -78,6 +90,10 @@ Help-on.net is a link management directory. Here website owners can submit link 
 - Trainer (remote) University of Pakistan virtual program (vu.edu.pk).
 This work included teaching and explaining projects to final year university students using Android simulators. They had projects with minor mistakes; I provided direction and guidance via skype. Also developed video tutorials for reference and study. 
 
+--------
+
+
+
 ## EDUCATION CREDENTIALS
 - 6-Month Tech Career Readiness Program, Computer and Information Systems Security/Information Assurance from District Arts and Education Stamford, CT, USA - June 2025 to November 2025
 
@@ -86,7 +102,8 @@ This work included teaching and explaining projects to final year university stu
 - Bachelor Computer Applications(B.C.A) from Poonamchand Gupta Vocational College Khandwa (affiliated by DAVV, Indore, India.) - 2007.
 Place: Stamford, CT 06901 (EDT/EST) Saroj Kushwaha
 
-------
+--------
+
 
 
 <img src="assets/img/daeWebLogo.png" alt="daeLogo" style="display: block; margin: 0 auto;">
