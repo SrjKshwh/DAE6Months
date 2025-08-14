@@ -78,7 +78,7 @@ This work included teaching and explaining projects to final year university stu
 - Bachelor Computer Applications(B.C.A) from Poonamchand Gupta Vocational College Khandwa (affiliated by DAVV, Indore, India.) - 2007.
 Place: Stamford, CT 06901 (EDT/EST) Saroj Kushwaha
 
-<img src="assets/img/daeWebLogo.png" alt="daeLogo">
+------
 <img src="assets/img/daeWebLogo.png" alt="daeLogo" style="display: block; margin: 0 auto;">
 <footer style="margin-top: 2rem; text-align: center; color: #6c757d;">
   <p>&copy; 2025 Saroj Kushwaha. All rights reserved.</p>

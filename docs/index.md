@@ -18,7 +18,7 @@ title: Home
 </table>
 
 
-<div>
+-----
 
 ## 🛠 Technical skills
 
@@ -37,7 +37,7 @@ title: Home
 
 
 - Salesforce CRM - Workflow rules, Approval Processes, LWC, Lighting, Profiles, Roles, Permission sets, Relationships, Validation Rules, Custom objects, Dashboards, Reports, Search Layouts, Page Layouts, Record Types, Process builders, Flows, OmniScript, OmniStudio
-</div>
+-------
 
 
 <div>
