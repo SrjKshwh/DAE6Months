@@ -1,7 +1,15 @@
 ---
-# This ensures Jekyll processes this file
 ---
+@import "{{ site.theme }}";
 
+/* Your custom styles go here */
+.site-title {
+  color: #007bff;
+}
+
+body {
+  font-family: "Helvetica", sans-serif;
+}
 
 .aHrefLinks{
   color: black;
