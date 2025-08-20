@@ -94,3 +94,92 @@ if stackIndex>-1:
 
         if enteredOption==5:
             print("The size of stack is - ", size())
+
+
+
+
+'''       Output -------------
+
+c:/Users/saroj/OneDrive/Desktop/course/FirstSetup/coding_practice/stack.py
+
+Welcome to the world of STACK !!! 
+ Now you need to add some items in the empty stack
+
+Enter an integer value for the stack - 125
+Stack is having  1  elements which are as follows -  [125]
+Stack is having  1  elements; what you want to do next ?
+Press 1 to push (add new element to the stack)
+Press 2 to pop (delete element to the stack)
+Press 3 to peek (return the top value without removing it, or None if empty)
+Press 4 for is_empty() (returns True if the stack has no items)
+Press 5 to get the size of stack (returns how many items are in the stack)
+Press 6 to quit (come out of the python program)
+Enter your option 1/2/3/4/5/6 - 1
+Enter an integer value for the stack - 89
+Stack is having  2  elements which are as follows -  [125, 89]
+Enter your option 1/2/3/4/5/6 - 1
+Enter an integer value for the stack - 784
+Stack is having  3  elements which are as follows -  [125, 89, 784]
+Enter your option 1/2/3/4/5/6 - 1
+Enter an integer value for the stack - 2463
+Stack is having  4  elements which are as follows -  [125, 89, 784, 2463]
+Enter your option 1/2/3/4/5/6 - 1
+Enter an integer value for the stack - 7836
+Stack is having  5  elements which are as follows -  [125, 89, 784, 2463, 7836]
+Enter your option 1/2/3/4/5/6 - 5
+The size of stack is -  5
+Enter your option 1/2/3/4/5/6 - 4
+is_empty() function returned -  False
+Enter your option 1/2/3/4/5/6 - 3
+stackIndex 4
+5
+Newest element in the stack is -  7836
+Enter your option 1/2/3/4/5/6 - 2
+Before calling pop stack is having  5  elements which are as follows -  [125, 89, 784, 2463, 7836]
+After calling pop() stack is having  4  elements which are as follows -  [125, 89, 784, 2463]
+Enter your option 1/2/3/4/5/6 - 2
+Before calling pop stack is having  4  elements which are as follows -  [125, 89, 784, 2463]
+After calling pop() stack is having  3  elements which are as follows -  [125, 89, 784]
+Enter your option 1/2/3/4/5/6 - 2
+Before calling pop stack is having  3  elements which are as follows -  [125, 89, 784]
+After calling pop() stack is having  2  elements which are as follows -  [125, 89]
+Enter your option 1/2/3/4/5/6 - 4
+is_empty() function returned -  False
+Enter your option 1/2/3/4/5/6 - 2
+Before calling pop stack is having  2  elements which are as follows -  [125, 89]
+After calling pop() stack is having  1  elements which are as follows -  [125]
+Enter your option 1/2/3/4/5/6 - 4
+is_empty() function returned -  False
+Enter your option 1/2/3/4/5/6 - 2
+Before calling pop stack is having  1  elements which are as follows -  [125]
+After calling pop() stack is having  0  elements which are as follows -  []
+Enter your option 1/2/3/4/5/6 - 4
+is_empty() function returned -  True
+Enter your option 1/2/3/4/5/6 - 1
+Enter an integer value for the stack - 45454
+Stack is having  1  elements which are as follows -  [45454]
+Enter your option 1/2/3/4/5/6 - 1
+Enter an integer value for the stack - 78
+Stack is having  2  elements which are as follows -  [45454, 78]
+Enter your option 1/2/3/4/5/6 - 2
+Before calling pop stack is having  2  elements which are as follows -  [45454, 78]
+After calling pop() stack is having  1  elements which are as follows -  [45454]
+Enter your option 1/2/3/4/5/6 - 4
+is_empty() function returned -  False
+Enter your option 1/2/3/4/5/6 - 2
+Before calling pop stack is having  1  elements which are as follows -  [45454]
+After calling pop() stack is having  0  elements which are as follows -  []
+Enter your option 1/2/3/4/5/6 - 4
+is_empty() function returned -  True
+Enter your option 1/2/3/4/5/6 - 2
+Before calling pop stack is having  0  elements which are as follows -  []
+Stack is EMPTY can't delete anything!
+Enter your option 1/2/3/4/5/6 - 1
+Enter an integer value for the stack - 224
+Stack is having  1  elements which are as follows -  [224]
+Enter your option 1/2/3/4/5/6 -6
+
+
+
+'''
+
