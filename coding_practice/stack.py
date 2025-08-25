@@ -28,16 +28,23 @@ def pop():
     global stackIndex
     if not is_empty():
         # stack.pop()           # pop() is predefined function which deletes last element of the list  ---- or ---
+        deletingVal=stack[stackIndex]
         del stack[stackIndex]   # del deletes the value at stack[stackIndex] 
         stackIndex -=1
         print("After calling pop() stack is having ",size()," elements which are as follows - ",stack)
+        return deletingVal
     else:
         print("Stack is EMPTY can't delete anything!")
 
 # peek() returns last/newest value in the stack
 def peek():
     global stackIndex
-    return stack[stackIndex]
+    if not is_empty():
+        return stack[stackIndex]
+    else:
+        print("Stack is EMPTY can't delete anything!")
+        return False
+
 
 # is_empty() returns true if list is empty
 def is_empty():
@@ -84,10 +91,14 @@ if stackIndex>-1:
         
         if enteredOption==2:
             print("Before calling pop stack is having ",size()," elements which are as follows - ",stack)
-            pop()
+            print("Deleted value is - ", pop())
 
         if enteredOption==3:
-            print("Newest element in the stack is - ", peek())
+            peekedVal=peek()
+            if peekedVal==False:
+                print("Stack is empty, can't show any value")
+            else:
+                print("Newest element in the stack is - ",peekedVal)
 
         if enteredOption==4:
             print("is_empty() function returned - ",is_empty())
