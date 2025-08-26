@@ -10,6 +10,7 @@ This file demonstrates Secure Software Development requirements:
 
 import os
 import re
+import sqlite3 
 import json
 import logging
 from datetime import timedelta
@@ -17,10 +18,8 @@ from pathlib import Path
 from functools import wraps
 
 from dotenv import load_dotenv
-from flask import (
-    Flask, render_template, request, redirect, url_for,
-    session, flash, send_from_directory
-)
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename as werkzeug_secure
 
@@ -60,10 +59,10 @@ def create_app():
     # Seed admin user if none exists
     with engine.begin() as conn:
         if conn.exec_driver_sql("SELECT COUNT(*) FROM users").scalar() == 0:
-            pw = generate_password_hash("admin123")  # hashed
+            pw = generate_password_hash("Sksf1234")  # hashed
             conn.exec_driver_sql(
                 "INSERT INTO users (email, password_hash, is_verified) VALUES (:e, :p, :v)",
-                {"e": "admin@example.com", "p": pw, "v": True},
+                {"e": "kush786srj@gmail.com", "p": pw, "v": True},
             )
             logging.info("Default admin user created")
 
@@ -184,6 +183,57 @@ def create_app():
             last_upload=last_upload,
             scan_result=scan_result,
         )
+
+    # ------------------------
+    # Register Route
+    # ------------------------
+    @app.route("/register", methods=["GET", "POST"])
+    def register():
+        if request.method == "POST":
+            email = request.form.get("email", "").strip()
+            password = request.form.get("password", "")
+            confirm_password = request.form.get("confirm_password", "")
+
+            # Validate email
+            email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+            if not re.match(email_pattern, email):
+                error = "Invalid email format!"
+                return render_template("register.html", error=error)
+
+            # Validate password length and complexity
+            if len(password) < 8 or not re.search(r'[A-Za-z]', password) or not re.search(r'\d', password):
+                error = "Password must be at least 8 characters long and contain at least one letter and one number."
+                return render_template("register.html", error=error)
+
+            # Confirm password check
+            if password != confirm_password:
+                error = "Passwords do not match!"
+                return render_template("register.html", error=error)
+        
+            # Hash and save user
+            hashed_pw = generate_password_hash(password)
+
+            conn = sqlite3.connect("instance/app.db")
+            cur = conn.cursor()
+            try:
+                cur.execute("INSERT INTO users (email, password_hash, is_verified) VALUES (?, ?, ?)",
+                        (email, hashed_pw, 1))
+                conn.commit()
+            except sqlite3.IntegrityError:
+                error = "User with this email already exists!"
+                return render_template("register.html", error=error)
+            finally:
+                conn.close()
+
+            flash("User registered successfully! Please login.")
+            return redirect(url_for("login"))
+        
+        # GET request → just show form
+        return render_template("register.html")
+       
+
+
+
 
     @app.route("/scan/<int:upload_id>", methods=["POST"])
     @login_required

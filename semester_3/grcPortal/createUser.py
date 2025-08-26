@@ -7,12 +7,12 @@ db_path = os.path.join(BASE_DIR, "instance", "app.db")
 conn = sqlite3.connect(db_path)
 cur = conn.cursor()
 
-hashed_pw = generate_password_hash("attack123")
-#print(hashed_pw)
+hashed_pw = generate_password_hash("Sksf@1234")
+print(hashed_pw)
 cur.execute("""
     INSERT INTO users (email, password_hash, is_verified)
     VALUES (?, ?, ?)
-""", ("hallabol@attack.com", hashed_pw, False))
+""", ("kush786srj@gmail.com", hashed_pw, 1))
 
 conn.commit()
 conn.close()
