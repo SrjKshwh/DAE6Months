@@ -45,8 +45,17 @@ logging.basicConfig(
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
-    app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET", os.urandom(24))
-    app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=8)
+ 
+ 
+    # Secure config
+    app.config.update(
+        SECRET_KEY=os.getenv("FLASK_SECRET", os.urandom(24)),
+        PERMANENT_SESSION_LIFETIME=timedelta(hours=8),
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SECURE=not app.debug,  # true in prod
+        SESSION_COOKIE_SAMESITE="Lax",
+        MAX_CONTENT_LENGTH=10*1024*1024  # 10 MB upload cap
+    )
 
     # Ensure instance and uploads folders exist
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
@@ -69,6 +78,7 @@ def create_app():
     # teardown hook for DB session
     @app.teardown_appcontext
     def teardown_db(exception=None):
+        
         close_session()
 
     # ---------------------------
@@ -105,8 +115,8 @@ def create_app():
                 return render_template("login.html")
 
             password = request.form.get("password", "")
-            if not password or len(password) < 6:
-                flash("Password must be at least 6 characters.", "danger")
+            if not password or len(password) < 8:
+                flash("Password must be at least 8 characters.", "danger")
                 return render_template("login.html")
 
             db = get_session()
@@ -273,6 +283,19 @@ def create_app():
         filename = secure_filename(filename)
         return send_from_directory("uploads", filename, as_attachment=False)
 
+
+    # error handlers
+    @app.errorhandler(404)
+    def not_found(e):
+        return render_template("errors/404.html"), 404
+
+
+    @app.errorhandler(500)
+    def server_error(e):
+        logging.error(f"500 Error: {e}")
+        return render_template("errors/500.html"), 500
+
+
     return app
 
 
@@ -280,6 +303,7 @@ def create_app():
 # Utils
 # ------------------------------------------------------------------------------
 ALLOWED_EXTENSIONS = {".pdf", ".txt"}
+
 
 
 def allowed_file(filename: str) -> bool:
