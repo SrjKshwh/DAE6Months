@@ -212,7 +212,7 @@ def create_app():
 
             # Validate password length and complexity
             if len(password) < 8 or not re.search(r'[A-Za-z]', password) or not re.search(r'\d', password):
-                error = "Password must be at least 8 characters long and contain at least one alphabet and one number."
+                error = "Password must be at least 8 characters long and contain at least one letter and one number."
                 return render_template("register.html", error=error)
 
             # Confirm password check
