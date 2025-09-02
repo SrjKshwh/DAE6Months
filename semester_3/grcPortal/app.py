@@ -24,7 +24,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename as werkzeug_secure
 
 from db import get_engine, get_session, close_session
-from models import Base, User, Upload, ScanResult
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency
 from llm_scan import scan_file_for_grc
 
 # ------------------------------------------------------------------------------
@@ -283,6 +283,86 @@ def create_app():
         filename = secure_filename(filename)
         return send_from_directory("uploads", filename, as_attachment=False)
 
+  
+    # --- Risk Routes ---
+    @app.route("/risks")
+    @login_required
+    def risks():
+        session = get_session()
+        risks = session.query(Risk).all()
+        close_session(session)
+        return render_template("risks.html", risks=risks)
+
+    @app.route("/add_risk", methods=["POST"])
+    def add_risk():
+        session = get_session()
+        data = request.form
+        risk = Risk(
+            asset=data["asset"],
+            threat=data["threat"],
+            vulnerability=data["vulnerability"],
+            control=data["control"],
+            compliance_standard=data.get("compliance_standard", "NIST"),
+            likelihood=int(data.get("likelihood", 1)),
+            impact=int(data.get("impact", 1))
+        )
+        risk.calculate_score()
+        session.add(risk)
+        session.commit()
+        close_session(session)
+        flash("Risk added successfully!", "success")
+        return redirect(url_for("risks"))
+
+
+    # --- Compliance Routes ---
+    @app.route("/compliance")
+    def compliance():
+        session = get_session()
+        records = session.query(Compliance).all()
+        close_session(session)
+        return render_template("compliance.html", compliance=records)
+
+    @app.route("/add_compliance", methods=["POST"])
+    def add_compliance():
+        session = get_session()
+        data = request.form
+        compliance = Compliance(
+            framework=data["framework"],
+            control=data["control"],
+            score=float(data.get("score", 0.0)),
+            risk_id=int(data.get("risk_id", None))
+        )
+        session.add(compliance)
+        session.commit()
+        close_session(session)
+        flash("Compliance record added!", "success")
+        return redirect(url_for("compliance"))
+
+
+    # --- Dependency Routes ---
+    @app.route("/dependencies")
+    def dependencies():
+        session = get_session()
+        deps = session.query(Dependency).all()
+        close_session(session)
+        return render_template("dependencies.html", dependencies=deps)
+
+    @app.route("/add_dependency", methods=["POST"])
+    def add_dependency():
+        session = get_session()
+        data = request.form
+        dep = Dependency(
+            name=data["name"],
+            version=data["version"],
+            risk=data.get("risk"),
+            mitigation=data.get("mitigation", "Upgrade recommended")
+        )
+        session.add(dep)
+        session.commit()
+        close_session(session)
+        flash("Dependency added!", "success")
+        return redirect(url_for("dependencies"))
+    
 
     # error handlers
     @app.errorhandler(404)
