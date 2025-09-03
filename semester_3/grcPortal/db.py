@@ -16,7 +16,10 @@ def get_session():
         g.db_session = SessionLocal()
     return g.db_session
 
-def close_session(e=None):
-    db_session = g.pop("db_session", None)
-    if db_session is not None:
-        db_session.close()
+def close_session(session=None):
+    if session:
+        session.close()
+    else:
+        db_session = g.pop("db_session", None)
+        if db_session is not None:
+            db_session.close()

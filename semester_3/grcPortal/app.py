@@ -23,6 +23,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename as werkzeug_secure
 
+load_dotenv()
+
 from db import get_engine, get_session, close_session
 from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency
 from llm_scan import scan_file_for_grc
@@ -33,8 +35,6 @@ from llm_scan import scan_file_for_grc
 # - Use a .gitignore to avoid committing secrets/uploads/__pycache__
 # - Run Bandit/Safety for static analysis
 # ------------------------------------------------------------------------------
-
-load_dotenv()
 
 # Configure logging (no sensitive info)
 logging.basicConfig(
@@ -60,6 +60,7 @@ def create_app():
     # Ensure instance and uploads folders exist
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
     Path("uploads").mkdir(exist_ok=True)
+    Path("reports").mkdir(exist_ok=True)
 
     # DB init
     engine = get_engine()
@@ -78,7 +79,6 @@ def create_app():
     # teardown hook for DB session
     @app.teardown_appcontext
     def teardown_db(exception=None):
-        
         close_session()
 
     # ---------------------------
@@ -242,9 +242,9 @@ def create_app():
         return render_template("register.html")
        
 
-
-
-
+    # ------------------------
+    # Secure Scan Route
+    # ------------------------
     @app.route("/scan/<int:upload_id>", methods=["POST"])
     @login_required
     def scan(upload_id):

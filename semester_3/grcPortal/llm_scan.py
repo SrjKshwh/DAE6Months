@@ -8,7 +8,7 @@ import requests
 from PyPDF2 import PdfReader
 
 MODEL_NAME = os.getenv("MODEL_NAME", "openai/gpt-oss-20b:free")
-OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY", "")
+OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY", OPENROUTER_API_KEY)
 
 def _extract_text(file_path: str, max_chars: int = 20000) -> str:
     """Extracts text from .txt or .pdf (basic). Truncates to keep prompt small."""
