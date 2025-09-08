@@ -1,0 +1,89 @@
+<!-- templates/policies.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GRC Portal - Security Policies</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <h1>Security Policies and Governance</h1>
+      <a href="{{ url_for('home') }}">Back to Home</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash">
+          {% for cat, msg in messages %}
+            <div class="flash-{{ cat }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="card">
+      <h2>Access Control Policy</h2>
+      <p><strong>Purpose:</strong> To ensure that access to the GRC Portal is granted only to authorized users and that all access is appropriately controlled and monitored.</p>
+      <p><strong>Requirements:</strong></p>
+      <ul>
+        <li>Users must authenticate using valid credentials before accessing any system resources</li>
+        <li>Role-based access controls limit user actions based on assigned permissions</li>
+        <li>Session timeouts prevent unauthorized access from abandoned sessions</li>
+        <li>IP-based restrictions limit access to approved network locations</li>
+      </ul>
+      <p><strong>Implementation:</strong> Enforced through login_required decorator, session management, and IP whitelisting.</p>
+    </div>
+
+    <div class="card">
+      <h2>Data Protection Policy</h2>
+      <p><strong>Purpose:</strong> To protect sensitive data from unauthorized access, disclosure, alteration, or destruction.</p>
+      <p><strong>Requirements:</strong></p>
+      <ul>
+        <li>All uploaded files are scanned for security risks before processing</li>
+        <li>Sensitive data is encrypted during transmission and storage</li>
+        <li>Files are automatically deleted after 2 minutes to minimize exposure</li>
+        <li>User data is isolated and only accessible to the owning user</li>
+      </ul>
+      <p><strong>Implementation:</strong> File scanning, secure filename handling, automatic cleanup, and user-specific data filtering.</p>
+    </div>
+
+    <div class="card">
+      <h2>System Use Policy</h2>
+      <p><strong>Purpose:</strong> To define acceptable use of the GRC Portal and establish user responsibilities for maintaining security.</p>
+      <p><strong>Requirements:</strong></p>
+      <ul>
+        <li>Users are responsible for maintaining the confidentiality of their credentials</li>
+        <li>Unauthorized access attempts are logged and may result in account suspension</li>
+        <li>Users must report security incidents immediately</li>
+        <li>System resources must not be used for unauthorized purposes</li>
+      </ul>
+      <p><strong>Implementation:</strong> Activity logging, incident reporting system, and access monitoring.</p>
+    </div>
+
+    <div class="card">
+      <h2>Governance Structure</h2>
+      <p><strong>Roles and Responsibilities:</strong></p>
+      <ul>
+        <li><strong>Administrator:</strong> Manages user accounts, system configuration, and enforces security policies</li>
+        <li><strong>Auditor:</strong> Reviews system logs, monitors compliance, and validates security controls</li>
+        <li><strong>User:</strong> Follows security policies, reports incidents, and uses system resources responsibly</li>
+      </ul>
+      <p><strong>Policy Enforcement:</strong> Automated through code-level controls and manual oversight by administrators.</p>
+    </div>
+
+    <div class="card">
+      <h2>Compliance Requirements</h2>
+      <p>This policy framework aligns with NIST SP 800-53 security controls:</p>
+      <ul>
+        <li><strong>AC-2 (Account Management):</strong> User authentication and authorization</li>
+        <li><strong>AU-2 (Audit Events):</strong> Comprehensive logging of security-relevant events</li>
+        <li><strong>SC-8 (Transmission Confidentiality):</strong> Secure data transmission</li>
+        <li><strong>SI-2 (Flaw Remediation):</strong> Vulnerability scanning and patching</li>
+      </ul>
+      <p><strong>Implementation Evidence:</strong> Policies are communicated through this document and enforced through automated system controls with audit logging.</p>
+    </div>
+  </div>
+</body>
+</html>

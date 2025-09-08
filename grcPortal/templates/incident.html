@@ -1,0 +1,74 @@
+<!-- templates/incident.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GRC Portal – Incident Details</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <h1>Incident: {{ incident.title }}</h1>
+      <a href="{{ url_for('incidents') }}">Back to Incidents</a> | <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash">
+          {% for cat, msg in messages %}
+            <div class="flash-{{ cat }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="card">
+      <h2>Incident Details</h2>
+      <p><strong>Description:</strong> {{ incident.description }}</p>
+      <p><strong>Severity:</strong> {{ incident.severity.value }}</p>
+      <p><strong>Status:</strong> {{ incident.status.value }}</p>
+      <p><strong>Reported At:</strong> {{ incident.reported_at }}</p>
+    </div>
+
+    <div class="card">
+      <h2>Incident Response Plan (IRP) Steps</h2>
+      <form method="POST">
+        <h3>1. Preparation</h3>
+        <p><strong>Description:</strong> Develop and maintain incident response capabilities and plans. Ensure the organization is prepared to respond to incidents.</p>
+        <p><strong>Example in grcPortal:</strong> Regularly backup the database and application files. Train staff on security protocols and ensure incident response team is identified.</p>
+        <textarea name="preparation_notes" placeholder="Notes for preparation...">{{ incident.preparation_notes or '' }}</textarea><br><br>
+
+        <h3>2. Identification</h3>
+        <p><strong>Description:</strong> Detect and identify potential security incidents. Monitor systems for signs of compromise.</p>
+        <p><strong>Example in grcPortal:</strong> Monitor login attempts and file uploads for anomalies. Use logging to detect unauthorized access to sensitive data.</p>
+        <textarea name="identification_notes" placeholder="Notes for identification...">{{ incident.identification_notes or '' }}</textarea><br><br>
+
+        <h3>3. Containment</h3>
+        <p><strong>Description:</strong> Contain the incident to prevent further damage. Isolate affected systems and limit the spread.</p>
+        <p><strong>Example in grcPortal:</strong> Disable compromised user accounts. Block IP addresses showing malicious activity. Isolate the affected server from the network.</p>
+        <textarea name="containment_notes" placeholder="Notes for containment...">{{ incident.containment_notes or '' }}</textarea><br><br>
+
+        <h3>4. Eradication</h3>
+        <p><strong>Description:</strong> Remove the root cause of the incident. Eliminate malware, close vulnerabilities, and recover affected systems.</p>
+        <p><strong>Example in grcPortal:</strong> Remove any injected code from the application. Patch known vulnerabilities in dependencies. Clean infected files and restore from backups if necessary.</p>
+        <textarea name="eradication_notes" placeholder="Notes for eradication...">{{ incident.eradication_notes or '' }}</textarea><br><br>
+
+        <h3>5. Recovery</h3>
+        <p><strong>Description:</strong> Restore systems to normal operation. Monitor for recurrence and document lessons learned.</p>
+        <p><strong>Example in grcPortal:</strong> Restore the application from clean backups. Re-enable user accounts after verification. Monitor logs for any signs of re-infection and update incident response plan based on findings.</p>
+        <textarea name="recovery_notes" placeholder="Notes for recovery...">{{ incident.recovery_notes or '' }}</textarea><br><br>
+
+        <label for="status">Update Status:</label>
+        <select name="status">
+          {% for stat in statuses %}
+            <option value="{{ stat.value }}" {% if stat.value == incident.status.value %}selected{% endif %}>{{ stat.value }}</option>
+          {% endfor %}
+        </select><br><br>
+
+        <button type="submit">Update Incident</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

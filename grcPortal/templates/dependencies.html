@@ -23,13 +23,15 @@
         <button type="submit">Add Dependency</button>
     </form>
 
-    <h3>Dependencies List</h3>
+    <h3>Dependencies List with Risk Assessment</h3>
     <ul>
         {% for dep in dependencies %}
-            <li>
-                {{ dep.name }} ({{ dep.version }})  
-                {% if dep.risk %}⚠ Risk: {{ dep.risk }}{% endif %}  
-                {% if dep.mitigation %} → Mitigation: {{ dep.mitigation }}{% endif %}
+            <li style="margin-bottom: 10px;">
+                <strong>{{ dep.name }} ({{ dep.version }})</strong> - Risk Level: {{ dep.risk_level.value }}
+                {% if dep.vulnerabilities %}<br>Vulnerabilities: {{ dep.vulnerabilities }}{% endif %}
+                {% if dep.risk %}<br>Risk: {{ dep.risk }}{% endif %}
+                {% if dep.mitigation %}<br>Mitigation: {{ dep.mitigation }}{% endif %}
+                {% if dep.mitigation_suggestions %}<br>Suggestions: {{ dep.mitigation_suggestions }}{% endif %}
             </li>
         {% endfor %}
     </ul>

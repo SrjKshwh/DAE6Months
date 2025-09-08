@@ -1,0 +1,173 @@
+<!-- templates/monitoring.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GRC Portal - SOC Monitoring</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <h1>SOC Monitoring Dashboard</h1>
+      <a href="{{ url_for('home') }}">Back to Home</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash">
+          {% for cat, msg in messages %}
+            <div class="flash-{{ cat }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="card">
+      <h2>System Performance Metrics</h2>
+      <div style="display: flex; justify-content: space-around; margin: 20px 0;">
+        <div style="text-align: center;">
+          <h3>CPU Usage</h3>
+          <div style="font-size: 2em; color: {{ 'red' if cpu_percent > 80 else 'green' }};">{{ cpu_percent }}%</div>
+        </div>
+        <div style="text-align: center;">
+          <h3>Memory Usage</h3>
+          <div style="font-size: 2em; color: {{ 'red' if memory.percent > 80 else 'green' }};">{{ memory.percent }}%</div>
+          <small>{{ "%.1f"|format(memory.used / 1024 / 1024 / 1024) }} GB / {{ "%.1f"|format(memory.total / 1024 / 1024 / 1024) }} GB</small>
+        </div>
+        <div style="text-align: center;">
+          <h3>Disk Usage</h3>
+          <div style="font-size: 2em; color: {{ 'red' if disk.percent > 80 else 'green' }};">{{ disk.percent }}%</div>
+          <small>{{ "%.1f"|format(disk.used / 1024 / 1024 / 1024) }} GB / {{ "%.1f"|format(disk.total / 1024 / 1024 / 1024) }} GB</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Network Activity</h2>
+      <table border="1" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Bytes Sent</th>
+            <th>Bytes Received</th>
+            <th>Packets Sent</th>
+            <th>Packets Received</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Total</td>
+            <td>{{ "%.2f"|format(network.bytes_sent / 1024 / 1024) }} MB</td>
+            <td>{{ "%.2f"|format(network.bytes_recv / 1024 / 1024) }} MB</td>
+            <td>{{ network.packets_sent }}</td>
+            <td>{{ network.packets_recv }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Recent Security Events</h2>
+      <div style="max-height: 200px; overflow-y: auto;">
+        {% for event in security_events %}
+        <div style="padding: 5px; border-bottom: 1px solid #ddd;">
+          <small>{{ event }}</small>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Active Security Incidents</h2>
+      {% if active_incidents %}
+        <table border="1" style="width: 100%;">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Severity</th>
+              <th>Status</th>
+              <th>Reported</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for incident in active_incidents %}
+            <tr>
+              <td><a href="{{ url_for('view_incident', incident_id=incident.id) }}">{{ incident.title }}</a></td>
+              <td style="color: {{ 'red' if incident.severity.value == 'Critical' else 'orange' if incident.severity.value == 'High' else 'yellow' if incident.severity.value == 'Medium' else 'green' }};">{{ incident.severity.value }}</td>
+              <td>{{ incident.status.value }}</td>
+              <td>{{ incident.reported_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No active incidents.</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h2>SOC Roles and Responsibilities</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <div style="flex: 1; min-width: 200px;">
+          <h3>SOC Analyst</h3>
+          <ul>
+            <li>Monitor security alerts and events</li>
+            <li>Investigate potential security incidents</li>
+            <li>Triage and categorize security events</li>
+            <li>Document findings and escalate as needed</li>
+          </ul>
+        </div>
+        <div style="flex: 1; min-width: 200px;">
+          <h3>SOC Engineer</h3>
+          <ul>
+            <li>Implement security controls and tools</li>
+            <li>Configure monitoring and alerting systems</li>
+            <li>Respond to security incidents</li>
+            <li>Perform vulnerability assessments</li>
+          </ul>
+        </div>
+        <div style="flex: 1; min-width: 200px;">
+          <h3>SOC Manager</h3>
+          <ul>
+            <li>Oversee SOC operations and strategy</li>
+            <li>Manage SOC team and resources</li>
+            <li>Review incident response effectiveness</li>
+            <li>Ensure compliance with security policies</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Threat Detection Analysis</h2>
+      <p><strong>Current Threat Landscape:</strong></p>
+      <ul>
+        <li><strong>SQL Injection Attempts:</strong> Detected through input validation and logging</li>
+        <li><strong>Unauthorized Access:</strong> Monitored via authentication logs and IP restrictions</li>
+        <li><strong>Malware Uploads:</strong> Prevented by file type restrictions and content scanning</li>
+        <li><strong>Session Hijacking:</strong> Mitigated by session timeouts and IP validation</li>
+      </ul>
+      <p><strong>Detection Methods:</strong> Pattern matching in uploaded content, authentication monitoring, and system performance analysis.</p>
+    </div>
+
+    <div class="card">
+      <h2>Alert Management</h2>
+      <p><strong>Active Alerts:</strong></p>
+      <ul>
+        <li>High CPU usage (>80%): System performance monitoring</li>
+        <li>Multiple failed login attempts: Authentication security</li>
+        <li>Unusual network traffic: Network activity monitoring</li>
+        <li>Security policy violations: Compliance monitoring</li>
+      </ul>
+      <p><strong>Resolution Process:</strong></p>
+      <ol>
+        <li>Alert triage and severity assessment</li>
+        <li>Investigation of root cause</li>
+        <li>Implementation of corrective actions</li>
+        <li>Documentation of incident and resolution</li>
+      </ol>
+    </div>
+  </div>
+</body>
+</html>

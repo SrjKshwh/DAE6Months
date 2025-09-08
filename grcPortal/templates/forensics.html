@@ -1,0 +1,101 @@
+<!-- templates/forensics.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GRC Portal – Digital Forensics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <h1>Digital Forensics Tool</h1>
+      <a href="{{ url_for('home') }}">Back to Home</a> | <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash">
+          {% for cat, msg in messages %}
+            <div class="flash-{{ cat }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="card">
+      <h2>Collect Forensics Data</h2>
+      <p>This tool collects system logs, user activity, and incident-related evidence for digital forensics analysis.</p>
+      <p>Evidence forms included:</p>
+      <ul>
+        <li>Logs: System and user activity logs</li>
+        <li>Screenshots: Captured incident screenshots</li>
+      </ul>
+      <form method="POST">
+        <input type="hidden" name="generate_report" value="1">
+        <button type="submit">Generate and Download Forensics Report</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Collect Evidence</h2>
+      <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="collect_evidence" value="1">
+        <label for="evidence_type">Evidence Type:</label>
+        <select name="evidence_type" id="evidence_type" required>
+          {% for et in evidence_types %}
+            <option value="{{ et.value }}">{{ et.value.title() }}</option>
+          {% endfor %}
+        </select><br><br>
+
+        <label for="description">Description:</label>
+        <textarea name="description" id="description" required></textarea><br><br>
+
+        <label for="evidence_file">Upload File (optional):</label>
+        <input type="file" name="evidence_file" id="evidence_file"><br><br>
+
+        <label for="storage_method">Storage Method:</label>
+        <input type="text" name="storage_method" id="storage_method" value="Secure server storage" required><br><br>
+
+        <label for="incident_id">Related Incident (optional):</label>
+        <select name="incident_id" id="incident_id">
+          <option value="">None</option>
+          {% for inc in incidents %}
+            <option value="{{ inc.id }}">{{ inc.title }}</option>
+          {% endfor %}
+        </select><br><br>
+
+        <button type="submit">Collect Evidence</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Collected Evidence</h2>
+      {% if evidence %}
+        <ul>
+          {% for ev in evidence %}
+            <li>
+              <strong>Type:</strong> {{ ev.type.value.title() }}<br>
+              <strong>Description:</strong> {{ ev.description }}<br>
+              <strong>Collected By:</strong> {{ ev.collector.email }}<br>
+              <strong>Collected At:</strong> {{ ev.collected_at }}<br>
+              <strong>Storage Method:</strong> {{ ev.storage_method }}<br>
+              {% if ev.hash_value %}
+                <strong>Integrity Hash:</strong> {{ ev.hash_value }}<br>
+              {% endif %}
+              {% if ev.file_path %}
+                <strong>File:</strong> <a href="{{ url_for('evidence_file', filename=ev.file_path.split('/')[-1]) }}">Download</a><br>
+              {% endif %}
+              {% if ev.incident %}
+                <strong>Related Incident:</strong> {{ ev.incident.title }}<br>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No evidence collected yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

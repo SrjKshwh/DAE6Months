@@ -1,0 +1,120 @@
+<!-- templates/kb.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GRC Portal - Knowledge Base</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <h1>Security Knowledge Base</h1>
+      <a href="{{ url_for('home') }}">Back to Home</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash">
+          {% for cat, msg in messages %}
+            <div class="flash-{{ cat }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="card">
+      <h2>Access Control</h2>
+      <ul>
+        <li><a href="/docs/zero_trust_guide.md">Zero Trust Architecture Implementation Guide</a>
+          <p>Comprehensive guide to implementing never trust, always verify principles</p></li>
+        <li><a href="/docs/rbac_guide.md">Role-Based Access Control Best Practices</a>
+          <p>Guidelines for implementing effective RBAC in enterprise environments</p></li>
+        <li><a href="/docs/session_management.md">Session Management Security</a>
+          <p>Best practices for secure session handling and timeout policies</p></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Incident Response</h2>
+      <ul>
+        <li><a href="/docs/playbooks.md">Security Incident Response Playbooks</a>
+          <p>Standardized procedures for responding to common security incidents</p></li>
+        <li><a href="/docs/incident_reporting_guide.md">Incident Reporting Procedures</a>
+          <p>Step-by-step guide for reporting and documenting security incidents</p></li>
+        <li><a href="/docs/forensics_guide.md">Digital Forensics Fundamentals</a>
+          <p>Introduction to digital evidence collection and preservation</p></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Compliance & Governance</h2>
+      <ul>
+        <li><a href="/policies">Security Policies and Standards</a>
+          <p>Complete security policy framework and governance structure</p></li>
+        <li><a href="/docs/nist_compliance.md">NIST SP 800-53 Compliance Guide</a>
+          <p>Detailed mapping of system controls to NIST security requirements</p></li>
+        <li><a href="/docs/iso27001_guide.md">ISO 27001 Implementation Roadmap</a>
+          <p>Step-by-step guide to achieving ISO 27001 certification</p></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Threat Detection & Monitoring</h2>
+      <ul>
+        <li><a href="/docs/threat_hunting.md">Threat Hunting Methodologies</a>
+          <p>Advanced techniques for proactive threat detection</p></li>
+        <li><a href="/docs/soc_operations.md">SOC Operations Guide</a>
+          <p>Security Operations Center procedures and best practices</p></li>
+        <li><a href="/docs/monitoring_setup.md">Security Monitoring Configuration</a>
+          <p>Setting up comprehensive security monitoring and alerting</p></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Risk Management</h2>
+      <ul>
+        <li><a href="/docs/risk_assessment.md">Risk Assessment Framework</a>
+          <p>Structured approach to identifying and evaluating security risks</p></li>
+        <li><a href="/docs/supply_chain_security.md">Supply Chain Risk Management</a>
+          <p>Managing security risks in third-party dependencies and vendors</p></li>
+        <li><a href="/docs/business_impact_analysis.md">Business Impact Analysis</a>
+          <p>Assessing the potential impact of security incidents on business operations</p></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Technical Security</h2>
+      <ul>
+        <li><a href="/docs/file_upload_procedure.md">Secure File Upload Procedures</a>
+          <p>Security controls for file upload and processing operations</p></li>
+        <li><a href="/docs/encryption_guide.md">Data Encryption Best Practices</a>
+          <p>Implementing encryption for data at rest and in transit</p></li>
+        <li><a href="/docs/vulnerability_management.md">Vulnerability Management Process</a>
+          <p>Systematic approach to identifying and remediating vulnerabilities</p></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Search Knowledge Base</h2>
+      <form method="get" action="/kb/search">
+        <input type="text" name="q" placeholder="Search knowledge base..." required>
+        <button type="submit">Search</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Contributing to the Knowledge Base</h2>
+      <p>The security knowledge base is continuously updated based on:
+      <ul>
+        <li>New threat intelligence and security research</li>
+        <li>Lessons learned from security incidents</li>
+        <li>Updates to compliance requirements and standards</li>
+        <li>Feedback from security team members</li>
+      </ul>
+      </p>
+      <p><strong>To suggest additions or updates:</strong> Contact the security team at security@grcportal.com</p>
+    </div>
+  </div>
+</body>
+</html>

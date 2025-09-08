@@ -1,5 +1,6 @@
 # llm_scan.py
 import json
+import logging
 import os
 import re
 from pathlib import Path
@@ -35,7 +36,7 @@ def _call_model(prompt: str) -> str:
     """
     Calls a provider that hosts `openai/gpt-oss-20b:free`.
     Example below shows OpenRouter's Chat Completions style.
-    If you use a different provider, adjust URL/headers/fields accordingly.
+    If provider is changed then adjust URL/headers/fields accordingly.
     """
     if not OPENROUTER_KEY:
         # Safe fallback for local testing without a key
@@ -66,7 +67,7 @@ def _call_model(prompt: str) -> str:
 
 def scan_file_for_grc(file_path: str) -> dict:
     """
-    Returns a dict with keys: summary (str), compliance_hits (list), risks (list), other_notes (str).
+    Returns a dictionary with keys: summary (str), compliance_hits (list), risks (list), other_notes (str).
     """
     text = _extract_text(file_path)
 
@@ -111,53 +112,84 @@ def create_risks_from_scan(scan_result_id: int, risks_data: list, compliance_dat
     Create Risk and Compliance entries from scan results
     """
     if not risks_data:
+        logging.info("No risks data provided, skipping creation")
         return
 
     db = get_session()
     try:
+        created_risk_count = 0
         for risk_item in risks_data:
-            # Map severity string to enum    (Low/Medium/High/Critical)
-            severity_str = risk_item.get("severity", "Medium").title()
             try:
-                severity = RiskSeverity[severity_str.upper()]
-            except KeyError:
-                severity = RiskSeverity.MEDIUM
+                # Map severity string to enum    (Low/Medium/High/Critical)
+                risk_desc = risk_item.get("risk")
+                severity_str = risk_item.get("severity", "Medium")
 
-            # Create risk entry
-            risk = Risk(
-                asset="Uploaded Policy Document",
-                threat=risk_item.get("risk", "Unspecified threat"),
-                vulnerability="Policy gap or missing control",
-                control="Implement recommended security control",
-                compliance_standard=ComplianceFramework.NIST_SP_800_53,  # Default
-                status=RiskStatus.OPEN,
-                category=RiskCategory.CONFIGURATION,  # Default category
-                likelihood=3,  # Default medium likelihood
-                impact=3,     # Default medium impact
-                severity=severity,
-                scan_result_id=scan_result_id
-            )
-            risk.calculate_score()
-            db.add(risk)
-            db.commit()  # Commit to get risk.id for compliance
+                if not risk_desc:
+                    logging.warning(f"Skipping risk item missing 'risk' field: {risk_item}")
+                    continue
 
-            # Create compliance entries for failed controls
-            for compliance_item in compliance_data:
-                compliance = Compliance(
-                    framework=ComplianceFramework.NIST_SP_800_53,
-                    control=compliance_item.get("control", "Unknown Control"),
-                    control_family=compliance_item.get("control", "").split("-")[0] if "-" in compliance_item.get("control", "") else "XX",
-                    score=0.0,  # Failed control
-                    status="non-compliant",
-                    risk_id=risk.id
+                severity_str = severity_str.title()
+                try:
+                    severity = RiskSeverity[severity_str.upper()]
+                except KeyError:
+                    logging.warning(f"Invalid severity '{severity_str}', defaulting to MEDIUM")
+                    severity = RiskSeverity.MEDIUM
+
+                # Create risk entry
+                risk = Risk(
+                    asset="Uploaded Policy Document",
+                    threat=risk_item.get("risk", "Unspecified threat"),
+                    vulnerability="Policy gap or missing control",
+                    control="Implement recommended security control",
+                    compliance_standard=ComplianceFramework.NIST_SP_800_53,  # Default
+                    status=RiskStatus.OPEN,
+                    category=RiskCategory.CONFIGURATION,  # Default category
+                    likelihood=3,  # Default medium likelihood
+                    impact=3,     # Default medium impact
+                    severity=severity,
+                    scan_result_id=scan_result_id
                 )
-                db.add(compliance)
+                risk.calculate_score()
+                db.add(risk)
+                db.commit()  # Commit to get risk.id
+                created_risk_count += 1
+                logging.info(f"Created risk entry {created_risk_count}: {risk_desc}")
 
-        db.commit()
-        print(f"Created {len(risks_data)} risk entries from scan results")
+                # Create compliance entries
+                for compliance_item in compliance_data:
+                    try:
+                        control = compliance_item.get("control")
+                        if not control:
+                            continue
+                        compliance = Compliance(
+                            framework=compliance_item.get("framework", "Unknown"),   # Use scanned framework
+                            control=control,
+                            control_family=control.split("-")[0] if "-" in control else "XX",
+                            score=0.0,
+                            status="non-compliant",
+                            risk_id=risk.id
+                        )
+                        db.add(compliance)
+                    except Exception as e:
+                        logging.error(f"Error creating compliance for risk {risk_desc}: {e}")
+                        continue  # Skip this compliance item
+
+            except Exception as e:
+                logging.error(f"Error creating risk {risk_desc}: {e}")
+                db.rollback()  # Rollback any uncommitted changes for this iteration
+                continue  # Skip to next risk
+
+        # Final commit for all compliance records
+        try:
+            db.commit()
+            logging.info(f"Successfully created {created_risk_count} risk entries and associated compliance records")
+        except Exception as e:
+            logging.error(f"Error in final commit: {e}")
+            db.rollback()
 
     except Exception as e:
         db.rollback()
-        print(f"Error creating risks: {e}")
+        logging.error(f"Error creating risks: {e}")
+        raise  # Re-raise to ensure visibility
     finally:
         close_session(db)

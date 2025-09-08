@@ -10,7 +10,7 @@
   <div class="container">
     <div class="topbar">
       <h1>Welcome, {{ user.email }}</h1>
-      <a href="{{ url_for('logout') }}">Logout</a>
+      <a href="{{ url_for('forensics') }}">Forensics</a> | <a href="{{ url_for('logout') }}">Logout</a>
     </div>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -27,40 +27,74 @@
       <h2>Step 1: Upload & Scan</h2>
 
       <form method="post" enctype="multipart/form-data">
-        <input type="file" name="file" id="fileInput" accept=".pdf,.txt">
-        <script>
-          document.getElementById('fileInput').addEventListener('change', function(e) {
-          const file = e.target.files[0];
-          const maxSize = 10 * 1024 * 1024; // 10MB
-          if (file.size > maxSize) {
-            alert('File size must be less than 10MB');
-            e.target.value = '';
-            }
-          });
-        </script>
+        <input type="file" name="file" accept=".pdf,.txt">
         <button type="submit">Upload</button>
       </form>
 
-      {% if last_upload %}
-        <p>Latest file: <a href="{{ url_for('uploaded_file', filename=last_upload.filename) }}" target="_blank">{{ last_upload.filename }}</a> ({{ last_upload.uploaded_at }})</p>
-
-        <form method="post" action="{{ url_for('scan', upload_id=last_upload.id) }}">
-          <button type="submit" {{ 'disabled' if has_scan else '' }}>Scan</button>
-        </form>
+      {% if show_previous and last_upload %}
+        <p>Latest file: <a href="{{ url_for('uploaded_file', filename=last_upload.filename) }}" target="_blank">{{ last_upload.filename }}</a> ({{ last_upload.uploaded_at }})
+          <form method="post" action="{{ url_for('scan', upload_id=last_upload.id) }}" style="display: inline;">
+            <button type="submit" {{ 'disabled' if has_scan else '' }}>Scan</button>
+          </form>
+        </p>
       {% endif %}
     </div>
 
-    {% if scan_result %}
+    {% if show_previous and scan_result %}
       <div class="card">
         <h2>Scan Result ({{ scan_result.scanned_at }})</h2>
+
+        <a href="{{ url_for('home', clear=1) }}" style="float: right; color: blue; text-decoration: underline;">Clear previous details for new scan</a>
+        <br><br>
+
         <h3>Summary</h3>
-        <pre>{{ scan_result.summary }}</pre>
+        <p>{{ scan_result.summary }}</p>
 
         <h3>Compliance Hits</h3>
-        <pre>{{ scan_result.compliance_hits_json }}</pre>
+        {% if compliance_hits %}
+          <table border="1">
+            <thead>
+              <tr>
+                <th>Framework</th>
+                <th>Control</th>
+                <th>Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for hit in compliance_hits %}
+                <tr>
+                  <td>{{ hit.get('framework', 'N/A') }}</td>
+                  <td>{{ hit.get('control', 'N/A') }}</td>
+                  <td>{{ hit.get('note', 'N/A') }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p>No compliance hits found.</p>
+        {% endif %}
 
         <h3>Risks</h3>
-        <pre>{{ scan_result.risks_json }}</pre>
+          {% if risks %}
+            <table border="1">
+              <thead>
+                <tr>
+                  <th>Risk Description</th>
+                  <th>Severity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for risk in risks %}
+                  <tr>
+                    <td>{{ risk.get('risk', 'N/A') }}</td>
+                    <td>{{ risk.get('severity', 'N/A') }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+            <p>No risks found.</p>
+          {% endif %}
       </div>
     {% endif %}
 
