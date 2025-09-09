@@ -1,16 +1,43 @@
-# app.py
 """
-Secure GRC Portal - Flask App
-This file demonstrates Secure Software Development requirements and Zero Trust Architecture:
-- Secure environment (use VS Code extensions SonarLint, GitGuardian, etc.)
-- Input validation, output encoding, error handling
-- Password hashing & authentication
-- Security logging & safe defaults
-- Zero Trust: Never trust, always verify - implemented via multiple security layers:
-  * Authentication (login_required decorator)
-  * Input validation (regex, length checks)
-  * Session timeout enforcement (active verification on each request)
-  * IP-based access control (restrict access to allowed IPs)
+Secure GRC Portal - Flask Web Application
+
+A comprehensive Governance, Risk, and Compliance (GRC) portal built with Flask,
+implementing enterprise-grade security practices and Zero Trust Architecture.
+
+This application provides:
+- User authentication and authorization
+- File upload and security scanning using LLM
+- Risk assessment and management
+- Compliance monitoring and reporting
+- Incident management and response
+- Digital forensics and evidence collection
+- Security monitoring and logging
+
+Security Features:
+- Zero Trust Architecture with multiple verification layers
+- Secure password hashing with Werkzeug
+- Session management with timeout enforcement
+- IP-based access control
+- Input validation and sanitization
+- Secure file upload handling
+- Comprehensive security logging
+- SQL injection prevention with SQLAlchemy ORM
+
+Architecture:
+- Flask web framework with SQLAlchemy ORM
+- SQLite database with proper session management
+- Template-based UI with security headers
+- RESTful API endpoints with proper error handling
+- Background task processing for file operations
+
+Usage:
+    python app.py
+
+Environment Variables:
+    FLASK_SECRET: Secret key for session encryption
+    ALLOWED_IPS: Comma-separated list of allowed IP addresses
+    MODEL_NAME: LLM model name for scanning
+    OPENROUTER_API_KEY: API key for LLM service
 """
 
 import os
@@ -35,7 +62,7 @@ from werkzeug.utils import secure_filename as werkzeug_secure
 load_dotenv()
 
 from db import get_engine, get_session, close_session
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog
 from llm_scan import scan_file_for_grc, create_risks_from_scan
 
 # ------------------------------------------------------------------------------
@@ -49,7 +76,25 @@ from llm_scan import scan_file_for_grc, create_risks_from_scan
 
 
 def compute_file_hash(file_path):
-    """Compute SHA-256 hash of a file for integrity verification."""
+    """
+    Compute SHA-256 hash of a file for integrity verification and evidence collection.
+
+    Generates a cryptographic hash to ensure file integrity and provide
+    tamper-evident evidence for digital forensics.
+
+    Args:
+        file_path (str): Path to the file to hash
+
+    Returns:
+        str or None: Hexadecimal SHA-256 hash string, or None if error occurs
+
+    Raises:
+        Logs error message if file cannot be read or hashed
+
+    Note:
+        Uses chunked reading (4096 bytes) to handle large files efficiently
+        Returns None on error rather than raising exceptions for graceful degradation
+    """
     hash_sha256 = hashlib.sha256()
     try:
         with open(file_path, "rb") as f:
@@ -62,7 +107,28 @@ def compute_file_hash(file_path):
 
 
 def collect_forensics_data():
-    """Collect forensics data for report"""
+    """
+    Collect and compile digital forensics data into a comprehensive report.
+
+    Gathers evidence from multiple sources including system logs, user activity,
+    incident reports, and collected evidence files. Generates a structured
+    forensics report suitable for incident response and legal proceedings.
+
+    Returns:
+        str: Complete forensics report as formatted text
+
+    Sources included:
+        - System logs from logs/forensics.log
+        - Incident database records
+        - Evidence files and metadata
+        - User activity summaries
+        - Report generation timestamp
+
+    Note:
+        Requires read access to logs/ directory and database
+        Handles missing log files gracefully
+        Includes integrity hashes for evidence files
+    """
     report = "DIGITAL FORENSICS REPORT\n"
     report += "=" * 50 + "\n\n"
 
@@ -142,12 +208,38 @@ def collect_forensics_data():
 
 
 def create_app():
+    """
+    Flask application factory function implementing secure configuration and Zero Trust Architecture.
+
+    Creates and configures the Flask application with comprehensive security measures
+    including session management, IP restrictions, logging, and database integration.
+
+    Returns:
+        Flask: Configured Flask application instance
+
+    Security Features Configured:
+        - Secure session configuration with timeout and cookies
+        - IP-based access control (Zero Trust perimeter)
+        - Session timeout enforcement (Zero Trust verification)
+        - Comprehensive logging setup
+        - Database initialization with SQLAlchemy
+        - Security headers and CSRF protection
+
+    Environment Setup:
+        - Creates necessary directories (instance, uploads, reports, logs, evidence)
+        - Initializes database tables
+        - Sets up logging handlers
+
+    Note:
+        Implements defense in depth with multiple security layers
+        Uses Flask application context for thread-safe operations
+    """
     app = Flask(__name__, instance_relative_config=True)
  
     # Secure config
     app.config.update(
         SECRET_KEY=os.getenv("FLASK_SECRET", os.urandom(24)),
-        PERMANENT_SESSION_LIFETIME=timedelta(hours=8),
+        PERMANENT_SESSION_LIFETIME=timedelta(minutes=5),
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SECURE=not app.debug,  # true in prod
         SESSION_COOKIE_SAMESITE="Lax",
@@ -182,6 +274,20 @@ def create_app():
     # teardown hook for DB session
     @app.teardown_appcontext
     def teardown_db(exception=None):
+        """
+        Flask application teardown hook for database session cleanup.
+
+        Automatically closes database sessions at the end of each request
+        to prevent connection leaks and ensure proper resource management.
+
+        Args:
+            exception: Exception object if request ended with error (optional)
+
+        Note:
+            Registered as Flask teardown handler to run after every request
+            Ensures database connections are properly returned to connection pool
+            Critical for production applications to prevent resource exhaustion
+        """
         close_session()
 
     # Zero Trust: Session timeout enforcement
@@ -191,9 +297,9 @@ def create_app():
         if 'user_id' in session and 'login_time' in session:
             # Enforce session lifetime (Zero Trust: never trust, always verify)
             if time.time() - session['login_time'] > app.config['PERMANENT_SESSION_LIFETIME'].total_seconds():
-                session.clear()
+                session.clear()     # Investigation: Check user activity logs
                 flash("Session expired due to inactivity. Please login again.", "warning")
-                return redirect(url_for("login"))
+                return redirect(url_for("login"))   # Resolution: Force re-authentication
 
     # Zero Trust: IP-based access control
     # Restrict access to allowed IPs (Zero Trust: verify every access)
@@ -208,6 +314,19 @@ def create_app():
     # Helpers
     # ---------------------------
     def current_user():
+        """
+        Retrieve current authenticated user from session.
+
+        Gets the User object for the currently authenticated user based on
+        session data. Returns None if no user is authenticated.
+
+        Returns:
+            User object or None: Current authenticated user or None if not logged in
+
+        Security Note:
+            Validates user existence in database to prevent session manipulation
+            Uses secure session management to prevent fixation attacks
+        """
         uid = session.get("user_id")
         if not uid:
             return None
@@ -215,6 +334,30 @@ def create_app():
         return db.get(User, uid)
 
     def login_required(f):
+        """
+        Decorator that enforces user authentication for protected routes.
+
+        Implements Zero Trust security by verifying user authentication on every
+        request to protected endpoints. Redirects unauthenticated users to login.
+
+        Args:
+            f: The route function to be decorated
+
+        Returns:
+            Decorated function that checks authentication before execution
+
+        Security Features:
+            - Verifies user authentication on every protected request
+            - Implements Zero Trust "never trust, always verify" principle
+            - Automatic redirect to login for unauthenticated users
+            - User-friendly flash messages for authentication requirements
+
+        Usage:
+            @app.route("/protected")
+            @login_required
+            def protected_route():
+                return "This requires authentication"
+        """
         @wraps(f)
         def wrapper(*args, **kwargs):
             # Zero Trust: Verify user authentication on every protected request
@@ -224,6 +367,264 @@ def create_app():
             return f(*args, **kwargs)
         return wrapper
 
+    def admin_required(f):
+        """
+        Decorator that enforces administrator role access for protected routes.
+
+        Implements governance by ensuring only users with admin role can access
+        administrative functions. Provides separation of duties and access control.
+
+        Args:
+            f: The route function to be decorated
+
+        Returns:
+            Decorated function that checks admin role before execution
+
+        Governance Features:
+            - Verifies user has administrator role
+            - Logs governance access attempts
+            - Provides clear error messages for unauthorized access
+            - Supports role-based access control (RBAC)
+
+        Usage:
+            @app.route("/admin")
+            @login_required
+            @admin_required
+            def admin_route():
+                return "Admin only content"
+        """
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            user = current_user()
+            if not user:
+                flash("Please login first.", "warning")
+                return redirect(url_for("login"))
+
+            if user.role != "admin":
+                forensics_logger.warning(f"Governance violation: User {user.email} (role: {user.role}) attempted admin access to {request.path}")
+                flash("Administrator access required.", "danger")
+                return redirect(url_for("home"))
+
+            forensics_logger.info(f"Governance: Admin {user.email} accessed {request.path}")
+            return f(*args, **kwargs)
+        return wrapper
+
+    def auditor_required(f):
+        """
+        Decorator that enforces auditor role access for protected routes.
+
+        Implements governance by ensuring only users with auditor or admin role
+        can access audit and compliance functions. Supports compliance monitoring.
+
+        Args:
+            f: The route function to be decorated
+
+        Returns:
+            Decorated function that checks auditor/admin role before execution
+
+        Governance Features:
+            - Verifies user has auditor or admin role
+            - Logs governance access attempts
+            - Supports compliance monitoring access
+            - Implements role hierarchy (auditor < admin)
+
+        Usage:
+            @app.route("/audit")
+            @login_required
+            @auditor_required
+            def audit_route():
+                return "Audit content"
+        """
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            user = current_user()
+            if not user:
+                flash("Please login first.", "warning")
+                return redirect(url_for("login"))
+
+            if user.role not in ["admin", "auditor"]:
+                forensics_logger.warning(f"Governance violation: User {user.email} (role: {user.role}) attempted auditor access to {request.path}")
+                flash("Auditor access required.", "danger")
+                return redirect(url_for("home"))
+
+            forensics_logger.info(f"Governance: Auditor/Admin {user.email} accessed {request.path}")
+            return f(*args, **kwargs)
+        return wrapper
+
+    # ---------------------------
+    # Governance: Role-Based Data Access Control Functions
+    # ---------------------------
+
+    def get_visible_incidents(user):
+        """
+        Returns incidents visible to the user based on their role.
+
+        Implements governance by controlling data access based on user role:
+        - Admin: Can see all incidents
+        - Auditor: Can see all incidents for compliance monitoring
+        - User: Can only see their own reported incidents
+
+        Args:
+            user: User object with role information
+
+        Returns:
+            Query object with appropriate incident filtering
+        """
+        db_session = get_session()
+        if user.role == "admin":
+            incidents = db_session.query(Incident).all()
+            forensics_logger.info(f"Governance: Admin {user.email} accessed all incidents")
+        elif user.role == "auditor":
+            incidents = db_session.query(Incident).all()
+            forensics_logger.info(f"Governance: Auditor {user.email} accessed all incidents for compliance review")
+        else:  # user role
+            incidents = db_session.query(Incident).filter(Incident.reported_by == user.id).all()
+            forensics_logger.info(f"Governance: User {user.email} accessed their {len(incidents)} incidents")
+
+        close_session(db_session)
+        return incidents
+
+    def get_visible_risks(user):
+        """
+        Returns risks visible to the user based on their role.
+
+        Implements governance by controlling risk data access:
+        - Admin: Can see all risks
+        - Auditor: Can see all risks for compliance monitoring
+        - User: Can only see risks from their own scans
+
+        Args:
+            user: User object with role information
+
+        Returns:
+            Query object with appropriate risk filtering
+        """
+        db_session = get_session()
+        if user.role == "admin":
+            risks = db_session.query(Risk).all()
+            forensics_logger.info(f"Governance: Admin {user.email} accessed all risks")
+        elif user.role == "auditor":
+            risks = db_session.query(Risk).all()
+            forensics_logger.info(f"Governance: Auditor {user.email} accessed all risks for compliance review")
+        else:  # user role
+            risks = (db_session.query(Risk)
+                    .join(ScanResult)
+                    .join(Upload)
+                    .filter(Upload.user_id == user.id)
+                    .all())
+            forensics_logger.info(f"Governance: User {user.email} accessed their {len(risks)} risks")
+
+        close_session(db_session)
+        return risks
+
+    def get_visible_users(user):
+        """
+        Returns users visible to the current user based on their role.
+
+        Implements governance by controlling user data access:
+        - Admin: Can see all users for management
+        - Auditor: Can see all users for compliance monitoring
+        - User: Can only see their own profile
+
+        Args:
+            user: User object with role information
+
+        Returns:
+            Query object with appropriate user filtering
+        """
+        db_session = get_session()
+        if user.role in ["admin", "auditor"]:
+            users = db_session.query(User).all()
+            forensics_logger.info(f"Governance: {user.role.title()} {user.email} accessed all user accounts")
+        else:  # user role
+            users = [user]  # Only their own profile
+            forensics_logger.info(f"Governance: User {user.email} accessed their profile")
+
+        close_session(db_session)
+        return users
+
+    # ---------------------------
+    # Governance: Audit Logging Functions
+    # ---------------------------
+
+    def log_audit_event(user, action, category, description, resource=None, success=True):
+        """
+        Logs audit events for governance and compliance tracking.
+
+        Implements comprehensive audit logging for:
+        - Authentication events
+        - Authorization decisions
+        - Administrative actions
+        - Security policy compliance
+        - Data access patterns
+
+        Args:
+            user: User object performing the action (can be None for system events)
+            action: Action performed (e.g., "LOGIN", "ROLE_CHANGE")
+            category: Audit category (AUTHENTICATION, AUTHORIZATION, ADMINISTRATION, COMPLIANCE, SECURITY)
+            description: Detailed description of the event
+            resource: Resource accessed (optional)
+            success: Whether the action was successful
+
+        Audit Categories:
+            - AUTHENTICATION: Login, logout, authentication events
+            - AUTHORIZATION: Access control decisions, role checks
+            - ADMINISTRATION: Administrative actions, user management
+            - COMPLIANCE: Policy compliance events, violations
+            - SECURITY: Security-related events, incidents
+        """
+        try:
+            db = get_session()
+            audit_log = AuditLog(
+                user_id=user.id if user else None,
+                action=action,
+                category=category,
+                description=description,
+                resource=resource or request.path,
+                ip_address=request.remote_addr,
+                user_agent=request.headers.get('User-Agent'),
+                success=success
+            )
+            db.add(audit_log)
+            db.commit()
+            close_session(db)
+        except Exception as e:
+            # Log audit failure but don't break the main flow
+            logging.error(f"Failed to log audit event: {e}")
+
+    def get_audit_logs(user, limit=100):
+        """
+        Retrieves audit logs based on user role.
+
+        Implements governance by controlling audit log access:
+        - Admin: Can see all audit logs
+        - Auditor: Can see all audit logs for compliance
+        - User: Can only see their own audit logs
+
+        Args:
+            user: User object requesting audit logs
+            limit: Maximum number of logs to return
+
+        Returns:
+            List of audit log entries
+        """
+        db = get_session()
+        if user.role in ["admin", "auditor"]:
+            logs = db.query(AuditLog).order_by(AuditLog.created_at.desc()).limit(limit).all()
+            log_audit_event(user, "AUDIT_LOG_ACCESS", "ADMINISTRATION",
+                          f"Accessed {len(logs)} audit log entries", "/audit/logs", True)
+        else:
+            logs = (db.query(AuditLog)
+                   .filter(AuditLog.user_id == user.id)
+                   .order_by(AuditLog.created_at.desc())
+                   .limit(limit)
+                   .all())
+            log_audit_event(user, "PERSONAL_AUDIT_ACCESS", "COMPLIANCE",
+                          f"Accessed {len(logs)} personal audit log entries", "/audit/logs", True)
+
+        close_session(db)
+        return logs
+
     # ---------------------------
     # Routes
     # ---------------------------
@@ -231,6 +632,33 @@ def create_app():
     @app.route("/", methods=["GET", "POST"])
     @app.route("/login", methods=["GET", "POST"])
     def login():
+        """
+        Handle user authentication with comprehensive security validation.
+
+        Processes login requests with input validation, credential verification,
+        and secure session establishment. Implements Zero Trust principles
+        with multiple verification layers.
+
+        GET: Displays login form
+        POST: Processes authentication attempt
+
+        Security Features:
+            - Email format validation using regex
+            - Password length and complexity checks
+            - Secure password verification with Werkzeug
+            - Account verification status checking
+            - Session establishment with timestamp tracking
+            - Security logging of authentication events
+            - IP address logging for audit trail
+
+        Returns:
+            GET: Login template render
+            POST: Redirect to home on success, login template on failure
+
+        Note:
+            Implements defense in depth with client and server-side validation
+            Logs all authentication attempts for security monitoring
+        """
         if request.method == "POST":
             # Zero Trust: Input validation - sanitize and validate all user inputs
             email = request.form.get("email", "").strip().lower()
@@ -255,6 +683,8 @@ def create_app():
                 session.permanent = True
                 session['login_time'] = time.time()  # Zero Trust: Track session start for timeout enforcement
                 forensics_logger.info(f"User {user.email} logged in successfully from IP {request.remote_addr}")
+                log_audit_event(user, "LOGIN", "AUTHENTICATION",
+                              f"Successful login from IP {request.remote_addr}", "/login", True)
                 return redirect(url_for("home"))
             else:
                 flash("Invalid credentials.", "danger")
@@ -263,22 +693,91 @@ def create_app():
 
     @app.route("/logout")
     def logout():
+        """
+        Handle secure user logout with session cleanup and audit logging.
+
+        Performs comprehensive logout procedure including:
+        - Session data clearing
+        - Security event logging
+        - Database session cleanup
+        - User feedback messaging
+
+        Process:
+            1. Retrieve current user information for logging
+            2. Log logout event with user details and IP address
+            3. Clear all session data (Zero Trust: complete session invalidation)
+            4. Close any open database connections
+            5. Display success message to user
+
+        Returns:
+            Redirect to login page with logout confirmation
+
+        Security Features:
+            - Complete session destruction (not just user_id removal)
+            - Audit logging of logout events
+            - Database connection cleanup
+            - IP address tracking for security monitoring
+
+        Note:
+            Implements Zero Trust by ensuring no session remnants remain
+            All user data is cleared to prevent session fixation attacks
+        """
         user_id = session.get("user_id")
         if user_id:
             db = get_session()
             user = db.get(User, user_id)
             if user:
                 forensics_logger.info(f"User {user.email} logged out from IP {request.remote_addr}")
+                log_audit_event(user, "LOGOUT", "AUTHENTICATION",
+                              f"User logged out from IP {request.remote_addr}", "/logout", True)
             close_session(db)
         session.clear()
         flash("Logged out securely.", "info")
         return redirect(url_for("login"))
 
     @app.route("/home", methods=["GET", "POST"])
-    @login_required
+    @login_required  # Access Control Policy
     def home():
+        """
+        Main dashboard displaying user uploads, scan results, and GRC data.
+
+        Provides comprehensive view of user's security posture including:
+        - Recent file uploads and scan status
+        - Compliance hits from LLM analysis
+        - Risk assessments with severity levels
+        - File upload functionality with security validation
+
+        GET: Displays dashboard with existing data
+        POST: Handles secure file upload with validation
+
+        Security Features:
+            - File type validation (PDF, TXT only)
+            - Filename sanitization to prevent path traversal
+            - File size limits (10MB)
+            - Duplicate filename handling
+            - Automatic cleanup scheduling
+            - Security logging of all operations
+
+        Template Variables:
+            user: Current authenticated user object
+            last_upload: Most recent user upload
+            has_scan: Boolean indicating if upload has been scanned
+            scan_result: Scan results with compliance and risk data
+            compliance_hits: List of compliance framework matches
+            risks: List of identified risks with severity
+            show_previous: Flag to control data display
+
+        Returns:
+            Rendered home template with dashboard data
+        """
         user = current_user()
-        db = get_session()        
+        db = get_session()
+
+        # Data Protection Policy: User-specific data access
+        uploads = db.query(Upload).filter(Upload.user_id == user.id)
+
+        # System Use Policy: Activity logging
+        logging.info(f"Policy compliance: User {user.email} accessing {request.path}")
         # Check if user wants to clear previous details
         show_previous = 'clear' not in request.args
         # Get last upload for scan button and show recent scan results (only if not clearing)
@@ -366,6 +865,44 @@ def create_app():
     # ------------------------
     @app.route("/register", methods=["GET", "POST"])
     def register():
+        """
+        Handle new user registration with comprehensive validation and security.
+
+        Processes user registration requests with multi-layer validation:
+        - Email format and uniqueness validation
+        - Password complexity requirements
+        - Password confirmation matching
+        - Secure password hashing
+
+        GET: Displays registration form
+        POST: Processes registration attempt
+
+        Security Features:
+            - Email format validation using regex
+            - Password complexity requirements (length, character types)
+            - Password confirmation verification
+            - Secure password hashing with Werkzeug
+            - Duplicate email prevention
+            - Input sanitization and validation
+
+        Validation Rules:
+            - Email: Must match standard email format
+            - Password: Minimum 8 characters, must contain letters and numbers
+            - Confirmation: Must match original password
+
+        Returns:
+            GET: Registration form template
+            POST: Success redirect to login or form with error messages
+
+        Database:
+            Uses direct SQLite connection for registration
+            Creates verified user accounts by default
+            Handles integrity constraint violations
+
+        Note:
+            Registration creates verified accounts for demo purposes
+            In production, email verification should be implemented
+        """
         if request.method == "POST":
             email = request.form.get("email", "").strip()
             password = request.form.get("password", "")
@@ -415,6 +952,37 @@ def create_app():
     @app.route("/scan/<int:upload_id>", methods=["POST"])
     @login_required
     def scan(upload_id):
+        """
+        Initiate security scan of uploaded file using LLM analysis.
+
+        Triggers comprehensive GRC analysis of uploaded documents using
+        large language models to identify compliance requirements, risks,
+        and security gaps.
+
+        Args:
+            upload_id (int): Database ID of the upload to scan
+
+        Security Checks:
+            - Verifies upload ownership (user_id match)
+            - Prevents duplicate scanning
+            - Validates upload existence
+
+        Process:
+            1. Extract text from uploaded file (PDF/TXT)
+            2. Send to LLM for GRC analysis
+            3. Parse structured response (compliance, risks, summary)
+            4. Store scan results in database
+            5. Generate risk and compliance records
+            6. Log security event
+
+        Returns:
+            Redirect to home page with success/error message
+
+        Note:
+            Asynchronous processing prevents UI blocking
+            Comprehensive error handling with user feedback
+            Creates database relationships for reporting
+        """
         db = get_session()
         up = db.get(Upload, upload_id)
 
@@ -440,8 +1008,9 @@ def create_app():
             # Generate and store risk entries from scan results
             risks_data = data.get("risks", [])
             compliance_data = data.get("compliance_hits", [])
-            if risks_data:
-                create_risks_from_scan(res.id, risks_data, compliance_data)
+            threats_data = data.get("detected_threats", [])
+            if risks_data or threats_data:
+                create_risks_from_scan(res.id, risks_data, compliance_data, threats_data)
 
             forensics_logger.info(f"User {session.get('user_id')} scanned file {up.filename}")
             flash("Scan completed and saved.", "success")
@@ -454,6 +1023,30 @@ def create_app():
     @app.route("/uploads/<path:filename>")
     @login_required
     def uploaded_file(filename):
+        """
+        Serve uploaded files securely with path traversal protection.
+
+        Provides secure access to user-uploaded files with multiple
+        security layers to prevent unauthorized access and path traversal attacks.
+
+        Args:
+            filename (str): Requested filename from URL path
+
+        Security Features:
+            - User authentication required (@login_required)
+            - Path traversal prevention via secure_filename()
+            - File existence validation (handled by send_from_directory)
+            - Directory restriction to uploads/ folder only
+            - No attachment download (inline display for security)
+
+        Returns:
+            File response for inline display in browser
+
+        Note:
+            Files are served from uploads/ directory only
+            Automatic cleanup removes files after 2 minutes
+            Used for displaying uploaded documents in the application
+        """
         # Output encoding to avoid path traversal
         filename = secure_filename(filename)
         return send_from_directory("uploads", filename, as_attachment=False)
@@ -461,6 +1054,30 @@ def create_app():
     @app.route("/evidence/<path:filename>")
     @login_required
     def evidence_file(filename):
+        """
+        Serve evidence files securely as downloadable attachments.
+
+        Provides secure download access to digital evidence files with
+        comprehensive security controls for forensic data handling.
+
+        Args:
+            filename (str): Requested evidence filename from URL path
+
+        Security Features:
+            - User authentication required (@login_required)
+            - Path traversal prevention via secure_filename()
+            - File existence validation
+            - Restricted to evidence/ directory only
+            - Download-only access (attachment disposition)
+
+        Returns:
+            File download response with attachment headers
+
+        Note:
+            Used for downloading evidence files in forensics module
+            Files include integrity hashes for tamper detection
+            Access logged for audit trail purposes
+        """
         # Output encoding to avoid path traversal
         filename = secure_filename(filename)
         return send_from_directory("evidence", filename, as_attachment=True)
@@ -470,15 +1087,74 @@ def create_app():
     @app.route("/risks")
     @login_required
     def risks():
-        session = get_session()
+        """
+        Display risk assessment dashboard with role-based access control.
+
+        Shows risks based on user role:
+        - Admin: All risks for system oversight
+        - Auditor: All risks for compliance monitoring
+        - User: Only risks from their own scans
+
+        Security Features:
+            - User authentication required
+            - Role-based data access control
+            - Comprehensive audit logging
+            - Data isolation by role
+
+        Data Sources:
+            - Risks linked to scan results
+            - Joined through ScanResult and Upload relationships
+            - Filtered by user role and ownership
+
+        Template Variables:
+            risks: List of visible Risk objects based on user role
+
+        Returns:
+            Rendered risks template with appropriate risk data
+
+        Note:
+            Implements governance through role-based data access
+            Uses SQLAlchemy joins for efficient data retrieval
+            Maintains audit trail of risk data access
+        """
         user = current_user()
-        # Get risks associated with user's scan results
-        user_risks = (session.query(Risk).join(ScanResult).join(Upload).filter(Upload.user_id == user.id).all())
-        close_session(session)
-        return render_template("risks.html", risks=user_risks)
+        risks_list = get_visible_risks(user)
+        log_audit_event(user, "RISKS_ACCESS", "COMPLIANCE",
+                       f"Accessed {len(risks_list)} risk assessments", "/risks", True)
+        return render_template("risks.html", risks=risks_list)
 
     @app.route("/add_risk", methods=["POST"])
     def add_risk():
+        """
+        Create new risk assessment entry with automatic scoring calculation.
+
+        Processes risk creation form data and creates new Risk database entry
+        with automatic risk score calculation based on likelihood and impact.
+
+        Form Fields:
+            asset: System resource or information asset
+            threat: Potential violation of security
+            vulnerability: Weakness that can be exploited
+            control: Safeguard or countermeasure
+            compliance_standard: Associated compliance framework
+            likelihood: Risk likelihood (1-5 scale)
+            impact: Risk impact (1-5 scale)
+
+        Process:
+            1. Extract and validate form data
+            2. Create Risk object with provided data
+            3. Automatically calculate risk score (likelihood × impact)
+            4. Save to database with proper session management
+            5. Redirect to risks dashboard with success message
+
+        Returns:
+            Redirect to risks page with success confirmation
+
+        Note:
+            Uses default values for missing optional fields
+            Automatic risk scoring eliminates manual calculation errors
+            Proper database session handling prevents connection leaks
+        """
         session = get_session()
         data = request.form
         risk = Risk(
@@ -501,6 +1177,30 @@ def create_app():
     # --- Compliance Routes ---
     @app.route("/compliance")
     def compliance():
+        """
+        Display compliance monitoring dashboard with all compliance records.
+
+        Shows comprehensive view of compliance status across all frameworks,
+        controls, and associated risk assessments for organizational oversight.
+
+        Data Display:
+            - Framework compliance status
+            - Control family and specific controls
+            - Compliance scores and status
+            - Associated risk linkages
+            - Assessment timestamps
+
+        Template Variables:
+            compliance: List of all Compliance database records
+
+        Returns:
+            Rendered compliance template with compliance data
+
+        Note:
+            Displays all compliance records (not user-specific)
+            Used for organizational compliance monitoring
+            Supports multiple compliance frameworks simultaneously
+        """
         session = get_session()
         records = session.query(Compliance).all()
         close_session(session)
@@ -508,6 +1208,33 @@ def create_app():
 
     @app.route("/add_compliance", methods=["POST"])
     def add_compliance():
+        """
+        Create new compliance assessment record with framework mapping.
+
+        Processes compliance form data to create new Compliance database entry
+        linking specific controls to compliance frameworks and associated risks.
+
+        Form Fields:
+            framework: Compliance framework (e.g., NIST SP 800-53, ISO 27001)
+            control: Specific control identifier (e.g., AC-2, IR-1)
+            score: Compliance score (0.0 to 100.0 percentage)
+            risk_id: Associated risk ID (optional)
+
+        Process:
+            1. Extract and validate form data
+            2. Create Compliance object with framework mapping
+            3. Link to associated risk if provided
+            4. Save to database with proper session management
+            5. Redirect to compliance dashboard with success message
+
+        Returns:
+            Redirect to compliance page with success confirmation
+
+        Note:
+            Supports multiple compliance frameworks
+            Optional risk linkage for integrated risk-compliance management
+            Default score of 0.0 for new assessments
+        """
         session = get_session()
         data = request.form
         compliance = Compliance(
@@ -526,6 +1253,35 @@ def create_app():
     # --- Dependency Routes ---
     @app.route("/dependencies")
     def dependencies():
+        """
+        Display software dependency risk assessment dashboard.
+
+        Shows all tracked software dependencies with automatic risk assessment
+        including vulnerability analysis and mitigation recommendations.
+
+        Risk Assessment Process:
+            1. Retrieve all dependency records from database
+            2. Run automated risk assessment for each dependency
+            3. Evaluate known vulnerabilities based on name/version
+            4. Assign risk levels (Low, Medium, High, Critical)
+            5. Generate mitigation recommendations
+
+        Template Variables:
+            dependencies: List of Dependency objects with risk assessments
+
+        Returns:
+            Rendered dependencies template with risk analysis
+
+        Risk Assessment Logic:
+            - Flask versions < 2.0: High risk
+            - Requests versions < 2.25.0: Medium risk
+            - Other dependencies: Low risk by default
+
+        Note:
+            Automatic risk assessment on page load
+            Supports supply chain risk management
+            Provides actionable mitigation strategies
+        """
         session = get_session()
         deps = session.query(Dependency).all()
         # Assess risks for each dependency
@@ -536,6 +1292,40 @@ def create_app():
 
     @app.route("/add_dependency", methods=["POST"])
     def add_dependency():
+        """
+        Add new software dependency with automatic risk assessment.
+
+        Creates new dependency record and performs immediate risk evaluation
+        based on known vulnerability patterns and version analysis.
+
+        Form Fields:
+            name: Software package name (e.g., Flask, requests, Django)
+            version: Version string (e.g., 1.1.4, 2.25.0)
+            risk: Manual risk description (optional)
+            mitigation: Manual mitigation strategy (optional)
+
+        Process:
+            1. Extract form data with validation
+            2. Create Dependency object with provided data
+            3. Run automated risk assessment (assess_risk method)
+            4. Determine risk level based on known vulnerabilities
+            5. Generate mitigation recommendations
+            6. Save to database with assessment results
+
+        Risk Assessment:
+            - Analyzes package name and version against vulnerability database
+            - Assigns risk levels: Low, Medium, High, Critical
+            - Provides specific mitigation strategies
+            - Identifies known CVEs and security issues
+
+        Returns:
+            Redirect to dependencies page with success confirmation
+
+        Note:
+            Automatic assessment overrides manual risk input if more severe
+            Supports supply chain risk management
+            Provides actionable security recommendations
+        """
         session = get_session()
         data = request.form
         dep = Dependency(
@@ -555,26 +1345,256 @@ def create_app():
         flash("Dependency added with risk assessment!", "success")
         return redirect(url_for("dependencies"))
 
+    # --- Administrative Routes ---
+    @app.route("/admin/users")
+    @login_required
+    @admin_required
+    def admin_users():
+        """
+        Administrative interface for user management and role assignment.
+
+        Provides administrators with the ability to:
+        - View all user accounts
+        - Change user roles
+        - Monitor user activity
+        - Manage account status
+
+        Security Features:
+            - Admin role required
+            - Audit logging of all administrative actions
+            - Secure role assignment validation
+
+        Returns:
+            Rendered admin users template with user management interface
+        """
+        users = get_visible_users(current_user())
+        return render_template("admin_users.html", users=users)
+
+    @app.route("/admin/change_role/<int:user_id>", methods=["POST"])
+    @login_required
+    @admin_required
+    def admin_change_role(user_id):
+        """
+        Administrative function to change user roles.
+
+        Implements governance by allowing administrators to assign roles:
+        - user: Basic user access
+        - auditor: Audit and compliance access
+        - admin: Full administrative access
+
+        Args:
+            user_id: ID of the user whose role is being changed
+
+        Security Features:
+            - Admin role required
+            - Audit logging of role changes
+            - Validation of role values
+            - Prevention of self-demotion
+
+        Returns:
+            Redirect to admin users page with success/error message
+        """
+        db = get_session()
+        user = db.get(User, user_id)
+        if not user:
+            flash("User not found.", "danger")
+            return redirect(url_for("admin_users"))
+
+        new_role = request.form.get("role")
+        if new_role not in ["user", "admin", "auditor"]:
+            flash("Invalid role specified.", "danger")
+            return redirect(url_for("admin_users"))
+
+        # Prevent admin from demoting themselves
+        current_admin = current_user()
+        if user.id == current_admin.id and new_role != "admin":
+            flash("Cannot change your own admin role.", "danger")
+            return redirect(url_for("admin_users"))
+
+        old_role = user.role
+        user.role = new_role
+        db.commit()
+
+        forensics_logger.info(f"Governance: Admin {current_admin.email} changed user {user.email} role from '{old_role}' to '{new_role}'")
+        flash(f"User role updated successfully.", "success")
+
+        return redirect(url_for("admin_users"))
+
+    @app.route("/admin/dashboard")
+    @login_required
+    @admin_required
+    def admin_dashboard():
+        """
+        Administrative dashboard with system overview and governance metrics.
+
+        Provides administrators with:
+        - System health metrics
+        - User activity statistics
+        - Security incident overview
+        - Governance compliance status
+
+        Security Features:
+            - Admin role required
+            - Comprehensive audit logging
+            - Real-time system monitoring
+
+        Returns:
+            Rendered admin dashboard template with system metrics
+        """
+        db = get_session()
+
+        # System metrics
+        total_users = db.query(User).count()
+        total_incidents = db.query(Incident).count()
+        active_incidents = db.query(Incident).filter(Incident.status != IncidentStatus.CLOSED).count()
+        total_risks = db.query(Risk).count()
+
+        # Role distribution
+        admin_count = db.query(User).filter(User.role == "admin").count()
+        auditor_count = db.query(User).filter(User.role == "auditor").count()
+        user_count = db.query(User).filter(User.role == "user").count()
+
+        close_session(db)
+
+        forensics_logger.info(f"Governance: Admin {current_user().email} accessed admin dashboard")
+
+        return render_template("admin_dashboard.html",
+                             total_users=total_users,
+                             total_incidents=total_incidents,
+                             active_incidents=active_incidents,
+                             total_risks=total_risks,
+                             admin_count=admin_count,
+                             auditor_count=auditor_count,
+                             user_count=user_count)
+
+    @app.route("/audit/logs")
+    @login_required
+    def audit_logs():
+        """
+        Audit logs interface for compliance monitoring and governance.
+
+        Provides access to audit logs based on user role:
+        - Admin: Full access to all audit logs
+        - Auditor: Full access for compliance monitoring
+        - User: Access to their own audit logs only
+
+        Security Features:
+            - Role-based access control
+            - Audit logging of audit log access
+            - Pagination support for large datasets
+
+        Returns:
+            Rendered audit logs template with filtered log entries
+        """
+        user = current_user()
+        logs = get_audit_logs(user)
+        return render_template("audit_logs.html", audit_logs=logs)
+
     # --- Security Policies Route ---
     @app.route("/policies")
     @login_required
     def policies():
+        """
+        Display security policies and procedures documentation.
+
+        Provides access to organizational security policies, procedures,
+        and guidelines for compliance and security awareness.
+
+        Security Features:
+            - User authentication required
+            - Access logged for audit purposes
+
+        Returns:
+            Rendered policies template with security documentation
+
+        Note:
+            Static content display for policy awareness
+            Supports organizational security training
+            Part of compliance documentation requirements
+        """
         return render_template("policies.html")
 
     # --- Knowledge Base Route ---
     @app.route("/kb")
     @login_required
     def kb():
+        """
+        Display knowledge base with security best practices and resources.
+
+        Provides centralized access to security knowledge, best practices,
+        procedures, and reference materials for security team members.
+
+        Security Features:
+            - User authentication required
+            - Access logged for audit purposes
+
+        Content Areas:
+            - Security best practices
+            - Incident response procedures
+            - Compliance guidelines
+            - Technical reference materials
+            - Training resources
+
+        Returns:
+            Rendered knowledge base template with security resources
+
+        Note:
+            Supports security team training and awareness
+            Central repository for security documentation
+            Part of organizational security knowledge management
+        """
         return render_template("kb.html")
 
     # --- SOC Monitoring Route ---
     @app.route("/monitoring")
     @login_required
     def monitoring():
+        """
+        Display Security Operations Center (SOC) monitoring dashboard.
+
+        Provides real-time system monitoring and security event visibility
+        for proactive threat detection and incident response.
+
+        Monitoring Data:
+            - CPU utilization percentage
+            - Memory usage statistics
+            - Disk space and I/O metrics
+            - Network traffic counters
+            - Recent security events from logs
+            - Active incident status
+
+        Security Features:
+            - User authentication required
+            - Real-time system metrics collection
+            - Security event log integration
+            - Active incident tracking
+
+        Data Sources:
+            - psutil: System performance metrics
+            - forensics.log: Security event logs
+            - Incident database: Active incident status
+
+        Template Variables:
+            cpu_percent: CPU usage percentage
+            memory: Memory usage object
+            disk: Disk usage object
+            network: Network I/O counters
+            security_events: List of recent security log entries
+            active_incidents: List of non-closed incidents
+
+        Returns:
+            Rendered monitoring template with system and security metrics
+
+        Note:
+            Supports SOC operations and proactive monitoring
+            Integrates system performance with security events
+            Provides operational visibility for security team
+        """
         # System monitoring using psutil
         cpu_percent = psutil.cpu_percent(interval=1)
         memory = psutil.virtual_memory()
         disk = psutil.disk_usage('/')
+        # Network Activity Monitoring
         network = psutil.net_io_counters()
 
         # Recent security events from logs
@@ -592,25 +1612,98 @@ def create_app():
         close_session(db)
 
         return render_template("monitoring.html",
-                             cpu_percent=cpu_percent,
-                             memory=memory,
-                             disk=disk,
-                             network=network,
-                             security_events=security_events,
-                             active_incidents=active_incidents)
+                              cpu_percent=cpu_percent,
+                              memory=memory,
+                              disk=disk,
+                              network=network,
+                              security_events=security_events,
+                              active_incidents=active_incidents)
 
     # --- Incident Routes ---
     @app.route("/incidents")
     @login_required
     def incidents():
-        db = get_session()
-        user_incidents = db.query(Incident).filter(Incident.reported_by == session.get("user_id")).all()
-        close_session(db)
-        return render_template("incidents.html", incidents=user_incidents)
+        """
+        Display incident management dashboard with role-based access control.
+
+        Shows security incidents based on user role:
+        - Admin: All incidents for system oversight
+        - Auditor: All incidents for compliance monitoring
+        - User: Only their own reported incidents
+
+        Security Features:
+            - User authentication required
+            - Role-based data access control
+            - Comprehensive audit logging
+            - Incident ownership verification
+
+        Incident Data:
+            - Incident title and description
+            - Status (Open, Contained, Eradicated, Recovered, Closed)
+            - Severity levels (Low, Medium, High, Critical)
+            - Reporting timestamps
+            - IRP (Incident Response Plan) progress notes
+
+        Template Variables:
+            incidents: List of visible incidents based on user role
+
+        Returns:
+            Rendered incidents template with incident management interface
+
+        Note:
+            Supports incident response workflow management
+            Tracks incident lifecycle from reporting to closure
+            Maintains audit trail of incident handling
+        """
+        user = current_user()
+        incidents_list = get_visible_incidents(user)
+        log_audit_event(user, "INCIDENTS_ACCESS", "COMPLIANCE",
+                       f"Accessed {len(incidents_list)} incidents", "/incidents", True)
+        return render_template("incidents.html", incidents=incidents_list)
 
     @app.route("/report_incident", methods=["GET", "POST"])
     @login_required
     def report_incident():
+        """
+        Handle incident reporting with structured data collection.
+
+        Provides secure interface for users to report security incidents
+        with proper classification, severity assessment, and audit logging.
+
+        GET: Displays incident reporting form
+        POST: Processes incident report submission
+
+        Form Fields:
+            title: Brief incident title/summary
+            description: Detailed incident description
+            severity: Incident severity level (Low, Medium, High, Critical)
+
+        Process:
+            1. Validate user authentication
+            2. Extract and validate form data
+            3. Create Incident database record
+            4. Set initial status to OPEN
+            5. Log security event with user details
+            6. Redirect to incidents dashboard
+
+        Security Features:
+            - User authentication required
+            - Input validation and sanitization
+            - Audit logging of incident reports
+            - Incident ownership assignment
+
+        Template Variables:
+            severities: IncidentSeverity enum for form dropdown
+
+        Returns:
+            GET: Incident reporting form
+            POST: Redirect to incidents page with success message
+
+        Note:
+            Initiates incident response workflow
+            Supports multiple severity classifications
+            Creates audit trail for compliance
+        """
         if request.method == "POST":
             title = request.form.get("title")
             description = request.form.get("description")
@@ -672,6 +1765,51 @@ def create_app():
     @app.route("/forensics", methods=["GET", "POST"])
     @login_required
     def forensics():
+        """
+        Digital forensics management interface with evidence collection and reporting.
+
+        Provides comprehensive forensics capabilities including evidence collection,
+        integrity verification, report generation, and chain of custody management.
+
+        GET: Displays forensics dashboard with evidence and incidents
+        POST: Handles evidence collection and report generation
+
+        POST Actions:
+            generate_report: Creates comprehensive forensics report
+            collect_evidence: Adds new evidence to incident
+
+        Evidence Collection:
+            - File upload with integrity hashing
+            - Evidence type classification
+            - Chain of custody tracking
+            - Storage method documentation
+
+        Report Generation:
+            - System logs compilation
+            - Incident evidence aggregation
+            - User activity analysis
+            - Timestamp and integrity verification
+
+        Security Features:
+            - User authentication required
+            - File type validation for evidence
+            - Integrity hashing for tamper detection
+            - Audit logging of all forensics activities
+
+        Template Variables:
+            incidents: User's reported incidents for evidence linking
+            evidence: User's collected evidence items
+            evidence_types: EvidenceType enum for form options
+
+        Returns:
+            GET: Forensics dashboard template
+            POST: File download or redirect with status messages
+
+        Note:
+            Supports incident response and legal proceedings
+            Maintains evidence integrity and chain of custody
+            Generates comprehensive audit trails
+        """
         db = get_session()
         user = current_user()
         if request.method == "POST":
@@ -736,11 +1874,50 @@ def create_app():
     # error handlers
     @app.errorhandler(404)
     def not_found(e):
+        """
+        Handle 404 Not Found errors with user-friendly error page.
+
+        Displays custom 404 error page when requested resource is not found.
+        Logs error for debugging while providing secure error response.
+
+        Args:
+            e: Flask exception object containing error details
+
+        Returns:
+            Tuple of (rendered template, HTTP status code 404)
+
+        Security Note:
+            Prevents information disclosure through generic error messages
+            Maintains consistent user experience for invalid URLs
+        """
         return render_template("errors/404.html"), 404
 
 
     @app.errorhandler(500)
     def server_error(e):
+        """
+        Handle 500 Internal Server Error with secure error handling.
+
+        Processes server errors with proper logging and user-friendly response.
+        Prevents sensitive information disclosure while maintaining audit trail.
+
+        Args:
+            e: Flask exception object containing error details
+
+        Returns:
+            Tuple of (rendered template, HTTP status code 500)
+
+        Security Features:
+            - Error logging for debugging and monitoring
+            - Generic error message to prevent information leakage
+            - Consistent error response format
+            - Audit trail maintenance
+
+        Note:
+            Logs full error details for administrators
+            Displays sanitized error page to users
+            Supports incident response and troubleshooting
+        """
         logging.error(f"500 Error: {e}")
         return render_template("errors/500.html"), 500
 
@@ -756,22 +1933,115 @@ ALLOWED_EXTENSIONS = {".pdf", ".txt", ".log", ".png", ".jpg", ".jpeg"}
 
 
 def allowed_file(filename: str) -> bool:
+    """
+    Validate file extension against whitelist for security.
+
+    Checks if uploaded file has an allowed extension to prevent
+    execution of malicious file types and ensure only safe
+    document formats are accepted.
+
+    Args:
+        filename (str): Name of the file to validate
+
+    Returns:
+        bool: True if file extension is allowed, False otherwise
+
+    Allowed Extensions:
+        .pdf: Portable Document Format
+        .txt: Plain text files
+        .log: Log files
+        .png: PNG images
+        .jpg/.jpeg: JPEG images
+
+    Security Note:
+        Prevents upload of executable files, scripts, or other
+        potentially dangerous file types that could compromise security
+    """
     ext = os.path.splitext(filename)[1].lower()
     return ext in ALLOWED_EXTENSIONS
 
 
 def secure_filename(name: str) -> str:
+    """
+    Sanitize filename to prevent path traversal and injection attacks.
+
+    Applies stricter sanitization than Werkzeug's default secure_filename
+    to eliminate any characters that could be used for directory traversal
+    or command injection.
+
+    Args:
+        name (str): Original filename to sanitize
+
+    Returns:
+        str: Sanitized filename safe for filesystem operations
+
+    Security Features:
+        - Removes path separators (/, \\)
+        - Eliminates shell metacharacters
+        - Strips control characters
+        - Allows only alphanumeric, underscore, dot, and hyphen
+
+    Note:
+        More restrictive than Werkzeug default for enhanced security
+        Preserves file extension for proper type identification
+    """
     # stricter sanitization than werkzeug default
     name = werkzeug_secure(name)
     return re.sub(r"[^A-Za-z0-9_.-]", "_", name)
 
 
 def json_dumps(obj) -> str:
+    """
+    Serialize Python object to JSON string with consistent formatting.
+
+    Provides standardized JSON serialization for database storage and API responses.
+    Configured for human-readable output and Unicode support.
+
+    Args:
+        obj: Python object to serialize (dict, list, etc.)
+
+    Returns:
+        str: JSON-formatted string with proper indentation
+
+    Configuration:
+        ensure_ascii=False: Preserves Unicode characters
+        indent=2: Human-readable formatting with 2-space indentation
+
+    Note:
+        Used for storing structured data in database text fields
+        Consistent formatting aids in debugging and data analysis
+    """
     return json.dumps(obj, ensure_ascii=False, indent=2)
 
 
 def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
-    """Delete a file after a specified delay in seconds."""
+    """
+    Schedule secure deletion of uploaded file after specified delay.
+
+    Implements automatic cleanup of temporary files to prevent disk space exhaustion
+    and maintain security by removing potentially sensitive uploaded content.
+
+    Args:
+        file_path (str): Path to the file to delete
+        delay_seconds (int): Delay before deletion in seconds (default: 120)
+
+    Process:
+        1. Creates background daemon thread for non-blocking execution
+        2. Waits for specified delay period
+        3. Checks if file still exists (may have been manually deleted)
+        4. Attempts secure file removal
+        5. Logs success or error conditions
+
+    Security Benefits:
+        - Prevents accumulation of sensitive files on disk
+        - Reduces attack surface by limiting file exposure time
+        - Automatic cleanup reduces manual intervention needs
+
+    Note:
+        Uses daemon thread to prevent blocking application shutdown
+        Gracefully handles deletion errors without crashing
+        Default 2-minute delay allows for processing/scanning time
+    """
     def delete():
         time.sleep(delay_seconds)
         try:

@@ -1,4 +1,46 @@
-# models.py
+"""
+Database Models and Enums for GRC Portal
+
+This module defines all SQLAlchemy database models, enumerations, and relationships
+for the Governance, Risk, and Compliance (GRC) portal. It implements NIST RMF
+(Risk Management Framework) concepts and provides structured data storage for
+security assessments, compliance tracking, and incident management.
+
+Core Components:
+- Enums: Standardized values for compliance frameworks, risk levels, incident status
+- Base Classes: SQLAlchemy declarative base and common model functionality
+- Business Models: User, Risk, Compliance, Incident, Evidence, etc.
+- Relationships: Foreign key relationships and back-references between models
+
+Key Features:
+- NIST RMF alignment with asset/threat/vulnerability/control structure
+- Risk scoring calculations (likelihood × impact)
+- Quantitative risk analysis (ALE, EMV calculations)
+- Incident Response Plan (IRP) tracking
+- Digital evidence collection with integrity hashing
+- Multi-framework compliance support
+
+Database Tables:
+- users: User accounts and authentication
+- uploads: File upload tracking
+- scan_results: LLM analysis results
+- risks: Risk assessments with NIST RMF structure
+- compliance_scores: Framework compliance tracking
+- dependencies: Software dependency risk analysis
+- incidents: Security incident management
+- evidence: Digital evidence collection
+
+Security Considerations:
+- Input validation through SQLAlchemy column constraints
+- Relationship integrity through foreign key constraints
+- Audit trails with automatic timestamps
+- Secure password storage (handled in application layer)
+
+Usage:
+    from models import User, Risk, Incident
+    # Models are used through SQLAlchemy sessions
+"""
+
 from datetime import datetime, timezone
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Boolean, DateTime, ForeignKey, Text, Float, Enum
@@ -67,17 +109,50 @@ class Base(DeclarativeBase):
     pass
 
 class User(Base):
-    """Represents a user in the system."""
+    """
+    Represents a user in the system with governance roles and responsibilities.
+
+    Governance Roles and Responsibilities:
+
+    Administrator Role ("admin"):
+    - User account management and system configuration
+    - Security policy enforcement and updates
+    - System maintenance and configuration
+    - Access to all system functions
+    - Role assignment and permission management
+    - System-wide audit log access
+    - Incident response coordination
+
+    Auditor Role ("auditor"):
+    - Review system logs and security events
+    - Monitor compliance with policies and standards
+    - Validate security controls effectiveness
+    - Generate audit reports and findings
+    - Access to all incident and evidence data
+    - Compliance monitoring and reporting
+    - Security assessment and validation
+
+    User Role ("user"):
+    - Access to basic system functions
+    - Report security incidents
+    - View personal data and assessments
+    - Upload files for security scanning
+    - Comply with security policies
+    - Access to personal incident reports
+    - View assigned risk assessments
+    """
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
+    role: Mapped[str] = mapped_column(String(50), default="user")  # user, admin, auditor
 
     uploads: Mapped[list["Upload"]] = relationship("Upload", back_populates="user")
     incidents: Mapped[list["Incident"]] = relationship("Incident", back_populates="reporter")
     evidence: Mapped[list["Evidence"]] = relationship("Evidence", back_populates="collector")
+    audit_logs: Mapped[list["AuditLog"]] = relationship("AuditLog", back_populates="user")
 
 class Upload(Base):
     """Represents a file upload by a user."""
@@ -271,3 +346,42 @@ class Evidence(Base):
 
     def __repr__(self):
         return f"<Evidence(id={self.id}, type={self.type.value}, collected_at={self.collected_at})>"
+
+
+class AuditLog(Base):
+    """
+    Audit log for tracking governance and security events.
+
+    Implements comprehensive audit logging for governance compliance:
+    - User authentication events
+    - Role changes and administrative actions
+    - Security policy violations
+    - Data access patterns
+    - Incident response activities
+
+    Audit Categories:
+    - AUTHENTICATION: Login/logout events
+    - AUTHORIZATION: Access control decisions
+    - ADMINISTRATION: Administrative actions
+    - COMPLIANCE: Policy compliance events
+    - SECURITY: Security-related events
+    """
+    __tablename__ = "audit_logs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)  # Nullable for system events
+    action: Mapped[str] = mapped_column(String(255), nullable=False)  # e.g., "LOGIN", "ROLE_CHANGE", "ACCESS_DENIED"
+    category: Mapped[str] = mapped_column(String(50), nullable=False)  # AUTHENTICATION, AUTHORIZATION, ADMINISTRATION, COMPLIANCE, SECURITY
+    description: Mapped[str] = mapped_column(Text, nullable=False)  # Detailed description of the event
+    resource: Mapped[str] = mapped_column(String(255), nullable=True)  # Resource accessed (e.g., "/admin/users")
+    ip_address: Mapped[str] = mapped_column(String(45), nullable=True)  # IPv4/IPv6 address
+    user_agent: Mapped[str] = mapped_column(String(500), nullable=True)  # Browser/client information
+    success: Mapped[bool] = mapped_column(Boolean, default=True)  # Whether the action was successful
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    user: Mapped["User"] = relationship("User", back_populates="audit_logs")
+
+    def __repr__(self):
+        return f"<AuditLog(id={self.id}, action='{self.action}', category='{self.category}', user_id={self.user_id})>"

@@ -4,3 +4,29 @@
 2025-09-07 15:25:14,924 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
 2025-09-07 15:25:14,924 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-09 10:19:26,149 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-09 10:19:26,149 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-09 10:19:31,241 [INFO] 127.0.0.1 - - [09/Sep/2025 10:19:31] "GET / HTTP/1.1" 200 -
+2025-09-09 10:19:31,318 [INFO] 127.0.0.1 - - [09/Sep/2025 10:19:31] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-09 10:19:31,465 [INFO] 127.0.0.1 - - [09/Sep/2025 10:19:31] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-09-09 10:19:40,133 [INFO] User admin@example.com logged in successfully from IP 127.0.0.1
+2025-09-09 10:19:40,135 [INFO] 127.0.0.1 - - [09/Sep/2025 10:19:40] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-09-09 10:19:40,235 [INFO] 127.0.0.1 - - [09/Sep/2025 10:19:40] "GET /home HTTP/1.1" 200 -
+2025-09-09 10:19:40,272 [INFO] 127.0.0.1 - - [09/Sep/2025 10:19:40] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-09 10:20:01,889 [INFO] User admin@example.com uploaded file GLBA_Compliance_Report.txt from IP 127.0.0.1
+2025-09-09 10:20:01,894 [INFO] 127.0.0.1 - - [09/Sep/2025 10:20:01] "[32mPOST /home HTTP/1.1[0m" 302 -
+2025-09-09 10:20:01,929 [INFO] 127.0.0.1 - - [09/Sep/2025 10:20:01] "GET /home HTTP/1.1" 200 -
+2025-09-09 10:20:01,953 [INFO] 127.0.0.1 - - [09/Sep/2025 10:20:01] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-09 10:20:10,173 [INFO] Created risk entry 1: Unauthorized access to customer database via weak passwords
+2025-09-09 10:20:10,208 [INFO] Created risk entry 2: Malware infection on employee workstations through phishing
+2025-09-09 10:20:10,229 [INFO] Created risk entry 3: Interception of sensitive customer data during transmission
+2025-09-09 10:20:10,260 [INFO] Created risk entry 4: Insider misuse of unmonitored backup access
+2025-09-09 10:20:10,278 [INFO] Successfully created 4 risk entries and associated compliance records
+2025-09-09 10:20:10,280 [ERROR] Scan failed: Instance <Upload at 0x240d32b1ba0> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-09 10:20:10,285 [INFO] 127.0.0.1 - - [09/Sep/2025 10:20:10] "[32mPOST /scan/21 HTTP/1.1[0m" 302 -
+2025-09-09 10:20:10,321 [INFO] 127.0.0.1 - - [09/Sep/2025 10:20:10] "GET /home HTTP/1.1" 200 -
+2025-09-09 10:20:10,343 [INFO] 127.0.0.1 - - [09/Sep/2025 10:20:10] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-09 10:20:36,676 [INFO] 127.0.0.1 - - [09/Sep/2025 10:20:36] "GET /forensics HTTP/1.1" 200 -
+2025-09-09 10:20:36,694 [INFO] 127.0.0.1 - - [09/Sep/2025 10:20:36] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-09 10:22:01,901 [INFO] File uploads\GLBA_Compliance_Report.txt deleted after 120 seconds.
