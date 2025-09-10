@@ -103,6 +103,34 @@ class RiskCategory(PyEnum):
     PERSONNEL_SECURITY = "Personnel Security"
     SUPPLY_CHAIN = "Supply Chain"
     VULNERABILITY_MANAGEMENT = "Vulnerability Management"
+class RiskTreatment(PyEnum):
+    ACCEPT = "accept"
+    MITIGATE = "mitigate"
+    TRANSFER = "transfer"
+    AVOID = "avoid"
+
+class ApprovalStatus(PyEnum):
+    PENDING = "pending"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+    ESCALATED = "escalated"
+
+class GovernanceRole(PyEnum):
+    RISK_OWNER = "risk_owner"
+    COMPLIANCE_OFFICER = "compliance_officer"
+    AUDITOR = "auditor"
+    BUSINESS_OWNER = "business_owner"
+    IT_SECURITY = "it_security"
+
+class NIST_RMF_Phase(PyEnum):
+    PREPARE = "prepare"
+    CATEGORIZE = "categorize"
+    SELECT = "select"
+    IMPLEMENT = "implement"
+    ASSESS = "assess"
+    AUTHORIZE = "authorize"
+    MONITOR = "monitor"
+
 
 class Base(DeclarativeBase):
     """Base class for all SQLAlchemy models."""
@@ -147,6 +175,14 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
+    role: Mapped[str] = mapped_column(String(50), default="user")  # user, admin, auditor
+    governance_role: Mapped[GovernanceRole] = mapped_column(Enum(GovernanceRole), nullable=True)
+    department: Mapped[str] = mapped_column(String(100), nullable=True)
+    approval_limit: Mapped[float] = mapped_column(Float, default=0.0)  # Maximum risk value user can approve
+    escalation_threshold: Mapped[int] = mapped_column(Integer, default=15)  # Risk score threshold for escalation
+    escalation_level: Mapped[str] = mapped_column(String(50), default="business_unit")  # business_unit, department, executive
+    audit_trail_enabled: Mapped[bool] = mapped_column(Boolean, default=True)  # Enable audit logging for this user
+
     role: Mapped[str] = mapped_column(String(50), default="user")  # user, admin, auditor
 
     uploads: Mapped[list["Upload"]] = relationship("Upload", back_populates="user")
@@ -209,6 +245,31 @@ class Risk(Base):
     mitigation_plan: Mapped[str] = mapped_column(Text, nullable=True)
     residual_risk: Mapped[str] = mapped_column(Text, nullable=True)
     owner: Mapped[str] = mapped_column(String(255), nullable=True)
+
+    # Enhanced NIST RMF fields
+    treatment: Mapped[RiskTreatment] = mapped_column(Enum(RiskTreatment), nullable=True)
+    rmf_phase: Mapped[NIST_RMF_Phase] = mapped_column(Enum(NIST_RMF_Phase), default=NIST_RMF_Phase.PREPARE)
+    approval_status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus), default=ApprovalStatus.PENDING)
+    approver_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=True)
+
+    # Risk quantification
+    asset_value: Mapped[float] = mapped_column(Float, default=0.0)  # Asset value for ALE calculation
+    mitigation_cost: Mapped[float] = mapped_column(Float, default=0.0)  # Cost of mitigation measures
+
+    # Governance tracking
+    business_impact: Mapped[str] = mapped_column(Text, nullable=True)
+    regulatory_impact: Mapped[str] = mapped_column(Text, nullable=True)
+    risk_appetite_level: Mapped[int] = mapped_column(Integer, default=3)  # 1-5 scale for organizational risk appetite
+
+   # Additional NIST RMF fields for residual risk scoring
+    residual_likelihood: Mapped[int] = mapped_column(Integer, default=1)  # Residual likelihood after mitigation
+    residual_impact: Mapped[int] = mapped_column(Integer, default=1)      # Residual impact after mitigation
+    residual_score: Mapped[int] = mapped_column(Integer, default=0)       # Calculated residual risk score
+
+    # Audit trail
+    last_reviewed: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    next_review_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    review_frequency_days: Mapped[int] = mapped_column(Integer, default=90)  # Days between reviews
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
@@ -385,3 +446,141 @@ class AuditLog(Base):
 
     def __repr__(self):
         return f"<AuditLog(id={self.id}, action='{self.action}', category='{self.category}', user_id={self.user_id})>"
+
+
+
+class ComplianceMatrix(Base):
+    """Maps compliance requirements to controls and risks."""
+    __tablename__ = "compliance_matrix"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    framework: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=False)
+    requirement: Mapped[str] = mapped_column(String(255), nullable=False)  # e.g., "GDPR Article 25"
+    control_mapping: Mapped[str] = mapped_column(String(255), nullable=True)  # e.g., "NIST AC-2"
+    risk_category: Mapped[RiskCategory] = mapped_column(Enum(RiskCategory), nullable=True)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    assessment_procedure: Mapped[str] = mapped_column(Text, nullable=True)
+    evidence_required: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Compliance scoring
+    current_score: Mapped[float] = mapped_column(Float, default=0.0)
+    target_score: Mapped[float] = mapped_column(Float, default=100.0)
+    last_assessed: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    next_assessment: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+class RiskApproval(Base):
+    """Represents risk approval workflow and decision-making process."""
+    __tablename__ = "risk_approvals"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    risk_id: Mapped[int] = mapped_column(ForeignKey("risks.id"), nullable=False)
+    approver_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus), default=ApprovalStatus.PENDING)
+    decision_notes: Mapped[str] = mapped_column(Text, nullable=True)
+    approval_level: Mapped[str] = mapped_column(String(50), nullable=True)  # business_unit, department, executive
+    escalated_to: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    requested_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    decided_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Relationships
+    risk = relationship("Risk", backref="approvals")
+    approver = relationship("User", foreign_keys=[approver_id])
+    escalated_user = relationship("User", foreign_keys=[escalated_to])
+
+class GovernanceDecision(Base):
+    """Tracks governance decisions and their rationale."""
+    __tablename__ = "governance_decisions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    decision_type: Mapped[str] = mapped_column(String(100), nullable=False)  # risk_treatment, policy_change, control_implementation
+    decision_maker: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    rationale: Mapped[str] = mapped_column(Text, nullable=True)
+    alternatives_considered: Mapped[str] = mapped_column(Text, nullable=True)
+    expected_outcomes: Mapped[str] = mapped_column(Text, nullable=True)
+
+    risk_id: Mapped[int] = mapped_column(ForeignKey("risks.id"), nullable=True)
+    compliance_id: Mapped[int] = mapped_column(ForeignKey("compliance_scores.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    implemented_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Relationships
+    decision_maker_user = relationship("User", backref="governance_decisions")
+    risk = relationship("Risk", backref="governance_decisions")
+    compliance = relationship("Compliance", backref="governance_decisions")
+
+class ComplianceMatrix(Base):
+    """Maps compliance requirements to controls and risks."""
+    __tablename__ = "compliance_matrix"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    framework: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=False)
+    requirement: Mapped[str] = mapped_column(String(255), nullable=False)  # e.g., "GDPR Article 25"
+    control_mapping: Mapped[str] = mapped_column(String(255), nullable=True)  # e.g., "NIST AC-2"
+    risk_category: Mapped[RiskCategory] = mapped_column(Enum(RiskCategory), nullable=True)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    assessment_procedure: Mapped[str] = mapped_column(Text, nullable=True)
+    evidence_required: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Compliance scoring
+    current_score: Mapped[float] = mapped_column(Float, default=0.0)
+    target_score: Mapped[float] = mapped_column(Float, default=100.0)
+    last_assessed: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    next_assessment: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    
+    """- Incident response activities
+
+    Audit Categories:
+    - AUTHENTICATION: Login/logout events
+    - AUTHORIZATION: Access control decisions
+    - ADMINISTRATION: Administrative actions
+    - COMPLIANCE: Policy compliance events
+    - SECURITY: Security-related events
+    """
+    
+
+class ComplianceRequirement(Base):
+    """Detailed compliance requirements for regulatory standards."""
+    __tablename__ = "compliance_requirements"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    framework: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=False)
+    requirement_id: Mapped[str] = mapped_column(String(100), nullable=False)  # e.g., "GDPR-25", "NIST-AC-2"
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    category: Mapped[str] = mapped_column(String(100), nullable=True)  # e.g., "Data Protection", "Access Control"
+    mandatory: Mapped[bool] = mapped_column(Boolean, default=True)  # Whether compliance is required
+    assessment_frequency: Mapped[str] = mapped_column(String(50), default="annual")  # annual, quarterly, monthly
+
+    # Relationships
+    mappings: Mapped[list["RiskComplianceMapping"]] = relationship("RiskComplianceMapping", back_populates="requirement")
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+class RiskComplianceMapping(Base):
+    """Maps risks to specific compliance requirements."""
+    __tablename__ = "risk_compliance_mappings"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    risk_id: Mapped[int] = mapped_column(ForeignKey("risks.id"), nullable=False)
+    requirement_id: Mapped[int] = mapped_column(ForeignKey("compliance_requirements.id"), nullable=False)
+    mapping_type: Mapped[str] = mapped_column(String(50), default="direct")  # direct, indirect, related
+    impact_level: Mapped[str] = mapped_column(String(50), nullable=True)  # High, Medium, Low
+    notes: Mapped[str] = mapped_column(Text, nullable=True)  # Additional mapping details
+
+    # Relationships
+    risk: Mapped["Risk"] = relationship("Risk", backref="compliance_mappings")
+    requirement: Mapped["ComplianceRequirement"] = relationship("ComplianceRequirement", back_populates="mappings")
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
