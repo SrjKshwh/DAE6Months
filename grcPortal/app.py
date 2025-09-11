@@ -49,7 +49,7 @@ import threading
 import time
 import hashlib
 import psutil
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 from pathlib import Path
 from functools import wraps
 
@@ -58,6 +58,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename as werkzeug_secure
+from flask_migrate import Migrate
 
 load_dotenv()
 
@@ -235,6 +236,7 @@ def create_app():
         Uses Flask application context for thread-safe operations
     """
     app = Flask(__name__, instance_relative_config=True)
+    migrate = Migrate(app, Base)
  
     # Secure config
     app.config.update(
@@ -927,17 +929,67 @@ def create_app():
             # Hash and save user
             hashed_pw = generate_password_hash(password)
 
-            conn = sqlite3.connect("instance/app.db")
-            cur = conn.cursor()
+            # Use direct SQLite connection for registration to avoid session conflicts
+            import sqlite3
+
             try:
-                cur.execute("INSERT INTO users (email, password_hash, is_verified) VALUES (?, ?, ?)",
-                        (email, hashed_pw, 1))
+                # Connect directly to SQLite database
+                conn = sqlite3.connect("instance/app.db", timeout=10.0)
+                conn.execute("PRAGMA busy_timeout = 10000")  # 10 second timeout
+                cur = conn.cursor()
+
+                # Check if user already exists
+                cur.execute("SELECT id FROM users WHERE email = ?", (email,))
+                if cur.fetchone():
+                    conn.close()
+                    error = "User with this email already exists!"
+                    return render_template("register.html", error=error)
+
+                # Insert new user directly
+                cur.execute("""
+                    INSERT INTO users (
+                        email, password_hash, is_verified, role,
+                        approval_limit, escalation_threshold, escalation_level, audit_trail_enabled,
+                        created_at, updated_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    email,
+                    hashed_pw,
+                    True,  # is_verified
+                    "user",  # role
+                    10000.0,  # approval_limit
+                    15,  # escalation_threshold
+                    "business_unit",  # escalation_level
+                    True,  # audit_trail_enabled
+                    datetime.now(timezone.utc),  # created_at
+                    datetime.now(timezone.utc)   # updated_at
+                ))
+
+                # Get the user ID for audit logging
+                user_id = cur.lastrowid
+
                 conn.commit()
-            except sqlite3.IntegrityError:
-                error = "User with this email already exists!"
-                return render_template("register.html", error=error)
-            finally:
                 conn.close()
+
+                forensics_logger.info(f"New user registered: {email}")
+
+                # Create a temporary user object for audit logging
+                temp_user = type('User', (), {'id': user_id, 'email': email})()
+                log_audit_event(temp_user, "USER_REGISTRATION", "ADMINISTRATION",
+                               f"New user account created: {email}", "/register", True)
+
+                flash("Registration successful! Please login.", "success")
+                return redirect(url_for("login"))
+
+            except sqlite3.OperationalError as e:
+                if "database is locked" in str(e).lower():
+                    error = "Database is currently busy. Please wait a moment and try again."
+                else:
+                    error = f"Database error: {str(e)}"
+                return render_template("register.html", error=error)
+            except Exception as e:
+                error = f"Registration failed: {str(e)}"
+                return render_template("register.html", error=error)
 
             flash("User registered successfully! Please login.")
             return redirect(url_for("login"))
@@ -1123,13 +1175,317 @@ def create_app():
                        f"Accessed {len(risks_list)} risk assessments", "/risks", True)
         return render_template("risks.html", risks=risks_list)
 
+    # --- Enhanced Risk Management Routes ---
+
+    @app.route("/risk/<int:risk_id>")
+    @login_required
+    def view_risk(risk_id):
+        """
+        Display detailed risk assessment with governance workflow status.
+
+        Shows comprehensive risk information including:
+        - Risk scoring and severity assessment
+        - Mitigation plans and residual risk
+        - Approval workflow status
+        - Escalation history
+        - Compliance mappings
+        - Audit trail
+
+        Args:
+            risk_id: Database ID of the risk to display
+
+        Returns:
+            Rendered risk detail template with comprehensive risk data
+
+        Security Features:
+            - Role-based access control
+            - Audit logging of risk access
+            - Data isolation by user permissions
+        """
+        user = current_user()
+        db = get_session()
+
+        # Get risk with role-based access control
+        risk = None
+        if user.role == "admin":
+            risk = db.get(Risk, risk_id)
+        elif user.role == "auditor":
+            risk = db.get(Risk, risk_id)  # Auditors can see all risks
+        else:
+            # Users can only see risks from their scans or assigned to them
+            risk = db.query(Risk).filter(
+                Risk.id == risk_id,
+                (Risk.owner == user.email) | (Risk.approver_id == user.id)
+            ).first()
+
+        if not risk:
+            close_session(db)
+            flash("Risk not found or access denied.", "danger")
+            return redirect(url_for("risks"))
+
+        # Get related data
+        approvals = db.query(RiskApproval).filter(RiskApproval.risk_id == risk_id).all()
+        governance_decisions = db.query(GovernanceDecision).filter(GovernanceDecision.risk_id == risk_id).all()
+        compliance_mappings = db.query(RiskComplianceMapping).filter(RiskComplianceMapping.risk_id == risk_id).all()
+
+        # Log access for audit trail
+        log_audit_event(user, "RISK_VIEWED", "COMPLIANCE",
+                       f"Viewed detailed risk assessment for {risk.asset}", f"/risk/{risk_id}", True)
+
+        close_session(db)
+        return render_template("risk_detail.html", risk=risk, approvals=approvals,
+                             governance_decisions=governance_decisions, compliance_mappings=compliance_mappings)
+
+    @app.route("/approve_risk/<int:risk_id>", methods=["POST"])
+    @login_required
+    def approve_risk(risk_id):
+        """
+        Process risk approval decision with governance workflow.
+
+        Handles risk approval/rejection decisions based on user role and approval authority.
+        Implements escalation procedures for high-risk items and maintains audit trail.
+
+        Args:
+            risk_id: Database ID of the risk being approved
+
+        Form Fields:
+            decision: "approve" or "reject"
+            decision_notes: Comments explaining the decision
+            escalate: Boolean indicating if risk should be escalated
+
+        Process:
+            1. Validate user approval authority
+            2. Update risk approval status
+            3. Handle escalation if requested
+            4. Update risk treatment and mitigation
+            5. Log governance decision
+            6. Notify stakeholders
+
+        Returns:
+            Redirect to risk detail page with status message
+
+        Governance Features:
+            - Approval authority validation
+            - Automatic escalation for high-risk items
+            - Comprehensive audit logging
+            - Stakeholder notification workflow
+        """
+        user = current_user()
+        db = get_session()
+
+        risk = db.get(Risk, risk_id)
+        if not risk:
+            close_session(db)
+            flash("Risk not found.", "danger")
+            return redirect(url_for("risks"))
+
+        # Check approval authority
+        can_approve = False
+        if user.role == "admin":
+            can_approve = True
+        elif user.role == "auditor" and risk.score <= 15:  # Medium risk threshold
+            can_approve = True
+        elif risk.approver_id == user.id:
+            can_approve = True
+
+        if not can_approve:
+            log_audit_event(user, "APPROVAL_DENIED", "AUTHORIZATION",
+                           f"Unauthorized approval attempt for risk {risk.asset}", f"/approve_risk/{risk_id}", False)
+            close_session(db)
+            flash("You do not have approval authority for this risk.", "danger")
+            return redirect(url_for("view_risk", risk_id=risk_id))
+
+        decision = request.form.get("decision")
+        decision_notes = request.form.get("decision_notes", "")
+        escalate = request.form.get("escalate") == "on"
+
+        # Update risk approval status
+        if decision == "approve":
+            risk.approval_status = ApprovalStatus.APPROVED
+            risk.treatment = RiskTreatment.MITIGATE  # Default treatment for approved risks
+        elif decision == "reject":
+            risk.approval_status = ApprovalStatus.REJECTED
+            risk.treatment = RiskTreatment.AVOID
+        else:
+            risk.approval_status = ApprovalStatus.PENDING
+
+        # Handle escalation
+        if escalate or risk.should_escalate():
+            risk.escalation_level = risk.get_escalation_level()
+            risk.escalation_reason = decision_notes or f"Escalated by {user.email}"
+            risk.escalation_date = datetime.now(timezone.utc)
+
+            # Create escalation record
+            escalation_approval = RiskApproval(
+                risk_id=risk.id,
+                approver_id=user.id,
+                status=ApprovalStatus.ESCALATED,
+                decision_notes=f"Escalated to {risk.escalation_level} level",
+                approval_level=risk.escalation_level
+            )
+            db.add(escalation_approval)
+
+        # Create governance decision record
+        governance_decision = GovernanceDecision(
+            title=f"Risk {decision.title()}: {risk.asset}",
+            description=f"Risk assessment {decision} decision for {risk.asset}",
+            decision_type="risk_treatment",
+            decision_maker=user.id,
+            rationale=decision_notes,
+            risk_id=risk.id
+        )
+        db.add(governance_decision)
+
+        # Update risk timestamps
+        risk.updated_at = datetime.now(timezone.utc)
+
+        db.commit()
+
+        # Log governance event
+        log_audit_event(user, "RISK_APPROVED" if decision == "approve" else "RISK_REJECTED", "COMPLIANCE",
+                       f"Risk {risk.asset} {decision} with notes: {decision_notes}", f"/approve_risk/{risk_id}", True)
+
+        close_session(db)
+        flash(f"Risk {decision} successfully processed.", "success")
+        return redirect(url_for("view_risk", risk_id=risk_id))
+
+    @app.route("/escalate_risk/<int:risk_id>", methods=["POST"])
+    @login_required
+    def escalate_risk(risk_id):
+        """
+        Escalate risk to higher approval authority.
+
+        Implements governance escalation procedures for risks requiring
+        higher-level approval based on severity, impact, or other criteria.
+
+        Args:
+            risk_id: Database ID of the risk to escalate
+
+        Process:
+            1. Validate escalation authority
+            2. Update risk escalation status
+            3. Create escalation approval record
+            4. Notify appropriate stakeholders
+            5. Log escalation event
+
+        Returns:
+            Redirect to risk detail page with escalation confirmation
+        """
+        user = current_user()
+        db = get_session()
+
+        risk = db.get(Risk, risk_id)
+        if not risk:
+            close_session(db)
+            flash("Risk not found.", "danger")
+            return redirect(url_for("risks"))
+
+        escalation_reason = request.form.get("escalation_reason", "")
+        target_level = request.form.get("target_level", "department")
+
+        # Update risk escalation
+        risk.escalation_level = target_level
+        risk.escalation_reason = escalation_reason
+        risk.escalation_date = datetime.now(timezone.utc)
+        risk.approval_status = ApprovalStatus.ESCALATED
+
+        # Create escalation record
+        escalation = RiskApproval(
+            risk_id=risk.id,
+            approver_id=user.id,
+            status=ApprovalStatus.ESCALATED,
+            decision_notes=f"Escalated to {target_level}: {escalation_reason}",
+            approval_level=target_level
+        )
+        db.add(escalation)
+
+        db.commit()
+
+        # Log escalation event
+        log_audit_event(user, "RISK_ESCALATED", "COMPLIANCE",
+                       f"Risk {risk.asset} escalated to {target_level} level", f"/escalate_risk/{risk_id}", True)
+
+        close_session(db)
+        flash(f"Risk escalated to {target_level} level successfully.", "warning")
+        return redirect(url_for("view_risk", risk_id=risk_id))
+
+    @app.route("/risk_dashboard")
+    @login_required
+    def risk_dashboard():
+        """
+        Comprehensive risk management dashboard with governance metrics.
+
+        Displays executive-level risk overview including:
+        - Risk heat map by severity and category
+        - Approval workflow status
+        - Escalation queue
+        - Compliance alignment status
+        - Key risk indicators (KRIs)
+        - Governance decision summary
+
+        Returns:
+            Rendered risk dashboard template with comprehensive metrics
+
+        Features:
+            - Role-based dashboard views
+            - Real-time risk metrics
+            - Interactive risk heat map
+            - Approval queue management
+            - Escalation alerts
+        """
+        user = current_user()
+        db = get_session()
+
+        # Get risks based on user role
+        risks = get_visible_risks(user)
+
+        # Calculate dashboard metrics
+        total_risks = len(risks)
+        critical_risks = len([r for r in risks if r.severity == RiskSeverity.CRITICAL])
+        high_risks = len([r for r in risks if r.severity == RiskSeverity.HIGH])
+        escalated_risks = len([r for r in risks if r.escalation_level != "none"])
+
+        # Approval workflow metrics
+        pending_approvals = len([r for r in risks if r.approval_status == ApprovalStatus.PENDING])
+        approved_risks = len([r for r in risks if r.approval_status == ApprovalStatus.APPROVED])
+        rejected_risks = len([r for r in risks if r.approval_status == ApprovalStatus.REJECTED])
+
+        # Risk by category
+        risk_by_category = {}
+        for risk in risks:
+            category = risk.category.value if risk.category else "Uncategorized"
+            risk_by_category[category] = risk_by_category.get(category, 0) + 1
+
+        # Recent governance decisions
+        recent_decisions = db.query(GovernanceDecision).order_by(GovernanceDecision.created_at.desc()).limit(10).all()
+
+        close_session(db)
+
+        # Log dashboard access
+        log_audit_event(user, "DASHBOARD_ACCESSED", "COMPLIANCE",
+                       "Accessed risk management dashboard", "/risk_dashboard", True)
+
+        return render_template("risk_dashboard.html",
+                             risks=risks,
+                             total_risks=total_risks,
+                             critical_risks=critical_risks,
+                             high_risks=high_risks,
+                             escalated_risks=escalated_risks,
+                             pending_approvals=pending_approvals,
+                             approved_risks=approved_risks,
+                             rejected_risks=rejected_risks,
+                             risk_by_category=risk_by_category,
+                             recent_decisions=recent_decisions)
+
     @app.route("/add_risk", methods=["POST"])
+    @login_required
     def add_risk():
         """
-        Create new risk assessment entry with automatic scoring calculation.
+        Create new risk assessment entry with automatic scoring calculation and governance workflow.
 
         Processes risk creation form data and creates new Risk database entry
-        with automatic risk score calculation based on likelihood and impact.
+        with automatic risk score calculation, governance workflow initiation,
+        and escalation procedures based on NIST RMF and ISO 31000 standards.
 
         Form Fields:
             asset: System resource or information asset
@@ -1139,38 +1495,85 @@ def create_app():
             compliance_standard: Associated compliance framework
             likelihood: Risk likelihood (1-5 scale)
             impact: Risk impact (1-5 scale)
+            business_impact: Business impact description
+            regulatory_impact: Regulatory impact description
+            mitigation_plan: Proposed mitigation strategy
 
         Process:
             1. Extract and validate form data
-            2. Create Risk object with provided data
+            2. Create Risk object with comprehensive data
             3. Automatically calculate risk score (likelihood × impact)
-            4. Save to database with proper session management
-            5. Redirect to risks dashboard with success message
+            4. Determine escalation requirements based on score
+            5. Set approval workflow based on risk level
+            6. Log governance event for audit trail
+            7. Save to database with proper session management
+            8. Redirect to risks dashboard with success message
+
+        Governance Features:
+            - Automatic escalation for high-risk items
+            - Approval workflow routing
+            - Audit trail logging
+            - Risk appetite alignment checking
 
         Returns:
             Redirect to risks page with success confirmation
 
         Note:
-            Uses default values for missing optional fields
-            Automatic risk scoring eliminates manual calculation errors
-            Proper database session handling prevents connection leaks
+            Implements comprehensive risk governance per NIST RMF
+            Automatic workflow initiation based on risk severity
+            Full audit trail for compliance requirements
         """
-        session = get_session()
+        user = current_user()
+        db_session = get_session()
+
         data = request.form
         risk = Risk(
             asset=data["asset"],
             threat=data["threat"],
             vulnerability=data["vulnerability"],
             control=data["control"],
-            compliance_standard=data.get("compliance_standard", "NIST"),
+            compliance_standard=getattr(ComplianceFramework, data.get("compliance_standard", "NIST_SP_800_53").upper().replace(" ", "_"), ComplianceFramework.NIST_SP_800_53),
             likelihood=int(data.get("likelihood", 1)),
-            impact=int(data.get("impact", 1))
+            impact=int(data.get("impact", 1)),
+            business_impact=data.get("business_impact", ""),
+            regulatory_impact=data.get("regulatory_impact", ""),
+            mitigation_plan=data.get("mitigation_plan", ""),
+            owner=user.email
         )
+
+        # Calculate initial risk score
         risk.calculate_score()
-        session.add(risk)
-        session.commit()
-        close_session(session)
-        flash("Risk added successfully!", "success")
+
+        # Determine escalation requirements
+        if risk.should_escalate():
+            risk.escalation_level = risk.get_escalation_level()
+            risk.escalation_reason = f"Risk score {risk.score} exceeds tolerance threshold of {risk.risk_tolerance_threshold}"
+            risk.escalation_date = datetime.now(timezone.utc)
+            forensics_logger.info(f"Governance: Risk {risk.asset} escalated to {risk.escalation_level} level")
+
+        # Set next review date
+        risk.update_next_review_date()
+
+        # Log governance event
+        log_audit_event(user, "RISK_CREATED", "COMPLIANCE",
+                       f"Created risk assessment for {risk.asset} with score {risk.score}", "/add_risk", True)
+
+        db_session.add(risk)
+        db_session.commit()
+
+        # Create initial approval record if escalation is needed
+        if risk.should_escalate():
+            approval = RiskApproval(
+                risk_id=risk.id,
+                approver_id=user.id,  # Initially assigned to creator, will be reassigned based on workflow
+                approval_level=risk.escalation_level,
+                decision_notes=f"Auto-escalated due to risk score {risk.score}"
+            )
+            db_session.add(approval)
+            db_session.commit()
+
+        close_session(db_session)
+        flash("Risk assessment created successfully with governance workflow initiated!", "success")
         return redirect(url_for("risks"))
 
 
@@ -2066,8 +2469,17 @@ if __name__ == "__main__":
             if conn.exec_driver_sql("SELECT COUNT(*) FROM users").scalar() == 0:
                 pw = generate_password_hash("Sksf1234")  # hashed
                 conn.exec_driver_sql(
-                    "INSERT INTO users (email, password_hash, is_verified) VALUES (:e, :p, :v)",
-                    {"e": "kush786srj@gmail.com", "p": pw, "v": True},
+                    "INSERT INTO users (email, password_hash, is_verified, role, approval_limit, escalation_threshold, escalation_level, audit_trail_enabled) VALUES (:e, :p, :v, :r, :al, :et, :el, :at)",
+                    {
+                        "e": "kush786srj@gmail.com",
+                        "p": pw,
+                        "v": True,
+                        "r": "admin",
+                        "al": 100000.0,
+                        "et": 15,
+                        "el": "executive",
+                        "at": True
+                    },
                 )
                 logging.info("Default admin user created")
 

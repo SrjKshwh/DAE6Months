@@ -1,0 +1,424 @@
+<!-- templates/risk_dashboard.html -->
+{% extends "base.html" %}
+
+{% block title %}Risk Management Dashboard - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-chart-line text-primary"></i> Risk Management Dashboard</h2>
+                <div>
+                    <a href="{{ url_for('risks') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-list"></i> Risk Register
+                    </a>
+                    <button class="btn btn-success" onclick="refreshDashboard()">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Key Metrics Row -->
+            <div class="row mb-4">
+                <div class="col-md-2">
+                    <div class="card text-center border-primary">
+                        <div class="card-body">
+                            <h3 class="card-title text-primary">{{ total_risks }}</h3>
+                            <p class="card-text">Total Risks</p>
+                            <small class="text-muted">All registered risks</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card text-center border-danger">
+                        <div class="card-body">
+                            <h3 class="card-title text-danger">{{ critical_risks }}</h3>
+                            <p class="card-text">Critical Risks</p>
+                            <small class="text-muted">Score 21-25</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card text-center border-warning">
+                        <div class="card-body">
+                            <h3 class="card-title text-warning">{{ high_risks }}</h3>
+                            <p class="card-text">High Risks</p>
+                            <small class="text-muted">Score 13-20</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card text-center border-info">
+                        <div class="card-body">
+                            <h3 class="card-title text-info">{{ escalated_risks }}</h3>
+                            <p class="card-text">Escalated</p>
+                            <small class="text-muted">Requiring attention</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card text-center border-success">
+                        <div class="card-body">
+                            <h3 class="card-title text-success">{{ approved_risks }}</h3>
+                            <p class="card-text">Approved</p>
+                            <small class="text-muted">Treatment approved</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card text-center border-secondary">
+                        <div class="card-body">
+                            <h3 class="card-title text-secondary">{{ pending_approvals }}</h3>
+                            <p class="card-text">Pending</p>
+                            <small class="text-muted">Awaiting approval</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row mb-4">
+                <!-- Risk Severity Distribution -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-chart-pie"></i> Risk Severity Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="p-3 bg-danger text-white rounded">
+                                        <h4>{{ critical_risks }}</h4>
+                                        <small>Critical</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 bg-warning text-dark rounded">
+                                        <h4>{{ high_risks }}</h4>
+                                        <small>High</small>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="p-3 bg-info text-white rounded">
+                                        <h4>{{ risks|selectattr('severity', 'equalto', 'MEDIUM')|list|length }}</h4>
+                                        <small>Medium</small>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="p-3 bg-success text-white rounded">
+                                        <h4>{{ risks|selectattr('severity', 'equalto', 'LOW')|list|length }}</h4>
+                                        <small>Low</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Status Distribution -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-chart-bar"></i> Risk Status Overview</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="p-3 bg-primary text-white rounded">
+                                        <h4>{{ risks|selectattr('status', 'equalto', 'OPEN')|list|length }}</h4>
+                                        <small>Open</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 bg-success text-white rounded">
+                                        <h4>{{ risks|selectattr('status', 'equalto', 'MITIGATED')|list|length }}</h4>
+                                        <small>Mitigated</small>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="p-3 bg-info text-white rounded">
+                                        <h4>{{ risks|selectattr('status', 'equalto', 'ACCEPTED')|list|length }}</h4>
+                                        <small>Accepted</small>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="p-3 bg-secondary text-white rounded">
+                                        <h4>{{ risks|selectattr('status', 'equalto', 'CLOSED')|list|length }}</h4>
+                                        <small>Closed</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Heat Map and Category Breakdown -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-fire"></i> Risk Heat Map</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered text-center" id="riskHeatMap">
+                                    <thead>
+                                        <tr>
+                                            <th>Likelihood →<br>↓ Impact</th>
+                                            <th>1 (Very Low)</th>
+                                            <th>2 (Low)</th>
+                                            <th>3 (Moderate)</th>
+                                            <th>4 (High)</th>
+                                            <th>5 (Very High)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for impact in range(1, 6) %}
+                                        <tr>
+                                            <th>{{ impact }} ({{ ['Very Low', 'Low', 'Moderate', 'High', 'Very High'][impact-1] }})</th>
+                                            {% for likelihood in range(1, 6) %}
+                                            {% set score = likelihood * impact %}
+                                            {% set cell_risks = risks|selectattr('score', 'equalto', score)|list %}
+                                            <td class="heat-cell {{ 'heat-critical' if score >= 21 else 'heat-high' if score >= 13 else 'heat-medium' if score >= 6 else 'heat-low' }}"
+                                                data-score="{{ score }}"
+                                                data-count="{{ cell_risks|length }}">
+                                                {% if cell_risks %}
+                                                <strong>{{ cell_risks|length }}</strong>
+                                                {% else %}
+                                                0
+                                                {% endif %}
+                                            </td>
+                                            {% endfor %}
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-tags"></i> Risks by Category</h5>
+                        </div>
+                        <div class="card-body">
+                            {% for category, count in risk_by_category.items() %}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span>{{ category or 'Uncategorized' }}</span>
+                                <span class="badge bg-primary">{{ count }}</span>
+                            </div>
+                            {% endfor %}
+                            {% if not risk_by_category %}
+                            <p class="text-muted">No categorized risks found.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity and Critical Risks -->
+            <div class="row">
+                <!-- Critical Risks Alert -->
+                <div class="col-md-6">
+                    <div class="card border-danger">
+                        <div class="card-header bg-danger text-white">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Critical Risks Requiring Attention</h5>
+                        </div>
+                        <div class="card-body">
+                            {% set critical_list = risks|selectattr('severity', 'equalto', 'CRITICAL')|list %}
+                            {% if critical_list %}
+                            <div class="list-group">
+                                {% for risk in critical_list[:5] %}
+                                <a href="{{ url_for('view_risk', risk_id=risk.id) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ risk.asset }}</h6>
+                                        <small class="text-danger">Score: {{ risk.score }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ risk.threat[:50] }}...</p>
+                                    <small class="text-muted">
+                                        {% if risk.escalation_level != "none" %}
+                                        <span class="badge bg-warning">Escalated</span>
+                                        {% endif %}
+                                        {% if risk.approval_status.value == "PENDING" %}
+                                        <span class="badge bg-warning">Pending Approval</span>
+                                        {% endif %}
+                                    </small>
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p class="text-success">No critical risks currently identified.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Governance Decisions -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-history"></i> Recent Governance Activity</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if recent_decisions %}
+                            <div class="timeline">
+                                {% for decision in recent_decisions %}
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>{{ decision.title }}</h6>
+                                        <p class="text-muted">{{ decision.description[:100] }}...</p>
+                                        <small class="text-muted">
+                                            {{ decision.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                            by {{ decision.decision_maker_user.email if decision.decision_maker_user else 'System' }}
+                                        </small>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p class="text-muted">No recent governance decisions.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Appetite and Compliance Status -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-bullseye"></i> Risk Appetite Alignment</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress mb-3">
+                                {% set appetite_alignment = (approved_risks / total_risks * 100) if total_risks > 0 else 0 %}
+                                <div class="progress-bar {{ 'bg-success' if appetite_alignment >= 80 else 'bg-warning' if appetite_alignment >= 60 else 'bg-danger' }}"
+                                     style="width: {{ appetite_alignment|round(1) }}%">
+                                    {{ appetite_alignment|round(1) }}%
+                                </div>
+                            </div>
+                            <p class="text-muted">
+                                Risk treatments aligned with organizational risk appetite.
+                                Current alignment: <strong>{{ appetite_alignment|round(1) }}%</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-clipboard-check"></i> Governance Health Score</h5>
+                        </div>
+                        <div class="card-body">
+                            {% set governance_score = ((approved_risks / total_risks * 40) + ((total_risks - escalated_risks) / total_risks * 30) + ((total_risks - pending_approvals) / total_risks * 30)) if total_risks > 0 else 0 %}
+                            <div class="progress mb-3">
+                                <div class="progress-bar {{ 'bg-success' if governance_score >= 80 else 'bg-warning' if governance_score >= 60 else 'bg-danger' }}"
+                                     style="width: {{ governance_score }}%">
+                                    {{ governance_score|round(1) }}%
+                                </div>
+                            </div>
+                            <p class="text-muted">
+                                Overall governance effectiveness based on approval rates, escalation management, and decision timeliness.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Simple heat map interactivity
+document.addEventListener('DOMContentLoaded', function() {
+    // Heat map interactivity
+    document.querySelectorAll('.heat-cell').forEach(cell => {
+        cell.addEventListener('click', function() {
+            const score = this.dataset.score;
+            const count = this.dataset.count;
+            if (count > 0) {
+                alert(`Risk Score ${score}: ${count} risk(s) identified`);
+            }
+        });
+    });
+});
+
+function refreshDashboard() {
+    location.reload();
+}
+</script>
+
+<style>
+.heat-cell {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.heat-cell:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.heat-critical {
+    background-color: #dc3545 !important;
+    color: white;
+}
+
+.heat-high {
+    background-color: #ffc107 !important;
+    color: black;
+}
+
+.heat-medium {
+    background-color: #0dcaf0 !important;
+    color: white;
+}
+
+.heat-low {
+    background-color: #198754 !important;
+    color: white;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -40px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    border-left: 3px solid #007bff;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: box-shadow 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+</style>
+{% endblock %}

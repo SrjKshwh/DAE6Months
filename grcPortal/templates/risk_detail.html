@@ -1,0 +1,334 @@
+<!-- templates/risk_detail.html -->
+{% extends "base.html" %}
+
+{% block title %}Risk Details - {{ risk.asset }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-shield-alt text-warning"></i> Risk Assessment Details</h2>
+                    <h4 class="text-muted">{{ risk.asset }}</h4>
+                </div>
+                <div>
+                    <a href="{{ url_for('risks') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Risk Register
+                    </a>
+                    <a href="{{ url_for('risk_dashboard') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-chart-line"></i> Risk Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Risk Status Overview -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {% if risk.severity.value == "CRITICAL" %}
+                                    <span class="badge bg-danger fs-6">Critical</span>
+                                {% elif risk.severity.value == "HIGH" %}
+                                    <span class="badge bg-warning fs-6">High</span>
+                                {% elif risk.severity.value == "MEDIUM" %}
+                                    <span class="badge bg-info fs-6">Medium</span>
+                                {% else %}
+                                    <span class="badge bg-success fs-6">Low</span>
+                                {% endif %}
+                            </h5>
+                            <p class="card-text">Severity Level</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ risk.score }}</h5>
+                            <p class="card-text">Risk Score ({{ risk.likelihood }}×{{ risk.impact }})</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {% if risk.approval_status.value == "APPROVED" %}
+                                    <span class="badge bg-success fs-6">Approved</span>
+                                {% elif risk.approval_status.value == "REJECTED" %}
+                                    <span class="badge bg-danger fs-6">Rejected</span>
+                                {% elif risk.approval_status.value == "ESCALATED" %}
+                                    <span class="badge bg-info fs-6">Escalated</span>
+                                {% else %}
+                                    <span class="badge bg-warning fs-6">Pending</span>
+                                {% endif %}
+                            </h5>
+                            <p class="card-text">Approval Status</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {% if risk.status.value == "OPEN" %}
+                                    <span class="badge bg-primary fs-6">Open</span>
+                                {% elif risk.status.value == "MITIGATED" %}
+                                    <span class="badge bg-success fs-6">Mitigated</span>
+                                {% elif risk.status.value == "ACCEPTED" %}
+                                    <span class="badge bg-info fs-6">Accepted</span>
+                                {% else %}
+                                    <span class="badge bg-secondary fs-6">Closed</span>
+                                {% endif %}
+                            </h5>
+                            <p class="card-text">Risk Status</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="row">
+                <!-- Risk Details -->
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5><i class="fas fa-info-circle"></i> Risk Assessment Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>NIST RMF Components</h6>
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Asset:</strong></td>
+                                            <td>{{ risk.asset }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Threat:</strong></td>
+                                            <td>{{ risk.threat }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Vulnerability:</strong></td>
+                                            <td>{{ risk.vulnerability }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Control:</strong></td>
+                                            <td>{{ risk.control }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Risk Quantification</h6>
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Likelihood:</strong></td>
+                                            <td>{{ risk.likelihood }}/5</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Impact:</strong></td>
+                                            <td>{{ risk.impact }}/5</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Risk Score:</strong></td>
+                                            <td><strong>{{ risk.score }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Asset Value:</strong></td>
+                                            <td>${{ risk.asset_value|number_format(0) if risk.asset_value else "Not set" }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            {% if risk.business_impact %}
+                            <div class="mt-3">
+                                <h6>Business Impact</h6>
+                                <p class="text-muted">{{ risk.business_impact }}</p>
+                            </div>
+                            {% endif %}
+
+                            {% if risk.regulatory_impact %}
+                            <div class="mt-3">
+                                <h6>Regulatory Impact</h6>
+                                <p class="text-muted">{{ risk.regulatory_impact }}</p>
+                            </div>
+                            {% endif %}
+
+                            {% if risk.mitigation_plan %}
+                            <div class="mt-3">
+                                <h6>Mitigation Plan</h6>
+                                <p class="text-muted">{{ risk.mitigation_plan }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Approval Actions -->
+                    {% if risk.approval_status.value == "PENDING" %}
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5><i class="fas fa-gavel"></i> Approval Actions</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('approve_risk', risk_id=risk.id) }}" class="d-inline">
+                                <div class="mb-3">
+                                    <label class="form-label">Decision Notes</label>
+                                    <textarea class="form-control" name="decision_notes" rows="3" placeholder="Provide reasoning for your decision..."></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="escalate" id="escalateCheck">
+                                        <label class="form-check-label" for="escalateCheck">
+                                            Escalate to higher authority
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit" name="decision" value="approve" class="btn btn-success me-2">
+                                    <i class="fas fa-check"></i> Approve Risk
+                                </button>
+                                <button type="submit" name="decision" value="reject" class="btn btn-danger me-2">
+                                    <i class="fas fa-times"></i> Reject Risk
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Escalation Actions -->
+                    {% if risk.escalation_level == "none" and risk.score >= 13 %}
+                    <div class="card mb-4 border-warning">
+                        <div class="card-header bg-warning">
+                            <h5><i class="fas fa-arrow-up"></i> Escalation Required</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-warning">
+                                <strong>This risk requires escalation due to its high score ({{ risk.score }}).</strong>
+                            </p>
+                            <form method="POST" action="{{ url_for('escalate_risk', risk_id=risk.id) }}">
+                                <div class="mb-3">
+                                    <label class="form-label">Escalation Reason</label>
+                                    <textarea class="form-control" name="escalation_reason" rows="2" required
+                                              placeholder="Explain why this risk needs escalation..."></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Target Level</label>
+                                    <select class="form-select" name="target_level" required>
+                                        <option value="department">Department Level</option>
+                                        <option value="executive">Executive Level</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fas fa-arrow-up"></i> Escalate Risk
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-md-4">
+                    <!-- Risk Metadata -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6>Risk Metadata</h6>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Owner:</strong></td>
+                                    <td>{{ risk.owner or "Unassigned" }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Created:</strong></td>
+                                    <td>{{ risk.created_at.strftime('%Y-%m-%d') }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Last Updated:</strong></td>
+                                    <td>{{ risk.updated_at.strftime('%Y-%m-%d') }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Next Review:</strong></td>
+                                    <td>{{ risk.next_review_date.strftime('%Y-%m-%d') if risk.next_review_date else "Not scheduled" }}</td>
+                                </tr>
+                                {% if risk.escalation_level != "none" %}
+                                <tr>
+                                    <td><strong>Escalation:</strong></td>
+                                    <td>
+                                        <span class="badge bg-warning">{{ risk.escalation_level.title() }}</span>
+                                        {% if risk.escalation_date %}
+                                        <br><small>{{ risk.escalation_date.strftime('%Y-%m-%d') }}</small>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Compliance Mapping -->
+                    {% if compliance_mappings %}
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6>Compliance Mappings</h6>
+                        </div>
+                        <div class="card-body">
+                            {% for mapping in compliance_mappings %}
+                            <div class="mb-2">
+                                <small class="text-muted">{{ mapping.requirement.framework.value }}</small>
+                                <br>
+                                <strong>{{ mapping.requirement.requirement_id }}</strong>
+                                <br>
+                                <span class="badge bg-light text-dark">{{ mapping.impact_level }}</span>
+                            </div>
+                            {% if not loop.last %}<hr>{% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Recent Approvals -->
+                    {% if approvals %}
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6>Approval History</h6>
+                        </div>
+                        <div class="card-body">
+                            {% for approval in approvals[-3:] %}
+                            <div class="mb-2">
+                                <small class="text-muted">{{ approval.decided_at.strftime('%Y-%m-%d') if approval.decided_at else 'Pending' }}</small>
+                                <br>
+                                <strong>{{ approval.status.value.title() }}</strong>
+                                {% if approval.decision_notes %}
+                                <br><small>{{ approval.decision_notes[:50] }}...</small>
+                                {% endif %}
+                            </div>
+                            {% if not loop.last %}<hr>{% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+
+.table-sm td {
+    padding: 0.25rem;
+}
+</style>
+{% endblock %}

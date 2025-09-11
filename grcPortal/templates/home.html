@@ -42,6 +42,60 @@
 
     {% if show_previous and scan_result %}
       <div class="card">
+        <!-- Incident Response & Governance Navigation -->
+        <div class="card" style="margin-top: 20px; background-color: #f8f9fa;">
+          <h3 style="color: #2c3e50; margin-bottom: 15px;">🚨 Incident Response & Governance Actions</h3>  
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+    
+            <!-- Primary Response Actions -->
+            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+              <h4 style="margin: 0 0 8px 0; color: #e74c3c;">⚠️ Response Actions</h4>
+              <a href="{{ url_for('report_incident') }}" style="display: block; margin: 5px 0; color: #e74c3c;">📝 Report Incident</a>
+              <a href="{{ url_for('incidents') }}" style="display: block; margin: 5px 0; color: #e74c3c;">📋 View My Incidents</a>
+              <a href="{{ url_for('forensics') }}" style="display: block; margin: 5px 0; color: #e74c3c;">🔍 Forensics Dashboard</a>
+            </div>
+    
+            <!-- Risk & Compliance Management -->
+            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+              <h4 style="margin: 0 0 8px 0; color: #f39c12;">📊 Risk Management</h4>
+              <a href="{{ url_for('risk_dashboard') }}" style="display: block; margin: 5px 0; color: #f39c12; font-weight: bold;">📊 Risk Dashboard</a>
+              <a href="{{ url_for('risks') }}" style="display: block; margin: 5px 0; color: #f39c12;">📈 Risk Register</a>
+              <a href="{{ url_for('compliance') }}" style="display: block; margin: 5px 0; color: #f39c12;">✅ Compliance Status</a>
+              <a href="{{ url_for('dependencies') }}" style="display: block; margin: 5px 0; color: #f39c12;">🔧 Dependencies</a>
+            </div>
+    
+            <!-- Governance & Audit -->
+            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+              <h4 style="margin: 0 0 8px 0; color: #3498db;">🏛️ Governance</h4>
+              <a href="{{ url_for('policies') }}" style="display: block; margin: 5px 0; color: #3498db;">📋 Security Policies</a>
+              <a href="{{ url_for('kb') }}" style="display: block; margin: 5px 0; color: #3498db;">📚 Knowledge Base</a>
+              <a href="{{ url_for('audit_logs') }}" style="display: block; margin: 5px 0; color: #3498db;">📋 Audit Logs</a>
+            </div>
+    
+            <!-- Monitoring & Administration -->
+            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+              <h4 style="margin: 0 0 8px 0; color: #2ecc71;">📊 Monitoring</h4>
+              <a href="{{ url_for('monitoring') }}" style="display: block; margin: 5px 0; color: #2ecc71;">📊 System Monitor</a>
+              {% if user.role == 'admin' %}
+                <a href="{{ url_for('admin_dashboard') }}" style="display: block; margin: 5px 0; color: #e67e22;">⚙️ Admin Dashboard</a>
+                <a href="{{ url_for('admin_users') }}" style="display: block; margin: 5px 0; color: #e67e22;">👥 User Management</a>
+              {% endif %}
+            </div>
+    
+          </div>
+  
+          <!-- Quick Actions Bar -->
+          <div style="margin-top: 15px; padding: 10px; background-color: #ecf0f1; border-radius: 5px;">
+            <strong>Quick Actions:</strong>
+            <a href="{{ url_for('home', clear=1) }}" style="margin-left: 15px; color: #7f8c8d;">🔄 New Scan</a> |
+            <a href="{{ url_for('uploaded_file', filename=last_upload.filename) }}" target="_blank" style="margin-left: 15px; color: #7f8c8d;">📄 View File</a> |
+            <button onclick="window.print()" style="margin-left: 15px; background: none; border: none; color: #7f8c8d; cursor: pointer;">🖨️ Print Report</button>
+          </div>
+        </div>
+
+
+
+
         <h2>Scan Result ({{ scan_result.scanned_at }})</h2>
 
         <a href="{{ url_for('home', clear=1) }}" style="float: right; color: blue; text-decoration: underline;">Clear previous details for new scan</a>

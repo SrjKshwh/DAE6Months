@@ -30,3 +30,316 @@
 2025-09-09 10:20:36,676 [INFO] 127.0.0.1 - - [09/Sep/2025 10:20:36] "GET /forensics HTTP/1.1" 200 -
 2025-09-09 10:20:36,694 [INFO] 127.0.0.1 - - [09/Sep/2025 10:20:36] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
 2025-09-09 10:22:01,901 [INFO] File uploads\GLBA_Compliance_Report.txt deleted after 120 seconds.
+2025-09-11 11:48:05,060 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 11:48:05,061 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 12:05:36,474 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 12:05:36,474 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 12:05:42,684 [INFO] 127.0.0.1 - - [11/Sep/2025 12:05:42] "GET / HTTP/1.1" 200 -
+2025-09-11 12:05:42,752 [INFO] 127.0.0.1 - - [11/Sep/2025 12:05:42] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:05:42,847 [INFO] 127.0.0.1 - - [11/Sep/2025 12:05:42] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-09-11 12:05:51,656 [ERROR] Exception on / [POST]
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: users.role
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 677, in login
+    user = db.query(User).filter(User.email == email).first()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\query.py", line 2728, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\query.py", line 2827, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2362, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2247, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: users.role
+[SQL: SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.is_verified AS users_is_verified, users.role AS users_role, users.governance_role AS users_governance_role, users.department AS users_department, users.approval_limit AS users_approval_limit, users.escalation_threshold AS users_escalation_threshold, users.escalation_level AS users_escalation_level, users.audit_trail_enabled AS users_audit_trail_enabled 
+FROM users 
+WHERE users.email = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('admin@example.com', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-11 12:05:51,896 [ERROR] 500 Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-09-11 12:05:51,920 [INFO] 127.0.0.1 - - [11/Sep/2025 12:05:51] "[35m[1mPOST / HTTP/1.1[0m" 500 -
+2025-09-11 12:05:51,934 [INFO] 127.0.0.1 - - [11/Sep/2025 12:05:51] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:08:56,182 [INFO] Default admin user created
+2025-09-11 12:08:56,194 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 12:08:56,195 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 12:15:02,941 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 12:15:02,942 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 12:15:06,894 [INFO] 127.0.0.1 - - [11/Sep/2025 12:15:06] "GET / HTTP/1.1" 200 -
+2025-09-11 12:15:06,949 [INFO] 127.0.0.1 - - [11/Sep/2025 12:15:06] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:15:16,275 [INFO] 127.0.0.1 - - [11/Sep/2025 12:15:16] "POST / HTTP/1.1" 200 -
+2025-09-11 12:15:16,293 [INFO] 127.0.0.1 - - [11/Sep/2025 12:15:16] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:15:21,992 [INFO] 127.0.0.1 - - [11/Sep/2025 12:15:21] "POST / HTTP/1.1" 200 -
+2025-09-11 12:15:22,019 [INFO] 127.0.0.1 - - [11/Sep/2025 12:15:22] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:15:24,605 [INFO] 127.0.0.1 - - [11/Sep/2025 12:15:24] "GET /register HTTP/1.1" 200 -
+2025-09-11 12:15:39,631 [INFO] 127.0.0.1 - - [11/Sep/2025 12:15:39] "POST /register HTTP/1.1" 200 -
+2025-09-11 12:15:57,527 [INFO] 127.0.0.1 - - [11/Sep/2025 12:15:57] "POST /register HTTP/1.1" 200 -
+2025-09-11 12:17:05,418 [INFO] 127.0.0.1 - - [11/Sep/2025 12:17:05] "POST /register HTTP/1.1" 200 -
+2025-09-11 12:18:21,659 [ERROR] Exception on /register [POST]
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 935, in register
+    cur.execute("INSERT INTO users (email, password_hash, is_verified) VALUES (?, ?, ?)",
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            (email, hashed_pw, 1))
+            ^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: database is locked
+2025-09-11 12:18:21,666 [ERROR] 500 Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-09-11 12:18:21,668 [INFO] 127.0.0.1 - - [11/Sep/2025 12:18:21] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+2025-09-11 12:18:21,683 [INFO] 127.0.0.1 - - [11/Sep/2025 12:18:21] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:20:14,166 [INFO] 127.0.0.1 - - [11/Sep/2025 12:20:14] "GET / HTTP/1.1" 200 -
+2025-09-11 12:20:14,196 [INFO] 127.0.0.1 - - [11/Sep/2025 12:20:14] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:20:37,576 [INFO] 127.0.0.1 - - [11/Sep/2025 12:20:37] "POST / HTTP/1.1" 200 -
+2025-09-11 12:20:37,591 [INFO] 127.0.0.1 - - [11/Sep/2025 12:20:37] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:21:39,788 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 12:21:39,788 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 12:21:43,160 [INFO] 127.0.0.1 - - [11/Sep/2025 12:21:43] "GET / HTTP/1.1" 200 -
+2025-09-11 12:21:43,190 [INFO] 127.0.0.1 - - [11/Sep/2025 12:21:43] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:21:47,346 [INFO] 127.0.0.1 - - [11/Sep/2025 12:21:47] "GET /register HTTP/1.1" 200 -
+2025-09-11 12:22:20,107 [ERROR] Exception on /register [POST]
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 935, in register
+    new_user = User(
+        email=email,
+sqlite3.OperationalError: database is locked
+2025-09-11 12:22:20,124 [ERROR] 500 Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-09-11 12:22:20,125 [INFO] 127.0.0.1 - - [11/Sep/2025 12:22:20] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+2025-09-11 12:22:20,139 [INFO] 127.0.0.1 - - [11/Sep/2025 12:22:20] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:26:20,232 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 12:26:20,243 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 12:26:25,086 [INFO] 127.0.0.1 - - [11/Sep/2025 12:26:25] "GET / HTTP/1.1" 200 -
+2025-09-11 12:26:25,112 [INFO] 127.0.0.1 - - [11/Sep/2025 12:26:25] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:26:42,616 [INFO] 127.0.0.1 - - [11/Sep/2025 12:26:42] "GET /register HTTP/1.1" 200 -
+2025-09-11 12:27:17,793 [ERROR] Exception on /register [POST]
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 935, in register
+    new_user = User(
+        email=email,
+sqlite3.OperationalError: database is locked
+2025-09-11 12:27:17,799 [ERROR] 500 Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-09-11 12:27:17,800 [INFO] 127.0.0.1 - - [11/Sep/2025 12:27:17] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+2025-09-11 12:27:17,816 [INFO] 127.0.0.1 - - [11/Sep/2025 12:27:17] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:34:36,746 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 12:34:36,747 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 12:34:40,355 [INFO] 127.0.0.1 - - [11/Sep/2025 12:34:40] "GET / HTTP/1.1" 200 -
+2025-09-11 12:34:40,387 [INFO] 127.0.0.1 - - [11/Sep/2025 12:34:40] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:34:46,434 [INFO] 127.0.0.1 - - [11/Sep/2025 12:34:46] "GET /register HTTP/1.1" 200 -
+2025-09-11 12:35:41,879 [ERROR] Exception on /register [POST]
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 935, in register
+    try:
+    
+        # Create new user with all required fields
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: database is locked
+2025-09-11 12:35:41,889 [ERROR] 500 Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-09-11 12:35:41,889 [INFO] 127.0.0.1 - - [11/Sep/2025 12:35:41] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+2025-09-11 12:35:41,905 [INFO] 127.0.0.1 - - [11/Sep/2025 12:35:41] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:49:33,710 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 12:49:33,711 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 12:49:39,764 [INFO] 127.0.0.1 - - [11/Sep/2025 12:49:39] "GET / HTTP/1.1" 200 -
+2025-09-11 12:49:39,792 [INFO] 127.0.0.1 - - [11/Sep/2025 12:49:39] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 12:49:42,660 [INFO] 127.0.0.1 - - [11/Sep/2025 12:49:42] "GET /register HTTP/1.1" 200 -
+2025-09-11 12:50:24,715 [ERROR] Exception on /register [POST]
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 935, in register
+    db = get_session()
+    
+sqlite3.OperationalError: database is locked
+2025-09-11 12:50:24,726 [ERROR] 500 Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-09-11 12:50:24,728 [INFO] 127.0.0.1 - - [11/Sep/2025 12:50:24] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+2025-09-11 12:50:24,909 [INFO] 127.0.0.1 - - [11/Sep/2025 12:50:24] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 13:58:35,247 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 13:58:35,249 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 13:59:16,052 [INFO] 127.0.0.1 - - [11/Sep/2025 13:59:16] "GET / HTTP/1.1" 200 -
+2025-09-11 13:59:16,101 [INFO] 127.0.0.1 - - [11/Sep/2025 13:59:16] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 13:59:41,457 [INFO] 127.0.0.1 - - [11/Sep/2025 13:59:41] "GET /register HTTP/1.1" 200 -
+2025-09-11 14:00:24,617 [ERROR] Exception on /register [POST]
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 935, in register
+    try:
+    
+        # Connect directly to SQLite database
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: database is locked
+2025-09-11 14:00:24,628 [ERROR] 500 Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-09-11 14:00:24,631 [INFO] 127.0.0.1 - - [11/Sep/2025 14:00:24] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+2025-09-11 14:00:24,665 [INFO] 127.0.0.1 - - [11/Sep/2025 14:00:24] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:13:34,600 [INFO] Default admin user created
+2025-09-11 14:13:34,631 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 14:13:34,632 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 14:13:51,374 [INFO] 127.0.0.1 - - [11/Sep/2025 14:13:51] "GET / HTTP/1.1" 200 -
+2025-09-11 14:13:51,488 [INFO] 127.0.0.1 - - [11/Sep/2025 14:13:51] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:13:51,585 [INFO] 127.0.0.1 - - [11/Sep/2025 14:13:51] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-09-11 14:13:56,942 [INFO] 127.0.0.1 - - [11/Sep/2025 14:13:56] "GET /register HTTP/1.1" 200 -
+2025-09-11 14:14:22,403 [INFO] 127.0.0.1 - - [11/Sep/2025 14:14:22] "POST /register HTTP/1.1" 200 -
+2025-09-11 14:25:23,180 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 14:25:23,182 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 14:25:36,831 [INFO] 127.0.0.1 - - [11/Sep/2025 14:25:36] "GET / HTTP/1.1" 200 -
+2025-09-11 14:25:36,915 [INFO] 127.0.0.1 - - [11/Sep/2025 14:25:36] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:25:42,501 [INFO] 127.0.0.1 - - [11/Sep/2025 14:25:42] "GET /register HTTP/1.1" 200 -
+2025-09-11 14:25:59,832 [INFO] 127.0.0.1 - - [11/Sep/2025 14:25:59] "POST /register HTTP/1.1" 200 -
+2025-09-11 14:29:57,819 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000

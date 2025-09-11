@@ -183,7 +183,8 @@ class User(Base):
     escalation_level: Mapped[str] = mapped_column(String(50), default="business_unit")  # business_unit, department, executive
     audit_trail_enabled: Mapped[bool] = mapped_column(Boolean, default=True)  # Enable audit logging for this user
 
-    role: Mapped[str] = mapped_column(String(50), default="user")  # user, admin, auditor
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     uploads: Mapped[list["Upload"]] = relationship("Upload", back_populates="user")
     incidents: Mapped[list["Incident"]] = relationship("Incident", back_populates="reporter")
@@ -220,7 +221,7 @@ class ScanResult(Base):
 
 
 class Risk(Base):
-    """Represents a risk assessment in the system."""
+    """Represents a comprehensive risk assessment in the system following NIST RMF and ISO 31000."""
     __tablename__ = "risks"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -261,10 +262,20 @@ class Risk(Base):
     regulatory_impact: Mapped[str] = mapped_column(Text, nullable=True)
     risk_appetite_level: Mapped[int] = mapped_column(Integer, default=3)  # 1-5 scale for organizational risk appetite
 
-   # Additional NIST RMF fields for residual risk scoring
+    # Additional NIST RMF fields for residual risk scoring
     residual_likelihood: Mapped[int] = mapped_column(Integer, default=1)  # Residual likelihood after mitigation
     residual_impact: Mapped[int] = mapped_column(Integer, default=1)      # Residual impact after mitigation
     residual_score: Mapped[int] = mapped_column(Integer, default=0)       # Calculated residual risk score
+
+    # Escalation and approval workflow
+    escalation_level: Mapped[str] = mapped_column(String(50), default="business_unit")  # business_unit, department, executive
+    escalated_to: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    escalation_reason: Mapped[str] = mapped_column(Text, nullable=True)
+    escalation_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Risk appetite and tolerance
+    risk_tolerance_threshold: Mapped[int] = mapped_column(Integer, default=15)  # Risk score threshold for escalation
+    risk_appetite_alignment: Mapped[str] = mapped_column(Text, nullable=True)  # How risk aligns with organizational appetite
 
     # Audit trail
     last_reviewed: Mapped[datetime] = mapped_column(DateTime, nullable=True)
@@ -278,6 +289,8 @@ class Risk(Base):
     compliance = relationship("Compliance", back_populates="risk")
     scan_result_id: Mapped[int] = mapped_column(Integer, ForeignKey("scan_results.id"), nullable=True)
     scan_result = relationship("ScanResult", back_populates="risks")
+    approver = relationship("User", foreign_keys=[approver_id])
+    escalated_user = relationship("User", foreign_keys=[escalated_to])
 
     def calculate_score(self):
         """Calculate risk score using likelihood × impact"""
@@ -300,6 +313,46 @@ class Risk(Base):
         """Calculate Expected Monetary Value"""
         self.emv = self.ale - mitigation_cost
 
+    def calculate_residual_score(self):
+        """Calculate residual risk score after mitigation"""
+        self.residual_score = self.residual_likelihood * self.residual_impact
+        # Auto-determine residual severity based on score
+        if self.residual_score >= 20:
+            self.severity = RiskSeverity.CRITICAL
+        elif self.residual_score >= 12:
+            self.severity = RiskSeverity.HIGH
+        elif self.residual_score >= 6:
+            self.severity = RiskSeverity.MEDIUM
+        else:
+            self.severity = RiskSeverity.LOW
+
+    def should_escalate(self):
+        """Determine if risk should be escalated based on score and thresholds"""
+        return self.score >= self.risk_tolerance_threshold
+
+    def get_escalation_level(self):
+        """Determine appropriate escalation level based on risk score"""
+        if self.score >= 21:  # Critical
+            return "executive"
+        elif self.score >= 13:  # High
+            return "department"
+        elif self.score >= 6:  # Medium
+            return "business_unit"
+        else:  # Low
+            return "none"
+
+    def update_next_review_date(self):
+        """Update the next review date based on risk level and frequency"""
+        from datetime import timedelta
+        if self.severity == RiskSeverity.CRITICAL:
+            days = min(self.review_frequency_days, 30)  # Max 30 days for critical risks
+        elif self.severity == RiskSeverity.HIGH:
+            days = min(self.review_frequency_days, 60)  # Max 60 days for high risks
+        else:
+            days = self.review_frequency_days
+
+        self.next_review_date = datetime.now(timezone.utc) + timedelta(days=days)
+
 
 class Compliance(Base):
     """Represents compliance scores for various frameworks."""
@@ -311,12 +364,82 @@ class Compliance(Base):
     control_family: Mapped[str] = mapped_column(String(100), nullable=True)  # e.g., AC, IR, AU
     score: Mapped[float] = mapped_column(Float, default=0.0)           # percentage compliance 0-100
     status: Mapped[str] = mapped_column(String(50), default="not_assessed")  # compliant, non-compliant, not_assessed
+    automated_score: Mapped[float] = mapped_column(Float, default=0.0)     # Automated calculated score
+    manual_override: Mapped[bool] = mapped_column(Boolean, default=False)  # Whether score was manually overridden
+    assessment_method: Mapped[str] = mapped_column(String(100), default="manual")  # manual, automated, hybrid
 
     risk_id: Mapped[int] = mapped_column(Integer, ForeignKey("risks.id"), nullable=True)
     risk = relationship("Risk", back_populates="compliance")
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    def calculate_automated_score(self):
+        """Calculate automated compliance score based on risk mitigation"""
+        if self.risk:
+            # Base score on risk treatment and mitigation effectiveness
+            base_score = 50.0  # Default moderate compliance
+
+            if self.risk.treatment == RiskTreatment.MITIGATE and self.risk.mitigation_plan:
+                base_score += 30.0  # Good mitigation plan
+            elif self.risk.treatment == RiskTreatment.ACCEPT:
+                base_score += 10.0  # Risk accepted but monitored
+            elif self.risk.treatment == RiskTreatment.AVOID:
+                base_score += 40.0  # Risk avoided
+
+            # Adjust based on residual risk
+            if hasattr(self.risk, 'residual_score') and self.risk.residual_score:
+                residual_factor = (25 - self.risk.residual_score) / 25.0  # Lower residual = higher compliance
+                base_score += residual_factor * 20.0
+
+            self.automated_score = min(100.0, max(0.0, base_score))
+        else:
+            self.automated_score = 0.0
+
+    def get_effective_score(self):
+        """Get the effective score (manual override takes precedence)"""
+        if self.manual_override:
+            return self.score
+        return self.automated_score
+
+
+class ComplianceScore(Base):
+    """Automated compliance scoring system for regulatory requirements."""
+    __tablename__ = "compliance_scores_automated"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    framework: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=False)
+    requirement_id: Mapped[str] = mapped_column(String(100), nullable=False)  # e.g., "NIST-AC-2", "GDPR-25"
+    calculated_score: Mapped[float] = mapped_column(Float, default=0.0)       # 0-100 percentage
+    weight: Mapped[float] = mapped_column(Float, default=1.0)                 # Importance weight for overall scoring
+    assessment_date: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # Gap analysis fields
+    gap_description: Mapped[str] = mapped_column(Text, nullable=True)
+    remediation_plan: Mapped[str] = mapped_column(Text, nullable=True)
+    priority_level: Mapped[str] = mapped_column(String(20), default="medium")  # high, medium, low
+
+    # Relationships
+    requirement_id_fk: Mapped[int] = mapped_column(Integer, ForeignKey("compliance_requirements.id"), nullable=True)
+    requirement = relationship("ComplianceRequirement", backref="automated_scores")
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    def calculate_gap_score(self, target_score: float = 100.0):
+        """Calculate compliance gap as percentage"""
+        return max(0.0, target_score - self.calculated_score)
+
+    def get_compliance_status(self):
+        """Get compliance status based on score"""
+        if self.calculated_score >= 95.0:
+            return "compliant"
+        elif self.calculated_score >= 80.0:
+            return "mostly_compliant"
+        elif self.calculated_score >= 60.0:
+            return "partially_compliant"
+        else:
+            return "non_compliant"
 
 
 class Dependency(Base):
@@ -515,38 +638,6 @@ class GovernanceDecision(Base):
     risk = relationship("Risk", backref="governance_decisions")
     compliance = relationship("Compliance", backref="governance_decisions")
 
-class ComplianceMatrix(Base):
-    """Maps compliance requirements to controls and risks."""
-    __tablename__ = "compliance_matrix"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    framework: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=False)
-    requirement: Mapped[str] = mapped_column(String(255), nullable=False)  # e.g., "GDPR Article 25"
-    control_mapping: Mapped[str] = mapped_column(String(255), nullable=True)  # e.g., "NIST AC-2"
-    risk_category: Mapped[RiskCategory] = mapped_column(Enum(RiskCategory), nullable=True)
-    description: Mapped[str] = mapped_column(Text, nullable=True)
-    assessment_procedure: Mapped[str] = mapped_column(Text, nullable=True)
-    evidence_required: Mapped[str] = mapped_column(Text, nullable=True)
-
-    # Compliance scoring
-    current_score: Mapped[float] = mapped_column(Float, default=0.0)
-    target_score: Mapped[float] = mapped_column(Float, default=100.0)
-    last_assessed: Mapped[datetime] = mapped_column(DateTime, nullable=True)
-    next_assessment: Mapped[datetime] = mapped_column(DateTime, nullable=True)
-
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
-    
-    """- Incident response activities
-
-    Audit Categories:
-    - AUTHENTICATION: Login/logout events
-    - AUTHORIZATION: Access control decisions
-    - ADMINISTRATION: Administrative actions
-    - COMPLIANCE: Policy compliance events
-    - SECURITY: Security-related events
-    """
-    
 
 class ComplianceRequirement(Base):
     """Detailed compliance requirements for regulatory standards."""

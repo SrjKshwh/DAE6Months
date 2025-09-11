@@ -1,17 +1,319 @@
-<!-- risks.html -->
-<h2>Risk Register</h2>
-<form method="POST" action="{{ url_for('add_risk') }}">
-  <input name="asset" placeholder="Asset">
-  <input name="threat" placeholder="Threat">
-  <input name="vulnerability" placeholder="Vulnerability">
-  <input name="control" placeholder="Control">
-  <input name="likelihood" type="number" min="1" max="5">
-  <input name="impact" type="number" min="1" max="5">
-  <button type="submit">Add Risk</button>
-</form>
+<!-- templates/risks.html -->
+{% extends "base.html" %}
 
-<ul>
-  {% for risk in risks %}
-    <li>{{ risk.asset }} | Score: {{ risk.score }} | Status: {{ risk.status }}</li>
-  {% endfor %}
-</ul>
+{% block title %}Risk Management - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-shield-alt text-warning"></i> Enterprise Risk Register</h2>
+                <div>
+                    <a href="{{ url_for('risk_dashboard') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-chart-line"></i> Risk Dashboard
+                    </a>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addRiskModal">
+                        <i class="fas fa-plus"></i> Add New Risk
+                    </button>
+                </div>
+            </div>
+
+            <!-- Risk Summary Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <h5 class="card-title text-primary">{{ risks|length }}</h5>
+                            <p class="card-text">Total Risks</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ risks|selectattr('severity', 'equalto', 'CRITICAL')|list|length }}</h5>
+                            <p class="card-text">Critical Risks</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ risks|selectattr('severity', 'equalto', 'HIGH')|list|length }}</h5>
+                            <p class="card-text">High Risks</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ risks|selectattr('approval_status', 'equalto', 'PENDING')|list|length }}</h5>
+                            <p class="card-text">Pending Approval</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Filter and Search -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <select class="form-select" id="severityFilter">
+                                <option value="">All Severities</option>
+                                <option value="CRITICAL">Critical</option>
+                                <option value="HIGH">High</option>
+                                <option value="MEDIUM">Medium</option>
+                                <option value="LOW">Low</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" id="statusFilter">
+                                <option value="">All Statuses</option>
+                                <option value="OPEN">Open</option>
+                                <option value="MITIGATED">Mitigated</option>
+                                <option value="ACCEPTED">Accepted</option>
+                                <option value="CLOSED">Closed</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search risks...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="riskTable">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Asset</th>
+                                    <th>Threat</th>
+                                    <th>Severity</th>
+                                    <th>Score</th>
+                                    <th>Status</th>
+                                    <th>Approval</th>
+                                    <th>Owner</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for risk in risks %}
+                                <tr class="risk-row" data-severity="{{ risk.severity.value }}" data-status="{{ risk.status.value }}">
+                                    <td>
+                                        <strong>{{ risk.asset }}</strong>
+                                        {% if risk.escalation_level != "none" %}
+                                        <span class="badge bg-warning ms-1">
+                                            <i class="fas fa-arrow-up"></i> Escalated
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ risk.threat }}</td>
+                                    <td>
+                                        {% if risk.severity.value == "CRITICAL" %}
+                                            <span class="badge bg-danger">Critical</span>
+                                        {% elif risk.severity.value == "HIGH" %}
+                                            <span class="badge bg-warning">High</span>
+                                        {% elif risk.severity.value == "MEDIUM" %}
+                                            <span class="badge bg-info">Medium</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Low</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold">{{ risk.score }}</span>
+                                        <small class="text-muted">({{ risk.likelihood }}×{{ risk.impact }})</small>
+                                    </td>
+                                    <td>
+                                        {% if risk.status.value == "OPEN" %}
+                                            <span class="badge bg-primary">Open</span>
+                                        {% elif risk.status.value == "MITIGATED" %}
+                                            <span class="badge bg-success">Mitigated</span>
+                                        {% elif risk.status.value == "ACCEPTED" %}
+                                            <span class="badge bg-info">Accepted</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Closed</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if risk.approval_status.value == "PENDING" %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% elif risk.approval_status.value == "APPROVED" %}
+                                            <span class="badge bg-success">Approved</span>
+                                        {% elif risk.approval_status.value == "REJECTED" %}
+                                            <span class="badge bg-danger">Rejected</span>
+                                        {% else %}
+                                            <span class="badge bg-info">Escalated</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ risk.owner or "Unassigned" }}</td>
+                                    <td>
+                                        <a href="{{ url_for('view_risk', risk_id=risk.id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        {% if risk.approval_status.value == "PENDING" %}
+                                        <button class="btn btn-sm btn-outline-success ms-1" data-risk-id="{{ risk.id }}" onclick="approveRisk(this)">
+                                            <i class="fas fa-check"></i> Approve
+                                        </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Risk Modal -->
+<div class="modal fade" id="addRiskModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Risk Assessment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('add_risk') }}">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Asset <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="asset" required placeholder="System resource or information asset">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Threat <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="threat" required placeholder="Potential violation of security">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Vulnerability <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="vulnerability" required placeholder="Weakness that can be exploited">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Control <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="control" required placeholder="Safeguard or countermeasure">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Likelihood (1-5) <span class="text-danger">*</span></label>
+                                <select class="form-select" name="likelihood" required>
+                                    <option value="1">1 - Very Low</option>
+                                    <option value="2">2 - Low</option>
+                                    <option value="3" selected>3 - Moderate</option>
+                                    <option value="4">4 - High</option>
+                                    <option value="5">5 - Very High</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Impact (1-5) <span class="text-danger">*</span></label>
+                                <select class="form-select" name="impact" required>
+                                    <option value="1">1 - Very Low</option>
+                                    <option value="2">2 - Low</option>
+                                    <option value="3" selected>3 - Moderate</option>
+                                    <option value="4">4 - High</option>
+                                    <option value="5">5 - Very High</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Compliance Standard</label>
+                                <select class="form-select" name="compliance_standard">
+                                    <option value="NIST_SP_800_53">NIST SP 800-53</option>
+                                    <option value="ISO_27001">ISO 27001</option>
+                                    <option value="GDPR">GDPR</option>
+                                    <option value="HIPAA">HIPAA</option>
+                                    <option value="PCI_DSS">PCI DSS</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Business Impact</label>
+                        <textarea class="form-control" name="business_impact" rows="2" placeholder="Describe the business impact of this risk"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Regulatory Impact</label>
+                        <textarea class="form-control" name="regulatory_impact" rows="2" placeholder="Describe regulatory or compliance implications"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Proposed Mitigation Plan</label>
+                        <textarea class="form-control" name="mitigation_plan" rows="3" placeholder="Describe how this risk should be mitigated"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Create Risk Assessment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Filter functionality
+document.getElementById('severityFilter').addEventListener('change', filterRisks);
+document.getElementById('statusFilter').addEventListener('change', filterRisks);
+document.getElementById('searchInput').addEventListener('input', filterRisks);
+
+function filterRisks() {
+    const severityFilter = document.getElementById('severityFilter').value.toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+    const rows = document.querySelectorAll('.risk-row');
+
+    rows.forEach(row => {
+        const severity = row.dataset.severity.toLowerCase();
+        const status = row.dataset.status.toLowerCase();
+        const text = row.textContent.toLowerCase();
+
+        const severityMatch = !severityFilter || severity === severityFilter;
+        const statusMatch = !statusFilter || status === statusFilter;
+        const searchMatch = !searchTerm || text.includes(searchTerm);
+
+        row.style.display = severityMatch && statusMatch && searchMatch ? '' : 'none';
+    });
+}
+
+function approveRisk(button) {
+    const riskId = button.getAttribute('data-risk-id');
+    if (confirm('Are you sure you want to approve this risk?')) {
+        // Create a form and submit it
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/approve_risk/${riskId}`;
+
+        const decisionInput = document.createElement('input');
+        decisionInput.type = 'hidden';
+        decisionInput.name = 'decision';
+        decisionInput.value = 'approve';
+
+        form.appendChild(decisionInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+
+<style>
+.risk-row:hover {
+    background-color: #f8f9fa !important;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+
+.table-responsive {
+    max-height: 600px;
+    overflow-y: auto;
+}
+</style>
+{% endblock %}
