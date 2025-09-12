@@ -1,160 +1,267 @@
 <!-- templates/home.html -->
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>GRC Portal – Home</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-</head>
-<body>
-  <div class="container">
-    <div class="topbar">
-      <h1>Welcome, {{ user.email }}</h1>
-      <a href="{{ url_for('forensics') }}">Forensics</a> | <a href="{{ url_for('logout') }}">Logout</a>
-    </div>
+{% extends "base.html" %}
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="flash">
-          {% for cat, msg in messages %}
-            <div class="flash-{{ cat }}">{{ msg }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
+{% block title %}GRC Portal – Home{% endblock %}
 
-    <div class="card">
-      <h2>Step 1: Upload & Scan</h2>
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="text-primary"><i class="fas fa-home"></i> Welcome, {{ user.email }}</h1>
+                <div>
+                    <a href="{{ url_for('forensics') }}" class="btn btn-outline-info me-2">
+                        <i class="fas fa-search"></i> Forensics
+                    </a>
+                </div>
+            </div>
 
-      <form method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".pdf,.txt">
-        <button type="submit">Upload</button>
-      </form>
+            <!-- File Upload Section -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-upload"></i> Step 1: Upload & Scan</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" class="mb-3">
+                        <div class="mb-3">
+                            <label for="fileInput" class="form-label">Select File to Upload</label>
+                            <input type="file" class="form-control" id="fileInput" name="file" accept=".pdf,.txt" required>
+                            <div class="form-text">Allowed file types: .pdf, .txt</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Upload & Scan
+                        </button>
+                    </form>
 
-      {% if show_previous and last_upload %}
-        <p>Latest file: <a href="{{ url_for('uploaded_file', filename=last_upload.filename) }}" target="_blank">{{ last_upload.filename }}</a> ({{ last_upload.uploaded_at }})
-          <form method="post" action="{{ url_for('scan', upload_id=last_upload.id) }}" style="display: inline;">
-            <button type="submit" {{ 'disabled' if has_scan else '' }}>Scan</button>
-          </form>
-        </p>
-      {% endif %}
-    </div>
+                    {% if show_previous and last_upload %}
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-file"></i> Latest Upload</h6>
+                        <p class="mb-2">
+                            <strong>{{ last_upload.filename }}</strong>
+                            <small class="text-muted">({{ last_upload.uploaded_at }})</small>
+                        </p>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('uploaded_file', filename=last_upload.filename) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-eye"></i> View File
+                            </a>
+                            <form method="post" action="{{ url_for('scan', upload_id=last_upload.id) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-success" {{ 'disabled' if has_scan else '' }}>
+                                    <i class="fas fa-search"></i> {{ 'Already Scanned' if has_scan else 'Scan File' }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
 
     {% if show_previous and scan_result %}
       <div class="card">
-        <!-- Incident Response & Governance Navigation -->
-        <div class="card" style="margin-top: 20px; background-color: #f8f9fa;">
-          <h3 style="color: #2c3e50; margin-bottom: 15px;">🚨 Incident Response & Governance Actions</h3>  
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
-    
-            <!-- Primary Response Actions -->
-            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
-              <h4 style="margin: 0 0 8px 0; color: #e74c3c;">⚠️ Response Actions</h4>
-              <a href="{{ url_for('report_incident') }}" style="display: block; margin: 5px 0; color: #e74c3c;">📝 Report Incident</a>
-              <a href="{{ url_for('incidents') }}" style="display: block; margin: 5px 0; color: #e74c3c;">📋 View My Incidents</a>
-              <a href="{{ url_for('forensics') }}" style="display: block; margin: 5px 0; color: #e74c3c;">🔍 Forensics Dashboard</a>
+            <!-- Incident Response & Governance Navigation -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-exclamation-triangle text-warning"></i> Incident Response & Governance Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Primary Response Actions -->
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="card border-danger h-100">
+                                <div class="card-header bg-danger text-white">
+                                    <h6 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Response Actions</h6>
+                                </div>
+                                <div class="card-body">
+                                    <a href="{{ url_for('report_incident') }}" class="btn btn-outline-danger btn-sm d-block mb-2">
+                                        <i class="fas fa-plus"></i> Report Incident
+                                    </a>
+                                    <a href="{{ url_for('incidents') }}" class="btn btn-outline-danger btn-sm d-block mb-2">
+                                        <i class="fas fa-list"></i> View Incidents
+                                    </a>
+                                    <a href="{{ url_for('forensics') }}" class="btn btn-outline-danger btn-sm d-block">
+                                        <i class="fas fa-search"></i> Forensics
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Risk & Compliance Management -->
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="card border-warning h-100">
+                                <div class="card-header bg-warning">
+                                    <h6 class="mb-0"><i class="fas fa-chart-line"></i> Risk Management</h6>
+                                </div>
+                                <div class="card-body">
+                                    <a href="{{ url_for('risk_dashboard') }}" class="btn btn-outline-warning btn-sm d-block mb-2 fw-bold">
+                                        <i class="fas fa-tachometer-alt"></i> Risk Dashboard
+                                    </a>
+                                    <a href="{{ url_for('risks') }}" class="btn btn-outline-warning btn-sm d-block mb-2">
+                                        <i class="fas fa-list"></i> Risk Register
+                                    </a>
+                                    <a href="{{ url_for('compliance') }}" class="btn btn-outline-warning btn-sm d-block mb-2">
+                                        <i class="fas fa-clipboard-check"></i> Compliance
+                                    </a>
+                                    <a href="{{ url_for('dependencies') }}" class="btn btn-outline-warning btn-sm d-block">
+                                        <i class="fas fa-cogs"></i> Dependencies
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Governance & Audit -->
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="card border-info h-100">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0"><i class="fas fa-gavel"></i> Governance</h6>
+                                </div>
+                                <div class="card-body">
+                                    <a href="{{ url_for('policies') }}" class="btn btn-outline-info btn-sm d-block mb-2">
+                                        <i class="fas fa-file-contract"></i> Policies
+                                    </a>
+                                    <a href="{{ url_for('kb') }}" class="btn btn-outline-info btn-sm d-block mb-2">
+                                        <i class="fas fa-book"></i> Knowledge Base
+                                    </a>
+                                    <a href="{{ url_for('audit_logs') }}" class="btn btn-outline-info btn-sm d-block">
+                                        <i class="fas fa-history"></i> Audit Logs
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Monitoring & Administration -->
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="card border-success h-100">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0"><i class="fas fa-desktop"></i> Monitoring</h6>
+                                </div>
+                                <div class="card-body">
+                                    <a href="{{ url_for('monitoring') }}" class="btn btn-outline-success btn-sm d-block mb-2">
+                                        <i class="fas fa-desktop"></i> System Monitor
+                                    </a>
+                                    {% if user.role == 'admin' %}
+                                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-success btn-sm d-block mb-2">
+                                        <i class="fas fa-cog"></i> Admin Dashboard
+                                    </a>
+                                    <a href="{{ url_for('admin_users') }}" class="btn btn-outline-success btn-sm d-block">
+                                        <i class="fas fa-users"></i> User Management
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Bar -->
+                    <div class="mt-3 p-3 bg-light rounded">
+                        <strong><i class="fas fa-bolt"></i> Quick Actions:</strong>
+                        <a href="{{ url_for('home', clear=1) }}" class="btn btn-sm btn-outline-secondary ms-2">
+                            <i class="fas fa-sync"></i> New Scan
+                        </a>
+                        {% if show_previous and last_upload %}
+                        <a href="{{ url_for('uploaded_file', filename=last_upload.filename) }}" target="_blank" class="btn btn-sm btn-outline-secondary ms-2">
+                            <i class="fas fa-file"></i> View File
+                        </a>
+                        {% endif %}
+                        <button onclick="window.print()" class="btn btn-sm btn-outline-secondary ms-2">
+                            <i class="fas fa-print"></i> Print Report
+                        </button>
+                    </div>
+                </div>
             </div>
-    
-            <!-- Risk & Compliance Management -->
-            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
-              <h4 style="margin: 0 0 8px 0; color: #f39c12;">📊 Risk Management</h4>
-              <a href="{{ url_for('risk_dashboard') }}" style="display: block; margin: 5px 0; color: #f39c12; font-weight: bold;">📊 Risk Dashboard</a>
-              <a href="{{ url_for('risks') }}" style="display: block; margin: 5px 0; color: #f39c12;">📈 Risk Register</a>
-              <a href="{{ url_for('compliance') }}" style="display: block; margin: 5px 0; color: #f39c12;">✅ Compliance Status</a>
-              <a href="{{ url_for('dependencies') }}" style="display: block; margin: 5px 0; color: #f39c12;">🔧 Dependencies</a>
+
+
+
+
+            {% if scan_result %}
+            <!-- Scan Results Section -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-search"></i> Scan Results ({{ scan_result.scanned_at }})</h5>
+                    <a href="{{ url_for('home', clear=1) }}" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-times"></i> Clear Results
+                    </a>
+                </div>
+                <div class="card-body">
+                    <!-- Summary -->
+                    <div class="mb-4">
+                        <h6><i class="fas fa-file-alt"></i> Summary</h6>
+                        <p class="text-muted">{{ scan_result.summary }}</p>
+                    </div>
+
+                    <!-- Compliance Hits -->
+                    <div class="mb-4">
+                        <h6><i class="fas fa-clipboard-check"></i> Compliance Hits</h6>
+                        {% if compliance_hits %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-sm">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Framework</th>
+                                        <th>Control</th>
+                                        <th>Note</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for hit in compliance_hits %}
+                                    <tr>
+                                        <td><span class="badge bg-primary">{{ hit.get('framework', 'N/A') }}</span></td>
+                                        <td><code>{{ hit.get('control', 'N/A') }}</code></td>
+                                        <td>{{ hit.get('note', 'N/A') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No compliance hits found.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Risks -->
+                    <div class="mb-3">
+                        <h6><i class="fas fa-exclamation-triangle"></i> Identified Risks</h6>
+                        {% if risks %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-sm">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Risk Description</th>
+                                        <th>Severity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for risk in risks %}
+                                    <tr>
+                                        <td>{{ risk.get('risk', 'N/A') }}</td>
+                                        <td>
+                                            {% if risk.get('severity') == 'CRITICAL' %}
+                                                <span class="badge bg-danger">Critical</span>
+                                            {% elif risk.get('severity') == 'HIGH' %}
+                                                <span class="badge bg-warning">High</span>
+                                            {% elif risk.get('severity') == 'MEDIUM' %}
+                                                <span class="badge bg-info">Medium</span>
+                                            {% else %}
+                                                <span class="badge bg-success">Low</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No risks found.</p>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-    
-            <!-- Governance & Audit -->
-            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
-              <h4 style="margin: 0 0 8px 0; color: #3498db;">🏛️ Governance</h4>
-              <a href="{{ url_for('policies') }}" style="display: block; margin: 5px 0; color: #3498db;">📋 Security Policies</a>
-              <a href="{{ url_for('kb') }}" style="display: block; margin: 5px 0; color: #3498db;">📚 Knowledge Base</a>
-              <a href="{{ url_for('audit_logs') }}" style="display: block; margin: 5px 0; color: #3498db;">📋 Audit Logs</a>
+            {% endif %}
+
+            <!-- File Type Information -->
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <strong>Supported File Types:</strong> .pdf, .txt
             </div>
-    
-            <!-- Monitoring & Administration -->
-            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
-              <h4 style="margin: 0 0 8px 0; color: #2ecc71;">📊 Monitoring</h4>
-              <a href="{{ url_for('monitoring') }}" style="display: block; margin: 5px 0; color: #2ecc71;">📊 System Monitor</a>
-              {% if user.role == 'admin' %}
-                <a href="{{ url_for('admin_dashboard') }}" style="display: block; margin: 5px 0; color: #e67e22;">⚙️ Admin Dashboard</a>
-                <a href="{{ url_for('admin_users') }}" style="display: block; margin: 5px 0; color: #e67e22;">👥 User Management</a>
-              {% endif %}
-            </div>
-    
-          </div>
-  
-          <!-- Quick Actions Bar -->
-          <div style="margin-top: 15px; padding: 10px; background-color: #ecf0f1; border-radius: 5px;">
-            <strong>Quick Actions:</strong>
-            <a href="{{ url_for('home', clear=1) }}" style="margin-left: 15px; color: #7f8c8d;">🔄 New Scan</a> |
-            <a href="{{ url_for('uploaded_file', filename=last_upload.filename) }}" target="_blank" style="margin-left: 15px; color: #7f8c8d;">📄 View File</a> |
-            <button onclick="window.print()" style="margin-left: 15px; background: none; border: none; color: #7f8c8d; cursor: pointer;">🖨️ Print Report</button>
-          </div>
         </div>
-
-
-
-
-        <h2>Scan Result ({{ scan_result.scanned_at }})</h2>
-
-        <a href="{{ url_for('home', clear=1) }}" style="float: right; color: blue; text-decoration: underline;">Clear previous details for new scan</a>
-        <br><br>
-
-        <h3>Summary</h3>
-        <p>{{ scan_result.summary }}</p>
-
-        <h3>Compliance Hits</h3>
-        {% if compliance_hits %}
-          <table border="1">
-            <thead>
-              <tr>
-                <th>Framework</th>
-                <th>Control</th>
-                <th>Note</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for hit in compliance_hits %}
-                <tr>
-                  <td>{{ hit.get('framework', 'N/A') }}</td>
-                  <td>{{ hit.get('control', 'N/A') }}</td>
-                  <td>{{ hit.get('note', 'N/A') }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          {% else %}
-          <p>No compliance hits found.</p>
-        {% endif %}
-
-        <h3>Risks</h3>
-          {% if risks %}
-            <table border="1">
-              <thead>
-                <tr>
-                  <th>Risk Description</th>
-                  <th>Severity</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for risk in risks %}
-                  <tr>
-                    <td>{{ risk.get('risk', 'N/A') }}</td>
-                    <td>{{ risk.get('severity', 'N/A') }}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-            {% else %}
-            <p>No risks found.</p>
-          {% endif %}
-      </div>
-    {% endif %}
-
-    <div class="hint">
-      <p>Allowed file types: .pdf, .txt</p>
     </div>
-  </div>
-</body>
-</html>
+</div>
+{% endblock %}

@@ -68,7 +68,7 @@
                                 <option value="LOW">Low</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <select class="form-select" id="statusFilter">
                                 <option value="">All Statuses</option>
                                 <option value="OPEN">Open</option>
@@ -77,7 +77,16 @@
                                 <option value="CLOSED">Closed</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <select class="form-select" id="originFilter">
+                                <option value="">All Origins</option>
+                                <option value="brainstorming">Brainstorming</option>
+                                <option value="checklist">Checklist</option>
+                                <option value="swot">SWOT Analysis</option>
+                                <option value="manual">Manual Entry</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
                             <input type="text" class="form-control" id="searchInput" placeholder="Search risks...">
                         </div>
                     </div>
@@ -97,6 +106,7 @@
                                     <th>Score</th>
                                     <th>Status</th>
                                     <th>Approval</th>
+                                    <th>Origin</th>
                                     <th>Owner</th>
                                     <th>Actions</th>
                                 </tr>
@@ -148,6 +158,25 @@
                                             <span class="badge bg-danger">Rejected</span>
                                         {% else %}
                                             <span class="badge bg-info">Escalated</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if "Brainstorming Idea:" in risk.asset %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-lightbulb"></i> Brainstorming
+                                            </span>
+                                        {% elif "Checklist Item:" in risk.asset %}
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-clipboard-check"></i> Checklist
+                                            </span>
+                                        {% elif "SWOT" in risk.asset %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-chart-line"></i> SWOT
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-edit"></i> Manual
+                                            </span>
                                         {% endif %}
                                     </td>
                                     <td>{{ risk.owner or "Unassigned" }}</td>
@@ -260,11 +289,13 @@
 // Filter functionality
 document.getElementById('severityFilter').addEventListener('change', filterRisks);
 document.getElementById('statusFilter').addEventListener('change', filterRisks);
+document.getElementById('originFilter').addEventListener('change', filterRisks);
 document.getElementById('searchInput').addEventListener('input', filterRisks);
 
 function filterRisks() {
     const severityFilter = document.getElementById('severityFilter').value.toLowerCase();
     const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+    const originFilter = document.getElementById('originFilter').value.toLowerCase();
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
 
     const rows = document.querySelectorAll('.risk-row');
@@ -274,11 +305,18 @@ function filterRisks() {
         const status = row.dataset.status.toLowerCase();
         const text = row.textContent.toLowerCase();
 
+        // Determine origin based on content
+        let origin = 'manual';
+        if (text.includes('brainstorming')) origin = 'brainstorming';
+        else if (text.includes('checklist')) origin = 'checklist';
+        else if (text.includes('swot')) origin = 'swot';
+
         const severityMatch = !severityFilter || severity === severityFilter;
         const statusMatch = !statusFilter || status === statusFilter;
+        const originMatch = !originFilter || origin === originFilter;
         const searchMatch = !searchTerm || text.includes(searchTerm);
 
-        row.style.display = severityMatch && statusMatch && searchMatch ? '' : 'none';
+        row.style.display = severityMatch && statusMatch && originMatch && searchMatch ? '' : 'none';
     });
 }
 

@@ -1,32 +1,85 @@
 <!-- templates/login.html -->
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>GRC Portal – Login</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-</head>
-<body>
-  <div class="container">
-    <h1>GRC Portal</h1>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="flash">
-          {% for cat, msg in messages %}
-            <div class="flash-{{ cat }}">{{ msg }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
+{% extends "base.html" %}
 
-    <form method="post" class="card">
-      <label>Email</label>
-      <input type="email" name="email" required placeholder="admin@example.com">
-      <label>Password</label>
-      <input type="password" name="password" required placeholder="admin123">
-      <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="{{ url_for('register') }}">Create new user</a></p>
-  </div>
-</body>
-</html>
+{% block title %}GRC Portal – Login{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="text-center mb-4">
+                <h1 class="text-primary"><i class="fas fa-shield-alt"></i> GRC Portal</h1>
+                <p class="text-muted">Secure Governance, Risk, and Compliance Management</p>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h5 class="mb-0"><i class="fas fa-sign-in-alt"></i> Login to Your Account</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" name="email"
+                                       required placeholder="admin@example.com">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="password" name="password"
+                                       required placeholder="Enter your password">
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p class="mb-0">Don't have an account?
+                        <a href="{{ url_for('register') }}" class="text-decoration-none">
+                            <strong>Create new user</strong>
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle"></i>
+                    Default admin credentials: admin@example.com / admin123
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+</style>
+{% endblock %}

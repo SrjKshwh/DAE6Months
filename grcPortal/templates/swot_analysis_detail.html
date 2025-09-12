@@ -1,0 +1,273 @@
+<!-- templates/swot_analysis_detail.html -->
+{% extends "base.html" %}
+
+{% block title %}SWOT Analysis - {{ analysis.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-chart-line text-success"></i> {{ analysis.title }}</h2>
+                    <p class="text-muted mb-0">Scope: {{ analysis.scope.title() }}</p>
+                </div>
+                <div>
+                    <span class="badge bg-{{ 'success' if analysis.status == 'completed' else 'warning' }} fs-6">
+                        {{ analysis.status.title() }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- SWOT Matrix -->
+            <div class="row mb-4">
+                <!-- Strengths -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-success">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Strengths</h5>
+                        </div>
+                        <div class="card-body">
+                            {% set strengths = grouped_factors.strengths %}
+                            {% if strengths %}
+                                <ul class="list-group list-group-flush">
+                                    {% for factor in strengths %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ factor.description }}
+                                        <div>
+                                            <span class="badge bg-{{ 'success' if factor.impact_level == 'high' else 'info' }} me-1">
+                                                {{ factor.impact_level.title() }}
+                                            </span>
+                                            {% if factor.converted_to_risk %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-shield-alt"></i> Risk Control
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted text-center py-3">No strengths identified yet.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weaknesses -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-warning">
+                        <div class="card-header bg-warning">
+                            <h5 class="mb-0"><i class="fas fa-minus-circle"></i> Weaknesses</h5>
+                        </div>
+                        <div class="card-body">
+                            {% set weaknesses = grouped_factors.weaknesses %}
+                            {% if weaknesses %}
+                                <ul class="list-group list-group-flush">
+                                    {% for factor in weaknesses %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ factor.description }}
+                                        <div>
+                                            <span class="badge bg-{{ 'danger' if factor.impact_level == 'high' else 'warning' }} me-1">
+                                                {{ factor.impact_level.title() }}
+                                            </span>
+                                            {% if factor.converted_to_risk %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-exclamation-triangle"></i> Risk Created
+                                            </span>
+                                            {% else %}
+                                            <form method="POST" class="d-inline">
+                                                <input type="hidden" name="action" value="convert_to_risk">
+                                                <input type="hidden" name="factor_id" value="{{ factor.id }}">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('Convert this weakness to a formal risk assessment?')">
+                                                    <i class="fas fa-exchange-alt"></i> Convert
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted text-center py-3">No weaknesses identified yet.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Opportunities -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-info">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-lightbulb"></i> Opportunities</h5>
+                        </div>
+                        <div class="card-body">
+                            {% set opportunities = grouped_factors.opportunities %}
+                            {% if opportunities %}
+                                <ul class="list-group list-group-flush">
+                                    {% for factor in opportunities %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ factor.description }}
+                                        <div>
+                                            <span class="badge bg-{{ 'primary' if factor.strategic_importance == 'high' else 'info' }} me-1">
+                                                {{ factor.strategic_importance.title() }}
+                                            </span>
+                                            {% if factor.converted_to_risk %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-shield-alt"></i> Mitigation Strategy
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted text-center py-3">No opportunities identified yet.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Threats -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-danger">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Threats</h5>
+                        </div>
+                        <div class="card-body">
+                            {% set threats = grouped_factors.threats %}
+                            {% if threats %}
+                                <ul class="list-group list-group-flush">
+                                    {% for factor in threats %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ factor.description }}
+                                        <div>
+                                            <span class="badge bg-{{ 'dark' if factor.impact_level == 'high' else 'secondary' }} me-1">
+                                                {{ factor.impact_level.title() }}
+                                            </span>
+                                            {% if factor.converted_to_risk %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-exclamation-triangle"></i> Risk Created
+                                            </span>
+                                            {% else %}
+                                            <form method="POST" class="d-inline">
+                                                <input type="hidden" name="action" value="convert_to_risk">
+                                                <input type="hidden" name="factor_id" value="{{ factor.id }}">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('Convert this threat to a formal risk assessment?')">
+                                                    <i class="fas fa-exchange-alt"></i> Convert
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted text-center py-3">No threats identified yet.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Factor Form -->
+            {% if analysis.status == 'in_progress' %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-plus"></i> Add SWOT Factor</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <input type="hidden" name="action" value="add_factor">
+                        <input type="hidden" name="analysis_id" value="{{ analysis.id }}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Factor Type</label>
+                                    <select class="form-select" name="factor_type" required>
+                                        <option value="strengths">Strength</option>
+                                        <option value="weaknesses">Weakness</option>
+                                        <option value="opportunities">Opportunity</option>
+                                        <option value="threats">Threat</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" name="description" rows="3" required
+                                              placeholder="Describe the factor..."></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Impact Level</label>
+                                    <select class="form-select" name="impact_level">
+                                        <option value="low">Low</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Strategic Importance</label>
+                                    <select class="form-select" name="strategic_importance">
+                                        <option value="low">Low</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="fas fa-plus"></i> Add Factor
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Analysis Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-bar"></i> Analysis Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="p-3 bg-success text-white rounded">
+                                <h4>{{ grouped_factors.strengths|length }}</h4>
+                                <small>Strengths</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="p-3 bg-warning text-dark rounded">
+                                <h4>{{ grouped_factors.weaknesses|length }}</h4>
+                                <small>Weaknesses</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="p-3 bg-info text-white rounded">
+                                <h4>{{ grouped_factors.opportunities|length }}</h4>
+                                <small>Opportunities</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="p-3 bg-danger text-white rounded">
+                                <h4>{{ grouped_factors.threats|length }}</h4>
+                                <small>Threats</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            Created: {{ analysis.created_at.strftime('%Y-%m-%d %H:%M') }} |
+                            Analyst: {{ analysis.analyst.email }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

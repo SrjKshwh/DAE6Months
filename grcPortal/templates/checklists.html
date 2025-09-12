@@ -1,0 +1,144 @@
+<!-- templates/checklists.html -->
+{% extends "base.html" %}
+
+{% block title %}Risk Checklists - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-clipboard-check text-info"></i> Risk Assessment Checklists</h2>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createChecklistModal">
+                    <i class="fas fa-plus"></i> Create Checklist
+                </button>
+            </div>
+
+            <!-- Available Checklists -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-list"></i> Available Checklists</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if checklists %}
+                                <div class="row">
+                                    {% for checklist in checklists %}
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <h6 class="card-title">{{ checklist.name }}</h6>
+                                                <p class="card-text small">{{ checklist.description }}</p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <small class="text-muted">
+                                                        {{ checklist.items|length }} items
+                                                    </small>
+                                                    <form method="POST" class="d-inline">
+                                                        <input type="hidden" name="action" value="start_assessment">
+                                                        <input type="hidden" name="checklist_id" value="{{ checklist.id }}">
+                                                        <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                            <i class="fas fa-play"></i> Start Assessment
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted text-center py-4">
+                                    <i class="fas fa-clipboard-check fa-3x text-info mb-3"></i><br>
+                                    No checklists available. Create one to get started!
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-info-circle"></i> Checklist Methodology</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>Structured Assessment:</h6>
+                            <ul class="small">
+                                <li>Systematic review of risk areas</li>
+                                <li>Standardized questions and criteria</li>
+                                <li>Consistent evaluation framework</li>
+                                <li>Automated risk scoring</li>
+                                <li>Compliance mapping</li>
+                            </ul>
+
+                            <h6 class="mt-3">Benefits:</h6>
+                            <ul class="small">
+                                <li>Comprehensive coverage</li>
+                                <li>Reduced oversight</li>
+                                <li>Measurable results</li>
+                                <li>Audit trail</li>
+                                <li>Regulatory compliance</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recent Assessments -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5><i class="fas fa-history"></i> Recent Assessments</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if recent_assessments %}
+                                <ul class="list-unstyled">
+                                    {% for assessment in recent_assessments %}
+                                    <li class="mb-2">
+                                        <div class="d-flex justify-content-between">
+                                            <small>{{ assessment.checklist.name }}</small>
+                                            <span class="badge bg-{{ 'success' if assessment.status == 'completed' else 'warning' }}">
+                                                {{ assessment.status }}
+                                            </span>
+                                        </div>
+                                        <small class="text-muted">
+                                            {{ assessment.created_at.strftime('%Y-%m-%d') }}
+                                        </small>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted small">No recent assessments</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Checklist Modal -->
+<div class="modal fade" id="createChecklistModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Risk Checklist</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    Checklist creation functionality would be implemented here with a form to define checklist name, description, and questions.
+                </div>
+                <p class="text-muted">
+                    In a full implementation, this modal would allow administrators to create custom checklists with categorized questions,
+                    response options, and risk scoring criteria.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,46 +1,136 @@
 <!-- templates/report_incident.html -->
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>GRC Portal – Report Incident</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-</head>
-<body>
-  <div class="container">
-    <div class="topbar">
-      <h1>Report New Incident</h1>
-      <a href="{{ url_for('incidents') }}">Back to Incidents</a> | <a href="{{ url_for('logout') }}">Logout</a>
-    </div>
+{% extends "base.html" %}
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="flash">
-          {% for cat, msg in messages %}
-            <div class="flash-{{ cat }}">{{ msg }}</div>
-          {% endfor %}
+{% block title %}Report Incident - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="text-center mb-4">
+                <h1 class="text-danger"><i class="fas fa-exclamation-triangle"></i> Report New Incident</h1>
+                <p class="text-muted">Submit a security incident for immediate response</p>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fas fa-plus"></i> Incident Report Form</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Incident Title <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-heading"></i></span>
+                                <input type="text" class="form-control" id="title" name="title"
+                                       required placeholder="Brief, descriptive title for the incident">
+                            </div>
+                            <div class="form-text">Provide a clear, concise title that summarizes the incident</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Incident Description <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="description" name="description" rows="5"
+                                      required placeholder="Provide detailed information about the incident including:&#10;&#10;• What happened&#10;• When it occurred&#10;• Who was affected&#10;• What systems/data were impacted&#10;• Any immediate actions taken"></textarea>
+                            <div class="form-text">Be as detailed as possible to help the response team</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="severity" class="form-label">Incident Severity <span class="text-danger">*</span></label>
+                            <select class="form-select" id="severity" name="severity" required>
+                                {% for sev in severities %}
+                                <option value="{{ sev.value }}"
+                                        {% if sev.value == 'MEDIUM' %}selected{% endif %}>
+                                    {{ sev.value }}
+                                    {% if sev.value == 'CRITICAL' %}
+                                        - Severe breach requiring immediate executive attention
+                                    {% elif sev.value == 'HIGH' %}
+                                        - Significant impact requiring urgent response
+                                    {% elif sev.value == 'MEDIUM' %}
+                                        - Moderate disruption requiring timely response
+                                    {% else %}
+                                        - Minor issue with limited impact
+                                    {% endif %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">Select the severity level based on business impact and urgency</div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Important:</strong> All incidents will be reviewed by the security team within 1 hour of submission.
+                            Critical and High severity incidents will receive immediate attention.
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('incidents') }}" class="btn btn-outline-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Back to Incidents
+                            </a>
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-paper-plane"></i> Submit Incident Report
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-shield-alt"></i>
+                        Your report is confidential and will be handled according to our incident response procedures
+                    </small>
+                </div>
+            </div>
+
+            <!-- Incident Response Guidelines -->
+            <div class="card mt-4 border-info">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0"><i class="fas fa-book"></i> Incident Response Guidelines</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>What to Report:</h6>
+                            <ul class="small mb-0">
+                                <li>Security breaches or unauthorized access</li>
+                                <li>Suspicious system behavior</li>
+                                <li>Data loss or corruption</li>
+                                <li>Phishing attempts or malware</li>
+                                <li>Policy violations</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Response Times:</h6>
+                            <ul class="small mb-0">
+                                <li><strong>Critical:</strong> Within 30 minutes</li>
+                                <li><strong>High:</strong> Within 1 hour</li>
+                                <li><strong>Medium:</strong> Within 4 hours</li>
+                                <li><strong>Low:</strong> Within 24 hours</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      {% endif %}
-    {% endwith %}
-
-    <div class="card">
-      <form method="POST">
-        <label for="title">Title:</label>
-        <input type="text" name="title" required><br><br>
-
-        <label for="description">Description:</label>
-        <textarea name="description" required></textarea><br><br>
-
-        <label for="severity">Severity:</label>
-        <select name="severity">
-          {% for sev in severities %}
-            <option value="{{ sev.value }}">{{ sev.value }}</option>
-          {% endfor %}
-        </select><br><br>
-
-        <button type="submit">Report Incident</button>
-      </form>
     </div>
-  </div>
-</body>
-</html>
+</div>
+
+<style>
+.card {
+    border: none;
+    border-radius: 15px;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+.form-text {
+    font-size: 0.875em;
+}
+</style>
+{% endblock %}

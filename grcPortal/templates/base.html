@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
-    <!-- Navigation Bar -->
+    <!-- Navigation Bar - Only show for authenticated users -->
+    {% if current_user %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('home') }}">
@@ -42,6 +43,16 @@
                             </a></li>
                             <li><a class="dropdown-item" href="{{ url_for('risks') }}">
                                 <i class="fas fa-list"></i> Risk Register
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('brainstorming') }}">
+                                <i class="fas fa-lightbulb"></i> Brainstorming
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('checklists') }}">
+                                <i class="fas fa-clipboard-check"></i> Checklists
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('swot_analysis') }}">
+                                <i class="fas fa-chart-line"></i> SWOT Analysis
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ url_for('compliance') }}">
@@ -89,7 +100,7 @@
                             <i class="fas fa-desktop"></i> Monitoring
                         </a>
                     </li>
-                    {% if current_user and current_user.role == 'admin' %}
+                    {% if current_user.role == 'admin' %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-cog"></i> Admin
@@ -109,7 +120,7 @@
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> {{ current_user.email if current_user else 'User' }}
+                            <i class="fas fa-user"></i> {{ current_user.email }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ url_for('logout') }}">
@@ -121,6 +132,7 @@
             </div>
         </div>
     </nav>
+    {% endif %}
 
     <!-- Flash Messages -->
     <div class="container-fluid mt-3">

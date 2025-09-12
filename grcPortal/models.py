@@ -674,4 +674,301 @@ class RiskComplianceMapping(Base):
     requirement: Mapped["ComplianceRequirement"] = relationship("ComplianceRequirement", back_populates="mappings")
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+class BrainstormingSession(Base):
+    """Represents a structured brainstorming session for risk identification."""
+    __tablename__ = "brainstorming_sessions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    objective: Mapped[str] = mapped_column(Text, nullable=False)
+    facilitator: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    status: Mapped[str] = mapped_column(String(50), default="planning")  # planning, active, completed, cancelled
+
+    # Session details
+    scheduled_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    duration_minutes: Mapped[int] = mapped_column(Integer, default=60)
+    max_participants: Mapped[int] = mapped_column(Integer, default=10)
+
+    # Methodology settings
+    technique: Mapped[str] = mapped_column(String(100), default="round_robin")  # round_robin, silent, affinity, etc.
+    time_limit_per_idea: Mapped[int] = mapped_column(Integer, default=2)  # minutes per idea
+    voting_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Results
+    total_ideas_generated: Mapped[int] = mapped_column(Integer, default=0)
+    ideas_converted_to_risks: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Documentation
+    agenda: Mapped[str] = mapped_column(Text, nullable=True)
+    ground_rules: Mapped[str] = mapped_column(Text, nullable=True)
+    session_notes: Mapped[str] = mapped_column(Text, nullable=True)
+    outcomes: Mapped[str] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    completed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Relationships
+    facilitator_user = relationship("User", backref="facilitated_sessions")
+    participants: Mapped[list["BrainstormingParticipant"]] = relationship("BrainstormingParticipant", back_populates="session")
+    ideas: Mapped[list["BrainstormingIdea"]] = relationship("BrainstormingIdea", back_populates="session")
+
+    def get_participant_count(self):
+        """Get current number of participants"""
+        return len(self.participants)
+
+    def get_completion_percentage(self):
+        """Calculate session completion percentage"""
+        if self.status == "completed":
+            return 100
+        elif self.status == "active":
+            return 50
+        elif self.status == "planning":
+            return 25
+        return 0
+
+
+class BrainstormingParticipant(Base):
+    """Represents participants in a brainstorming session."""
+    __tablename__ = "brainstorming_participants"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    session_id: Mapped[int] = mapped_column(ForeignKey("brainstorming_sessions.id"), nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    role: Mapped[str] = mapped_column(String(50), default="participant")  # facilitator, participant, observer
+    joined_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # Participation metrics
+    ideas_contributed: Mapped[int] = mapped_column(Integer, default=0)
+    votes_cast: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Relationships
+    session = relationship("BrainstormingSession", back_populates="participants")
+    user = relationship("User", backref="brainstorming_participations")
+    ideas: Mapped[list["BrainstormingIdea"]] = relationship("BrainstormingIdea", back_populates="contributor")
+
+
+class BrainstormingIdea(Base):
+    """Represents individual ideas generated during brainstorming."""
+    __tablename__ = "brainstorming_ideas"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    session_id: Mapped[int] = mapped_column(ForeignKey("brainstorming_sessions.id"), nullable=False)
+    contributor_id: Mapped[int] = mapped_column(ForeignKey("brainstorming_participants.id"), nullable=False)
+
+    # Idea content
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    category: Mapped[str] = mapped_column(String(100), nullable=True)  # strategic, operational, financial, etc.
+
+    # Evaluation
+    votes: Mapped[int] = mapped_column(Integer, default=0)
+    priority_score: Mapped[int] = mapped_column(Integer, default=0)  # 1-5 scale
+
+    # Conversion to risk
+    converted_to_risk: Mapped[bool] = mapped_column(Boolean, default=False)
+    risk_id: Mapped[int] = mapped_column(ForeignKey("risks.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    session = relationship("BrainstormingSession", back_populates="ideas")
+    contributor = relationship("BrainstormingParticipant", back_populates="ideas")
+    risk = relationship("Risk", backref="brainstorming_idea")
+
+
+class RiskChecklist(Base):
+    """Represents predefined risk checklists for different domains."""
+    __tablename__ = "risk_checklists"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    category: Mapped[str] = mapped_column(String(100), nullable=False)  # IT, Finance, Operations, Compliance, etc.
+    framework: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=True)
+
+    # Checklist metadata
+    version: Mapped[str] = mapped_column(String(20), default="1.0")
+    is_template: Mapped[bool] = mapped_column(Boolean, default=True)  # Template vs custom checklist
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Usage tracking
+    times_used: Mapped[int] = mapped_column(Integer, default=0)
+    last_used: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    creator = relationship("User", backref="created_checklists")
+    items: Mapped[list["RiskChecklistItem"]] = relationship("RiskChecklistItem", back_populates="checklist")
+    assessments: Mapped[list["RiskChecklistAssessment"]] = relationship("RiskChecklistAssessment", back_populates="checklist")
+
+
+class RiskChecklistItem(Base):
+    """Represents individual items within a risk checklist."""
+    __tablename__ = "risk_checklist_items"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    checklist_id: Mapped[int] = mapped_column(ForeignKey("risk_checklists.id"), nullable=False)
+
+    # Item details
+    question: Mapped[str] = mapped_column(Text, nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    category: Mapped[RiskCategory] = mapped_column(Enum(RiskCategory), nullable=True)
+
+    # Risk mapping
+    default_likelihood: Mapped[int] = mapped_column(Integer, default=3)  # 1-5 scale
+    default_impact: Mapped[int] = mapped_column(Integer, default=3)      # 1-5 scale
+    suggested_controls: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Ordering
+    order: Mapped[int] = mapped_column(Integer, default=0)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    checklist = relationship("RiskChecklist", back_populates="items")
+
+
+class RiskChecklistAssessment(Base):
+    """Represents an assessment conducted using a risk checklist."""
+    __tablename__ = "risk_checklist_assessments"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    checklist_id: Mapped[int] = mapped_column(ForeignKey("risk_checklists.id"), nullable=False)
+    assessor_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    # Assessment details
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    scope: Mapped[str] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(String(50), default="in_progress")  # in_progress, completed, reviewed
+
+    # Results
+    total_items: Mapped[int] = mapped_column(Integer, default=0)
+    completed_items: Mapped[int] = mapped_column(Integer, default=0)
+    risks_identified: Mapped[int] = mapped_column(Integer, default=0)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    completed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Relationships
+    checklist = relationship("RiskChecklist", back_populates="assessments")
+    assessor = relationship("User", backref="checklist_assessments")
+    responses: Mapped[list["RiskChecklistResponse"]] = relationship("RiskChecklistResponse", back_populates="assessment")
+
+
+class RiskChecklistResponse(Base):
+    """Represents responses to individual checklist items."""
+    __tablename__ = "risk_checklist_responses"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    assessment_id: Mapped[int] = mapped_column(ForeignKey("risk_checklist_assessments.id"), nullable=False)
+    item_id: Mapped[int] = mapped_column(ForeignKey("risk_checklist_items.id"), nullable=False)
+
+    # Response data
+    response: Mapped[str] = mapped_column(String(50), nullable=False)  # yes, no, n/a
+    notes: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Risk creation
+    risk_created: Mapped[bool] = mapped_column(Boolean, default=False)
+    risk_id: Mapped[int] = mapped_column(ForeignKey("risks.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    assessment = relationship("RiskChecklistAssessment", back_populates="responses")
+    item = relationship("RiskChecklistItem", backref="responses")
+    risk = relationship("Risk", backref="checklist_response")
+
+
+class SWOTAnalysis(Base):
+    """Represents a SWOT analysis for strategic risk assessment."""
+    __tablename__ = "swot_analyses"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    objective: Mapped[str] = mapped_column(Text, nullable=False)
+    scope: Mapped[str] = mapped_column(Text, nullable=True)  # What is being analyzed
+
+    # SWOT dimensions
+    strengths: Mapped[str] = mapped_column(Text, nullable=True)
+    weaknesses: Mapped[str] = mapped_column(Text, nullable=True)
+    opportunities: Mapped[str] = mapped_column(Text, nullable=True)
+    threats: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Analysis metadata
+    analyst_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    status: Mapped[str] = mapped_column(String(50), default="draft")  # draft, in_review, completed, archived
+
+    # Risk conversion
+    risks_from_threats: Mapped[int] = mapped_column(Integer, default=0)
+    risks_from_weaknesses: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Strategic insights
+    key_findings: Mapped[str] = mapped_column(Text, nullable=True)
+    recommendations: Mapped[str] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    completed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Relationships
+    analyst = relationship("User", backref="swot_analyses")
+    items: Mapped[list["SWOTItem"]] = relationship("SWOTItem", back_populates="analysis")
+
+    def get_completion_percentage(self):
+        """Calculate SWOT completion percentage based on filled sections"""
+        sections = [self.strengths, self.weaknesses, self.opportunities, self.threats]
+        filled_sections = sum(1 for section in sections if section and section.strip())
+        return (filled_sections / 4) * 100
+
+
+class SWOTItem(Base):
+    """Represents individual items within SWOT analysis."""
+    __tablename__ = "swot_items"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    analysis_id: Mapped[int] = mapped_column(ForeignKey("swot_analyses.id"), nullable=False)
+
+    # Item details
+    dimension: Mapped[str] = mapped_column(String(20), nullable=False)  # strengths, weaknesses, opportunities, threats
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+
+    # Evaluation
+    importance: Mapped[int] = mapped_column(Integer, default=3)  # 1-5 scale
+    feasibility: Mapped[int] = mapped_column(Integer, default=3)  # 1-5 scale for opportunities
+    impact: Mapped[int] = mapped_column(Integer, default=3)       # 1-5 scale for threats
+
+    # Risk conversion
+    converted_to_risk: Mapped[bool] = mapped_column(Boolean, default=False)
+    risk_id: Mapped[int] = mapped_column(ForeignKey("risks.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    analysis = relationship("SWOTAnalysis", back_populates="items")
+    risk = relationship("Risk", backref="swot_item")
+
+
+class RiskIdentificationMethod(Base):
+    """Tracks which risk identification method was used for each risk."""
+    __tablename__ = "risk_identification_methods"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    risk_id: Mapped[int] = mapped_column(ForeignKey("risks.id"), nullable=False)
+
+    # Method identification
+    method: Mapped[str] = mapped_column(String(50), nullable=False)  # brainstorming, checklist, swot, scan, manual
+    method_id: Mapped[int] = mapped_column(Integer, nullable=True)  # ID of the source method record
+
+    # Context
+    identified_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    identified_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    risk = relationship("Risk", backref="identification_methods")
+    identifier = relationship("User", backref="risk_identifications")
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

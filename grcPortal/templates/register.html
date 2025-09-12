@@ -1,66 +1,160 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Create New User</title>
-  <script>
-    function validateForm(event) {
-      const email = document.forms["regForm"]["email"].value.trim();
-      const password = document.forms["regForm"]["password"].value;
-      const confirmPassword = document.forms["regForm"]["confirm_password"].value;
-      const errorBox = document.getElementById("errorBox");
-      errorBox.innerHTML = ""; // clear previous errors
+<!-- templates/register.html -->
+{% extends "base.html" %}
 
-      // Email regex
-      const emailPattern = /^[\w\.-]+@[\w\.-]+\.\w+$/;
-      if (!emailPattern.test(email)) {
-        errorBox.innerHTML = "❌ Invalid email format!";
+{% block title %}Create New User - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="text-center mb-4">
+                <h1 class="text-primary"><i class="fas fa-user-plus"></i> Create Account</h1>
+                <p class="text-muted">Join the GRC Portal</p>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header bg-success text-white text-center">
+                    <h5 class="mb-0"><i class="fas fa-user-plus"></i> Register New User</h5>
+                </div>
+                <div class="card-body">
+                    <form name="regForm" method="POST" action="{{ url_for('register') }}" onsubmit="return validateForm(event)">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" name="email"
+                                       required placeholder="Enter your email">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="password" name="password"
+                                       required placeholder="Create a password">
+                            </div>
+                            <div class="form-text">
+                                Must be at least 8 characters with letters and numbers
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">Confirm Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                                       required placeholder="Confirm your password">
+                            </div>
+                        </div>
+
+                        <div id="errorBox" class="alert alert-danger d-none" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span id="errorText"></span>
+                        </div>
+
+                        {% if error %}
+                        <div class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            {{ error }}
+                        </div>
+                        {% endif %}
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-user-plus"></i> Create Account
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p class="mb-0">Already have an account?
+                        <a href="{{ url_for('login') }}" class="text-decoration-none">
+                            <strong>Login here</strong>
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle"></i>
+                    Registration creates a user account with basic access
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+body {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function validateForm(event) {
+    const email = document.forms["regForm"]["email"].value.trim();
+    const password = document.forms["regForm"]["password"].value;
+    const confirmPassword = document.forms["regForm"]["confirm_password"].value;
+    const errorBox = document.getElementById("errorBox");
+    const errorText = document.getElementById("errorText");
+
+    // Clear previous errors
+    errorBox.classList.add("d-none");
+    errorText.innerHTML = "";
+
+    // Email regex
+    const emailPattern = /^[\w\.-]+@[\w\.-]+\.\w+$/;
+    if (!emailPattern.test(email)) {
+        errorText.innerHTML = "Invalid email format!";
+        errorBox.classList.remove("d-none");
         event.preventDefault();
         return false;
-      }
-
-      // Password rules
-      if (password.length < 8) {
-        errorBox.innerHTML = "❌ Password must be at least 8 characters long.";
-        event.preventDefault();
-        return false;
-      }
-      if (!/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
-        errorBox.innerHTML = "❌ Password must contain at least one letter and one number.";
-        event.preventDefault();
-        return false;
-      }
-
-      // Confirm password check
-      if (password !== confirmPassword) {
-        errorBox.innerHTML = "❌ Passwords do not match.";
-        event.preventDefault();
-        return false;
-      }
-
-      return true; // allow submission
     }
-  </script>
-</head>
-<body>
-  <h2>Register New User</h2>
-  <form name="regForm" method="POST" action="{{ url_for('register') }}" onsubmit="return validateForm(event)">
-    <label>Email:</label><br>
-    <input type="text" name="email" required><br><br>
 
-    <label>Password:</label><br>
-    <input type="password" name="password" required><br><br>
+    // Password rules
+    if (password.length < 8) {
+        errorText.innerHTML = "Password must be at least 8 characters long.";
+        errorBox.classList.remove("d-none");
+        event.preventDefault();
+        return false;
+    }
+    if (!/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+        errorText.innerHTML = "Password must contain at least one letter and one number.";
+        errorBox.classList.remove("d-none");
+        event.preventDefault();
+        return false;
+    }
 
-    <label>Confirm Password:</label><br>
-    <input type="password" name="confirm_password" required><br><br>
+    // Confirm password check
+    if (password !== confirmPassword) {
+        errorText.innerHTML = "Passwords do not match.";
+        errorBox.classList.remove("d-none");
+        event.preventDefault();
+        return false;
+    }
 
-    <button type="submit">Register</button>
-  </form>
-
-  <p id="errorBox" style="color:red; font-weight:bold;"></p>
-
-  {% if error %}
-    <p style="color:red;">{{ error }}</p>
-  {% endif %}
-</body>
-</html>
+    return true; // allow submission
+}
+</script>
+{% endblock %}

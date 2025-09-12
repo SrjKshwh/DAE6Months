@@ -63,7 +63,7 @@ from flask_migrate import Migrate
 load_dotenv()
 
 from db import get_engine, get_session, close_session
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod
 from llm_scan import scan_file_for_grc, create_risks_from_scan
 
 # ------------------------------------------------------------------------------
@@ -2272,6 +2272,467 @@ def create_app():
         evidence_list = db.query(Evidence).filter(Evidence.collected_by == user.id).all()
         close_session(db)
         return render_template("forensics.html", incidents=incidents, evidence=evidence_list, evidence_types=EvidenceType)
+    # --- Risk Identification Methods Routes ---
+
+    @app.route("/brainstorming", methods=["GET", "POST"])
+    @login_required
+    def brainstorming():
+        """
+        Facilitated brainstorming session for risk identification.
+
+        Implements structured brainstorming approach with:
+        - Session management and participant tracking
+        - Idea generation and categorization
+        - Facilitation techniques and time management
+        - Risk conversion from brainstorming ideas
+
+        GET: Displays brainstorming interface
+        POST: Handles session creation, idea submission, and risk generation
+
+        Process:
+            1. Create/manage brainstorming sessions
+            2. Collect ideas from participants
+            3. Categorize and prioritize ideas
+            4. Convert high-priority ideas to formal risks
+            5. Generate session reports
+
+        Returns:
+            Rendered brainstorming template with session management
+        """
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            action = request.form.get("action")
+
+            if action == "create_session":
+                # Create new brainstorming session
+                session_title = request.form.get("session_title")
+                objective = request.form.get("objective")
+                duration_minutes = int(request.form.get("duration", 60))
+
+                bs = BrainstormingSession(
+                    title=session_title,
+                    objective=objective,
+                    facilitator_id=user.id,
+                    duration_minutes=duration_minutes,
+                    status="active"
+                )
+                db.add(bs)
+                db.commit()
+
+                # Add facilitator as first participant
+                participant = BrainstormingParticipant(
+                    session_id=bs.id,
+                    user_id=user.id,
+                    role="facilitator"
+                )
+                db.add(participant)
+                db.commit()
+
+                flash(f"Brainstorming session '{session_title}' created successfully!", "success")
+                return redirect(url_for("brainstorming"))
+
+            elif action == "join_session":
+                session_id = int(request.form.get("session_id"))
+                bs = db.get(BrainstormingSession, session_id)
+                if bs and bs.status == "active":
+                    # Check if already a participant
+                    existing = db.query(BrainstormingParticipant).filter(
+                        BrainstormingParticipant.session_id == session_id,
+                        BrainstormingParticipant.user_id == user.id
+                    ).first()
+
+                    if not existing:
+                        participant = BrainstormingParticipant(
+                            session_id=session_id,
+                            user_id=user.id,
+                            role="participant"
+                        )
+                        db.add(participant)
+                        db.commit()
+                        flash("Joined brainstorming session!", "success")
+                    else:
+                        flash("Already participating in this session.", "info")
+                else:
+                    flash("Session not found or not active.", "danger")
+
+            elif action == "submit_idea":
+                session_id = int(request.form.get("session_id"))
+                idea_text = request.form.get("idea_text")
+                category = request.form.get("category", "general")
+
+                idea = BrainstormingIdea(
+                    session_id=session_id,
+                    submitted_by=user.id,
+                    idea_text=idea_text,
+                    category=category
+                )
+                db.add(idea)
+                db.commit()
+                flash("Idea submitted successfully!", "success")
+
+            elif action == "convert_to_risk":
+                idea_id = int(request.form.get("idea_id"))
+                idea = db.get(BrainstormingIdea, idea_id)
+
+                if idea:
+                    # Create risk from idea
+                    risk = Risk(
+                        asset=f"Brainstorming Idea: {idea.idea_text[:100]}",
+                        threat=idea.idea_text,
+                        vulnerability="Identified through brainstorming",
+                        control="To be determined",
+                        likelihood=3,  # Default moderate
+                        impact=3,      # Default moderate
+                        owner=user.email,
+                        category=RiskCategory(idea.category.upper()) if idea.category != "general" else None
+                    )
+                    risk.calculate_score()
+
+                    db.add(risk)
+                    db.commit()
+
+                    # Mark idea as converted
+                    idea.converted_to_risk = True
+                    idea.risk_id = risk.id
+                    db.commit()
+
+                    flash(f"Idea converted to risk assessment (ID: {risk.id})", "success")
+
+        # Get active sessions and user's participation
+        active_sessions = db.query(BrainstormingSession).filter(BrainstormingSession.status == "active").all()
+        user_participation = db.query(BrainstormingParticipant).filter(BrainstormingParticipant.user_id == user.id).all()
+
+        close_session(db)
+        return render_template("brainstorming.html", active_sessions=active_sessions, user_participation=user_participation)
+
+    @app.route("/brainstorming/<int:session_id>")
+    @login_required
+    def view_brainstorming_session(session_id):
+        """
+        View detailed brainstorming session with ideas and participants.
+        """
+        user = current_user()
+        db = get_session()
+
+        session_obj = db.get(BrainstormingSession, session_id)
+        if not session_obj:
+            close_session(db)
+            flash("Session not found.", "danger")
+            return redirect(url_for("brainstorming"))
+
+        # Check if user is a participant
+        participant = db.query(BrainstormingParticipant).filter(
+            BrainstormingParticipant.session_id == session_id,
+            BrainstormingParticipant.user_id == user.id
+        ).first()
+
+        if not participant and session_obj.facilitator_id != user.id:
+            close_session(db)
+            flash("Access denied. You are not a participant in this session.", "danger")
+            return redirect(url_for("brainstorming"))
+
+        # Get ideas and participants
+        ideas = db.query(BrainstormingIdea).filter(BrainstormingIdea.session_id == session_id).all()
+        participants = db.query(BrainstormingParticipant).filter(BrainstormingParticipant.session_id == session_id).all()
+
+        close_session(db)
+        return render_template("brainstorming_session.html",
+                             session=session_obj,
+                             ideas=ideas,
+                             participants=participants,
+                             is_facilitator=(session_obj.facilitator_id == user.id))
+
+    @app.route("/checklists", methods=["GET", "POST"])
+    @login_required
+    def checklists():
+        """
+        Risk checklist assessment interface.
+
+        Implements structured checklist-based risk identification with:
+        - Pre-defined risk categories and questions
+        - Assessment scoring and prioritization
+        - Automated risk generation from checklist responses
+        - Compliance framework mapping
+
+        GET: Displays available checklists
+        POST: Handles checklist assessment and risk generation
+
+        Process:
+            1. Select or create risk checklist
+            2. Answer assessment questions
+            3. Calculate risk scores based on responses
+            4. Generate formal risk assessments
+            5. Link to compliance requirements
+
+        Returns:
+            Rendered checklists template with assessment interface
+        """
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            action = request.form.get("action")
+
+            if action == "start_assessment":
+                checklist_id = int(request.form.get("checklist_id"))
+
+                # Create new assessment
+                assessment = RiskChecklistAssessment(
+                    checklist_id=checklist_id,
+                    assessor_id=user.id,
+                    status="in_progress"
+                )
+                db.add(assessment)
+                db.commit()
+
+                flash("Assessment started! Please answer the questions.", "success")
+                return redirect(url_for("checklist_assessment", assessment_id=assessment.id))
+
+            elif action == "submit_response":
+                assessment_id = int(request.form.get("assessment_id"))
+                item_id = int(request.form.get("item_id"))
+                response_value = request.form.get("response")
+                notes = request.form.get("notes", "")
+
+                response = RiskChecklistResponse(
+                    assessment_id=assessment_id,
+                    checklist_item_id=item_id,
+                    response_value=response_value,
+                    notes=notes
+                )
+                db.add(response)
+                db.commit()
+
+                # Check if assessment is complete
+                assessment = db.get(RiskChecklistAssessment, assessment_id)
+                total_items = db.query(RiskChecklistItem).filter(RiskChecklistItem.checklist_id == assessment.checklist_id).count()
+                completed_responses = db.query(RiskChecklistResponse).filter(RiskChecklistResponse.assessment_id == assessment_id).count()
+
+                if completed_responses >= total_items:
+                    assessment.status = "completed"
+                    assessment.completed_at = datetime.now(timezone.utc)
+                    db.commit()
+
+                    # Generate risks from high-risk responses
+                    generate_risks_from_checklist(assessment_id)
+                    flash("Assessment completed! Risks have been generated where applicable.", "success")
+
+        # Get available checklists
+        checklists_list = db.query(RiskChecklist).all()
+
+        # Get user's recent assessments
+        recent_assessments = db.query(RiskChecklistAssessment).filter(
+            RiskChecklistAssessment.assessor_id == user.id
+        ).order_by(RiskChecklistAssessment.created_at.desc()).limit(5).all()
+
+        close_session(db)
+        return render_template("checklists.html",
+                             checklists=checklists_list,
+                             recent_assessments=recent_assessments)
+
+    @app.route("/checklist_assessment/<int:assessment_id>", methods=["GET", "POST"])
+    @login_required
+    def checklist_assessment(assessment_id):
+        """
+        Individual checklist assessment interface.
+        """
+        user = current_user()
+        db = get_session()
+
+        assessment = db.get(RiskChecklistAssessment, assessment_id)
+        if not assessment or assessment.assessor_id != user.id:
+            close_session(db)
+            flash("Assessment not found or access denied.", "danger")
+            return redirect(url_for("checklists"))
+
+        # Get checklist items and existing responses
+        checklist_items = db.query(RiskChecklistItem).filter(
+            RiskChecklistItem.checklist_id == assessment.checklist_id
+        ).all()
+
+        responses = {}
+        for item in checklist_items:
+            response = db.query(RiskChecklistResponse).filter(
+                RiskChecklistResponse.assessment_id == assessment_id,
+                RiskChecklistResponse.checklist_item_id == item.id
+            ).first()
+            if response:
+                responses[item.id] = response
+
+        close_session(db)
+        return render_template("checklist_assessment.html",
+                             assessment=assessment,
+                             checklist_items=checklist_items,
+                             responses=responses)
+
+    @app.route("/swot_analysis", methods=["GET", "POST"])
+    @login_required
+    def swot_analysis():
+        """
+        SWOT analysis for strategic risk identification.
+
+        Implements SWOT (Strengths, Weaknesses, Opportunities, Threats) methodology with:
+        - Strategic factor identification and categorization
+        - Risk extraction from weaknesses and threats
+        - Opportunity conversion to positive risk treatments
+        - Strategic risk prioritization
+
+        GET: Displays SWOT analysis interface
+        POST: Handles factor submission and risk generation
+
+        Process:
+            1. Create SWOT analysis session
+            2. Collect factors in each category
+            3. Analyze factors for risk implications
+            4. Generate strategic risks from threats/weaknesses
+            5. Create mitigation strategies from opportunities
+
+        Returns:
+            Rendered SWOT analysis template
+        """
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            action = request.form.get("action")
+
+            if action == "create_analysis":
+                title = request.form.get("title")
+                scope = request.form.get("scope", "general")
+
+                swot = SWOTAnalysis(
+                    title=title,
+                    scope=scope,
+                    analyst_id=user.id,
+                    status="in_progress"
+                )
+                db.add(swot)
+                db.commit()
+
+                flash(f"SWOT analysis '{title}' created successfully!", "success")
+                return redirect(url_for("swot_analysis"))
+
+            elif action == "add_factor":
+                analysis_id = int(request.form.get("analysis_id"))
+                factor_type = request.form.get("factor_type")  # strengths, weaknesses, opportunities, threats
+                description = request.form.get("description")
+                impact_level = request.form.get("impact_level", "medium")
+                strategic_importance = request.form.get("strategic_importance", "medium")
+
+                factor = SWOTItem(
+                    analysis_id=analysis_id,
+                    factor_type=factor_type,
+                    description=description,
+                    impact_level=impact_level,
+                    strategic_importance=strategic_importance
+                )
+                db.add(factor)
+                db.commit()
+
+                flash(f"{factor_type.title()} factor added successfully!", "success")
+
+            elif action == "convert_to_risk":
+                factor_id = int(request.form.get("factor_id"))
+                factor = db.get(SWOTItem, factor_id)
+
+                if factor and factor.factor_type in ["weaknesses", "threats"]:
+                    # Create risk from SWOT factor
+                    risk_type = "Weakness" if factor.factor_type == "weaknesses" else "Threat"
+
+                    risk = Risk(
+                        asset=f"SWOT {risk_type}: {factor.description[:100]}",
+                        threat=factor.description,
+                        vulnerability=f"Strategic {risk_type.lower()} identified in SWOT analysis",
+                        control="Strategic mitigation required",
+                        likelihood=4 if factor.impact_level == "high" else 3 if factor.impact_level == "medium" else 2,
+                        impact=4 if factor.strategic_importance == "high" else 3 if factor.strategic_importance == "medium" else 2,
+                        owner=user.email,
+                        category=RiskCategory.STRATEGIC_RISKS if hasattr(RiskCategory, 'STRATEGIC_RISKS') else None
+                    )
+                    risk.calculate_score()
+
+                    db.add(risk)
+                    db.commit()
+
+                    # Mark factor as converted
+                    factor.converted_to_risk = True
+                    factor.risk_id = risk.id
+                    db.commit()
+
+                    flash(f"SWOT factor converted to risk assessment (ID: {risk.id})", "success")
+
+        # Get user's SWOT analyses
+        swot_analyses = db.query(SWOTAnalysis).filter(SWOTAnalysis.analyst_id == user.id).all()
+
+        close_session(db)
+        return render_template("swot_analysis.html", swot_analyses=swot_analyses)
+
+    @app.route("/swot_analysis/<int:analysis_id>")
+    @login_required
+    def view_swot_analysis(analysis_id):
+        """
+        View detailed SWOT analysis with factors and generated risks.
+        """
+        user = current_user()
+        db = get_session()
+
+        analysis = db.get(SWOTAnalysis, analysis_id)
+        if not analysis or analysis.analyst_id != user.id:
+            close_session(db)
+            flash("Analysis not found or access denied.", "danger")
+            return redirect(url_for("swot_analysis"))
+
+        # Get SWOT factors grouped by type
+        factors = db.query(SWOTItem).filter(SWOTItem.analysis_id == analysis_id).all()
+
+        # Group factors by type
+        grouped_factors = {
+            "strengths": [f for f in factors if f.factor_type == "strengths"],
+            "weaknesses": [f for f in factors if f.factor_type == "weaknesses"],
+            "opportunities": [f for f in factors if f.factor_type == "opportunities"],
+            "threats": [f for f in factors if f.factor_type == "threats"]
+        }
+
+        close_session(db)
+        return render_template("swot_analysis_detail.html",
+                             analysis=analysis,
+                             grouped_factors=grouped_factors)
+
+    # Helper functions for risk generation
+    def generate_risks_from_checklist(assessment_id):
+        """
+        Generate risks from completed checklist assessment.
+        """
+        db = get_session()
+
+        assessment = db.get(RiskChecklistAssessment, assessment_id)
+        responses = db.query(RiskChecklistResponse).filter(RiskChecklistResponse.assessment_id == assessment_id).all()
+
+        for response in responses:
+            # Generate risk if response indicates high risk
+            if response.response_value in ["yes", "high", "critical"]:
+                item = db.get(RiskChecklistItem, response.checklist_item_id)
+
+                risk = Risk(
+                    asset=f"Checklist Item: {item.question[:100]}",
+                    threat=item.question,
+                    vulnerability="Identified through checklist assessment",
+                    control=item.mitigation_suggestion or "To be determined",
+                    likelihood=4 if response.response_value == "critical" else 3,
+                    impact=4 if response.response_value == "critical" else 3,
+                    owner=assessment.assessor.email,
+                    category=item.category
+                )
+                risk.calculate_score()
+
+                db.add(risk)
+
+        db.commit()
+        close_session(db)
+
+    # --- End of Risk Identification Methods Routes ---
 
 
     # error handlers
@@ -2483,22 +2944,5 @@ if __name__ == "__main__":
                 )
                 logging.info("Default admin user created")
 
-            # Seed sample dependencies for demo
-            # Commented out due to schema mismatch
-            # if conn.exec_driver_sql("SELECT COUNT(*) FROM dependencies").scalar() == 0:
-            #     # Use ORM for proper defaults
-            #     session = get_session()
-            #     dep1 = Dependency(name="Flask", version="1.1.4")
-            #     dep1.assess_risk()
-            #     session.add(dep1)
-            #     dep2 = Dependency(name="requests", version="2.20.0")
-            #     dep2.assess_risk()
-            #     session.add(dep2)
-            #     dep3 = Dependency(name="sqlalchemy", version="1.4.0")
-            #     dep3.assess_risk()
-            #     session.add(dep3)
-            #     session.commit()
-            #     close_session(session)
-            #     logging.info("Sample dependencies added for demo")
     # Avoid debug=True in production
     app.run(debug=False, host="127.0.0.1", port=5000)

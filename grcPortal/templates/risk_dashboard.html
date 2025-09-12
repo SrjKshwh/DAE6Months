@@ -77,6 +77,61 @@
                 </div>
             </div>
 
+            <!-- Risk Identification Methods Row -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h5><i class="fas fa-search"></i> Risk Identification Methods</h5>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-warning">
+                        <div class="card-body">
+                            <h5 class="card-title text-warning">
+                                {{ risks|selectattr('asset', 'match', '.*Brainstorming.*')|list|length }}
+                            </h5>
+                            <p class="card-text">Brainstorming</p>
+                            <small class="text-muted">Facilitated sessions</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-info">
+                        <div class="card-body">
+                            <h5 class="card-title text-info">
+                                {{ risks|selectattr('asset', 'match', '.*Checklist.*')|list|length }}
+                            </h5>
+                            <p class="card-text">Checklist</p>
+                            <small class="text-muted">Structured assessment</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-success">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">
+                                {{ risks|selectattr('asset', 'match', '.*SWOT.*')|list|length }}
+                            </h5>
+                            <p class="card-text">SWOT Analysis</p>
+                            <small class="text-muted">Strategic factors</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-secondary">
+                        <div class="card-body">
+                            <h5 class="card-title text-secondary">
+                                {{ total_risks - risks|selectattr('asset', 'match', '.*(Brainstorming|Checklist|SWOT).*')|list|length }}
+                            </h5>
+                            <p class="card-text">Manual Entry</p>
+                            <small class="text-muted">Direct input</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Original Key Metrics Row (continued) -->
+            <div class="row mb-4">
+            </div>
+
             <!-- Charts Row -->
             <div class="row mb-4">
                 <!-- Risk Severity Distribution -->

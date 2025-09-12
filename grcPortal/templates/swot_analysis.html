@@ -1,0 +1,129 @@
+<!-- templates/swot_analysis.html -->
+{% extends "base.html" %}
+
+{% block title %}SWOT Analysis - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-chart-line text-success"></i> SWOT Risk Analysis</h2>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createAnalysisModal">
+                    <i class="fas fa-plus"></i> Create Analysis
+                </button>
+            </div>
+
+            <!-- SWOT Analyses -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-list"></i> SWOT Analyses</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if swot_analyses %}
+                                <div class="list-group">
+                                    {% for analysis in swot_analyses %}
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <div>
+                                                <h6 class="mb-1">{{ analysis.title }}</h6>
+                                                <p class="mb-1">{{ analysis.scope }}</p>
+                                                <small class="text-muted">
+                                                    Created: {{ analysis.created_at.strftime('%Y-%m-%d %H:%M') }} |
+                                                    Status: {{ analysis.status.title() }}
+                                                </small>
+                                            </div>
+                                            <div>
+                                                <a href="{{ url_for('view_swot_analysis', analysis_id=analysis.id) }}"
+                                                   class="btn btn-sm btn-outline-primary me-2">
+                                                    <i class="fas fa-eye"></i> View
+                                                </a>
+                                                {% if analysis.status == 'in_progress' %}
+                                                <span class="badge bg-warning">In Progress</span>
+                                                {% else %}
+                                                <span class="badge bg-success">Completed</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted text-center py-4">
+                                    <i class="fas fa-chart-line fa-3x text-success mb-3"></i><br>
+                                    No SWOT analyses yet. Create one to identify strategic risks!
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-info-circle"></i> SWOT Methodology</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>Strategic Analysis:</h6>
+                            <ul class="small">
+                                <li><strong>Strengths:</strong> Internal positive attributes</li>
+                                <li><strong>Weaknesses:</strong> Internal negative attributes</li>
+                                <li><strong>Opportunities:</strong> External positive factors</li>
+                                <li><strong>Threats:</strong> External negative factors</li>
+                            </ul>
+
+                            <h6 class="mt-3">Risk Identification:</h6>
+                            <ul class="small">
+                                <li>Weaknesses → Operational risks</li>
+                                <li>Threats → Strategic risks</li>
+                                <li>Opportunities → Mitigation strategies</li>
+                                <li>Strengths → Risk controls</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Analysis Modal -->
+<div class="modal fade" id="createAnalysisModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create SWOT Analysis</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="create_analysis">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Analysis Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="title" required
+                               placeholder="e.g., Annual Strategic Risk Assessment">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Scope/Area of Analysis</label>
+                        <select class="form-select" name="scope">
+                            <option value="general">General/Organizational</option>
+                            <option value="it">Information Technology</option>
+                            <option value="operations">Operations</option>
+                            <option value="finance">Finance</option>
+                            <option value="compliance">Compliance</option>
+                            <option value="strategic">Strategic Planning</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Create Analysis</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

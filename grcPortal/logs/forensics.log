@@ -343,3 +343,137 @@ sqlite3.OperationalError: database is locked
 2025-09-11 14:25:59,832 [INFO] 127.0.0.1 - - [11/Sep/2025 14:25:59] "POST /register HTTP/1.1" 200 -
 2025-09-11 14:29:57,819 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
+2025-09-11 14:29:57,819 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 14:36:11,447 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-11 14:36:11,447 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-11 14:36:15,736 [INFO] 127.0.0.1 - - [11/Sep/2025 14:36:15] "GET / HTTP/1.1" 200 -
+2025-09-11 14:36:15,885 [INFO] 127.0.0.1 - - [11/Sep/2025 14:36:15] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:36:17,775 [INFO] 127.0.0.1 - - [11/Sep/2025 14:36:17] "GET /register HTTP/1.1" 200 -
+2025-09-11 14:36:30,358 [INFO] New user registered: admin@example.com
+2025-09-11 14:36:30,476 [INFO] 127.0.0.1 - - [11/Sep/2025 14:36:30] "[32mPOST /register HTTP/1.1[0m" 302 -
+2025-09-11 14:36:30,484 [INFO] 127.0.0.1 - - [11/Sep/2025 14:36:30] "GET /login HTTP/1.1" 200 -
+2025-09-11 14:36:30,515 [INFO] 127.0.0.1 - - [11/Sep/2025 14:36:30] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:36:36,693 [INFO] User admin@example.com logged in successfully from IP 127.0.0.1
+2025-09-11 14:36:36,719 [INFO] 127.0.0.1 - - [11/Sep/2025 14:36:36] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-09-11 14:36:36,744 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:36:36,800 [INFO] 127.0.0.1 - - [11/Sep/2025 14:36:36] "GET /home HTTP/1.1" 200 -
+2025-09-11 14:36:36,825 [INFO] 127.0.0.1 - - [11/Sep/2025 14:36:36] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:37:01,966 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:37:02,010 [INFO] User admin@example.com uploaded file ISO_Compliance_Report_1.txt from IP 127.0.0.1
+2025-09-11 14:37:02,013 [INFO] 127.0.0.1 - - [11/Sep/2025 14:37:02] "[32mPOST /home HTTP/1.1[0m" 302 -
+2025-09-11 14:37:02,032 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:37:02,045 [INFO] 127.0.0.1 - - [11/Sep/2025 14:37:02] "GET /home HTTP/1.1" 200 -
+2025-09-11 14:37:02,066 [INFO] 127.0.0.1 - - [11/Sep/2025 14:37:02] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:37:13,894 [INFO] Created risk entry 1: ISO-R1: Data Breach due to Unauthorized Access to Customer Data Storage
+2025-09-11 14:37:13,923 [INFO] Created risk entry 2: ISO-R2: Malware Infection on Internal Network
+2025-09-11 14:37:13,937 [INFO] Created risk entry 3: ISO-R3: Data Loss via Phishing Attack on Employee Endpoints
+2025-09-11 14:37:13,950 [INFO] Created risk entry 4: ISO-R4: Service Outage or Misconfiguration in Cloud Infrastructure
+2025-09-11 14:37:13,960 [INFO] Successfully created 4 risk entries (4 LLM + 0 pattern-based) and associated compliance records
+2025-09-11 14:37:13,961 [ERROR] Scan failed: Instance <Upload at 0x1697b5e8410> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-11 14:37:13,962 [INFO] 127.0.0.1 - - [11/Sep/2025 14:37:13] "[32mPOST /scan/1 HTTP/1.1[0m" 302 -
+2025-09-11 14:37:13,974 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:37:13,991 [INFO] 127.0.0.1 - - [11/Sep/2025 14:37:13] "GET /home HTTP/1.1" 200 -
+2025-09-11 14:37:14,016 [INFO] 127.0.0.1 - - [11/Sep/2025 14:37:14] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:37:42,478 [INFO] 127.0.0.1 - - [11/Sep/2025 14:37:42] "GET /uploads/ISO_Compliance_Report_1.txt HTTP/1.1" 200 -
+2025-09-11 14:38:04,822 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:38:04,825 [INFO] 127.0.0.1 - - [11/Sep/2025 14:38:04] "GET /home?clear=1 HTTP/1.1" 200 -
+2025-09-11 14:38:04,847 [INFO] 127.0.0.1 - - [11/Sep/2025 14:38:04] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:38:12,500 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:38:12,520 [INFO] User admin@example.com uploaded file sample_risk_policy_1.txt from IP 127.0.0.1
+2025-09-11 14:38:12,523 [INFO] 127.0.0.1 - - [11/Sep/2025 14:38:12] "[32mPOST /home?clear=1 HTTP/1.1[0m" 302 -
+2025-09-11 14:38:12,537 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:38:12,544 [INFO] 127.0.0.1 - - [11/Sep/2025 14:38:12] "GET /home HTTP/1.1" 200 -
+2025-09-11 14:38:12,564 [INFO] 127.0.0.1 - - [11/Sep/2025 14:38:12] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:38:20,561 [INFO] Created risk entry 3: Incident response tabletop exercises have not been performed in the past 18 months, risking delayed containment and recovery.
+2025-09-11 14:38:20,574 [INFO] Created risk entry 4: Access reviews sometimes exceed the quarterly requirement, allowing lingering excessive privileges.
+2025-09-11 14:38:20,586 [INFO] Successfully created 4 risk entries (4 LLM + 0 pattern-based) and associated compliance records
+2025-09-11 14:38:20,587 [ERROR] Scan failed: Instance <Upload at 0x1697b6e5590> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-11 14:38:20,589 [INFO] 127.0.0.1 - - [11/Sep/2025 14:38:20] "[32mPOST /scan/2 HTTP/1.1[0m" 302 -
+2025-09-11 14:38:20,604 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:38:20,620 [INFO] 127.0.0.1 - - [11/Sep/2025 14:38:20] "GET /home HTTP/1.1" 200 -
+2025-09-11 14:38:20,636 [INFO] 127.0.0.1 - - [11/Sep/2025 14:38:20] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:38:49,434 [INFO] 127.0.0.1 - - [11/Sep/2025 14:38:49] "GET /report_incident HTTP/1.1" 200 -
+2025-09-11 14:38:49,461 [INFO] 127.0.0.1 - - [11/Sep/2025 14:38:49] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:39:00,417 [INFO] Governance: User admin@example.com accessed their 0 incidents
+2025-09-11 14:39:00,483 [INFO] 127.0.0.1 - - [11/Sep/2025 14:39:00] "GET /incidents HTTP/1.1" 200 -
+2025-09-11 14:39:00,503 [INFO] 127.0.0.1 - - [11/Sep/2025 14:39:00] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:39:02,019 [INFO] File uploads\ISO_Compliance_Report_1.txt deleted after 120 seconds.
+2025-09-11 14:39:03,607 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:39:03,625 [INFO] 127.0.0.1 - - [11/Sep/2025 14:39:03] "GET /home HTTP/1.1" 200 -
+2025-09-11 14:39:03,645 [INFO] 127.0.0.1 - - [11/Sep/2025 14:39:03] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:39:32,241 [INFO] Governance: User admin@example.com accessed their 8 risks
+2025-09-11 14:39:32,401 [INFO] 127.0.0.1 - - [11/Sep/2025 14:39:32] "GET /risks HTTP/1.1" 200 -
+2025-09-11 14:39:32,422 [INFO] 127.0.0.1 - - [11/Sep/2025 14:39:32] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:40:06,228 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:40:06,244 [INFO] 127.0.0.1 - - [11/Sep/2025 14:40:06] "GET /home HTTP/1.1" 200 -
+2025-09-11 14:40:12,531 [INFO] File uploads\sample_risk_policy_1.txt deleted after 120 seconds.
+2025-09-11 14:40:14,467 [INFO] 127.0.0.1 - - [11/Sep/2025 14:40:14] "GET /policies HTTP/1.1" 200 -
+2025-09-11 14:40:14,485 [INFO] 127.0.0.1 - - [11/Sep/2025 14:40:14] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:40:19,154 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:40:19,170 [INFO] 127.0.0.1 - - [11/Sep/2025 14:40:19] "GET /home HTTP/1.1" 200 -
+2025-09-11 14:40:20,953 [INFO] 127.0.0.1 - - [11/Sep/2025 14:40:20] "GET /kb HTTP/1.1" 200 -
+2025-09-11 14:40:20,966 [INFO] 127.0.0.1 - - [11/Sep/2025 14:40:20] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:40:34,368 [INFO] 127.0.0.1 - - [11/Sep/2025 14:40:34] "[33mGET /docs/encryption_guide.md HTTP/1.1[0m" 404 -
+2025-09-11 14:40:34,389 [INFO] 127.0.0.1 - - [11/Sep/2025 14:40:34] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:40:45,783 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:40:45,803 [INFO] 127.0.0.1 - - [11/Sep/2025 14:40:45] "GET /home HTTP/1.1" 200 -
+2025-09-11 14:40:48,723 [ERROR] Exception on /compliance [GET]
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 1610, in compliance
+    return render_template("compliance.html", compliance=records)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\compliance.html", line 31, in top-level template code
+    {% if c.risk %}
+    ^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\attributes.py", line 566, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1086, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1121, in _fire_loader_callables
+    return self.callable_(state, passive)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\strategies.py", line 918, in _load_for_state
+    raise orm_exc.DetachedInstanceError(
+    ...<3 lines>...
+    )
+sqlalchemy.orm.exc.DetachedInstanceError: Parent instance <Compliance at 0x1697b7f7890> is not bound to a Session; lazy load operation of attribute 'risk' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-11 14:40:48,763 [ERROR] 500 Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-09-11 14:40:48,786 [INFO] 127.0.0.1 - - [11/Sep/2025 14:40:48] "[35m[1mGET /compliance HTTP/1.1[0m" 500 -
+2025-09-11 14:40:48,801 [INFO] 127.0.0.1 - - [11/Sep/2025 14:40:48] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:40:51,456 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-11 14:40:51,469 [INFO] 127.0.0.1 - - [11/Sep/2025 14:40:51] "GET /home HTTP/1.1" 200 -
+2025-09-11 14:41:00,872 [INFO] 127.0.0.1 - - [11/Sep/2025 14:41:00] "GET /dependencies HTTP/1.1" 200 -
+2025-09-11 14:41:23,085 [INFO] Governance: User admin@example.com accessed their 8 risks
+2025-09-11 14:41:23,100 [INFO] 127.0.0.1 - - [11/Sep/2025 14:41:23] "GET /risks HTTP/1.1" 200 -
+2025-09-11 14:41:23,127 [INFO] 127.0.0.1 - - [11/Sep/2025 14:41:23] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-11 14:42:50,886 [INFO] 127.0.0.1 - - [11/Sep/2025 14:42:50] "[32mGET /dependencies HTTP/1.1[0m" 302 -
+2025-09-11 14:42:50,894 [INFO] 127.0.0.1 - - [11/Sep/2025 14:42:50] "GET /login HTTP/1.1" 200 -
+2025-09-12 10:49:42,611 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-12 10:49:42,612 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-12 10:49:46,759 [INFO] 127.0.0.1 - - [12/Sep/2025 10:49:46] "GET / HTTP/1.1" 200 -
+2025-09-12 10:49:46,842 [INFO] 127.0.0.1 - - [12/Sep/2025 10:49:46] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-12 10:49:47,014 [INFO] 127.0.0.1 - - [12/Sep/2025 10:49:47] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-09-12 10:51:07,139 [INFO] 127.0.0.1 - - [12/Sep/2025 10:51:07] "GET / HTTP/1.1" 200 -
+2025-09-12 10:52:21,085 [INFO] 127.0.0.1 - - [12/Sep/2025 10:52:21] "GET /?email=admin@example.com&password=mkopl123 HTTP/1.1" 200 -

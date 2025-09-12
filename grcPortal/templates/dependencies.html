@@ -1,41 +1,202 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dependencies</title>
-</head>
-<body>
-    <h2>Tracked Dependencies</h2>
+<!-- templates/dependencies.html -->
+{% extends "base.html" %}
 
-    <form method="POST" action="{{ url_for('add_dependency') }}">
-        <label>Name:</label>
-        <input type="text" name="name" placeholder="e.g., Flask">
+{% block title %}Dependency Risk Management - GRC Portal{% endblock %}
 
-        <label>Version:</label>
-        <input type="text" name="version" placeholder="e.g., 2.3.2">
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="text-warning"><i class="fas fa-cogs"></i> Dependency Risk Management</h1>
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addDependencyModal">
+                    <i class="fas fa-plus"></i> Add Dependency
+                </button>
+            </div>
 
-        <label>Risk:</label>
-        <input type="text" name="risk" placeholder="e.g., CVE-2023-XYZ">
+            <!-- Dependencies Overview Cards -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card text-center border-primary">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ dependencies|length }}</h5>
+                            <p class="card-text">Total Dependencies</p>
+                            <small class="text-muted">Tracked packages</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center border-danger">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger">
+                                {{ dependencies|selectattr('risk_level', 'equalto', 'CRITICAL')|list|length +
+                                   dependencies|selectattr('risk_level', 'equalto', 'HIGH')|list|length }}
+                            </h5>
+                            <p class="card-text">High Risk</p>
+                            <small class="text-muted">Critical + High severity</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center border-success">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">
+                                {{ dependencies|selectattr('risk_level', 'equalto', 'LOW')|list|length }}
+                            </h5>
+                            <p class="card-text">Low Risk</p>
+                            <small class="text-muted">Safe dependencies</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <label>Mitigation:</label>
-        <input type="text" name="mitigation" placeholder="Upgrade to safe version">
+            <!-- Dependencies List -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-list"></i> Dependencies with Risk Assessment</h5>
+                </div>
+                <div class="card-body">
+                    {% if dependencies %}
+                    <div class="row">
+                        {% for dep in dependencies %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 border
+                                {% if dep.risk_level.value == 'CRITICAL' %}border-danger
+                                {% elif dep.risk_level.value == 'HIGH' %}border-warning
+                                {% elif dep.risk_level.value == 'MEDIUM' %}border-info
+                                {% else %}border-success{% endif %}">
+                                <div class="card-header
+                                    {% if dep.risk_level.value == 'CRITICAL' %}bg-danger text-white
+                                    {% elif dep.risk_level.value == 'HIGH' %}bg-warning
+                                    {% elif dep.risk_level.value == 'MEDIUM' %}bg-info text-white
+                                    {% else %}bg-success text-white{% endif %}">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-cube"></i> {{ dep.name }}
+                                        <span class="badge
+                                            {% if dep.risk_level.value == 'CRITICAL' %}bg-light text-danger
+                                            {% elif dep.risk_level.value == 'HIGH' %}bg-dark
+                                            {% elif dep.risk_level.value == 'MEDIUM' %}bg-light text-info
+                                            {% else %}bg-light text-success{% endif %}">
+                                            {{ dep.risk_level.value }}
+                                        </span>
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <strong>Version:</strong> <code>{{ dep.version }}</code>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Last Checked:</strong>
+                                        <small class="text-muted">{{ dep.last_checked.strftime('%Y-%m-%d %H:%M') if dep.last_checked else 'Never' }}</small>
+                                    </div>
 
-        <button type="submit">Add Dependency</button>
-    </form>
+                                    {% if dep.vulnerabilities %}
+                                    <div class="mb-2">
+                                        <strong class="text-danger">Vulnerabilities:</strong>
+                                        <div class="text-danger small">{{ dep.vulnerabilities }}</div>
+                                    </div>
+                                    {% endif %}
 
-    <h3>Dependencies List with Risk Assessment</h3>
-    <ul>
-        {% for dep in dependencies %}
-            <li style="margin-bottom: 10px;">
-                <strong>{{ dep.name }} ({{ dep.version }})</strong> - Risk Level: {{ dep.risk_level.value }}
-                {% if dep.vulnerabilities %}<br>Vulnerabilities: {{ dep.vulnerabilities }}{% endif %}
-                {% if dep.risk %}<br>Risk: {{ dep.risk }}{% endif %}
-                {% if dep.mitigation %}<br>Mitigation: {{ dep.mitigation }}{% endif %}
-                {% if dep.mitigation_suggestions %}<br>Suggestions: {{ dep.mitigation_suggestions }}{% endif %}
-            </li>
-        {% endfor %}
-    </ul>
+                                    {% if dep.risk %}
+                                    <div class="mb-2">
+                                        <strong>Risk Assessment:</strong>
+                                        <div class="text-muted small">{{ dep.risk }}</div>
+                                    </div>
+                                    {% endif %}
 
-    <p><a href="{{ url_for('risks') }}">← Back to Risks</a></p>
-</body>
-</html>
+                                    {% if dep.mitigation %}
+                                    <div class="mb-2">
+                                        <strong class="text-success">Mitigation:</strong>
+                                        <div class="text-muted small">{{ dep.mitigation }}</div>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if dep.mitigation_suggestions %}
+                                    <div class="mb-2">
+                                        <strong>Suggestions:</strong>
+                                        <div class="text-muted small">{{ dep.mitigation_suggestions }}</div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-cogs fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Dependencies Tracked</h5>
+                        <p class="text-muted">No software dependencies have been added for risk assessment yet.</p>
+                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addDependencyModal">
+                            <i class="fas fa-plus"></i> Add First Dependency
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Dependency Modal -->
+<div class="modal fade" id="addDependencyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Software Dependency</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('add_dependency') }}">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Package Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name"
+                                       required placeholder="e.g., Flask, requests, Django">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Version <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="version"
+                                       required placeholder="e.g., 2.3.2, 1.4.0">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Known Risk (Optional)</label>
+                                <input type="text" class="form-control" name="risk"
+                                       placeholder="e.g., CVE-2023-XYZ, Outdated version">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Mitigation Strategy (Optional)</label>
+                                <input type="text" class="form-control" name="mitigation"
+                                       placeholder="e.g., Upgrade to version X.X.X">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Note:</strong> The system will automatically assess risk levels based on known vulnerabilities
+                        and provide mitigation suggestions for common packages.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Add Dependency</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}

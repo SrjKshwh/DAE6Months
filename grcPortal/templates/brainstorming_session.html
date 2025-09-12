@@ -1,0 +1,173 @@
+<!-- templates/brainstorming_session.html -->
+{% extends "base.html" %}
+
+{% block title %}Brainstorming Session - {{ session.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-lightbulb text-warning"></i> {{ session.title }}</h2>
+                    <p class="text-muted mb-0">{{ session.objective }}</p>
+                </div>
+                <div>
+                    <span class="badge bg-{{ 'success' if session.status == 'active' else 'secondary' }} fs-6">
+                        {{ session.status.title() }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Session Info -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-info-circle"></i> Session Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Facilitator:</strong> {{ session.facilitator.email }}</p>
+                                    <p><strong>Duration:</strong> {{ session.duration_minutes }} minutes</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Created:</strong> {{ session.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                                    <p><strong>Participants:</strong> {{ participants|length }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-users"></i> Participants</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                {% for participant in participants %}
+                                <li>
+                                    <i class="fas fa-{{ 'user-tie' if participant.role == 'facilitator' else 'user' }}"></i>
+                                    {{ participant.user.email }}
+                                    {% if participant.role == 'facilitator' %}
+                                        <span class="badge bg-primary ms-1">Facilitator</span>
+                                    {% endif %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Idea Submission -->
+            {% if session.status == 'active' %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-plus-circle"></i> Submit New Idea</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <input type="hidden" name="action" value="submit_idea">
+                        <input type="hidden" name="session_id" value="{{ session.id }}">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label">Idea Description</label>
+                                    <textarea class="form-control" name="idea_text" rows="3" required
+                                              placeholder="Describe your risk idea or concern..."></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select" name="category">
+                                        <option value="general">General</option>
+                                        <option value="operational">Operational</option>
+                                        <option value="financial">Financial</option>
+                                        <option value="strategic">Strategic</option>
+                                        <option value="compliance">Compliance</option>
+                                        <option value="technical">Technical</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="fas fa-paper-plane"></i> Submit Idea
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Ideas List -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-list"></i> Generated Ideas ({{ ideas|length }})</h5>
+                    {% if is_facilitator and session.status == 'active' %}
+                    <button class="btn btn-warning btn-sm" onclick="endSession()">
+                        <i class="fas fa-stop"></i> End Session
+                    </button>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if ideas %}
+                        <div class="row">
+                            {% for idea in ideas %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100 border-{{ 'success' if idea.converted_to_risk else 'primary' }}">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <span class="badge bg-{{ idea.category|default('secondary') }}">{{ idea.category|default('general')|title }}</span>
+                                            {% if idea.converted_to_risk %}
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check"></i> Converted to Risk
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <p class="card-text">{{ idea.idea_text }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">
+                                                By {{ idea.submitter.email }} at {{ idea.created_at.strftime('%H:%M') }}
+                                            </small>
+                                            {% if is_facilitator and not idea.converted_to_risk %}
+                                            <form method="POST" class="d-inline">
+                                                <input type="hidden" name="action" value="convert_to_risk">
+                                                <input type="hidden" name="idea_id" value="{{ idea.id }}">
+                                                <button type="submit" class="btn btn-sm btn-outline-success"
+                                                        onclick="return confirm('Convert this idea to a formal risk assessment?')">
+                                                    <i class="fas fa-exchange-alt"></i> Convert
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center py-4">
+                            <i class="fas fa-lightbulb fa-3x text-warning mb-3"></i><br>
+                            No ideas submitted yet. Be the first to contribute!
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function endSession() {
+    if (confirm('Are you sure you want to end this brainstorming session? This will prevent further idea submissions.')) {
+        // In a real implementation, you'd make an AJAX call or form submission
+        alert('Session ending functionality would be implemented here.');
+    }
+}
+</script>
+
+{% endblock %}
