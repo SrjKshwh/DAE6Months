@@ -477,3 +477,10 @@ sqlalchemy.orm.exc.DetachedInstanceError: Parent instance <Compliance at 0x1697b
 2025-09-12 10:49:47,014 [INFO] 127.0.0.1 - - [12/Sep/2025 10:49:47] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
 2025-09-12 10:51:07,139 [INFO] 127.0.0.1 - - [12/Sep/2025 10:51:07] "GET / HTTP/1.1" 200 -
 2025-09-12 10:52:21,085 [INFO] 127.0.0.1 - - [12/Sep/2025 10:52:21] "GET /?email=admin@example.com&password=mkopl123 HTTP/1.1" 200 -
+2025-09-12 14:21:02,092 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-12 14:21:02,092 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-12 14:21:17,538 [INFO] 127.0.0.1 - - [12/Sep/2025 14:21:17] "GET / HTTP/1.1" 200 -
+2025-09-12 14:21:17,615 [INFO] 127.0.0.1 - - [12/Sep/2025 14:21:17] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-12 14:38:24,055 [INFO] 127.0.0.1 - - [12/Sep/2025 14:38:24] "[33mGET /index.md HTTP/1.1[0m" 404 -
+2025-09-12 14:38:24,081 [INFO] 127.0.0.1 - - [12/Sep/2025 14:38:24] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
