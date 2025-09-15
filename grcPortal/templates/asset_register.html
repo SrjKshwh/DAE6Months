@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Critical Asset Register</h2>
+<form method="POST">
+    <input type="text" name="asset_name" placeholder="Asset Name" required>
+    <input type="text" name="asset_type" placeholder="Asset Type" required>
+    <input type="number" name="asset_value" placeholder="Asset Value" step="0.01">
+    <select name="criticality_level">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+    </select>
+    <input type="number" name="threat_exposure_score" placeholder="Threat Exposure (1-5)" min="1" max="5">
+    <input type="number" name="vulnerability_count" placeholder="Vulnerability Count">
+    <button type="submit">Register Asset</button>
+</form>
+
+<h3>Registered Assets</h3>
+<ul>
+    {% for asset in assets %}
+    <li>
+        {{ asset.asset_name }} - Risk Exposure: {{ asset.overall_risk_exposure }}/5
+        <a href="{{ url_for('asset_report', asset_id=asset.id) }}">View Report</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

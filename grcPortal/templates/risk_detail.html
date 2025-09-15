@@ -267,6 +267,23 @@
                                 {% endif %}
                             </table>
                         </div>
+                        <h3>Business Impact Analysis</h3>
+                        <p>RTO: {{ risk.rto_hours }} hours</p>
+                        <p>RPO: {{ risk.rpo_hours }} hours</p>
+                        <p>MTD: {{ risk.mtd_hours }} hours</p>
+                        <p>Financial Impact: ${{ risk.financial_impact_amount }}</p>
+                        <p>Calculated BIA Score: {{ risk.calculate_business_impact_score() }}</p>
+
+                        <h3>Multi-Criteria Risk Score</h3>
+                        <p>Financial Impact: {{ risk.get_impact_description("financial", risk.financial_impact) }}</p>
+                        <p>Operational Impact: {{ risk.get_impact_description("operational", risk.operational_impact) }}</p>
+                        <p>Compliance Impact: {{ risk.get_impact_description("compliance", risk.compliance_impact) }}</p>
+                        <p>Reputation Impact: {{ risk.get_impact_description("reputation", risk.reputation_impact) }}</p>
+                        <p>Weighted Score: {{ risk.score }}</p>
+
+                        <h3>Evaluation Criteria</h3>
+                        <p>{{ risk.evaluation_criteria or "Not documented" }}</p>
+                        <p>Stakeholder Approval: {{ risk.get_stakeholder_approval_status() }}</p>
                     </div>
 
                     <!-- Compliance Mapping -->

@@ -1,7 +1,8 @@
-import logging
+import os
 from logging.config import fileConfig
 
-from flask import current_app
+from sqlalchemy import engine_from_config
+from sqlalchemy import pool
 
 from alembic import context
 
@@ -11,32 +12,22 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-fileConfig(config.config_file_name)
-logger = logging.getLogger('alembic.env')
-
-
-def get_engine_url():
-    # Use the same database URL as defined in db.py
-    return "sqlite:///instance/app.db"
-
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
 from models import Base
 target_metadata = Base.metadata
-# target_db will be set in the migration functions
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-
-def get_metadata():
-    return target_metadata
-
-
-def run_migrations_offline():
+def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 
     This configures the context with just a URL
@@ -49,49 +40,32 @@ def run_migrations_offline():
 
     """
     url = config.get_main_option("sqlalchemy.url")
-    if not url:
-        # Set URL from Flask app if not already set
-        url = get_engine_url()
-        config.set_main_option('sqlalchemy.url', url)
-
     context.configure(
-        url=url, target_metadata=get_metadata(), literal_binds=True
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={"paramstyle": "named"},
     )
 
     with context.begin_transaction():
         context.run_migrations()
 
 
-def run_migrations_online():
+def run_migrations_online() -> None:
     """Run migrations in 'online' mode.
 
     In this scenario we need to create an Engine
     and associate a connection with the context.
 
     """
-
-    # this callback is used to prevent an auto-migration from being generated
-    # when there are no changes to the schema
-    # reference: http://alembic.zzzcomputing.com/en/latest/cookbook.html
-    def process_revision_directives(context, revision, directives):
-        if getattr(config.cmd_opts, 'autogenerate', False):
-            script = directives[0]
-            if script.upgrade_ops.is_empty():
-                directives[:] = []
-                logger.info('No changes in schema detected.')
-
-    # Set database URL if not already set
-    if not config.get_main_option("sqlalchemy.url"):
-        config.set_main_option('sqlalchemy.url', get_engine_url())
-
+    # Create engine directly (similar to your db.py)
     from sqlalchemy import create_engine
-    connectable = create_engine(get_engine_url(), echo=False, future=True)
+    url = os.getenv("DATABASE_URL", "sqlite:///instance/app.db")
+    connectable = create_engine(url)
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection,
-            target_metadata=get_metadata(),
-            process_revision_directives=process_revision_directives
+            connection=connection, target_metadata=target_metadata
         )
 
         with context.begin_transaction():

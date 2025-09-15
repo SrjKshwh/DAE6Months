@@ -1303,9 +1303,11 @@ def create_app():
         if decision == "approve":
             risk.approval_status = ApprovalStatus.APPROVED
             risk.treatment = RiskTreatment.MITIGATE  # Default treatment for approved risks
+            risk.stakeholder_approval_notes = decision_notes or "Approved via risk approval process"
         elif decision == "reject":
             risk.approval_status = ApprovalStatus.REJECTED
             risk.treatment = RiskTreatment.AVOID
+            risk.stakeholder_approval_notes = decision_notes or "Rejected via risk approval process"
         else:
             risk.approval_status = ApprovalStatus.PENDING
 
@@ -1526,6 +1528,11 @@ def create_app():
         user = current_user()
         db_session = get_session()
 
+        evaluation_criteria = data.get("evaluation_criteria", "").strip()
+        if not evaluation_criteria or len(evaluation_criteria) < 50:
+            flash("Evaluation criteria must be at least 50 characters long.", "danger")
+            return redirect(url_for("risks"))  # Or render form with error
+
         data = request.form
         risk = Risk(
             asset=data["asset"],
@@ -1538,11 +1545,28 @@ def create_app():
             business_impact=data.get("business_impact", ""),
             regulatory_impact=data.get("regulatory_impact", ""),
             mitigation_plan=data.get("mitigation_plan", ""),
-            owner=user.email
-        )
+            owner=user.email,
+            # Add new multi-criteria fields
+            financial_impact=int(data.get("financial_impact", 1)),
+            operational_impact=int(data.get("operational_impact", 1)),
+            compliance_impact=int(data.get("compliance_impact", 1)),
+            reputation_impact=int(data.get("reputation_impact", 1)),
+            # Add BIA fields
+            rto_hours=float(data.get("rto_hours", 0)),
+            rpo_hours=float(data.get("rpo_hours", 0)),
+            mtd_hours=float(data.get("mtd_hours", 0)),
+            financial_impact_amount=float(data.get("financial_impact_amount", 0)),
+            dependency_mapping=json.dumps(data.get("dependency_mapping", [])),
+            # Add evaluation criteria
+            evaluation_criteria=data.get("evaluation_criteria", ""),
+            stakeholder_approval_required=data.get("stakeholder_approval_required", True)
+            )
 
         # Calculate initial risk score
         risk.calculate_score()
+        # Calculate scores
+        risk.calculate_multi_criteria_score()  
+        risk.calculate_business_impact_score() 
 
         # Determine escalation requirements
         if risk.should_escalate():
@@ -2699,6 +2723,48 @@ def create_app():
         return render_template("swot_analysis_detail.html",
                              analysis=analysis,
                              grouped_factors=grouped_factors)
+
+
+    @app.route("/asset_register", methods=["GET", "POST"])
+    @login_required
+    def asset_register():
+        db = get_session()
+        if request.method == "POST":
+            # Create new asset entry
+            asset = CriticalAssetRegister(
+                asset_name=request.form["asset_name"],
+                asset_type=request.form["asset_type"],
+                asset_value=float(request.form.get("asset_value", 0)),
+                criticality_level=request.form.get("criticality_level", "medium"),
+                threat_exposure_score=int(request.form.get("threat_exposure_score", 1)),
+                primary_threats=json.dumps(request.form.getlist("threats")),
+                vulnerability_count=int(request.form.get("vulnerability_count", 0)),
+                upstream_dependencies=json.dumps(request.form.getlist("upstream")),
+                downstream_dependencies=json.dumps(request.form.getlist("downstream")),
+                assessed_by=current_user().id
+            )
+            asset.calculate_overall_risk_exposure()
+            db.add(asset)
+            db.commit()
+            flash("Asset registered successfully.", "success")
+            return redirect(url_for("asset_register"))
+    
+        assets = db.query(CriticalAssetRegister).all()
+        close_session(db)
+        return render_template("asset_register.html", assets=assets)
+
+    @app.route("/asset_report/<int:asset_id>")
+    @login_required
+    def asset_report(asset_id):
+        db = get_session()
+        asset = db.get(CriticalAssetRegister, asset_id)
+        if not asset:
+            flash("Asset not found.", "danger")
+            return redirect(url_for("asset_register"))
+        report = asset.generate_report()
+        close_session(db)
+        return render_template("asset_report.html", report=report)
+
 
     # Helper functions for risk generation
     def generate_risks_from_checklist(assessment_id):

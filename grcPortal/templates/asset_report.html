@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Asset Risk Exposure Report</h2>
+<pre>{{ report }}</pre>
+<a href="{{ url_for('asset_register') }}">Back to Register</a>
+{% endblock %}
