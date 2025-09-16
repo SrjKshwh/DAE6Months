@@ -87,7 +87,7 @@
                     <div class="card text-center border-warning">
                         <div class="card-body">
                             <h5 class="card-title text-warning">
-                                {{ risks|selectattr('asset', 'match', '.*Brainstorming.*')|list|length }}
+                                {{ risks|selectattr('asset', 'in', 'Brainstorming')|list|length }}
                             </h5>
                             <p class="card-text">Brainstorming</p>
                             <small class="text-muted">Facilitated sessions</small>
@@ -98,7 +98,7 @@
                     <div class="card text-center border-info">
                         <div class="card-body">
                             <h5 class="card-title text-info">
-                                {{ risks|selectattr('asset', 'match', '.*Checklist.*')|list|length }}
+                                {{ risks|selectattr('asset', 'in', 'Checklist')|list|length }}
                             </h5>
                             <p class="card-text">Checklist</p>
                             <small class="text-muted">Structured assessment</small>
@@ -109,7 +109,7 @@
                     <div class="card text-center border-success">
                         <div class="card-body">
                             <h5 class="card-title text-success">
-                                {{ risks|selectattr('asset', 'match', '.*SWOT.*')|list|length }}
+                                {{ risks|selectattr('asset', 'in', 'SWOT')|list|length }}
                             </h5>
                             <p class="card-text">SWOT Analysis</p>
                             <small class="text-muted">Strategic factors</small>
@@ -120,7 +120,7 @@
                     <div class="card text-center border-secondary">
                         <div class="card-body">
                             <h5 class="card-title text-secondary">
-                                {{ total_risks - risks|selectattr('asset', 'match', '.*(Brainstorming|Checklist|SWOT).*')|list|length }}
+                                {{ total_risks - (risks|selectattr('asset', 'in', 'Brainstorming')|list + risks|selectattr('asset', 'in', 'Checklist')|list + risks|selectattr('asset', 'in', 'SWOT')|list)|length }}
                             </h5>
                             <p class="card-text">Manual Entry</p>
                             <small class="text-muted">Direct input</small>

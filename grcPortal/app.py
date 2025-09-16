@@ -54,7 +54,7 @@ from pathlib import Path
 from functools import wraps
 
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, g
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename as werkzeug_secure
@@ -63,7 +63,10 @@ from flask_migrate import Migrate
 load_dotenv()
 
 from db import get_engine, get_session, close_session
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod
+
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision
+from sqlalchemy.orm import sessionmaker
+
 from llm_scan import scan_file_for_grc, create_risks_from_scan
 
 # ------------------------------------------------------------------------------
@@ -241,7 +244,7 @@ def create_app():
     # Secure config
     app.config.update(
         SECRET_KEY=os.getenv("FLASK_SECRET", os.urandom(24)),
-        PERMANENT_SESSION_LIFETIME=timedelta(minutes=5),
+        PERMANENT_SESSION_LIFETIME=timedelta(minutes=10),
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SECURE=not app.debug,  # true in prod
         SESSION_COOKIE_SAMESITE="Lax",
@@ -290,7 +293,12 @@ def create_app():
             Ensures database connections are properly returned to connection pool
             Critical for production applications to prevent resource exhaustion
         """
+        # Close the main session
         close_session()
+        # Also close the compliance session if it exists
+        compliance_session = g.pop("compliance_session", None)
+        if compliance_session is not None:
+            compliance_session.close()
 
     # Zero Trust: Session timeout enforcement
     # Always verify session validity on each request
@@ -1628,10 +1636,40 @@ def create_app():
             Used for organizational compliance monitoring
             Supports multiple compliance frameworks simultaneously
         """
-        session = get_session()
-        records = session.query(Compliance).all()
-        close_session(session)
-        return render_template("compliance.html", compliance=records)
+        # Create a temporary session for this request
+        engine = get_engine()
+        SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
+        db_session = SessionLocal()
+
+        try:
+            # Fetch compliance records with eager loading of risk relationship
+            from sqlalchemy.orm import joinedload
+            compliance_records = db_session.query(Compliance).options(joinedload(Compliance.risk)).all()
+
+            # Create a simple data structure for the template
+            compliance_data = []
+            for c in compliance_records:
+                risk_info = None
+                if c.risk:
+                    risk_info = {
+                        'id': c.risk.id,
+                        'asset': c.risk.asset
+                    }
+
+                compliance_data.append({
+                    'id': c.id,
+                    'framework': c.framework,
+                    'control': c.control,
+                    'score': c.score,
+                    'created_at': c.created_at,
+                    'updated_at': c.updated_at,
+                    'risk': risk_info
+                })
+
+            return render_template("compliance.html", compliance=compliance_data)
+
+        finally:
+            db_session.close()
 
     @app.route("/add_compliance", methods=["POST"])
     def add_compliance():
@@ -2996,7 +3034,7 @@ if __name__ == "__main__":
             if conn.exec_driver_sql("SELECT COUNT(*) FROM users").scalar() == 0:
                 pw = generate_password_hash("Sksf1234")  # hashed
                 conn.exec_driver_sql(
-                    "INSERT INTO users (email, password_hash, is_verified, role, approval_limit, escalation_threshold, escalation_level, audit_trail_enabled) VALUES (:e, :p, :v, :r, :al, :et, :el, :at)",
+                    "INSERT INTO users (email, password_hash, is_verified, role, approval_limit, escalation_threshold, escalation_level, audit_trail_enabled, created_at, updated_at) VALUES (:e, :p, :v, :r, :al, :et, :el, :at, :createdDate, :updatedDate)",
                     {
                         "e": "kush786srj@gmail.com",
                         "p": pw,
@@ -3005,10 +3043,12 @@ if __name__ == "__main__":
                         "al": 100000.0,
                         "et": 15,
                         "el": "executive",
-                        "at": True
+                        "at": True,
+                        "createdDate":datetime.now(timezone.utc),  
+                        "updatedDate":datetime.now(timezone.utc) 
                     },
                 )
                 logging.info("Default admin user created")
 
-    # Avoid debug=True in production
-    app.run(debug=False, host="127.0.0.1", port=5000)
+    # Enable debug mode for development (shows detailed error messages)
+    app.run(debug=True, host="127.0.0.1", port=5000)
