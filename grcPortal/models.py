@@ -329,6 +329,11 @@ class Risk(Base):
     stakeholder_approval_required: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     stakeholder_approval_notes: Mapped[str] = mapped_column(Text, nullable=True)
 
+    # Store JSON response for Risk Mitigation Planning
+    mitigation_plan_json: Mapped[str] = mapped_column(Text, nullable=True)  # Store JSON response
+    mitigation_plan_updated: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+
     def calculate_score(self, use_multi_criteria=False):
         """Calculate risk score - can use traditional or multi-criteria approach"""
         if use_multi_criteria:

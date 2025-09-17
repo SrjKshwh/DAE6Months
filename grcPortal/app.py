@@ -64,10 +64,10 @@ load_dotenv()
 
 from db import get_engine, get_session, close_session
 
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister
 from sqlalchemy.orm import sessionmaker
 
-from llm_scan import scan_file_for_grc, create_risks_from_scan
+from llm_scan import scan_file_for_grc, create_risks_from_scan,generate_risk_mitigation_plan
 
 # ------------------------------------------------------------------------------
 # Secure Development Environment Notes
@@ -847,15 +847,23 @@ def create_app():
 
         compliance_hits = []
         risks_list = []
-        if show_previous and  scan_result:
+        if show_previous and scan_result:
             try:
                 compliance_hits = json.loads(scan_result.compliance_hits_json or '[]')
-                risks_list = [
-                    {"id": risk.id, "risk": risk.threat, "severity": risk.severity.value}
-                    for risk in scan_result.risks
-                    ]
+                # Eagerly load the risks relationship to avoid session issues
+                from sqlalchemy.orm import joinedload
+                scan_result_with_risks = db.query(ScanResult).options(joinedload(ScanResult.risks)).filter(ScanResult.id == scan_result.id).first()
+                if scan_result_with_risks and scan_result_with_risks.risks:
+                    risks_list = [
+                        {"id": risk.id, "risk": risk.threat, "severity": risk.severity.value if risk.severity else 'Medium'}
+                        for risk in scan_result_with_risks.risks
+                        ]
             except json.JSONDecodeError as e:
                 logging.error(f"Failed to parse scan result JSON: {e}")
+                risks_list = []
+            except Exception as e:
+                logging.error(f"Error loading risks for scan result: {e}")
+                risks_list = []
 
 
         # Provide variables for scan button and show current scan results
@@ -1047,17 +1055,24 @@ def create_app():
         up = db.get(Upload, upload_id)
 
         if not up or up.user_id != session.get("user_id"):
+            close_session(db)
             flash("Upload not found or unauthorized.", "danger")
             return redirect(url_for("home"))
 
         if up.scan_result:
+            close_session(db)
             flash("This file has already been scanned.", "info")
             return redirect(url_for("home"))
 
         try:
-            data = scan_file_for_grc(up.saved_path)
+            # Store file path before potential session issues
+            file_path = up.saved_path
+            upload_id_for_scan = up.id
+            filename = up.filename
+
+            data = scan_file_for_grc(file_path)
             res = ScanResult(
-                upload_id=up.id,
+                upload_id=upload_id_for_scan,
                 summary=data.get("summary", ""),
                 compliance_hits_json=json_dumps(data.get("compliance_hits", [])),
                 risks_json=json_dumps(data.get("risks", [])),
@@ -1072,11 +1087,13 @@ def create_app():
             if risks_data or threats_data:
                 create_risks_from_scan(res.id, risks_data, compliance_data, threats_data)
 
-            forensics_logger.info(f"User {session.get('user_id')} scanned file {up.filename}")
+            forensics_logger.info(f"User {session.get('user_id')} scanned file {filename}")
             flash("Scan completed and saved.", "success")
         except Exception as e:
             logging.error("Scan failed: %s", str(e))
             flash("An error occurred while scanning. Please try again.", "danger")
+        finally:
+            close_session(db)
 
         return redirect(url_for("home"))
 
@@ -1240,9 +1257,48 @@ def create_app():
         log_audit_event(user, "RISK_VIEWED", "COMPLIANCE",
                        f"Viewed detailed risk assessment for {risk.asset}", f"/risk/{risk_id}", True)
 
+        # Add mitigation planning
+        risk_data_for_ai = {
+            'asset': risk.asset,
+            'threat': risk.threat,
+            'vulnerability': risk.vulnerability,
+            'score': risk.score,
+            'severity': risk.severity.value if risk.severity else 'Medium'
+            }
+        
+        # In view_risk route, before calling generate_risk_mitigation_plan
+        #if risk.mitigation_plan_json and risk.mitigation_plan_updated:
+            # Check if cache is still valid (e.g., 30 days)
+            #cache_age = datetime.now(timezone.utc) - risk.mitigation_plan_updated
+            #if cache_age.days < 30:
+                #mitigation_plan = json.loads(risk.mitigation_plan_json)
+            #else:
+                # Cache expired, regenerate
+                #mitigation_plan = generate_risk_mitigation_plan(risk_data_for_ai)
+                #risk.mitigation_plan_json = json.dumps(mitigation_plan)
+                #risk.mitigation_plan_updated = datetime.now(timezone.utc)
+                #db.commit()
+        #else:
+            # No cache, generate new
+            #mitigation_plan = generate_risk_mitigation_plan(risk_data_for_ai)
+            #risk.mitigation_plan_json = json.dumps(mitigation_plan)
+            #risk.mitigation_plan_updated = datetime.now(timezone.utc)
+            #db.commit()
+
+    
+
+        mitigation_plan = generate_risk_mitigation_plan(risk_data_for_ai)
+
         close_session(db)
-        return render_template("risk_detail.html", risk=risk, approvals=approvals,
-                             governance_decisions=governance_decisions, compliance_mappings=compliance_mappings)
+        return render_template("risk_detail.html",
+                     risk=risk,
+                     approvals=approvals,
+                     governance_decisions=governance_decisions,
+                     compliance_mappings=compliance_mappings,
+                     mitigation_plan=mitigation_plan)
+    
+
+
 
     @app.route("/approve_risk/<int:risk_id>", methods=["POST"])
     @login_required
@@ -1456,9 +1512,9 @@ def create_app():
         escalated_risks = len([r for r in risks if r.escalation_level != "none"])
 
         # Approval workflow metrics
-        pending_approvals = len([r for r in risks if r.approval_status == ApprovalStatus.PENDING])
-        approved_risks = len([r for r in risks if r.approval_status == ApprovalStatus.APPROVED])
-        rejected_risks = len([r for r in risks if r.approval_status == ApprovalStatus.REJECTED])
+        pending_approvals = len([r for r in risks if r.approval_status and r.approval_status.value == "pending"])
+        approved_risks = len([r for r in risks if r.approval_status and r.approval_status.value == "approved"])
+        rejected_risks = len([r for r in risks if r.approval_status and r.approval_status.value == "rejected"])
 
         # Risk by category
         risk_by_category = {}

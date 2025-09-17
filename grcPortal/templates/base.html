@@ -118,13 +118,33 @@
                 </ul>
 
                 <ul class="navbar-nav">
+                    <!-- User Info -->
+                    <li class="nav-item">
+                        <span class="navbar-text me-2">
+                            <i class="fas fa-user text-light"></i>
+                            <strong>{{ current_user.email }}</strong>
+                        </span>
+                    </li>
+
+                    <!-- Prominent Logout Button -->
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm me-2" title="Secure Logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+
+                    <!-- User Dropdown Menu -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> {{ current_user.email }}
+                            <i class="fas fa-cog"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ url_for('logout') }}">
-                                <i class="fas fa-sign-out-alt"></i> Logout
+                                <i class="fas fa-sign-out-alt"></i> Secure Logout
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-muted" href="#" onclick="return false;">
+                                <small><i class="fas fa-info-circle"></i> Session active</small>
                             </a></li>
                         </ul>
                     </li>

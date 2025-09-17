@@ -1,0 +1,34 @@
+GLBA Compliance Report
+
+Date: 2025-08-21
+
+This report outlines identified risks related to GLBA (Gramm-Leach-Bliley Act) compliance.
+
+Risks Identified:
+
+1. Asset: Customer Database
+   Threat: Unauthorized access by external attacker
+   Vulnerability: Weak password policies
+   Control: Implement strong password enforcement and MFA
+   GLBA Requirement: Safeguards Rule - Access Controls
+
+2. Asset: Employee Workstations
+   Threat: Malware infection via phishing
+   Vulnerability: Lack of regular security awareness training
+   Control: Conduct mandatory phishing awareness training
+   GLBA Requirement: Safeguards Rule - Employee Training
+
+3. Asset: Data Transmission Channels
+   Threat: Interception of sensitive customer data
+   Vulnerability: Unencrypted data transmission
+   Control: Enforce TLS 1.2+ for all communications
+   GLBA Requirement: Safeguards Rule - Encryption of Data in Transit
+
+4. Asset: Backup Storage
+   Threat: Insider misuse of unmonitored backup access
+   Vulnerability: No logging/monitoring of backup system access
+   Control: Enable logging and implement least privilege access
+   GLBA Requirement: Safeguards Rule - Monitoring and Logging
+
+Conclusion:
+The organization must address these four risks to ensure GLBA compliance. Mitigation efforts should focus on access control, employee training, encryption, and monitoring systems to safeguard customer information.

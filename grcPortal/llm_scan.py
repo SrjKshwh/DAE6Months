@@ -70,6 +70,7 @@ def _extract_text(file_path: str, max_chars: int = 20000) -> str:
     text = re.sub(r"\s+", " ", text).strip()
     return text[:max_chars]
 
+
 def _call_model(prompt: str) -> str:
     """
     Calls a provider that hosts `openai/gpt-oss-20b:free`.
@@ -103,6 +104,7 @@ def _call_model(prompt: str) -> str:
     r.raise_for_status()
     content = r.json()["choices"][0]["message"]["content"]
     return content
+
 
 def scan_file_for_grc(file_path: str) -> dict:
     """
@@ -313,3 +315,301 @@ def create_risks_from_scan(scan_result_id: int, risks_data: list, compliance_dat
         raise  # Re-raise to ensure visibility
     finally:
         close_session(db)
+
+
+def generate_risk_mitigation_plan(risk_data: dict) -> dict:
+    """
+    Generate comprehensive risk mitigation planning using OpenRouter AI.
+    
+    Args:
+        risk_data (dict): Risk information containing threat, vulnerability, asset, etc.
+    
+    Returns:
+        dict: Structured JSON response with mitigation planning details
+    """
+    
+    prompt = f"""
+    You are a senior cybersecurity risk management expert. For the following risk, provide a comprehensive mitigation plan:
+
+    RISK DETAILS:
+    - Asset: {risk_data.get('asset', 'Unknown')}
+    - Threat: {risk_data.get('threat', 'Unknown')}
+    - Vulnerability: {risk_data.get('vulnerability', 'Unknown')}
+    - Current Risk Score: {risk_data.get('score', 'Unknown')}
+    - Severity: {risk_data.get('severity', 'Unknown')}
+
+    Provide a detailed mitigation plan in STRICT JSON format with this exact structure:
+
+    {{
+        "framework_controls": [
+            {{
+                "framework": "NIST Cybersecurity Framework",
+                "control_id": "ID-RA",
+                "control_name": "Risk Assessment",
+                "description": "Detailed control description",
+                "implementation_cost": "Estimated cost in USD",
+                "timeline_months": 3,
+                "rationale": "Why this control addresses the risk",
+                "effectiveness_percentage": 85
+            }}
+        ],
+        "treatment_strategies": {{
+            "mitigate": {{
+                "description": "Detailed mitigation approach",
+                "implementation_steps": ["Step 1", "Step 2", "Step 3"],
+                "timeline_months": 6,
+                "resource_requirements": ["Resource 1", "Resource 2"],
+                "estimated_cost": "Cost in USD",
+                "residual_risk_score": 3,
+                "monitoring_procedures": ["Monitoring step 1", "Monitoring step 2"]
+            }},
+            "avoid": {{
+                "description": "Avoidance strategy details",
+                "implementation_steps": ["Step 1", "Step 2"],
+                "timeline_months": 2,
+                "resource_requirements": ["Resource 1"],
+                "estimated_cost": "Cost in USD",
+                "residual_risk_score": 1,
+                "monitoring_procedures": ["Monitoring procedure"]
+            }},
+            "transfer": {{
+                "description": "Risk transfer approach",
+                "implementation_steps": ["Step 1", "Step 2"],
+                "timeline_months": 4,
+                "resource_requirements": ["Resource 1", "Resource 2"],
+                "estimated_cost": "Cost in USD",
+                "residual_risk_score": 2,
+                "monitoring_procedures": ["Monitoring procedure"]
+            }},
+            "accept": {{
+                "description": "Risk acceptance rationale",
+                "implementation_steps": ["Step 1"],
+                "timeline_months": 1,
+                "resource_requirements": ["Minimal resources"],
+                "estimated_cost": "Cost in USD",
+                "residual_risk_score": 5,
+                "monitoring_procedures": ["Monitoring procedure"]
+            }}
+        }},
+        "cost_benefit_analysis": {{
+            "total_implementation_cost": "Total cost across all strategies",
+            "annual_savings": "Expected annual cost savings",
+            "roi_percentage": 150,
+            "payback_period_months": 8,
+            "risk_reduction_percentage": 75
+        }},
+        "recommended_strategy": {{
+            "strategy": "mitigate",
+            "rationale": "Why this strategy is recommended",
+            "priority_level": "High",
+            "business_alignment": "How it aligns with business objectives"
+        }},
+        "implementation_roadmap": [
+            {{
+                "phase": "Planning",
+                "duration_weeks": 4,
+                "milestones": ["Milestone 1", "Milestone 2"],
+                "dependencies": ["Dependency 1"]
+            }},
+            {{
+                "phase": "Implementation",
+                "duration_weeks": 12,
+                "milestones": ["Milestone 1", "Milestone 2"],
+                "dependencies": ["Dependency 1", "Dependency 2"]
+            }},
+            {{
+                "phase": "Testing",
+                "duration_weeks": 4,
+                "milestones": ["Milestone 1"],
+                "dependencies": ["Previous phase completion"]
+            }},
+            {{
+                "phase": "Monitoring",
+                "duration_weeks": 52,
+                "milestones": ["Ongoing monitoring"],
+                "dependencies": ["Implementation completion"]
+            }}
+        ],
+        "success_metrics": [
+            {{
+                "metric": "Risk Score Reduction",
+                "target": "Reduce from 15 to 3",
+                "measurement_method": "Risk scoring methodology",
+                "frequency": "Quarterly"
+            }},
+            {{
+                "metric": "Incident Reduction",
+                "target": "50% reduction in related incidents",
+                "measurement_method": "Incident tracking system",
+                "frequency": "Monthly"
+            }}
+        ]
+    }}
+
+    Ensure all costs are realistic estimates, timelines are practical, and the response is valid JSON.
+    """
+    
+    if not OPENROUTER_KEY:
+        # Fallback response for testing without API key
+        return {
+            "framework_controls": [
+                {
+                    "framework": "NIST Cybersecurity Framework",
+                    "control_id": "ID-RA",
+                    "control_name": "Risk Assessment",
+                    "description": "Implement comprehensive risk assessment process",
+                    "implementation_cost": "$25,000",
+                    "timeline_months": 3,
+                    "rationale": "Addresses the core risk through systematic assessment",
+                    "effectiveness_percentage": 85
+                }
+            ],
+            "treatment_strategies": {
+                "mitigate": {
+                    "description": "Implement technical and administrative controls",
+                    "implementation_steps": ["Assess current controls", "Design new controls", "Implement controls"],
+                    "timeline_months": 6,
+                    "resource_requirements": ["Security team", "IT resources"],
+                    "estimated_cost": "$50,000",
+                    "residual_risk_score": 3,
+                    "monitoring_procedures": ["Regular audits", "Control effectiveness reviews"]
+                },
+                "avoid": {
+                    "description": "Discontinue vulnerable process",
+                    "implementation_steps": ["Identify alternative process", "Transition to new process"],
+                    "timeline_months": 2,
+                    "resource_requirements": ["Process owners"],
+                    "estimated_cost": "$10,000",
+                    "residual_risk_score": 1,
+                    "monitoring_procedures": ["Process monitoring"]
+                },
+                "transfer": {
+                    "description": "Transfer risk through insurance",
+                    "implementation_steps": ["Assess insurance options", "Purchase coverage"],
+                    "timeline_months": 4,
+                    "resource_requirements": ["Risk management team"],
+                    "estimated_cost": "$15,000",
+                    "residual_risk_score": 2,
+                    "monitoring_procedures": ["Policy reviews"]
+                },
+                "accept": {
+                    "description": "Accept risk with monitoring",
+                    "implementation_steps": ["Document acceptance decision"],
+                    "timeline_months": 1,
+                    "resource_requirements": ["Management approval"],
+                    "estimated_cost": "$2,000",
+                    "residual_risk_score": 5,
+                    "monitoring_procedures": ["Regular risk reviews"]
+                }
+            },
+            "cost_benefit_analysis": {
+                "total_implementation_cost": "$77,000",
+                "annual_savings": "$100,000",
+                "roi_percentage": 130,
+                "payback_period_months": 9,
+                "risk_reduction_percentage": 80
+            },
+            "recommended_strategy": {
+                "strategy": "mitigate",
+                "rationale": "Provides best balance of risk reduction and business continuity",
+                "priority_level": "High",
+                "business_alignment": "Supports business objectives while maintaining security"
+            },
+            "implementation_roadmap": [
+                {
+                    "phase": "Planning",
+                    "duration_weeks": 4,
+                    "milestones": ["Requirements gathering", "Solution design"],
+                    "dependencies": ["Stakeholder approval"]
+                },
+                {
+                    "phase": "Implementation",
+                    "duration_weeks": 12,
+                    "milestones": ["Control deployment", "Testing"],
+                    "dependencies": ["Planning completion"]
+                },
+                {
+                    "phase": "Testing",
+                    "duration_weeks": 4,
+                    "milestones": ["Validation testing"],
+                    "dependencies": ["Implementation completion"]
+                },
+                {
+                    "phase": "Monitoring",
+                    "duration_weeks": 52,
+                    "milestones": ["Ongoing monitoring"],
+                    "dependencies": ["Testing completion"]
+                }
+            ],
+            "success_metrics": [
+                {
+                    "metric": "Risk Score Reduction",
+                    "target": "Reduce risk score by 80%",
+                    "measurement_method": "Risk assessment framework",
+                    "frequency": "Quarterly"
+                },
+                {
+                    "metric": "Cost Savings",
+                    "target": "$100,000 annual savings",
+                    "measurement_method": "Financial tracking",
+                    "frequency": "Annually"
+                }
+            ]
+        }
+    
+    # Call OpenRouter API
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_KEY}",
+        "Content-Type": "application/json",
+    }
+    body = {
+        "model": MODEL_NAME,
+        "messages": [
+            {"role": "system", "content": "You are a senior cybersecurity risk management expert. Provide comprehensive mitigation planning in STRICT JSON format only."},
+            {"role": "user", "content": prompt}
+        ],
+        "temperature": 0.3,
+        "max_tokens": 4000
+    }
+    
+    try:
+        r = requests.post(url, headers=headers, json=body, timeout=120)
+        r.raise_for_status()
+        content = r.json()["choices"][0]["message"]["content"]
+        
+        # Parse JSON response
+        try:
+            return json.loads(content)
+        except json.JSONDecodeError:
+            # Try to extract JSON from response
+            import re
+            json_match = re.search(r'\{.*\}', content, re.DOTALL)
+            if json_match:
+                return json.loads(json_match.group(0))
+            else:
+                logging.error(f"Could not parse JSON from AI response: {content[:500]}")
+                return generate_fallback_mitigation_plan(risk_data)
+                
+    except Exception as e:
+        logging.error(f"Error calling OpenRouter API: {e}")
+        return generate_fallback_mitigation_plan(risk_data)
+
+
+def generate_fallback_mitigation_plan(risk_data: dict) -> dict:
+    """Fallback mitigation plan when API is unavailable"""
+    return {
+        "framework_controls": [],
+        "treatment_strategies": {
+            "mitigate": {"description": "API unavailable - manual planning required"},
+            "avoid": {"description": "API unavailable - manual planning required"},
+            "transfer": {"description": "API unavailable - manual planning required"},
+            "accept": {"description": "API unavailable - manual planning required"}
+        },
+        "cost_benefit_analysis": {},
+        "recommended_strategy": {"strategy": "manual_review"},
+        "implementation_roadmap": [],
+        "success_metrics": []
+    }
+
+

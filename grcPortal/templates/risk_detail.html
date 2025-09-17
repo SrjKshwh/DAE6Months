@@ -596,6 +596,277 @@
                     {% endif %}
                 </div>
             </div>
+
+
+            
+            <!-- mitigation planning -->
+            <div class="row mt-4">
+                <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-shield-alt"></i>Risk Mitigation Plan
+                </h5>
+            </div>
+            <div class="card-body">
+                
+                <!-- Framework Controls Table -->
+                {% if mitigation_plan.framework_controls %}
+                <h6 class="text-primary mb-3">
+                    <i class="fas fa-cogs"></i> Recommended Framework Controls
+                </h6>
+                <div class="table-responsive mb-4">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Framework</th>
+                                <th>Control ID</th>
+                                <th>Control Name</th>
+                                <th>Description</th>
+                                <th>Cost</th>
+                                <th>Timeline</th>
+                                <th>Effectiveness</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for control in mitigation_plan.framework_controls %}
+                            <tr>
+                                <td><span class="badge bg-info">{{ control.framework }}</span></td>
+                                <td><code>{{ control.control_id }}</code></td>
+                                <td>{{ control.control_name }}</td>
+                                <td>{{ control.description }}</td>
+                                <td class="text-success fw-bold">{{ control.implementation_cost }}</td>
+                                <td>{{ control.timeline_months }} months</td>
+                                <td>
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar bg-success" 
+                                             style="width: {{ control.effectiveness_percentage }}%">
+                                            {{ control.effectiveness_percentage }}%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+                <!-- Treatment Strategies -->
+                {% if mitigation_plan.treatment_strategies %}
+                <h6 class="text-primary mb-3">
+                    <i class="fas fa-balance-scale"></i> Risk Treatment Strategies
+                </h6>
+                
+                <div class="row">
+                    {% for strategy_name, strategy in mitigation_plan.treatment_strategies.items() %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-{{ 'primary' if strategy_name == mitigation_plan.recommended_strategy.strategy else 'secondary' }} h-100">
+                            <div class="card-header">
+                                <h6 class="mb-0 text-capitalize">
+                                    {% if strategy_name == mitigation_plan.recommended_strategy.strategy %}
+                                        <i class="fas fa-star text-warning"></i> 
+                                    {% endif %}
+                                    {{ strategy_name }} Strategy
+                                    {% if strategy_name == mitigation_plan.recommended_strategy.strategy %}
+                                        <span class="badge bg-success ms-2">Recommended</span>
+                                    {% endif %}
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted">{{ strategy.description }}</p>
+                                
+                                <div class="row text-center mb-3">
+                                    <div class="col-6">
+                                        <strong class="text-primary">{{ strategy.timeline_months }} months</strong>
+                                        <br><small>Timeline</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong class="text-success">{{ strategy.estimated_cost }}</strong>
+                                        <br><small>Cost</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <strong>Residual Risk Score:</strong> 
+                                    <span class="badge bg-{{ 'danger' if strategy.residual_risk_score > 3 else 'warning' if strategy.residual_risk_score > 2 else 'success' }}">
+                                        {{ strategy.residual_risk_score }}/5
+                                    </span>
+                                </div>
+                                
+                                <details class="mb-2">
+                                    <summary class="fw-bold">Implementation Steps</summary>
+                                    <ul class="mt-2">
+                                        {% for step in strategy.implementation_steps %}
+                                        <li>{{ step }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </details>
+                                
+                                <details class="mb-2">
+                                    <summary class="fw-bold">Resource Requirements</summary>
+                                    <ul class="mt-2">
+                                        {% for resource in strategy.resource_requirements %}
+                                        <li>{{ resource }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </details>
+                                
+                                <details>
+                                    <summary class="fw-bold">Monitoring Procedures</summary>
+                                    <ul class="mt-2">
+                                        {% for procedure in strategy.monitoring_procedures %}
+                                        <li>{{ procedure }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </details>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Cost-Benefit Analysis -->
+                {% if mitigation_plan.cost_benefit_analysis %}
+                <h6 class="text-primary mb-3">
+                    <i class="fas fa-chart-line"></i> Cost-Benefit Analysis
+                </h6>
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card text-center bg-light">
+                            <div class="card-body">
+                                <h5 class="text-danger">{{ mitigation_plan.cost_benefit_analysis.total_implementation_cost }}</h5>
+                                <small class="text-muted">Total Cost</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center bg-light">
+                            <div class="card-body">
+                                <h5 class="text-success">{{ mitigation_plan.cost_benefit_analysis.annual_savings }}</h5>
+                                <small class="text-muted">Annual Savings</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center bg-light">
+                            <div class="card-body">
+                                <h5 class="text-primary">{{ mitigation_plan.cost_benefit_analysis.roi_percentage }}%</h5>
+                                <small class="text-muted">ROI</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center bg-light">
+                            <div class="card-body">
+                                <h5 class="text-info">{{ mitigation_plan.cost_benefit_analysis.payback_period_months }} months</h5>
+                                <small class="text-muted">Payback Period</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Implementation Roadmap -->
+                {% if mitigation_plan.implementation_roadmap %}
+                <h6 class="text-primary mb-3">
+                    <i class="fas fa-road"></i> Implementation Roadmap
+                </h6>
+                <div class="table-responsive mb-4">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Phase</th>
+                                <th>Duration</th>
+                                <th>Milestones</th>
+                                <th>Dependencies</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for phase in mitigation_plan.implementation_roadmap %}
+                            <tr>
+                                <td><strong>{{ phase.phase }}</strong></td>
+                                <td>{{ phase.duration_weeks }} weeks</td>
+                                <td>
+                                    <ul class="mb-0">
+                                        {% for milestone in phase.milestones %}
+                                        <li>{{ milestone }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul class="mb-0">
+                                        {% for dependency in phase.dependencies %}
+                                        <li>{{ dependency }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+                <!-- Success Metrics -->
+                {% if mitigation_plan.success_metrics %}
+                <h6 class="text-primary mb-3">
+                    <i class="fas fa-trophy"></i> Success Metrics & Monitoring
+                </h6>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Metric</th>
+                                <th>Target</th>
+                                <th>Measurement Method</th>
+                                <th>Frequency</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for metric in mitigation_plan.success_metrics %}
+                            <tr>
+                                <td><strong>{{ metric.metric }}</strong></td>
+                                <td>{{ metric.target }}</td>
+                                <td>{{ metric.measurement_method }}</td>
+                                <td>{{ metric.frequency }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+                <!-- Recommended Strategy Summary -->
+                {% if mitigation_plan.recommended_strategy %}
+                <div class="alert alert-info mt-4">
+                    <h6 class="alert-heading">
+                        <i class="fas fa-lightbulb"></i> Recommended Strategy: 
+                        <strong class="text-capitalize">{{ mitigation_plan.recommended_strategy.strategy }}</strong>
+                    </h6>
+                    <p class="mb-2">{{ mitigation_plan.recommended_strategy.rationale }}</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Priority:</strong> 
+                            <span class="badge bg-{{ 'danger' if mitigation_plan.recommended_strategy.priority_level == 'Critical' else 'warning' if mitigation_plan.recommended_strategy.priority_level == 'High' else 'info' }}">
+                                {{ mitigation_plan.recommended_strategy.priority_level }}
+                            </span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Business Alignment:</strong> {{ mitigation_plan.recommended_strategy.business_alignment }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+                </div>
+            </div>
+
+
+
         </div>
     </div>
 </div>
