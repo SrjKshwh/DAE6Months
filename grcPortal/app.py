@@ -851,7 +851,7 @@ def create_app():
             try:
                 compliance_hits = json.loads(scan_result.compliance_hits_json or '[]')
                 risks_list = [
-                    {"risk": risk.threat, "severity": risk.severity.value}
+                    {"id": risk.id, "risk": risk.threat, "severity": risk.severity.value}
                     for risk in scan_result.risks
                     ]
             except json.JSONDecodeError as e:
@@ -1953,7 +1953,28 @@ def create_app():
         """
         user = current_user()
         logs = get_audit_logs(user)
-        return render_template("audit_logs.html", audit_logs=logs)
+
+        # Convert SQLAlchemy objects to dictionaries to avoid session issues
+        audit_logs_data = []
+        for log in logs:
+            log_dict = {
+                'id': log.id,
+                'user_id': log.user_id,
+                'action': log.action,
+                'category': log.category,
+                'description': log.description,
+                'resource': log.resource,
+                'ip_address': log.ip_address,
+                'user_agent': log.user_agent,
+                'success': log.success,
+                'created_at': log.created_at,
+                'user': {
+                    'email': log.user.email if log.user else 'System'
+                } if log.user else None
+            }
+            audit_logs_data.append(log_dict)
+
+        return render_template("audit_logs.html", audit_logs=audit_logs_data)
 
     # --- Security Policies Route ---
     @app.route("/policies")

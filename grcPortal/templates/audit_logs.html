@@ -91,40 +91,40 @@
                                 <tr>
                                     <td>
                                         <small class="text-muted">
-                                            {{ log.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                                            {{ log['created_at'].strftime('%Y-%m-%d %H:%M:%S') }}
                                         </small>
                                     </td>
                                     <td>
-                                        {% if log.user_id %}
-                                            <span class="badge bg-primary">{{ log.user.email if log.user else 'Unknown' }}</span>
+                                        {% if log['user_id'] %}
+                                            <span class="badge bg-primary">{{ log['user']['email'] if log['user'] else 'Unknown' }}</span>
                                         {% else %}
                                             <span class="badge bg-secondary">System</span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <code class="text-primary">{{ log.action }}</code>
+                                        <code class="text-primary">{{ log['action'] }}</code>
                                     </td>
                                     <td>
-                                        {% if log.category == 'AUTHENTICATION' %}
-                                            <span class="badge bg-info">{{ log.category }}</span>
-                                        {% elif log.category == 'AUTHORIZATION' %}
-                                            <span class="badge bg-warning">{{ log.category }}</span>
-                                        {% elif log.category == 'ADMINISTRATION' %}
-                                            <span class="badge bg-danger">{{ log.category }}</span>
-                                        {% elif log.category == 'COMPLIANCE' %}
-                                            <span class="badge bg-success">{{ log.category }}</span>
+                                        {% if log['category'] == 'AUTHENTICATION' %}
+                                            <span class="badge bg-info">{{ log['category'] }}</span>
+                                        {% elif log['category'] == 'AUTHORIZATION' %}
+                                            <span class="badge bg-warning">{{ log['category'] }}</span>
+                                        {% elif log['category'] == 'ADMINISTRATION' %}
+                                            <span class="badge bg-danger">{{ log['category'] }}</span>
+                                        {% elif log['category'] == 'COMPLIANCE' %}
+                                            <span class="badge bg-success">{{ log['category'] }}</span>
                                         {% else %}
-                                            <span class="badge bg-secondary">{{ log.category }}</span>
+                                            <span class="badge bg-secondary">{{ log['category'] }}</span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <small>{{ log.resource or 'N/A' }}</small>
+                                        <small>{{ log['resource'] or 'N/A' }}</small>
                                     </td>
                                     <td>
-                                        <code>{{ log.ip_address or 'N/A' }}</code>
+                                        <code>{{ log['ip_address'] or 'N/A' }}</code>
                                     </td>
                                     <td>
-                                        {% if log.success %}
+                                        {% if log['success'] %}
                                             <span class="badge bg-success">
                                                 <i class="fas fa-check"></i> Success
                                             </span>
@@ -135,7 +135,7 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <small class="text-muted">{{ log.description }}</small>
+                                        <small class="text-muted">{{ log['description'] }}</small>
                                     </td>
                                 </tr>
                                 {% endfor %}

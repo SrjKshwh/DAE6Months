@@ -3202,3 +3202,216 @@ sqlalchemy.orm.exc.DetachedInstanceError: Instance <AuditLog at 0x1eae5a262b0> i
 2025-09-16 14:15:28,140 [ERROR] 500 Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
 2025-09-16 14:15:28,141 [INFO] 127.0.0.1 - - [16/Sep/2025 14:15:28] "[35m[1mGET /audit/logs HTTP/1.1[0m" 500 -
 2025-09-16 14:15:28,165 [INFO] 127.0.0.1 - - [16/Sep/2025 14:15:28] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-16 14:34:20,508 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-16 14:34:20,508 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-16 14:34:20,510 [INFO]  * Restarting with stat
+2025-09-16 14:34:21,477 [WARNING]  * Debugger is active!
+2025-09-16 14:34:21,480 [INFO]  * Debugger PIN: 453-637-993
+2025-09-16 14:36:03,370 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-16 14:36:03,370 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-16 14:36:03,372 [INFO]  * Restarting with stat
+2025-09-16 14:36:04,214 [WARNING]  * Debugger is active!
+2025-09-16 14:36:04,216 [INFO]  * Debugger PIN: 453-637-993
+2025-09-16 14:36:11,732 [INFO] 127.0.0.1 - - [16/Sep/2025 14:36:11] "GET / HTTP/1.1" 200 -
+2025-09-16 14:36:11,769 [INFO] 127.0.0.1 - - [16/Sep/2025 14:36:11] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-16 14:36:20,326 [INFO] User admin@example.com logged in successfully from IP 127.0.0.1
+2025-09-16 14:36:20,338 [INFO] 127.0.0.1 - - [16/Sep/2025 14:36:20] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-09-16 14:36:20,354 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-16 14:36:20,369 [INFO] 127.0.0.1 - - [16/Sep/2025 14:36:20] "GET /home HTTP/1.1" 200 -
+2025-09-16 14:36:20,405 [INFO] 127.0.0.1 - - [16/Sep/2025 14:36:20] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-16 14:36:30,840 [ERROR] Exception on /compliance [GET]
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 1636, in compliance
+    Used for organizational compliance monitoring
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\compliance.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 153, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\compliance.html", line 104, in block 'content'
+    {% if c.get('risk') %}
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\attributes.py", line 566, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1086, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1121, in _fire_loader_callables
+    return self.callable_(state, passive)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\strategies.py", line 918, in _load_for_state
+    raise orm_exc.DetachedInstanceError(
+    ...<3 lines>...
+    )
+sqlalchemy.orm.exc.DetachedInstanceError: Parent instance <Compliance at 0x1eae604a510> is not bound to a Session; lazy load operation of attribute 'risk' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-16 14:36:30,846 [ERROR] 500 Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-09-16 14:36:30,847 [INFO] 127.0.0.1 - - [16/Sep/2025 14:36:30] "[35m[1mGET /compliance HTTP/1.1[0m" 500 -
+2025-09-16 14:36:30,867 [INFO] 127.0.0.1 - - [16/Sep/2025 14:36:30] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-16 14:36:35,378 [ERROR] Exception on /audit/logs [GET]
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 471, in getitem
+    return obj[argument]
+           ~~~^^^^^^^^^^
+TypeError: 'AuditLog' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 371, in wrapper
+    @wraps(f)
+    
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 1920, in audit_logs
+    user_count = db.query(User).filter(User.role == "user").count()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\audit_logs.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 153, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\audit_logs.html", line 37, in block 'content'
+    {{ audit_logs|selectattr('success', 'equalto', True)|list|length }}
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\async_utils.py", line 48, in wrapper
+    return normal_func(*args, **kwargs)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\filters.py", line 1365, in sync_do_list
+    return list(value)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\filters.py", line 1798, in select_or_reject
+    if func(item):
+       ~~~~^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\filters.py", line 1783, in <lambda>
+    return lambda item: modfunc(func(transfunc(item)))
+                                     ~~~~~~~~~^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\filters.py", line 73, in attrgetter
+    item = environment.getitem(item, part)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 480, in getitem
+    return getattr(obj, attr)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\attributes.py", line 566, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1086, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1116, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\loading.py", line 1603, in load_scalar_attributes
+    raise orm_exc.DetachedInstanceError(
+    ...<2 lines>...
+    )
+sqlalchemy.orm.exc.DetachedInstanceError: Instance <AuditLog at 0x1eae5ea9f40> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-16 14:36:35,386 [ERROR] 500 Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-09-16 14:36:35,388 [INFO] 127.0.0.1 - - [16/Sep/2025 14:36:35] "[35m[1mGET /audit/logs HTTP/1.1[0m" 500 -
+2025-09-16 14:36:35,409 [INFO] 127.0.0.1 - - [16/Sep/2025 14:36:35] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-16 14:38:32,776 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\app.py', reloading
+2025-09-16 14:38:32,905 [INFO]  * Restarting with stat
+2025-09-16 14:38:33,085 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\app.py', reloading
+2025-09-16 14:38:33,230 [INFO]  * Restarting with stat
+2025-09-16 14:38:33,942 [WARNING]  * Debugger is active!
+2025-09-16 14:38:33,944 [INFO]  * Debugger PIN: 453-637-993
+2025-09-16 14:38:34,264 [WARNING]  * Debugger is active!
+2025-09-16 14:38:34,266 [INFO]  * Debugger PIN: 453-637-993
+2025-09-16 14:38:34,956 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\app.py', reloading
+2025-09-16 14:38:35,059 [INFO]  * Restarting with stat
+2025-09-16 14:38:36,722 [WARNING]  * Debugger is active!
+2025-09-16 14:38:36,726 [INFO]  * Debugger PIN: 453-637-993
+2025-09-16 14:38:50,378 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-16 14:38:50,378 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-16 14:38:50,380 [INFO]  * Restarting with stat
+2025-09-16 14:38:51,264 [WARNING]  * Debugger is active!
+2025-09-16 14:38:51,266 [INFO]  * Debugger PIN: 453-637-993
+2025-09-16 14:39:20,410 [INFO] 127.0.0.1 - - [16/Sep/2025 14:39:20] "GET / HTTP/1.1" 200 -
+2025-09-16 14:39:20,444 [INFO] 127.0.0.1 - - [16/Sep/2025 14:39:20] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-16 14:39:30,019 [INFO] User admin@example.com logged in successfully from IP 127.0.0.1
+2025-09-16 14:39:30,034 [INFO] 127.0.0.1 - - [16/Sep/2025 14:39:30] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-09-16 14:39:30,055 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-16 14:39:30,071 [INFO] 127.0.0.1 - - [16/Sep/2025 14:39:30] "GET /home HTTP/1.1" 200 -
+2025-09-16 14:39:30,106 [INFO] 127.0.0.1 - - [16/Sep/2025 14:39:30] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-16 14:39:46,874 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-16 14:39:46,900 [INFO] User admin@example.com uploaded file sample_risk_policy_1.txt from IP 127.0.0.1
+2025-09-16 14:39:46,903 [INFO] 127.0.0.1 - - [16/Sep/2025 14:39:46] "[32mPOST /home HTTP/1.1[0m" 302 -
+2025-09-16 14:39:46,922 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-16 14:39:46,929 [INFO] 127.0.0.1 - - [16/Sep/2025 14:39:46] "GET /home HTTP/1.1" 200 -
+2025-09-16 14:39:46,947 [INFO] 127.0.0.1 - - [16/Sep/2025 14:39:46] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-16 14:40:01,710 [INFO] Created risk entry 3: Incident response tabletop exercises have not been performed in the past 18 months.
+2025-09-16 14:40:01,721 [INFO] Created risk entry 4: Access reviews sometimes exceed the quarterly requirement.
+2025-09-16 14:40:01,730 [INFO] Successfully created 4 risk entries (4 LLM + 0 pattern-based) and associated compliance records
+2025-09-16 14:40:01,731 [ERROR] Scan failed: Instance <Upload at 0x1eae716f7d0> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-16 14:40:01,732 [INFO] 127.0.0.1 - - [16/Sep/2025 14:40:01] "[32mPOST /scan/3 HTTP/1.1[0m" 302 -
+2025-09-16 14:40:01,742 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-16 14:40:01,750 [INFO] 127.0.0.1 - - [16/Sep/2025 14:40:01] "GET /home HTTP/1.1" 200 -
+2025-09-16 14:40:01,766 [INFO] 127.0.0.1 - - [16/Sep/2025 14:40:01] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-16 14:41:46,906 [INFO] File uploads\sample_risk_policy_1.txt deleted after 120 seconds.
+2025-09-17 11:13:23,972 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-17 11:13:23,972 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-17 11:13:23,974 [INFO]  * Restarting with stat
+2025-09-17 11:13:25,058 [WARNING]  * Debugger is active!
+2025-09-17 11:13:25,060 [INFO]  * Debugger PIN: 453-637-993
+2025-09-17 11:13:33,440 [INFO] 127.0.0.1 - - [17/Sep/2025 11:13:33] "GET / HTTP/1.1" 200 -
+2025-09-17 11:13:33,503 [INFO] 127.0.0.1 - - [17/Sep/2025 11:13:33] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-17 11:13:41,425 [INFO] User admin@example.com logged in successfully from IP 127.0.0.1
+2025-09-17 11:13:41,458 [INFO] 127.0.0.1 - - [17/Sep/2025 11:13:41] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-09-17 11:13:41,478 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-17 11:13:41,522 [INFO] 127.0.0.1 - - [17/Sep/2025 11:13:41] "GET /home HTTP/1.1" 200 -
+2025-09-17 11:13:41,559 [INFO] 127.0.0.1 - - [17/Sep/2025 11:13:41] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-17 11:13:59,631 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-17 11:13:59,665 [INFO] User admin@example.com uploaded file GLBA_Compliance_Report.txt from IP 127.0.0.1
+2025-09-17 11:13:59,668 [INFO] 127.0.0.1 - - [17/Sep/2025 11:13:59] "[32mPOST /home HTTP/1.1[0m" 302 -
+2025-09-17 11:13:59,684 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-17 11:13:59,689 [INFO] 127.0.0.1 - - [17/Sep/2025 11:13:59] "GET /home HTTP/1.1" 200 -
+2025-09-17 11:13:59,728 [INFO] 127.0.0.1 - - [17/Sep/2025 11:13:59] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-17 11:14:09,212 [INFO] Created risk entry 1: Unauthorized access to customer database by external attackers
+2025-09-17 11:14:09,269 [INFO] Created risk entry 2: Malware infection via phishing on employee workstations
+2025-09-17 11:14:09,332 [INFO] Created risk entry 3: Interception of sensitive customer data during transmission
+2025-09-17 11:14:09,359 [INFO] Created risk entry 4: Insider misuse of unmonitored backup access
+2025-09-17 11:14:09,376 [INFO] Successfully created 4 risk entries (4 LLM + 0 pattern-based) and associated compliance records
+2025-09-17 11:14:09,378 [ERROR] Scan failed: Instance <Upload at 0x1eae716c350> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-17 11:14:09,380 [INFO] 127.0.0.1 - - [17/Sep/2025 11:14:09] "[32mPOST /scan/4 HTTP/1.1[0m" 302 -
+2025-09-17 11:14:09,421 [INFO] Policy compliance: User admin@example.com accessing /home
+2025-09-17 11:14:09,445 [INFO] 127.0.0.1 - - [17/Sep/2025 11:14:09] "GET /home HTTP/1.1" 200 -
+2025-09-17 11:14:09,475 [INFO] 127.0.0.1 - - [17/Sep/2025 11:14:09] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-17 11:15:59,670 [INFO] File uploads\GLBA_Compliance_Report.txt deleted after 120 seconds.

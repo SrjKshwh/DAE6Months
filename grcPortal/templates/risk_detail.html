@@ -7,14 +7,80 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
+            <!-- Navigation Menu -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 rounded">
+                <div class="container-fluid">
+                    <span class="navbar-brand mb-0 h1">
+                        <i class="fas fa-shield-alt text-warning"></i> Risk Management
+                    </span>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#riskNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="riskNav">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('risk_dashboard') }}">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('risks') }}">
+                                    <i class="fas fa-list"></i> Risk Register
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('compliance') }}">
+                                    <i class="fas fa-clipboard-check"></i> Compliance
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('brainstorming') }}">
+                                    <i class="fas fa-lightbulb"></i> Brainstorming
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('checklists') }}">
+                                    <i class="fas fa-tasks"></i> Checklists
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('swot_analysis') }}">
+                                    <i class="fas fa-chart-pie"></i> SWOT Analysis
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="actionsDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-cogs"></i> Actions
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="window.print()">
+                                        <i class="fas fa-print"></i> Print Report
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="exportToPDF()">
+                                        <i class="fas fa-file-pdf"></i> Export PDF
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('home') }}">
+                                        <i class="fas fa-home"></i> Back to Home
+                                    </a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
             <!-- Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h2><i class="fas fa-shield-alt text-warning"></i> Risk Assessment Details</h2>
                     <h4 class="text-muted">{{ risk.asset }}</h4>
+                    <small class="text-muted">Risk ID: {{ risk.id }} | Created: {{ risk.created_at.strftime('%Y-%m-%d') }}</small>
                 </div>
                 <div>
-                    <a href="{{ url_for('risks') }}" class="btn btn-outline-secondary">
+                    <a href="{{ url_for('risks') }}" class="btn btn-outline-secondary me-2">
                         <i class="fas fa-arrow-left"></i> Back to Risk Register
                     </a>
                     <a href="{{ url_for('risk_dashboard') }}" class="btn btn-outline-primary">
@@ -84,6 +150,95 @@
                                 {% endif %}
                             </h5>
                             <p class="card-text">Risk Status</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Heat Map and Matrix -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-chart-bar"></i> Risk Heat Map</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered text-center">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Likelihood →<br>Impact ↓</th>
+                                            <th class="text-center">1 (Very Low)</th>
+                                            <th class="text-center">2 (Low)</th>
+                                            <th class="text-center">3 (Medium)</th>
+                                            <th class="text-center">4 (High)</th>
+                                            <th class="text-center">5 (Very High)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for impact in range(1, 6) %}
+                                        <tr>
+                                            <th class="text-center">{{ impact }}</th>
+                                            {% for likelihood in range(1, 6) %}
+                                                {% set score = likelihood * impact %}
+                                                <td class="{% if score >= 20 %}bg-danger{% elif score >= 12 %}bg-warning{% elif score >= 6 %}bg-info{% else %}bg-success{% endif %} text-white">
+                                                    {% if likelihood == risk.likelihood and impact == risk.impact %}
+                                                        <strong>{{ score }}</strong>
+                                                        <br><small>(Current)</small>
+                                                    {% else %}
+                                                        {{ score }}
+                                                    {% endif %}
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Current position: Likelihood {{ risk.likelihood }}, Impact {{ risk.impact }}, Score {{ risk.score }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-chart-pie"></i> Risk Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="riskChart" width="300" height="300"></canvas>
+                            <div class="mt-3 text-center">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="border rounded p-2">
+                                            <h6 class="text-success">Low Risk</h6>
+                                            <p class="mb-0">Score: 1-5</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="border rounded p-2">
+                                            <h6 class="text-info">Medium Risk</h6>
+                                            <p class="mb-0">Score: 6-11</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="border rounded p-2">
+                                            <h6 class="text-warning">High Risk</h6>
+                                            <p class="mb-0">Score: 12-19</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="border rounded p-2">
+                                            <h6 class="text-danger">Critical Risk</h6>
+                                            <p class="mb-0">Score: 20-25</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -307,6 +462,117 @@
                     </div>
                     {% endif %}
 
+                    <!-- Multi-Criteria Risk Analysis -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6>Multi-Criteria Risk Analysis</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Impact Categories</h6>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Financial Impact:</span>
+                                            <span class="badge bg-secondary">{{ risk.financial_impact }}/5</span>
+                                        </div>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" id="financial-progress"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Operational Impact:</span>
+                                            <span class="badge bg-secondary">{{ risk.operational_impact }}/5</span>
+                                        </div>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-info" id="operational-progress"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Compliance Impact:</span>
+                                            <span class="badge bg-secondary">{{ risk.compliance_impact }}/5</span>
+                                        </div>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-success" id="compliance-progress"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Reputation Impact:</span>
+                                            <span class="badge bg-secondary">{{ risk.reputation_impact }}/5</span>
+                                        </div>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-danger" id="reputation-progress"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Risk Weight Distribution</h6>
+                                    <canvas id="criteriaChart" width="200" height="200"></canvas>
+                                    <div class="mt-2 text-center">
+                                        <small class="text-muted">
+                                            Weights: Financial {{ risk.financial_weight * 100 }}%,
+                                            Operational {{ risk.operational_weight * 100 }}%,
+                                            Compliance {{ risk.compliance_weight * 100 }}%,
+                                            Reputation {{ risk.reputation_weight * 100 }}%
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Trends and History -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6>Risk Assessment History</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="timeline-title">Risk Created</h6>
+                                        <p class="timeline-text">{{ risk.created_at.strftime('%B %d, %Y at %H:%M') }}</p>
+                                        <small class="text-muted">Initial assessment completed</small>
+                                    </div>
+                                </div>
+                                {% if risk.updated_at != risk.created_at %}
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="timeline-title">Last Updated</h6>
+                                        <p class="timeline-text">{{ risk.updated_at.strftime('%B %d, %Y at %H:%M') }}</p>
+                                        <small class="text-muted">Risk details modified</small>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if risk.approval_status.value != "PENDING" %}
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="timeline-title">Approval Decision</h6>
+                                        <p class="timeline-text">{{ risk.approval_status.value.title() }}</p>
+                                        <small class="text-muted">Risk approval process completed</small>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if risk.escalation_level != "none" %}
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6 class="timeline-title">Escalation</h6>
+                                        <p class="timeline-text">Escalated to {{ risk.escalation_level.title() }} level</p>
+                                        <small class="text-muted">{{ risk.escalation_reason or "No reason specified" }}</small>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Recent Approvals -->
                     {% if approvals %}
                     <div class="card mb-4">
@@ -347,5 +613,133 @@
 .table-sm td {
     padding: 0.25rem;
 }
+
+.risk-matrix td {
+    width: 60px;
+    height: 40px;
+    font-size: 0.8em;
+}
+
+.navbar-nav .nav-link {
+    color: #495057 !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #007bff !important;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set progress bar widths
+    const financialProgress = document.getElementById('financial-progress');
+    const operationalProgress = document.getElementById('operational-progress');
+    const complianceProgress = document.getElementById('compliance-progress');
+    const reputationProgress = document.getElementById('reputation-progress');
+
+    if (financialProgress) {
+        const financialImpact = parseInt('{{ risk.financial_impact }}');
+        financialProgress.style.width = ((financialImpact / 5) * 100) + '%';
+    }
+    if (operationalProgress) {
+        const operationalImpact = parseInt('{{ risk.operational_impact }}');
+        operationalProgress.style.width = ((operationalImpact / 5) * 100) + '%';
+    }
+    if (complianceProgress) {
+        const complianceImpact = parseInt('{{ risk.compliance_impact }}');
+        complianceProgress.style.width = ((complianceImpact / 5) * 100) + '%';
+    }
+    if (reputationProgress) {
+        const reputationImpact = parseInt('{{ risk.reputation_impact }}');
+        reputationProgress.style.width = ((reputationImpact / 5) * 100) + '%';
+    }
+
+    // Risk Distribution Chart
+    const ctx = document.getElementById('riskChart');
+    if (ctx) {
+        const chartCtx = ctx.getContext('2d');
+        const riskScore = parseInt('{{ risk.score }}');
+
+        // Determine risk level
+        let riskLevel, riskColor;
+        if (riskScore >= 20) {
+            riskLevel = 'Critical';
+            riskColor = '#dc3545';
+        } else if (riskScore >= 12) {
+            riskLevel = 'High';
+            riskColor = '#ffc107';
+        } else if (riskScore >= 6) {
+            riskLevel = 'Medium';
+            riskColor = '#17a2b8';
+        } else {
+            riskLevel = 'Low';
+            riskColor = '#28a745';
+        }
+
+        new Chart(chartCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Current Risk Level', 'Remaining to Max'],
+                datasets: [{
+                    data: [riskScore, 25 - riskScore],
+                    backgroundColor: [riskColor, '#e9ecef'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Risk Score: ' + riskScore + '/25 (' + riskLevel + ')'
+                    }
+                }
+            }
+        });
+    }
+
+    // Criteria Chart
+    const criteriaCtx = document.getElementById('criteriaChart');
+    if (criteriaCtx) {
+        const criteriaChartCtx = criteriaCtx.getContext('2d');
+        const financialWeight = parseFloat('{{ risk.financial_weight }}');
+        const operationalWeight = parseFloat('{{ risk.operational_weight }}');
+        const complianceWeight = parseFloat('{{ risk.compliance_weight }}');
+        const reputationWeight = parseFloat('{{ risk.reputation_weight }}');
+
+        new Chart(criteriaChartCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Financial', 'Operational', 'Compliance', 'Reputation'],
+                datasets: [{
+                    data: [financialWeight, operationalWeight, complianceWeight, reputationWeight],
+                    backgroundColor: ['#ffc107', '#17a2b8', '#28a745', '#dc3545'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    }
+});
+
+// Print functionality
+function exportToPDF() {
+    window.print();
+}
+</script>
 {% endblock %}
