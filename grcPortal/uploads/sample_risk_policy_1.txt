@@ -1,0 +1,37 @@
+Title: Data Protection & Access Management Policy
+Owner: GRC Team
+Approved: 2025-04-10
+Scope: Applies to all systems handling customer PII and financial data.
+
+1. Access Management
+   - All accounts must use multi-factor authentication (MFA).
+   - Privileged accounts require approval from the Security Governance team.
+   - Orphaned accounts must be disabled within 48 hours of user termination.
+   - Quarterly access reviews required for all critical applications.
+
+2. Data Protection
+   - Sensitive data (PII, PCI, financial records) must be encrypted at rest and in transit.
+   - Approved algorithms: AES-256, TLS 1.3 or higher.
+   - Data loss prevention (DLP) alerts monitored by SOC 24/7.
+
+3. Incident Handling
+   - Malware, phishing, and ransomware incidents must be reported to SOC within 30 minutes.
+   - Containment within 1 hour; recovery validated through post-incident testing.
+   - Annual tabletop exercises required to test incident response procedures.
+
+4. Vendor Management
+   - Vendors processing customer data must maintain ISO 27001 certification.
+   - SOC 2 Type II reports must be reviewed annually.
+   - Data Processing Agreements must define notification obligations within 72 hours of a breach.
+
+References:
+- NIST SP 800-53: AC-2 (Account Management), AC-17 (Remote Access), IR-4 (Incident Handling)
+- ISO/IEC 27001:2022: A.5 (Information security policies), A.8 (Asset management), A.16 (Information security incident management)
+- CIS Controls v8: 5 (Access Control Management), 6 (Data Protection), 17 (Incident Response Management)
+
+Risks:
+- MFA is not consistently enforced across all third-party SaaS tools (Risk of unauthorized access).
+- Vendor certifications are not always re-validated annually (Risk of compliance gaps).
+- Incident response tabletop exercises have not been performed in the past 18 months (Risk of delayed containment and recovery).
+- Access reviews sometimes exceed the quarterly requirement (Risk of lingering excessive privileges).
+

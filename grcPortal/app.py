@@ -1230,12 +1230,12 @@ def create_app():
         user = current_user()
         db = get_session()
 
-        # Get risk with role-based access control
+        # Get risk with role-based access control and ensure it's properly loaded
         risk = None
         if user.role == "admin":
-            risk = db.get(Risk, risk_id)
+            risk = db.query(Risk).filter(Risk.id == risk_id).first()
         elif user.role == "auditor":
-            risk = db.get(Risk, risk_id)  # Auditors can see all risks
+            risk = db.query(Risk).filter(Risk.id == risk_id).first()  # Auditors can see all risks
         else:
             # Users can only see risks from their scans or assigned to them
             risk = db.query(Risk).filter(
@@ -1248,14 +1248,25 @@ def create_app():
             flash("Risk not found or access denied.", "danger")
             return redirect(url_for("risks"))
 
-        # Get related data
+        # Ensure risk object is properly attached to session
+        logging.info(f"DEBUG: Risk loaded with ID {risk.id}, session active: {db.is_active}")
+        # Force load key attributes to ensure they're in session
+        _ = risk.asset, risk.threat, risk.vulnerability, risk.control
+        logging.info(f"DEBUG: Risk attributes accessed successfully")
+
+        # Get related data with eager loading to prevent DetachedInstanceError
+        from sqlalchemy.orm import joinedload
         approvals = db.query(RiskApproval).filter(RiskApproval.risk_id == risk_id).all()
         governance_decisions = db.query(GovernanceDecision).filter(GovernanceDecision.risk_id == risk_id).all()
-        compliance_mappings = db.query(RiskComplianceMapping).filter(RiskComplianceMapping.risk_id == risk_id).all()
+        compliance_mappings = db.query(RiskComplianceMapping).options(
+            joinedload(RiskComplianceMapping.requirement)
+        ).filter(RiskComplianceMapping.risk_id == risk_id).all()
 
-        # Log access for audit trail
-        log_audit_event(user, "RISK_VIEWED", "COMPLIANCE",
-                       f"Viewed detailed risk assessment for {risk.asset}", f"/risk/{risk_id}", True)
+        # Ensure risk object has all necessary attributes loaded
+        logging.info(f"DEBUG: Risk object loaded with ID {risk.id}, status: {risk.status}")
+
+        # Store risk asset for audit logging (before session close)
+        risk_asset = risk.asset
 
         # Add mitigation planning
         risk_data_for_ai = {
@@ -1265,37 +1276,48 @@ def create_app():
             'score': risk.score,
             'severity': risk.severity.value if risk.severity else 'Medium'
             }
-        
-        # In view_risk route, before calling generate_risk_mitigation_plan
-        #if risk.mitigation_plan_json and risk.mitigation_plan_updated:
-            # Check if cache is still valid (e.g., 30 days)
-            #cache_age = datetime.now(timezone.utc) - risk.mitigation_plan_updated
-            #if cache_age.days < 30:
-                #mitigation_plan = json.loads(risk.mitigation_plan_json)
-            #else:
-                # Cache expired, regenerate
-                #mitigation_plan = generate_risk_mitigation_plan(risk_data_for_ai)
-                #risk.mitigation_plan_json = json.dumps(mitigation_plan)
-                #risk.mitigation_plan_updated = datetime.now(timezone.utc)
-                #db.commit()
-        #else:
-            # No cache, generate new
-            #mitigation_plan = generate_risk_mitigation_plan(risk_data_for_ai)
-            #risk.mitigation_plan_json = json.dumps(mitigation_plan)
-            #risk.mitigation_plan_updated = datetime.now(timezone.utc)
-            #db.commit()
 
-    
+        # DEBUG: Log session state before mitigation plan generation
+        logging.info(f"DEBUG: Session active before mitigation plan: {db.is_active}")
+        logging.info(f"DEBUG: Risk object session: {risk in db}")
 
         mitigation_plan = generate_risk_mitigation_plan(risk_data_for_ai)
 
-        close_session(db)
-        return render_template("risk_detail.html",
+        # Pre-calculate values that template methods would access to prevent lazy loading
+        business_impact_score = risk.calculate_business_impact_score()
+        financial_impact_desc = risk.get_impact_description("financial", risk.financial_impact)
+        operational_impact_desc = risk.get_impact_description("operational", risk.operational_impact)
+        compliance_impact_desc = risk.get_impact_description("compliance", risk.compliance_impact)
+        reputation_impact_desc = risk.get_impact_description("reputation", risk.reputation_impact)
+
+        # DEBUG: Log before session close
+        logging.info(f"DEBUG: About to close session. Risk ID: {risk.id}")
+        logging.info(f"DEBUG: Approvals count: {len(approvals)}")
+        logging.info(f"DEBUG: Governance decisions count: {len(governance_decisions)}")
+        logging.info(f"DEBUG: Compliance mappings count: {len(compliance_mappings)}")
+        logging.info(f"DEBUG: Pre-calculated values: BIA={business_impact_score}")
+
+        # Keep session open during template rendering, close after response is sent
+        logging.info(f"DEBUG: Starting template render for risk {risk.id}")
+        response = render_template("risk_detail.html",
                      risk=risk,
                      approvals=approvals,
                      governance_decisions=governance_decisions,
                      compliance_mappings=compliance_mappings,
-                     mitigation_plan=mitigation_plan)
+                     mitigation_plan=mitigation_plan,
+                     business_impact_score=business_impact_score,
+                     financial_impact_desc=financial_impact_desc,
+                     operational_impact_desc=operational_impact_desc,
+                     compliance_impact_desc=compliance_impact_desc,
+                     reputation_impact_desc=reputation_impact_desc)
+        logging.info(f"DEBUG: Template rendered successfully, closing session for risk {risk.id}")
+        close_session(db)
+
+        # Log access for audit trail (after session close to avoid DetachedInstanceError)
+        log_audit_event(user, "RISK_VIEWED", "COMPLIANCE",
+                       f"Viewed detailed risk assessment for {risk_asset}", f"/risk/{risk_id}", True)
+
+        return response
     
 
 

@@ -427,13 +427,13 @@
                         <p>RPO: {{ risk.rpo_hours }} hours</p>
                         <p>MTD: {{ risk.mtd_hours }} hours</p>
                         <p>Financial Impact: ${{ risk.financial_impact_amount }}</p>
-                        <p>Calculated BIA Score: {{ risk.calculate_business_impact_score() }}</p>
+                        <p>Calculated BIA Score: {{ business_impact_score }}</p>
 
                         <h3>Multi-Criteria Risk Score</h3>
-                        <p>Financial Impact: {{ risk.get_impact_description("financial", risk.financial_impact) }}</p>
-                        <p>Operational Impact: {{ risk.get_impact_description("operational", risk.operational_impact) }}</p>
-                        <p>Compliance Impact: {{ risk.get_impact_description("compliance", risk.compliance_impact) }}</p>
-                        <p>Reputation Impact: {{ risk.get_impact_description("reputation", risk.reputation_impact) }}</p>
+                        <p>Financial Impact: {{ financial_impact_desc }}</p>
+                        <p>Operational Impact: {{ operational_impact_desc }}</p>
+                        <p>Compliance Impact: {{ compliance_impact_desc }}</p>
+                        <p>Reputation Impact: {{ reputation_impact_desc }}</p>
                         <p>Weighted Score: {{ risk.score }}</p>
 
                         <h3>Evaluation Criteria</h3>
@@ -479,6 +479,7 @@
                                         <div class="progress" style="height: 8px;">
                                             <div class="progress-bar bg-warning" id="financial-progress"></div>
                                         </div>
+                                        <small class="text-muted">{{ financial_impact_desc }}</small>
                                     </div>
                                     <div class="mb-3">
                                         <div class="d-flex justify-content-between">
@@ -488,6 +489,7 @@
                                         <div class="progress" style="height: 8px;">
                                             <div class="progress-bar bg-info" id="operational-progress"></div>
                                         </div>
+                                        <small class="text-muted">{{ operational_impact_desc }}</small>
                                     </div>
                                     <div class="mb-3">
                                         <div class="d-flex justify-content-between">
@@ -497,6 +499,7 @@
                                         <div class="progress" style="height: 8px;">
                                             <div class="progress-bar bg-success" id="compliance-progress"></div>
                                         </div>
+                                        <small class="text-muted">{{ compliance_impact_desc }}</small>
                                     </div>
                                     <div class="mb-3">
                                         <div class="d-flex justify-content-between">
@@ -506,6 +509,7 @@
                                         <div class="progress" style="height: 8px;">
                                             <div class="progress-bar bg-danger" id="reputation-progress"></div>
                                         </div>
+                                        <small class="text-muted">{{ reputation_impact_desc }}</small>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
