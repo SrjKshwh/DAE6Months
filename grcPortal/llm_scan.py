@@ -47,7 +47,13 @@ import requests
 from PyPDF2 import PdfReader
 
 # Import database models for risk creation
-from models import Risk, Compliance, RiskSeverity, RiskCategory, ComplianceFramework, RiskStatus
+
+from models import (
+    Risk, Compliance, RiskSeverity, RiskCategory, ComplianceFramework, RiskStatus,
+    RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, 
+    RiskIndicator, IndicatorReading, EnvironmentalChange
+)
+
 from db import get_session, close_session
 
 MODEL_NAME = os.getenv("MODEL_NAME", "openai/gpt-oss-20b:free")
@@ -577,6 +583,7 @@ def generate_risk_mitigation_plan(risk_data: dict) -> dict:
         r = requests.post(url, headers=headers, json=body, timeout=120)
         r.raise_for_status()
         content = r.json()["choices"][0]["message"]["content"]
+        #print(content)
         
         # Parse JSON response
         try:
@@ -596,6 +603,392 @@ def generate_risk_mitigation_plan(risk_data: dict) -> dict:
         return generate_fallback_mitigation_plan(risk_data)
 
 
+def generate_risk_communication_plan(risk_data: dict, mitigation_plan: dict) -> dict:
+    """
+    Generate comprehensive risk communication plan using stored mitigation data
+    """
+    
+    prompt = f"""
+    You are a senior risk management consultant. Based on the following risk assessment and mitigation plan, 
+    create a comprehensive risk communication strategy for executive leadership and stakeholders.
+    
+    RISK ASSESSMENT:
+    - Asset: {risk_data.get('asset', 'Unknown')}
+    - Threat: {risk_data.get('threat', 'Unknown')}
+    - Vulnerability: {risk_data.get('vulnerability', 'Unknown')}
+    - Current Risk Score: {risk_data.get('score', 'Unknown')}/25
+    - Severity: {risk_data.get('severity', 'Unknown')}
+    
+    MITIGATION PLAN SUMMARY:
+    - Recommended Strategy: {mitigation_plan.get('recommended_strategy', {}).get('strategy', 'Unknown')}
+    - Total Implementation Cost: {mitigation_plan.get('cost_benefit_analysis', {}).get('total_implementation_cost', 'Unknown')}
+    - Expected ROI: {mitigation_plan.get('cost_benefit_analysis', {}).get('roi_percentage', 'Unknown')}%
+    - Payback Period: {mitigation_plan.get('cost_benefit_analysis', {}).get('payback_period_months', 'Unknown')} months
+    
+    Generate a structured JSON response with the following exact structure:
+    
+    {{
+        "executive_risk_report": {{
+            "key_findings": [
+                "Critical finding with business impact",
+                "Secondary finding with operational implications",
+                "Compliance-related finding"
+            ],
+            "financial_impact_analysis": {{
+                "total_potential_loss": "Estimated financial loss amount",
+                "annual_financial_impact": "Yearly cost impact",
+                "business_continuity_risk": "High/Medium/Low assessment",
+                "cost_benefit_summary": "Summary of mitigation ROI"
+            }},
+            "actionable_recommendations": [
+                {{
+                    "priority": "Critical",
+                    "recommendation": "Specific action required",
+                    "expected_benefits": "Quantified benefits",
+                    "timeline": "Implementation timeline",
+                    "responsible_party": "Who owns this action"
+                }}
+            ],
+            "board_presentation_format": "Structured content for executive presentation"
+        }},
+        "stakeholder_communication_plan": {{
+            "stakeholder_analysis": [
+                {{
+                    "stakeholder_group": "Board of Directors",
+                    "communication_frequency": "Quarterly",
+                    "preferred_format": "Executive presentation",
+                    "key_concerns": ["Financial impact", "Regulatory compliance"],
+                    "tailored_messaging": "Board-specific message",
+                    "communication_schedule": ["Q1 Review", "Annual Board Meeting"]
+                }},
+                {{
+                    "stakeholder_group": "Department Heads",
+                    "communication_frequency": "Monthly",
+                    "preferred_format": "Email updates",
+                    "key_concerns": ["Operational impact", "Resource requirements"],
+                    "tailored_messaging": "Department-specific operational message",
+                    "communication_schedule": ["Monthly risk review", "Quarterly planning"]
+                }},
+                {{
+                    "stakeholder_group": "IT Security Team",
+                    "communication_frequency": "Weekly",
+                    "preferred_format": "Technical reports",
+                    "key_concerns": ["Technical implementation", "Security controls"],
+                    "tailored_messaging": "Technical implementation details",
+                    "communication_schedule": ["Weekly status updates", "Implementation milestones"]
+                }}
+            ],
+            "communication_channels": ["Email", "Meetings", "Reports", "Dashboard"],
+            "escalation_procedures": {{
+                "trigger_conditions": ["Risk score exceeds 20", "Critical vulnerability discovered"],
+                "escalation_path": "Risk Owner → Department Head → Executive Leadership",
+                "response_timeframes": "24 hours for critical issues"
+            }}
+        }},
+        "risk_dashboard_config": {{
+            "key_metrics": [
+                {{
+                    "metric_name": "Risk Score Trend",
+                    "data_source": "risks.score",
+                    "visualization_type": "line_chart",
+                    "refresh_frequency": "Daily",
+                    "alert_threshold": 15
+                }},
+                {{
+                    "metric_name": "Mitigation Progress",
+                    "data_source": "implementation_roadmap",
+                    "visualization_type": "progress_bar",
+                    "refresh_frequency": "Weekly",
+                    "alert_threshold": "90% completion"
+                }},
+                {{
+                    "metric_name": "Financial Impact",
+                    "data_source": "cost_benefit_analysis",
+                    "visualization_type": "bar_chart",
+                    "refresh_frequency": "Monthly",
+                    "alert_threshold": "$100K impact"
+                }}
+            ],
+            "automated_alerts": [
+                {{
+                    "condition": "risk_score > 20",
+                    "alert_type": "Critical",
+                    "severity": "High",
+                    "notification_channels": ["Email", "SMS", "Dashboard"],
+                    "escalation_rules": "Notify risk owner and executive immediately",
+                    "response_required": "Within 24 hours"
+                }},
+                {{
+                    "condition": "mitigation_delay > 30",
+                    "alert_type": "Warning",
+                    "severity": "Medium",
+                    "notification_channels": ["Email", "Dashboard"],
+                    "escalation_rules": "Notify project manager",
+                    "response_required": "Within 1 week"
+                }}
+            ],
+            "drill_down_capabilities": {{
+                "risk_categories": ["Operational", "Financial", "Compliance", "Strategic"],
+                "time_periods": ["Last 7 days", "Last 30 days", "Last quarter", "Year to date"],
+                "filter_options": ["By department", "By risk owner", "By severity", "By status"],
+                "export_formats": ["PDF", "Excel", "PowerPoint"]
+            }}
+        }},
+        "kpi_framework": {{
+            "leading_indicators": [
+                {{
+                    "kpi_name": "Risk Assessment Frequency",
+                    "target": "Monthly assessment completion",
+                    "measurement_method": "Percentage of scheduled assessments completed",
+                    "current_value": "85%",
+                    "trend": "Improving",
+                    "data_source": "assessment_completion_logs"
+                }},
+                {{
+                    "kpi_name": "Control Effectiveness Testing",
+                    "target": "100% of critical controls tested quarterly",
+                    "measurement_method": "Control testing completion rate",
+                    "current_value": "92%",
+                    "trend": "Stable",
+                    "data_source": "control_testing_logs"
+                }},
+                {{
+                    "kpi_name": "Threat Intelligence Integration",
+                    "target": "Weekly threat intelligence review",
+                    "measurement_method": "Percentage of relevant threats addressed",
+                    "current_value": "78%",
+                    "trend": "Improving",
+                    "data_source": "threat_intelligence_logs"
+                }}
+            ],
+            "lagging_indicators": [
+                {{
+                    "kpi_name": "Incident Response Time",
+                    "target": "< 4 hours average response time",
+                    "measurement_method": "Average time from incident detection to response",
+                    "current_value": "3.2 hours",
+                    "trend": "Improving",
+                    "benchmark_comparison": "Industry average: 6 hours",
+                    "data_source": "incident_response_logs"
+                }},
+                {{
+                    "kpi_name": "Risk Mitigation Effectiveness",
+                    "target": "80% reduction in risk scores post-mitigation",
+                    "measurement_method": "Percentage reduction in risk scores",
+                    "current_value": "75%",
+                    "trend": "Stable",
+                    "benchmark_comparison": "Industry standard: 70%",
+                    "data_source": "risk_assessment_history"
+                }},
+                {{
+                    "kpi_name": "Compliance Violation Rate",
+                    "target": "< 2% compliance violations",
+                    "measurement_method": "Percentage of compliance requirements met",
+                    "current_value": "1.8%",
+                    "trend": "Improving",
+                    "benchmark_comparison": "Industry average: 3.5%",
+                    "data_source": "compliance_audit_logs"
+                }}
+            ],
+            "tracking_systems": {{
+                "data_collection": "Automated from risk management system and manual inputs",
+                "reporting_frequency": "Monthly KPI dashboard and quarterly executive review",
+                "review_process": "Monthly KPI review meeting with action item tracking",
+                "accountability": "Risk Manager responsible for KPI tracking and Executive Sponsor for oversight",
+                "improvement_actions": "Quarterly KPI improvement planning sessions"
+            }}
+        }}
+    }}
+    
+    Ensure all content is professional, actionable, and tailored to the specific risk scenario.
+    """
+    
+    if not OPENROUTER_KEY:
+        # Fallback response for testing without API key
+        return {
+            "executive_risk_report": {
+                "key_findings": ["High-risk vulnerability identified", "Potential compliance violations", "Financial impact exceeds threshold"],
+                "financial_impact_analysis": {
+                    "total_potential_loss": "$500,000",
+                    "annual_financial_impact": "$250,000",
+                    "business_continuity_risk": "High",
+                    "cost_benefit_summary": "Mitigation investment of $150K yields 300% ROI"
+                },
+                "actionable_recommendations": [
+                    {
+                        "priority": "Critical",
+                        "recommendation": "Implement immediate security controls",
+                        "expected_benefits": "80% risk reduction",
+                        "timeline": "30 days",
+                        "responsible_party": "IT Security Team"
+                    }
+                ],
+                "board_presentation_format": "Executive summary with key metrics and recommendations"
+            },
+            "stakeholder_communication_plan": {
+                "stakeholder_analysis": [
+                    {
+                        "stakeholder_group": "Board of Directors",
+                        "communication_frequency": "Quarterly",
+                        "preferred_format": "Executive presentation",
+                        "key_concerns": ["Financial impact", "Regulatory compliance"],
+                        "tailored_messaging": "Strategic risk implications and mitigation strategy",
+                        "communication_schedule": ["Q1 Review", "Annual Board Meeting"]
+                    }
+                ],
+                "communication_channels": ["Email", "Meetings", "Reports"],
+                "escalation_procedures": {
+                    "trigger_conditions": ["Risk score > 20"],
+                    "escalation_path": "Risk Owner → Executive Leadership",
+                    "response_timeframes": "24 hours for critical issues"
+                }
+            },
+            "risk_dashboard_config": {
+                "key_metrics": [
+                    {
+                        "metric_name": "Risk Score Trend",
+                        "data_source": "risks.score",
+                        "visualization_type": "line_chart",
+                        "refresh_frequency": "Daily",
+                        "alert_threshold": 15
+                    }
+                ],
+                "automated_alerts": [
+                    {
+                        "condition": "risk_score > 20",
+                        "alert_type": "Critical",
+                        "severity": "High",
+                        "notification_channels": ["Email", "Dashboard"],
+                        "escalation_rules": "Immediate notification to risk owner",
+                        "response_required": "Within 24 hours"
+                    }
+                ],
+                "drill_down_capabilities": {
+                    "risk_categories": ["Operational", "Financial", "Compliance"],
+                    "time_periods": ["Last 30 days", "Last quarter"],
+                    "filter_options": ["By department", "By severity"],
+                    "export_formats": ["PDF", "Excel"]
+                }
+            },
+            "kpi_framework": {
+                "leading_indicators": [
+                    {
+                        "kpi_name": "Risk Assessment Frequency",
+                        "target": "Monthly completion",
+                        "measurement_method": "Assessment completion rate",
+                        "current_value": "85%",
+                        "trend": "Improving",
+                        "data_source": "assessment_logs"
+                    }
+                ],
+                "lagging_indicators": [
+                    {
+                        "kpi_name": "Incident Response Time",
+                        "target": "< 4 hours",
+                        "measurement_method": "Average response time",
+                        "current_value": "3.2 hours",
+                        "trend": "Improving",
+                        "benchmark_comparison": "Industry average: 6 hours",
+                        "data_source": "incident_logs"
+                    }
+                ],
+                "tracking_systems": {
+                    "data_collection": "Automated and manual tracking",
+                    "reporting_frequency": "Monthly",
+                    "review_process": "Monthly KPI reviews",
+                    "accountability": "Risk Manager",
+                    "improvement_actions": "Quarterly planning"
+                }
+            }
+        }
+    
+    # Call OpenRouter API
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_KEY}",
+        "Content-Type": "application/json",
+    }
+    body = {
+        "model": MODEL_NAME,
+        "messages": [
+            {"role": "system", "content": "You are a senior risk management consultant specializing in executive communication and stakeholder management. Generate comprehensive risk communication strategies in STRICT JSON format only."},
+            {"role": "user", "content": prompt}
+        ],
+        "temperature": 0.3,
+        "max_tokens": 4000
+    }
+    
+    try:
+        r = requests.post(url, headers=headers, json=body, timeout=120)
+        r.raise_for_status()
+        content = r.json()["choices"][0]["message"]["content"]
+        
+        # Parse JSON response
+        try:
+            return json.loads(content)
+        except json.JSONDecodeError:
+            # Try to extract JSON from response
+            import re
+            json_match = re.search(r'\{.*\}', content, re.DOTALL)
+            if json_match:
+                return json.loads(json_match.group(0))
+            else:
+                logging.error(f"Could not parse JSON from AI response: {content[:500]}")
+                return generate_fallback_communication_plan(risk_data, mitigation_plan)
+                
+    except Exception as e:
+        logging.error(f"Error calling OpenRouter API for communication plan: {e}")
+        return generate_fallback_communication_plan(risk_data, mitigation_plan)
+
+
+def generate_fallback_communication_plan(risk_data: dict, mitigation_plan: dict) -> dict:
+    """Fallback communication plan when API is unavailable"""
+    return {
+        "executive_risk_report": {
+            "key_findings": ["API unavailable - manual report generation required"],
+            "financial_impact_analysis": {
+                "total_potential_loss": "Analysis pending",
+                "annual_financial_impact": "To be determined",
+                "business_continuity_risk": "Unknown",
+                "cost_benefit_summary": "Analysis in progress"
+            },
+            "actionable_recommendations": [],
+            "board_presentation_format": "Manual preparation required"
+        },
+        "stakeholder_communication_plan": {
+            "stakeholder_analysis": [],
+            "communication_channels": ["Email"],
+            "escalation_procedures": {
+                "trigger_conditions": ["Manual review required"],
+                "escalation_path": "Standard procedures",
+                "response_timeframes": "As needed"
+            }
+        },
+        "risk_dashboard_config": {
+            "key_metrics": [],
+            "automated_alerts": [],
+            "drill_down_capabilities": {
+                "risk_categories": [],
+                "time_periods": [],
+                "filter_options": [],
+                "export_formats": ["PDF"]
+            }
+        },
+        "kpi_framework": {
+            "leading_indicators": [],
+            "lagging_indicators": [],
+            "tracking_systems": {
+                "data_collection": "Manual",
+                "reporting_frequency": "As needed",
+                "review_process": "Manual review",
+                "accountability": "Risk Manager",
+                "improvement_actions": "As needed"
+            }
+        }
+    }
+
+
+
 def generate_fallback_mitigation_plan(risk_data: dict) -> dict:
     """Fallback mitigation plan when API is unavailable"""
     return {
@@ -613,3 +1006,266 @@ def generate_fallback_mitigation_plan(risk_data: dict) -> dict:
     }
 
 
+def generate_program_phases(framework_name: str) -> list:
+    """Generate program phases based on selected framework"""
+    
+    if framework_name.upper() == "NIST RMF":
+        return [
+            {
+                "name": "Prepare",
+                "description": "Prepare the organization for risk management implementation",
+                "budget": 50000,
+                "personnel": ["Risk Manager", "IT Security Lead", "Compliance Officer"],
+                "tools": ["Risk assessment software", "Documentation tools"],
+                "training": ["NIST RMF training", "Risk management fundamentals"]
+            },
+            {
+                "name": "Categorize",
+                "description": "Categorize information systems and data",
+                "budget": 30000,
+                "personnel": ["System Owners", "Data Classification Specialists"],
+                "tools": ["Asset inventory tools", "Data classification software"],
+                "training": ["Data classification training"]
+            },
+            {
+                "name": "Select",
+                "description": "Select security controls for implementation",
+                "budget": 75000,
+                "personnel": ["Security Architects", "Control Assessors"],
+                "tools": ["Control selection tools", "Security policy templates"],
+                "training": ["Security control implementation"]
+            },
+            {
+                "name": "Implement",
+                "description": "Implement selected security controls",
+                "budget": 150000,
+                "personnel": ["Implementation Teams", "Technical Specialists"],
+                "tools": ["Security tools", "Monitoring systems"],
+                "training": ["Technical implementation training"]
+            },
+            {
+                "name": "Assess",
+                "description": "Assess control effectiveness",
+                "budget": 50000,
+                "personnel": ["Assessment Teams", "Auditors"],
+                "tools": ["Assessment tools", "Testing frameworks"],
+                "training": ["Assessment methodologies"]
+            },
+            {
+                "name": "Authorize",
+                "description": "Authorize system operation",
+                "budget": 25000,
+                "personnel": ["Authorizing Officials", "Risk Executives"],
+                "tools": ["Authorization packages", "Reporting tools"],
+                "training": ["Authorization processes"]
+            },
+            {
+                "name": "Monitor",
+                "description": "Continuously monitor control effectiveness",
+                "budget": 100000,
+                "personnel": ["Monitoring Teams", "Continuous Assessment Specialists"],
+                "tools": ["SIEM systems", "Continuous monitoring tools"],
+                "training": ["Continuous monitoring techniques"]
+            }
+        ]
+    
+    elif framework_name.upper() == "ISO 31000":
+        return [
+            {
+                "name": "Establish Context",
+                "description": "Establish the context for risk management",
+                "budget": 25000,
+                "personnel": ["Risk Management Lead", "Stakeholders"],
+                "tools": ["Stakeholder analysis tools"],
+                "training": ["ISO 31000 fundamentals"]
+            },
+            {
+                "name": "Risk Identification",
+                "description": "Identify risks using various methods",
+                "budget": 40000,
+                "personnel": ["Risk Identification Teams"],
+                "tools": ["Risk identification tools", "Workshop facilitation tools"],
+                "training": ["Risk identification techniques"]
+            },
+            {
+                "name": "Risk Analysis",
+                "description": "Analyze identified risks",
+                "budget": 35000,
+                "personnel": ["Risk Analysts"],
+                "tools": ["Risk analysis software"],
+                "training": ["Risk analysis methodologies"]
+            },
+            {
+                "name": "Risk Evaluation",
+                "description": "Evaluate risks against criteria",
+                "budget": 30000,
+                "personnel": ["Risk Evaluators"],
+                "tools": ["Risk evaluation frameworks"],
+                "training": ["Risk evaluation techniques"]
+            },
+            {
+                "name": "Risk Treatment",
+                "description": "Treat identified risks",
+                "budget": 80000,
+                "personnel": ["Risk Treatment Teams"],
+                "tools": ["Risk treatment planning tools"],
+                "training": ["Risk treatment strategies"]
+            },
+            {
+                "name": "Monitoring & Review",
+                "description": "Monitor and review risk management process",
+                "budget": 60000,
+                "personnel": ["Monitoring Teams"],
+                "tools": ["Monitoring dashboards", "Review tools"],
+                "training": ["Monitoring and review processes"]
+            }
+        ]
+    
+    else:  # COSO or default
+        return [
+            {
+                "name": "Planning",
+                "description": "Establish risk management objectives and planning",
+                "budget": 30000,
+                "personnel": ["Risk Management Committee"],
+                "tools": ["Planning tools", "Strategy development software"],
+                "training": ["COSO ERM framework"]
+            },
+            {
+                "name": "Event Identification",
+                "description": "Identify potential risk events",
+                "budget": 35000,
+                "personnel": ["Event Identification Teams"],
+                "tools": ["Event identification tools"],
+                "training": ["Event identification methods"]
+            },
+            {
+                "name": "Risk Assessment",
+                "description": "Assess risks and their potential impact",
+                "budget": 45000,
+                "personnel": ["Risk Assessment Teams"],
+                "tools": ["Risk assessment software"],
+                "training": ["Risk assessment techniques"]
+            },
+            {
+                "name": "Risk Response",
+                "description": "Develop risk response strategies",
+                "budget": 55000,
+                "personnel": ["Risk Response Teams"],
+                "tools": ["Strategy development tools"],
+                "training": ["Risk response planning"]
+            },
+            {
+                "name": "Control Activities",
+                "description": "Implement control activities",
+                "budget": 70000,
+                "personnel": ["Control Implementation Teams"],
+                "tools": ["Control implementation tools"],
+                "training": ["Control activities"]
+            },
+            {
+                "name": "Information & Communication",
+                "description": "Establish information and communication channels",
+                "budget": 40000,
+                "personnel": ["Communication Specialists"],
+                "tools": ["Communication platforms"],
+                "training": ["Risk communication"]
+            },
+            {
+                "name": "Monitoring",
+                "description": "Monitor risk management effectiveness",
+                "budget": 50000,
+                "personnel": ["Monitoring Teams"],
+                "tools": ["Monitoring systems"],
+                "training": ["Monitoring techniques"]
+            }
+        ]
+
+def perform_continuous_monitoring():
+    """Automated function to perform continuous risk monitoring"""
+    db = get_session()
+    
+    try:
+        indicators = db.query(RiskIndicator).filter(RiskIndicator.is_active == True).all()
+        
+        for indicator in indicators:
+            # Calculate current value based on indicator type
+            current_value = calculate_indicator_value(indicator)
+            
+            # Create reading
+            reading = IndicatorReading(
+                indicator_id=indicator.id,
+                value=current_value
+            )
+            db.add(reading)
+            
+            # Check thresholds and alert if necessary
+            if indicator.threshold_critical and current_value >= indicator.threshold_critical:
+                create_alert("CRITICAL", f"Critical threshold exceeded for {indicator.name}: {current_value}")
+            elif indicator.threshold_warning and current_value >= indicator.threshold_warning:
+                create_alert("WARNING", f"Warning threshold exceeded for {indicator.name}: {current_value}")
+        
+        db.commit()
+        
+    except Exception as e:
+        logging.error(f"Error in continuous monitoring: {e}")
+        db.rollback()
+    finally:
+        close_session(db)
+
+def calculate_indicator_value(indicator: RiskIndicator) -> float:
+    """Calculate current value for a risk indicator"""
+    db = get_session()
+    
+    try:
+        if indicator.data_source == "risk_count":
+            return db.query(Risk).count()
+        elif indicator.data_source == "critical_risk_count":
+            return db.query(Risk).filter(Risk.severity == RiskSeverity.CRITICAL).count()
+        elif indicator.data_source == "open_incident_count":
+            return db.query(Incident).filter(Incident.status == IncidentStatus.OPEN).count()
+        elif indicator.data_source == "compliance_score":
+            compliances = db.query(Compliance).all()
+            if compliances:
+                return sum(c.score for c in compliances) / len(compliances)
+            return 0.0
+        else:
+            # Default calculation
+            return 0.0
+    finally:
+        close_session(db)
+
+def create_alert(severity: str, message: str):
+    """Create automated alert"""
+    logging.warning(f"ALERT [{severity}]: {message}")
+    # In a real implementation, this would send emails, create notifications, etc.
+
+def detect_environmental_changes():
+    """Detect environmental changes that could impact risk posture"""
+    db = get_session()
+    
+    try:
+        # Example: Check for new regulations or compliance requirements
+        # This would integrate with external APIs or manual inputs
+        
+        # For demo purposes, we'll create a sample change detection
+        recent_compliances = db.query(Compliance).filter(
+            Compliance.created_at >= datetime.now(timezone.utc) - timedelta(days=7)
+        ).all()
+        
+        if len(recent_compliances) > 5:  # Arbitrary threshold
+            change = EnvironmentalChange(
+                change_type="regulatory",
+                description="Increased regulatory compliance activity detected",
+                impact_assessment="Potential increase in compliance requirements",
+                risk_implications="May require additional compliance resources",
+                severity="medium"
+            )
+            db.add(change)
+            db.commit()
+            
+    except Exception as e:
+        logging.error(f"Error detecting environmental changes: {e}")
+        db.rollback()
+    finally:
+        close_session(db)

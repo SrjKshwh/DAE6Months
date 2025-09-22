@@ -1,8 +1,8 @@
-"""Initial schema with risk evaluation methods
+"""Add risk management program models
 
-Revision ID: 5fd04cfb0c8a
+Revision ID: 34558889d887
 Revises: 
-Create Date: 2025-09-15 14:29:44.957168
+Create Date: 2025-09-22 12:25:26.385443
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5fd04cfb0c8a'
+revision = '34558889d887'
 down_revision = None
 branch_labels = None
 depends_on = None

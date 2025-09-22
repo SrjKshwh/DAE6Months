@@ -292,7 +292,7 @@
                                         </tr>
                                         <tr>
                                             <td><strong>Asset Value:</strong></td>
-                                            <td>${{ risk.asset_value|number_format(0) if risk.asset_value else "Not set" }}</td>
+                                            <td>${{ risk.asset_value if risk.asset_value else "Not set" }}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -868,6 +868,259 @@
         </div>
                 </div>
             </div>
+
+
+
+
+
+
+{% if communication_plan %}
+
+<!-- Risk Communication Section -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-bullhorn"></i> Risk Communication Strategy
+                </h5>
+            </div>
+            <div class="card-body">
+                
+                <!-- Executive Risk Report -->
+                {% if communication_plan.executive_risk_report %}
+                <h6 class="text-info mb-3">
+                    <i class="fas fa-chart-line"></i> Executive Risk Report
+                </h6>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card border-primary">
+                            <div class="card-header">
+                                <h6 class="mb-0">Key Findings</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    {% for finding in communication_plan.executive_risk_report.key_findings %}
+                                    <li class="list-group-item">{{ finding }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card border-success">
+                            <div class="card-header">
+                                <h6 class="mb-0">Financial Impact Analysis</h6>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Total Potential Loss:</strong> {{ communication_plan.executive_risk_report.financial_impact_analysis.total_potential_loss }}</p>
+                                <p><strong>Annual Impact:</strong> {{ communication_plan.executive_risk_report.financial_impact_analysis.annual_financial_impact }}</p>
+                                <p><strong>Business Continuity Risk:</strong> 
+                                    <span class="badge bg-{{ 'danger' if communication_plan.executive_risk_report.financial_impact_analysis.business_continuity_risk == 'High' else 'warning' }}">
+                                        {{ communication_plan.executive_risk_report.financial_impact_analysis.business_continuity_risk }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Actionable Recommendations -->
+                {% if communication_plan.executive_risk_report.actionable_recommendations %}
+                <h6 class="text-info mb-3">Actionable Recommendations</h6>
+                <div class="table-responsive mb-4">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Priority</th>
+                                <th>Recommendation</th>
+                                <th>Expected Benefits</th>
+                                <th>Timeline</th>
+                                <th>Responsible Party</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rec in communication_plan.executive_risk_report.actionable_recommendations %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if rec.priority == 'Critical' else 'warning' if rec.priority == 'High' else 'info' }}">
+                                        {{ rec.priority }}
+                                    </span>
+                                </td>
+                                <td>{{ rec.recommendation }}</td>
+                                <td>{{ rec.expected_benefits }}</td>
+                                <td>{{ rec.timeline }}</td>
+                                <td>{{ rec.responsible_party }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+                {% endif %}
+                
+                <!-- Stakeholder Communication Plan -->
+                {% if communication_plan.stakeholder_communication_plan %}
+                <h6 class="text-info mb-3">
+                    <i class="fas fa-users"></i> Stakeholder Communication Plan
+                </h6>
+                
+                <div class="row mb-4">
+                    {% for stakeholder in communication_plan.stakeholder_communication_plan.stakeholder_analysis %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="mb-0">{{ stakeholder.stakeholder_group }}</h6>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Frequency:</strong> {{ stakeholder.communication_frequency }}</p>
+                                <p><strong>Format:</strong> {{ stakeholder.preferred_format }}</p>
+                                <p><strong>Key Concerns:</strong></p>
+                                <ul>
+                                    {% for concern in stakeholder.key_concerns %}
+                                    <li>{{ concern }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <p><strong>Messaging:</strong> {{ stakeholder.tailored_messaging }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Risk Dashboard Configuration -->
+                {% if communication_plan.risk_dashboard_config %}
+                <h6 class="text-info mb-3">
+                    <i class="fas fa-tachometer-alt"></i> Risk Dashboard Configuration
+                </h6>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Key Metrics</h6>
+                            </div>
+                            <div class="card-body">
+                                {% for metric in communication_plan.risk_dashboard_config.key_metrics %}
+                                <div class="mb-3 p-3 border rounded">
+                                    <h6>{{ metric.metric_name }}</h6>
+                                    <p><strong>Type:</strong> {{ metric.visualization_type }}</p>
+                                    <p><strong>Refresh:</strong> {{ metric.refresh_frequency }}</p>
+                                    <p><strong>Alert Threshold:</strong> {{ metric.alert_threshold }}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Automated Alerts</h6>
+                            </div>
+                            <div class="card-body">
+                                {% for alert in communication_plan.risk_dashboard_config.automated_alerts %}
+                                <div class="mb-3 p-3 border rounded">
+                                    <h6>{{ alert.alert_type }} Alert</h6>
+                                    <p><strong>Condition:</strong> {{ alert.condition }}</p>
+                                    <p><strong>Severity:</strong> 
+                                        <span class="badge bg-{{ 'danger' if alert.severity == 'High' else 'warning' }}">
+                                            {{ alert.severity }}
+                                        </span>
+                                    </p>
+                                    <p><strong>Response Required:</strong> {{ alert.response_required }}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- KPI Framework -->
+                {% if communication_plan.kpi_framework %}
+                <h6 class="text-info mb-3">
+                    <i class="fas fa-chart-bar"></i> KPI Framework
+                </h6>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Leading Indicators</h6>
+                            </div>
+                            <div class="card-body">
+                                {% for kpi in communication_plan.kpi_framework.leading_indicators %}
+                                <div class="mb-3 p-3 border rounded">
+                                    <h6>{{ kpi.kpi_name }}</h6>
+                                    <p><strong>Target:</strong> {{ kpi.target }}</p>
+                                    <p><strong>Current:</strong> {{ kpi.current_value }}</p>
+                                    <p><strong>Trend:</strong> 
+                                        <span class="badge bg-{{ 'success' if kpi.trend == 'Improving' else 'warning' }}">
+                                            {{ kpi.trend }}
+                                        </span>
+                                    </p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Lagging Indicators</h6>
+                            </div>
+                            <div class="card-body">
+                                {% for kpi in communication_plan.kpi_framework.lagging_indicators %}
+                                <div class="mb-3 p-3 border rounded">
+                                    <h6>{{ kpi.kpi_name }}</h6>
+                                    <p><strong>Target:</strong> {{ kpi.target }}</p>
+                                    <p><strong>Current:</strong> {{ kpi.current_value }}</p>
+                                    <p><strong>vs Benchmark:</strong> {{ kpi.benchmark_comparison }}</p>
+                                    <p><strong>Trend:</strong> 
+                                        <span class="badge bg-{{ 'success' if kpi.trend == 'Improving' else 'warning' }}">
+                                            {{ kpi.trend }}
+                                        </span>
+                                    </p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tracking Systems -->
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Tracking Systems & Review Process</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Data Collection:</strong> {{ communication_plan.kpi_framework.tracking_systems.data_collection }}</p>
+                                <p><strong>Reporting Frequency:</strong> {{ communication_plan.kpi_framework.tracking_systems.reporting_frequency }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Review Process:</strong> {{ communication_plan.kpi_framework.tracking_systems.review_process }}</p>
+                                <p><strong>Accountability:</strong> {{ communication_plan.kpi_framework.tracking_systems.accountability }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+
 
 
 

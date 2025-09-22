@@ -41,6 +41,7 @@ Usage:
     # Models are used through SQLAlchemy sessions
 """
 
+from typing import List
 from datetime import datetime, timezone
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Boolean, DateTime, ForeignKey, Text, Float, Enum
@@ -528,6 +529,150 @@ class Risk(Base):
             return f"Rejected - {self.stakeholder_approval_notes or 'No notes'}"
         else:
             return f"Pending - {self.approval_status.value}"
+
+
+
+
+
+class RiskManagementFramework(Base):
+    """Risk management framework selection and customization"""
+    __tablename__ = "risk_management_frameworks"
+    
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)  # NIST RMF, ISO 31000, COSO
+    version: Mapped[str] = mapped_column(String(50), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    customization_notes: Mapped[str] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class RiskProgramPlan(Base):
+    """Complete risk management program plan"""
+    __tablename__ = "risk_program_plans"
+    
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(200), nullable=False)
+    framework_id: Mapped[int] = mapped_column(Integer, ForeignKey("risk_management_frameworks.id"))
+    status: Mapped[str] = mapped_column(String(50), default="draft")  # draft, active, completed
+    start_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    end_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    total_budget: Mapped[float] = mapped_column(Float, default=0.0)
+    created_by: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
+    
+    # Program phases
+    planning_phase_complete: Mapped[bool] = mapped_column(Boolean, default=False)
+    implementation_phase_complete: Mapped[bool] = mapped_column(Boolean, default=False)
+    monitoring_phase_complete: Mapped[bool] = mapped_column(Boolean, default=False)
+    
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    framework: Mapped[RiskManagementFramework] = relationship("RiskManagementFramework")
+    creator: Mapped[User] = relationship("User")
+
+class ProgramPhase(Base):
+    """Program implementation phases with timelines and resources"""
+    __tablename__ = "program_phases"
+    
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    program_id: Mapped[int] = mapped_column(Integer, ForeignKey("risk_program_plans.id"))
+    phase_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    phase_order: Mapped[int] = mapped_column(Integer, nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    start_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    end_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    budget_allocated: Mapped[float] = mapped_column(Float, default=0.0)
+    status: Mapped[str] = mapped_column(String(50), default="pending")  # pending, in_progress, completed
+    
+    # Resource allocation
+    personnel_required: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string
+    tools_required: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string
+    training_required: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string
+    
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    program: Mapped[RiskProgramPlan] = relationship("RiskProgramPlan", back_populates="phases")
+
+# Add to RiskProgramPlan
+RiskProgramPlan.phases: Mapped[List[ProgramPhase]] = relationship("ProgramPhase", back_populates="program", cascade="all, delete-orphan")
+
+class GapAnalysis(Base):
+    """Gap analysis for framework implementation"""
+    __tablename__ = "gap_analyses"
+    
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    program_id: Mapped[int] = mapped_column(Integer, ForeignKey("risk_program_plans.id"))
+    requirement_category: Mapped[str] = mapped_column(String(100), nullable=False)
+    current_state: Mapped[str] = mapped_column(Text, nullable=True)
+    required_state: Mapped[str] = mapped_column(Text, nullable=True)
+    gap_description: Mapped[str] = mapped_column(Text, nullable=True)
+    gap_severity: Mapped[str] = mapped_column(String(50), default="medium")  # low, medium, high, critical
+    mitigation_plan: Mapped[str] = mapped_column(Text, nullable=True)
+    estimated_cost: Mapped[float] = mapped_column(Float, default=0.0)
+    timeline_months: Mapped[int] = mapped_column(Integer, default=0)
+    status: Mapped[str] = mapped_column(String(50), default="open")  # open, in_progress, closed
+    
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    program: Mapped[RiskProgramPlan] = relationship("RiskProgramPlan")
+
+class RiskIndicator(Base):
+    """Automated risk indicators for continuous monitoring"""
+    __tablename__ = "risk_indicators"
+    
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    indicator_type: Mapped[str] = mapped_column(String(50), nullable=False)  # leading, lagging
+    data_source: Mapped[str] = mapped_column(String(200), nullable=False)
+    calculation_method: Mapped[str] = mapped_column(Text, nullable=True)
+    target_value: Mapped[float] = mapped_column(Float, nullable=True)
+    threshold_warning: Mapped[float] = mapped_column(Float, nullable=True)
+    threshold_critical: Mapped[float] = mapped_column(Float, nullable=True)
+    unit: Mapped[str] = mapped_column(String(50), nullable=True)
+    frequency: Mapped[str] = mapped_column(String(50), default="daily")  # hourly, daily, weekly, monthly
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class IndicatorReading(Base):
+    """Historical readings for risk indicators"""
+    __tablename__ = "indicator_readings"
+    
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    indicator_id: Mapped[int] = mapped_column(Integer, ForeignKey("risk_indicators.id"))
+    value: Mapped[float] = mapped_column(Float, nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    notes: Mapped[str] = mapped_column(Text, nullable=True)
+    
+    # Relationships
+    indicator: Mapped[RiskIndicator] = relationship("RiskIndicator")
+
+class EnvironmentalChange(Base):
+    """Environmental changes that could impact risk posture"""
+    __tablename__ = "environmental_changes"
+    
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    change_type: Mapped[str] = mapped_column(String(100), nullable=False)  # regulatory, technological, operational, etc.
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    impact_assessment: Mapped[str] = mapped_column(Text, nullable=True)
+    risk_implications: Mapped[str] = mapped_column(Text, nullable=True)
+    detection_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    assessment_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    status: Mapped[str] = mapped_column(String(50), default="detected")  # detected, assessed, mitigated
+    severity: Mapped[str] = mapped_column(String(50), default="medium")  # low, medium, high, critical
+    
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
 
 
 class Compliance(Base):

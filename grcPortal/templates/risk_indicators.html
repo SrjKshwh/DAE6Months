@@ -1,0 +1,152 @@
+<!-- templates/risk_indicators.html -->
+{% extends "base.html" %}
+
+{% block title %}Risk Indicators - Continuous Monitoring{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-chart-line text-info"></i> Risk Indicators</h2>
+                <div>
+                    <a href="{{ url_for('environmental_changes') }}" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-globe"></i> Environmental Changes
+                    </a>
+                    <a href="{{ url_for('risk_dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Risk Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Indicators Overview -->
+            <div class="row mb-4">
+                {% for indicator_data in indicator_data %}
+                {% set indicator = indicator_data.indicator %}
+                {% set latest_reading = indicator_data.latest_reading %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">{{ indicator.name }}</h6>
+                            <span class="badge bg-{{ 'success' if indicator.is_active else 'secondary' }}">
+                                {{ 'Active' if indicator.is_active else 'Inactive' }}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted mb-2">{{ indicator.description }}</p>
+                            
+                            <div class="row text-center mb-3">
+                                {% if latest_reading %}
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <h5 class="text-primary mb-0">{{ latest_reading.value }}</h5>
+                                        <small class="text-muted">Current Value</small>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <h5 class="text-success mb-0">{{ indicator.target_value or 'N/A' }}</h5>
+                                        <small class="text-muted">Target</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <h5 class="text-{{ 'danger' if latest_reading and latest_reading.value >= (indicator.threshold_critical or 999999) else 'warning' if latest_reading and latest_reading.value >= (indicator.threshold_warning or 999999) else 'success' }} mb-0">
+                                            {{ indicator.threshold_warning or 'N/A' }}
+                                        </h5>
+                                        <small class="text-muted">Warning</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <strong>Type:</strong> {{ indicator.indicator_type.title() }} | 
+                                    <strong>Frequency:</strong> {{ indicator.frequency }} | 
+                                    <strong>Unit:</strong> {{ indicator.unit or 'Count' }}
+                                </small>
+                            </div>
+                            
+                            {% if latest_reading %}
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <strong>Last Reading:</strong> {{ latest_reading.timestamp.strftime('%Y-%m-%d %H:%M') }}
+                                </small>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Status Indicator -->
+                            {% if latest_reading %}
+                                {% if indicator.threshold_critical and latest_reading.value >= indicator.threshold_critical %}
+                                    <div class="alert alert-danger py-2">
+                                        <i class="fas fa-exclamation-triangle"></i> Critical threshold exceeded!
+                                    </div>
+                                {% elif indicator.threshold_warning and latest_reading.value >= indicator.threshold_warning %}
+                                    <div class="alert alert-warning py-2">
+                                        <i class="fas fa-exclamation-circle"></i> Warning threshold exceeded.
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-success py-2">
+                                        <i class="fas fa-check-circle"></i> Within acceptable range.
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Indicator Details Table -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Indicator Configuration</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Data Source</th>
+                                            <th>Target</th>
+                                            <th>Warning</th>
+                                            <th>Critical</th>
+                                            <th>Frequency</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for indicator_data in indicator_data %}
+                                        {% set indicator = indicator_data.indicator %}
+                                        <tr>
+                                            <td><strong>{{ indicator.name }}</strong></td>
+                                            <td>{{ indicator.indicator_type.title() }}</td>
+                                            <td><code>{{ indicator.data_source }}</code></td>
+                                            <td>{{ indicator.target_value or 'N/A' }}</td>
+                                            <td>{{ indicator.threshold_warning or 'N/A' }}</td>
+                                            <td>{{ indicator.threshold_critical or 'N/A' }}</td>
+                                            <td>{{ indicator.frequency }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if indicator.is_active else 'secondary' }}">
+                                                    {{ 'Active' if indicator.is_active else 'Inactive' }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,233 @@
+<!-- templates/program_detail.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ program.title }} - Program Details{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-project-diagram text-primary"></i> {{ program.title }}</h2>
+                    <p class="text-muted mb-0">Framework: {{ program.framework.name }} ({{ program.framework.version }})</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('gap_analysis', program_id=program.id) }}" class="btn btn-warning me-2">
+                        <i class="fas fa-search"></i> Gap Analysis
+                    </a>
+                    <a href="{{ url_for('risk_programs') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Programs
+                    </a>
+                </div>
+            </div>
+
+            <!-- Program Overview -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">${{ program.total_budget }}</h5>
+                            <p class="card-text">Total Budget</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-info">{{ program.phases|length }}</h5>
+                            <p class="card-text">Implementation Phases</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">{{ gap_analyses|length }}</h5>
+                            <p class="card-text">Gap Analyses</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <span class="badge fs-6 bg-{{ 'success' if program.status == 'completed' else 'warning' if program.status == 'active' else 'secondary' }} p-2">
+                                {{ program.status.title() }}
+                            </span>
+                            <p class="card-text mt-2">Program Status</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Implementation Phases -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-tasks"></i> Implementation Phases</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline">
+                                {% for phase in phases %}
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-{{ 'success' if phase.status == 'completed' else 'primary' if phase.status == 'in_progress' else 'secondary' }}"></div>
+                                    <div class="timeline-content">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="timeline-title">{{ phase.phase_name }}</h6>
+                                                <p class="timeline-text mb-2">{{ phase.description }}</p>
+                                                <div class="row text-sm">
+                                                    <div class="col-md-3">
+                                                        <strong>Budget:</strong> ${{ phase.budget_allocated }}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <strong>Status:</strong> 
+                                                        <span class="badge bg-{{ 'success' if phase.status == 'completed' else 'primary' if phase.status == 'in_progress' else 'secondary' }}">
+                                                            {{ phase.status.replace('_', ' ').title() }}
+                                                        </span>
+                                                    </div>
+                                                    {% if phase.start_date %}
+                                                    <div class="col-md-3">
+                                                        <strong>Start:</strong> {{ phase.start_date.strftime('%Y-%m-%d') }}
+                                                    </div>
+                                                    {% endif %}
+                                                    {% if phase.end_date %}
+                                                    <div class="col-md-3">
+                                                        <strong>End:</strong> {{ phase.end_date.strftime('%Y-%m-%d') }}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {% if phase.personnel_required %}
+                                        <details class="mt-2">
+                                            <summary><strong>Personnel Requirements</strong></summary>
+                                            <ul class="mt-2">
+                                                {% for person in phase.personnel_required|from_json %}
+                                                <li>{{ person }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </details>
+                                        {% endif %}
+                                        
+                                        {% if phase.tools_required %}
+                                        <details class="mt-2">
+                                            <summary><strong>Tools & Technology</strong></summary>
+                                            <ul class="mt-2">
+                                                {% for tool in phase.tools_required|from_json %}
+                                                <li>{{ tool }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </details>
+                                        {% endif %}
+                                        
+                                        {% if phase.training_required %}
+                                        <details class="mt-2">
+                                            <summary><strong>Training Requirements</strong></summary>
+                                            <ul class="mt-2">
+                                                {% for training in phase.training_required|from_json %}
+                                                <li>{{ training }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </details>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gap Analysis Summary -->
+            {% if gap_analyses %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-search"></i> Gap Analysis Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Gap Description</th>
+                                            <th>Severity</th>
+                                            <th>Status</th>
+                                            <th>Estimated Cost</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for gap in gap_analyses %}
+                                        <tr>
+                                            <td>{{ gap.requirement_category }}</td>
+                                            <td>{{ gap.gap_description[:50] }}...</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'danger' if gap.gap_severity == 'critical' else 'warning' if gap.gap_severity == 'high' else 'info' }}">
+                                                    {{ gap.gap_severity.title() }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if gap.status == 'closed' else 'warning' if gap.status == 'in_progress' else 'secondary' }}">
+                                                    {{ gap.status.replace('_', ' ').title() }}
+                                                </span>
+                                            </td>
+                                            <td>${{ gap.estimated_cost }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -40px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 3px solid #007bff;
+}
+
+.timeline-title {
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.timeline-text {
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+</style>
+{% endblock %}

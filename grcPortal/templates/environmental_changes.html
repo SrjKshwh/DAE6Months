@@ -1,0 +1,170 @@
+<!-- templates/environmental_changes.html -->
+{% extends "base.html" %}
+
+{% block title %}Environmental Changes - Risk Monitoring{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-globe text-success"></i> Environmental Changes</h2>
+                <div>
+                    <a href="{{ url_for('risk_indicators') }}" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-chart-line"></i> Risk Indicators
+                    </a>
+                    <a href="{{ url_for('risk_dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Risk Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Changes Summary -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ changes|length }}</h5>
+                            <p class="card-text">Total Changes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger">{{ changes|selectattr('severity', 'equalto', 'critical')|list|length }}</h5>
+                            <p class="card-text">Critical Changes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-warning">{{ changes|selectattr('status', 'equalto', 'detected')|list|length }}</h5>
+                            <p class="card-text">Unassessed</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">{{ changes|selectattr('status', 'equalto', 'mitigated')|list|length }}</h5>
+                            <p class="card-text">Mitigated</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Changes List -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Environmental Changes Timeline</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if changes %}
+                            <div class="timeline">
+                                {% for change in changes %}
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-{{ 'danger' if change.severity == 'critical' else 'warning' if change.severity == 'high' else 'info' }}"></div>
+                                    <div class="timeline-content">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h6 class="timeline-title">{{ change.change_type.title() }} Change</h6>
+                                                <p class="timeline-text mb-2">{{ change.description }}</p>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="badge bg-{{ 'danger' if change.severity == 'critical' else 'warning' if change.severity == 'high' else 'info' }}">
+                                                    {{ change.severity.title() }}
+                                                </span>
+                                                <br>
+                                                <small class="text-muted">{{ change.detection_date.strftime('%Y-%m-%d') }}</small>
+                                            </div>
+                                        </div>
+                                        
+                                        {% if change.impact_assessment %}
+                                        <div class="mb-2">
+                                            <strong>Impact Assessment:</strong>
+                                            <p class="text-muted mb-1">{{ change.impact_assessment }}</p>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        {% if change.risk_implications %}
+                                        <div class="mb-2">
+                                            <strong>Risk Implications:</strong>
+                                            <p class="text-muted mb-1">{{ change.risk_implications }}</p>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>Status:</strong>
+                                                <span class="badge bg-{{ 'success' if change.status == 'mitigated' else 'warning' if change.status == 'assessed' else 'secondary' }}">
+                                                    {{ change.status.title() }}
+                                                </span>
+                                            </div>
+                                            {% if change.assessment_date %}
+                                            <small class="text-muted">
+                                                Assessed: {{ change.assessment_date.strftime('%Y-%m-%d') }}
+                                            </small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-globe fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No Environmental Changes Detected</h5>
+                                <p class="text-muted">The system will automatically detect and report environmental changes that may impact risk posture.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -40px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 3px solid #007bff;
+}
+
+.timeline-title {
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.timeline-text {
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+</style>
+{% endblock %}

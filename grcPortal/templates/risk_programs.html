@@ -1,0 +1,97 @@
+<!-- templates/risk_programs.html -->
+{% extends "base.html" %}
+
+{% block title %}Risk Management Programs - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-project-diagram text-primary"></i> Risk Management Programs</h2>
+                <a href="{{ url_for('create_program') }}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Create New Program
+                </a>
+            </div>
+
+            <!-- Framework Overview -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h5>Available Frameworks</h5>
+                </div>
+                {% for framework in frameworks %}
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h6 class="mb-0">{{ framework.name }} ({{ framework.version }})</h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">{{ framework.description }}</p>
+                            {% if framework.customization_notes %}
+                            <small class="text-info">Customized: {{ framework.customization_notes }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Existing Programs -->
+            <div class="row">
+                <div class="col-12">
+                    <h5>Your Programs</h5>
+                    {% if programs %}
+                    <div class="row">
+                        {% for program in programs %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">{{ program.title }}</h6>
+                                    <span class="badge bg-{{ 'success' if program.status == 'completed' else 'warning' if program.status == 'active' else 'secondary' }}">
+                                        {{ program.status.title() }}
+                                    </span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted mb-2">Framework: {{ program.framework.name }}</p>
+                                    <p class="text-muted mb-2">Budget: ${{ program.total_budget }}</p>
+                                    {% if program.start_date %}
+                                    <p class="text-muted mb-3">
+                                        Duration: {{ program.start_date.strftime('%Y-%m-%d') }} - 
+                                        {{ program.end_date.strftime('%Y-%m-%d') if program.end_date else 'Ongoing' }}
+                                    </p>
+                                    {% endif %}
+                                    
+                                    <!-- Progress -->
+                                    <div class="mb-3">
+                                        <small class="text-muted">Implementation Progress</small>
+                                        <div class="progress" style="height: 8px;">
+                                            {% set progress = ((1 if program.planning_phase_complete else 0) + (1 if program.implementation_phase_complete else 0) + (1 if program.monitoring_phase_complete else 0)) / 3 * 100 %}
+                                            <div class="progress-bar bg-success" style="width: {{ progress }}%"></div>
+                                        </div>
+                                        <small class="text-muted">{{ progress|round(0) }}% Complete</small>
+                                    </div>
+                                    
+                                    <a href="{{ url_for('view_program', program_id=program.id) }}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-project-diagram fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Programs Created Yet</h5>
+                        <p class="text-muted">Create your first risk management program to get started.</p>
+                        <a href="{{ url_for('create_program') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Your First Program
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

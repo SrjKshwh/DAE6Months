@@ -64,7 +64,10 @@ load_dotenv()
 
 from db import get_engine, get_session, close_session
 
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister
+
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange
+
+
 from sqlalchemy.orm import sessionmaker
 
 from llm_scan import scan_file_for_grc, create_risks_from_scan,generate_risk_mitigation_plan
@@ -1200,6 +1203,205 @@ def create_app():
                        f"Accessed {len(risks_list)} risk assessments", "/risks", True)
         return render_template("risks.html", risks=risks_list)
 
+
+
+# --- Risk Management Program Routes ---
+
+    @app.route("/risk_programs")
+    @login_required
+    def risk_programs():
+        """Display risk management programs dashboard"""
+        user = current_user()
+        db = get_session()
+    
+        programs_raw = db.query(RiskProgramPlan).filter(RiskProgramPlan.created_by == user.id).all()
+        frameworks_raw = db.query(RiskManagementFramework).filter(RiskManagementFramework.is_active == True).all()
+
+        programs = []
+        for prog in programs_raw:
+            programs.append({
+                'id': prog.id,
+                'title': prog.title,
+                'status': prog.status,
+                'start_date': prog.start_date,
+                'end_date': prog.end_date,
+                'total_budget': prog.total_budget,
+                'framework': {
+                    'name': prog.framework.name if prog.framework else 'Unknown'
+                } if prog.framework else None
+            })
+
+        frameworks = []
+        for fw in frameworks_raw:
+            frameworks.append({
+                'id': fw.id,
+                'name': fw.name,
+                'version': fw.version,
+                'description': fw.description,
+                'customization_notes': fw.customization_notes,
+                'is_active': fw.is_active
+            })
+
+        close_session(db)
+        return render_template("risk_programs.html", programs=programs, frameworks=frameworks)
+
+    @app.route("/create_program", methods=["GET", "POST"])
+    @login_required
+    def create_program():
+        """Create new risk management program"""
+        user = current_user()
+        db = get_session()
+    
+        if request.method == "POST":
+            data = request.form
+        
+            # Create program plan
+            program = RiskProgramPlan(
+                title=data["title"],
+                framework_id=int(data["framework_id"]),
+                status="draft",
+                start_date=datetime.strptime(data["start_date"], "%Y-%m-%d") if data.get("start_date") else None,
+                end_date=datetime.strptime(data["end_date"], "%Y-%m-%d") if data.get("end_date") else None,
+                total_budget=float(data.get("total_budget", 0)),
+                created_by=user.id
+            )
+            db.add(program)
+            db.commit()
+        
+            # Generate initial phases based on framework
+            framework = db.get(RiskManagementFramework, program.framework_id)
+            phases_data = generate_program_phases(framework.name)
+        
+            for i, phase_data in enumerate(phases_data):
+                phase = ProgramPhase(
+                    program_id=program.id,
+                    phase_name=phase_data["name"],
+                    phase_order=i+1,
+                    description=phase_data["description"],
+                    budget_allocated=phase_data.get("budget", 0),
+                    personnel_required=json.dumps(phase_data.get("personnel", [])),
+                    tools_required=json.dumps(phase_data.get("tools", [])),
+                    training_required=json.dumps(phase_data.get("training", []))
+                )
+                db.add(phase)
+        
+            db.commit()
+            close_session(db)
+        
+            flash("Risk management program created successfully!", "success")
+            return redirect(url_for("view_program", program_id=program.id))
+    
+        frameworks_raw = db.query(RiskManagementFramework).filter(RiskManagementFramework.is_active == True).all()
+        frameworks = []
+        for fw in frameworks_raw:
+            frameworks.append({
+                'id': fw.id,
+                'name': fw.name,
+                'version': fw.version,
+                'description': fw.description,
+                'customization_notes': fw.customization_notes,
+                'is_active': fw.is_active
+            })
+        close_session(db)
+
+        return render_template("create_program.html", frameworks=frameworks)
+
+    @app.route("/program/<int:program_id>")
+    @login_required
+    def view_program(program_id):
+        """View detailed risk management program"""
+        user = current_user()
+        db = get_session()
+    
+        program = db.get(RiskProgramPlan, program_id)
+        if not program or program.created_by != user.id:
+            close_session(db)
+            flash("Program not found or access denied.", "danger")
+            return redirect(url_for("risk_programs"))
+    
+        phases = db.query(ProgramPhase).filter(ProgramPhase.program_id == program_id).order_by(ProgramPhase.phase_order).all()
+        gap_analyses = db.query(GapAnalysis).filter(GapAnalysis.program_id == program_id).all()
+    
+        close_session(db)
+        return render_template("program_detail.html", program=program, phases=phases, gap_analyses=gap_analyses)
+
+    @app.route("/gap_analysis/<int:program_id>", methods=["GET", "POST"])
+    @login_required
+    def gap_analysis(program_id):
+        """Perform gap analysis for program"""
+        user = current_user()
+        db = get_session()
+    
+        program = db.get(RiskProgramPlan, program_id)
+        if not program or program.created_by != user.id:
+            close_session(db)
+            flash("Program not found or access denied.", "danger")
+            return redirect(url_for("risk_programs"))
+    
+        if request.method == "POST":
+            data = request.form
+        
+            gap = GapAnalysis(
+                program_id=program_id,
+                requirement_category=data["category"],
+                current_state=data["current_state"],
+                required_state=data["required_state"],
+                gap_description=data["gap_description"],
+                gap_severity=data["severity"],
+                mitigation_plan=data["mitigation_plan"],
+                estimated_cost=float(data.get("estimated_cost", 0)),
+                timeline_months=int(data.get("timeline_months", 0))
+            )
+            db.add(gap)
+            db.commit()
+        
+            flash("Gap analysis entry added!", "success")
+            return redirect(url_for("gap_analysis", program_id=program_id))
+    
+        gaps = db.query(GapAnalysis).filter(GapAnalysis.program_id == program_id).all()
+        close_session(db)
+    
+        return render_template("gap_analysis.html", program=program, gaps=gaps)
+
+    @app.route("/risk_indicators")
+    @login_required
+    def risk_indicators():
+        """Manage risk indicators for continuous monitoring"""
+        db = get_session()
+    
+        indicators = db.query(RiskIndicator).filter(RiskIndicator.is_active == True).all()
+    
+        # Get latest readings for each indicator
+        indicator_data = []
+        for indicator in indicators:
+            latest_reading = db.query(IndicatorReading).filter(
+                IndicatorReading.indicator_id == indicator.id
+            ).order_by(IndicatorReading.timestamp.desc()).first()
+        
+            indicator_data.append({
+                'indicator': indicator,
+                'latest_reading': latest_reading
+            })
+    
+        close_session(db)
+        return render_template("risk_indicators.html", indicator_data=indicator_data)
+
+    @app.route("/environmental_changes")
+    @login_required
+    def environmental_changes():
+        """Monitor environmental changes"""
+        db = get_session()
+    
+        changes = db.query(EnvironmentalChange).order_by(EnvironmentalChange.detection_date.desc()).all()
+        close_session(db)
+    
+        return render_template("environmental_changes.html", changes=changes)
+
+
+
+
+
+
     # --- Enhanced Risk Management Routes ---
 
     @app.route("/risk/<int:risk_id>")
@@ -1281,7 +1483,22 @@ def create_app():
         logging.info(f"DEBUG: Session active before mitigation plan: {db.is_active}")
         logging.info(f"DEBUG: Risk object session: {risk in db}")
 
+        # generating the mitigation plan
         mitigation_plan = generate_risk_mitigation_plan(risk_data_for_ai)
+
+        communication_plan = None
+        if risk.mitigation_plan_json:
+            stored_mitigation_plan = json.loads(risk.mitigation_plan_json)
+            communication_plan = generate_risk_communication_plan(risk_data_for_ai, stored_mitigation_plan)
+
+
+
+
+        # Saving mitigation plan to database
+        risk.mitigation_plan_json = json.dumps(mitigation_plan)
+        risk.mitigation_plan_updated = datetime.now(timezone.utc)
+        db.commit()
+
 
         # Pre-calculate values that template methods would access to prevent lazy loading
         business_impact_score = risk.calculate_business_impact_score()
@@ -1305,6 +1522,7 @@ def create_app():
                      governance_decisions=governance_decisions,
                      compliance_mappings=compliance_mappings,
                      mitigation_plan=mitigation_plan,
+                     communication_plan=communication_plan, 
                      business_impact_score=business_impact_score,
                      financial_impact_desc=financial_impact_desc,
                      operational_impact_desc=operational_impact_desc,
@@ -3149,5 +3367,128 @@ if __name__ == "__main__":
                 )
                 logging.info("Default admin user created")
 
+            ##############
+            # Seed risk management frameworks
+            frameworks_data = [
+            {
+                "name": "NIST RMF",
+                "version": "2.0",
+                "description": "NIST Risk Management Framework for information systems",
+                "customization_notes": "Adapted for general organizational risk management"
+            },
+            {
+                "name": "ISO 31000",
+                "version": "2018",
+                "description": "International standard for risk management",
+                "customization_notes": "Integrated with existing compliance frameworks"
+            },
+            {
+                "name": "COSO",
+                "version": "2017",
+                "description": "COSO Enterprise Risk Management framework",
+                "customization_notes": "Focused on enterprise-wide risk management"
+            }]
+
+            for fw_data in frameworks_data:
+                from sqlalchemy import text
+                result = conn.execute(text("SELECT id FROM risk_management_frameworks WHERE name = :name"), {"name": fw_data["name"]})
+                existing = result.fetchone()
+    
+                if not existing:
+                    conn.execute(text("""
+                    INSERT INTO risk_management_frameworks (name, version, description, customization_notes, is_active, created_at, updated_at)
+                    VALUES (:name, :version, :description, :customization_notes, :is_active, :created_at, :updated_at)"""), {
+                    "name": fw_data["name"],
+                    "version": fw_data["version"], 
+                    "description": fw_data["description"],
+                    "customization_notes": fw_data["customization_notes"],
+                    "is_active": True,
+                    "created_at": datetime.now(timezone.utc),
+                    "updated_at": datetime.now(timezone.utc)
+                 })
+
+
+            # Seed default risk indicators
+            indicators_data = [
+            {
+                "name": "Total Risk Count",
+                "description": "Total number of identified risks",
+                "indicator_type": "lagging",
+                "data_source": "risk_count",
+                "target_value": 50.0,
+                "threshold_warning": 75.0,
+                "threshold_critical": 100.0,
+                "unit": "count"
+            },
+            {
+                "name": "Critical Risk Count",
+                "description": "Number of critical severity risks",
+                "indicator_type": "leading",
+                "data_source": "critical_risk_count",
+                "target_value": 5.0,
+                "threshold_warning": 10.0,
+                "threshold_critical": 15.0,
+                "unit": "count"
+            },
+            {
+                "name": "Open Incidents",
+                "description": "Number of open security incidents",
+                "indicator_type": "leading",
+                "data_source": "open_incident_count",
+                "target_value": 2.0,
+                "threshold_warning": 5.0,
+                "threshold_critical": 10.0,
+                "unit": "count"
+            },
+            {
+                "name": "Compliance Score",
+                "description": "Average compliance assessment score",
+                "indicator_type": "lagging",
+                "data_source": "compliance_score",
+                "target_value": 85.0,
+                "threshold_warning": 70.0,
+                "threshold_critical": 50.0,
+                "unit": "percentage"
+            }]
+
+            for ind_data in indicators_data:
+                result = conn.execute(text("SELECT id FROM risk_indicators WHERE name = :name"), {"name": ind_data["name"]})
+                existing = result.fetchone()
+
+                if not existing:
+                    conn.execute(text("""INSERT INTO risk_indicators (name, description, indicator_type, data_source, calculation_method, 
+                         target_value, threshold_warning, threshold_critical, unit, frequency, is_active, created_at, updated_at)
+                         VALUES (:name, :description, :indicator_type, :data_source, :calculation_method, :target_value, 
+                         :threshold_warning, :threshold_critical, :unit, :frequency, :is_active, :created_at, :updated_at)"""), {
+                        "name": ind_data["name"],
+                        "description": ind_data["description"],
+                        "indicator_type": ind_data["indicator_type"],
+                        "data_source": ind_data["data_source"],
+                        "calculation_method": None,  # calculation_method
+                        "target_value": ind_data["target_value"],
+                        "threshold_warning": ind_data["threshold_warning"],
+                        "threshold_critical": ind_data["threshold_critical"],
+                        "unit": ind_data["unit"],
+                        "frequency": "daily",
+                        "is_active": True,
+                        "created_at": datetime.now(timezone.utc),
+                        "updated_at": datetime.now(timezone.utc)
+                        })
+
+    ##########
+
     # Enable debug mode for development (shows detailed error messages)
     app.run(debug=True, host="127.0.0.1", port=5000)
+
+
+    #from apscheduler.schedulers.background import BackgroundScheduler
+    # Initialize scheduler for continuous monitoring
+    #scheduler = BackgroundScheduler()
+    #scheduler.add_job(func=perform_continuous_monitoring, trigger="interval", hours=1, id="continuous_monitoring")
+    #scheduler.add_job(func=detect_environmental_changes, trigger="interval", days=1, id="environmental_scanning")
+    #scheduler.start()
+
+    # Shut down scheduler on app exit
+    #import atexit
+    #atexit.register(lambda: scheduler.shutdown())
+

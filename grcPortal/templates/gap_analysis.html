@@ -1,0 +1,214 @@
+<!-- templates/gap_analysis.html -->
+{% extends "base.html" %}
+
+{% block title %}Gap Analysis - {{ program.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-search text-warning"></i> Gap Analysis</h2>
+                    <p class="text-muted mb-0">{{ program.title }}</p>
+                </div>
+                <div>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addGapModal">
+                        <i class="fas fa-plus"></i> Add Gap
+                    </button>
+                    <a href="{{ url_for('view_program', program_id=program.id) }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Program
+                    </a>
+                </div>
+            </div>
+
+            <!-- Gap Analysis Summary -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ gaps|length }}</h5>
+                            <p class="card-text">Total Gaps</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger">{{ gaps|selectattr('gap_severity', 'equalto', 'critical')|list|length }}</h5>
+                            <p class="card-text">Critical Gaps</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-warning">{{ gaps|selectattr('status', 'equalto', 'open')|list|length }}</h5>
+                            <p class="card-text">Open Gaps</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">${{ gaps|sum(attribute='estimated_cost') }}</h5>
+                            <p class="card-text">Total Cost</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gaps List -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Gaps Identified</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if gaps %}
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Current State</th>
+                                            <th>Required State</th>
+                                            <th>Gap Description</th>
+                                            <th>Severity</th>
+                                            <th>Status</th>
+                                            <th>Cost</th>
+                                            <th>Timeline</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for gap in gaps %}
+                                        <tr>
+                                            <td><strong>{{ gap.requirement_category }}</strong></td>
+                                            <td>{{ gap.current_state or 'Not documented' }}</td>
+                                            <td>{{ gap.required_state or 'Not specified' }}</td>
+                                            <td>{{ gap.gap_description or 'No description' }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'danger' if gap.gap_severity == 'critical' else 'warning' if gap.gap_severity == 'high' else 'info' }}">
+                                                    {{ gap.gap_severity.title() }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if gap.status == 'closed' else 'warning' if gap.status == 'in_progress' else 'secondary' }}">
+                                                    {{ gap.status.replace('_', ' ').title() }}
+                                                </span>
+                                            </td>
+                                            <td>${{ gap.estimated_cost }}</td>
+                                            <td>{{ gap.timeline_months }} months</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" onclick="editGap({{ gap.id }})">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No Gaps Identified Yet</h5>
+                                <p class="text-muted">Start by adding your first gap analysis.</p>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGapModal">
+                                    <i class="fas fa-plus"></i> Add First Gap
+                                </button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Gap Modal -->
+<div class="modal fade" id="addGapModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Gap Analysis</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('gap_analysis', program_id=program.id) }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Requirement Category</label>
+                        <input type="text" class="form-control" id="category" name="category" required
+                               placeholder="e.g., Policy, Process, Technology, People">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="current_state" class="form-label">Current State</label>
+                        <textarea class="form-control" id="current_state" name="current_state" rows="3"
+                                  placeholder="Describe what currently exists..."></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="required_state" class="form-label">Required State</label>
+                        <textarea class="form-control" id="required_state" name="required_state" rows="3"
+                                  placeholder="Describe what should be in place..."></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="gap_description" class="form-label">Gap Description</label>
+                        <textarea class="form-control" id="gap_description" name="gap_description" rows="3" required
+                                  placeholder="Describe the specific gap and its impact..."></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="severity" class="form-label">Severity</label>
+                                <select class="form-select" id="severity" name="severity" required>
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="estimated_cost" class="form-label">Estimated Cost ($)</label>
+                                <input type="number" class="form-control" id="estimated_cost" name="estimated_cost" min="0">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="timeline_months" class="form-label">Timeline (Months)</label>
+                                <input type="number" class="form-control" id="timeline_months" name="timeline_months" min="0" value="3">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="mitigation_plan" class="form-label">Mitigation Plan</label>
+                        <textarea class="form-control" id="mitigation_plan" name="mitigation_plan" rows="3"
+                                  placeholder="Describe how to address this gap..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Add Gap Analysis</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function editGap(gapId) {
+    // Implement edit functionality
+    alert('Edit functionality for gap ' + gapId + ' - to be implemented');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,124 @@
+<!-- templates/create_program.html -->
+{% extends "base.html" %}
+
+{% block title %}Create Risk Management Program - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-plus text-success"></i> Create Risk Management Program</h2>
+                <a href="{{ url_for('risk_programs') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Programs
+                </a>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Program Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('create_program') }}">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Program Title</label>
+                                    <input type="text" class="form-control" id="title" name="title" required
+                                           placeholder="e.g., Enterprise Risk Management Program 2025">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="framework_id" class="form-label">Risk Management Framework</label>
+                                    <select class="form-select" id="framework_id" name="framework_id" required>
+                                        <option value="">Select Framework</option>
+                                        {% for framework in frameworks %}
+                                        <option value="{{ framework.id }}">{{ framework.name }} ({{ framework.version }})</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="start_date" class="form-label">Start Date</label>
+                                            <input type="date" class="form-control" id="start_date" name="start_date">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="end_date" class="form-label">End Date</label>
+                                            <input type="date" class="form-control" id="end_date" name="end_date">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="total_budget" class="form-label">Total Budget ($)</label>
+                                    <input type="number" class="form-control" id="total_budget" name="total_budget" 
+                                           placeholder="100000" min="0" step="1000">
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-save"></i> Create Program
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6>Framework Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="framework-info">
+                                <p class="text-muted">Select a framework to see details</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6>Program Benefits</h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Structured implementation approach</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Resource allocation planning</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Progress tracking and reporting</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Gap analysis and remediation</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Continuous monitoring setup</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('framework_id').addEventListener('change', function() {
+    const frameworkId = this.value;
+    const frameworks = {{ frameworks|tojson }};
+    const infoDiv = document.getElementById('framework-info');
+    
+    if (frameworkId) {
+        const framework = frameworks.find(f => f.id == frameworkId);
+        if (framework) {
+            infoDiv.innerHTML = `
+                <h6>${framework.name} (${framework.version})</h6>
+                <p>${framework.description}</p>
+                ${framework.customization_notes ? `<small class="text-info">Customization: ${framework.customization_notes}</small>` : ''}
+            `;
+        }
+    } else {
+        infoDiv.innerHTML = '<p class="text-muted">Select a framework to see details</p>';
+    }
+});
+</script>
+{% endblock %}
