@@ -3120,6 +3120,37 @@ def create_app():
         close_session(db)
         return render_template("asset_report.html", report=report)
 
+    @app.route("/framework_mapping")
+    @login_required
+    def framework_mapping():
+        """Visual framework mapping showing organizational alignment"""
+        db_session = get_session()
+        frameworks = db_session.query(RiskManagementFramework).filter_by(is_active=True).all()
+        close_session(db_session)
+
+        # Create mapping data structure
+        mapping_data = {
+            "executive": {
+                "nist_rmf": ["Prepare", "Categorize", "Authorize"],
+                "iso_31000": ["Establish context", "Risk treatment"],
+                "coso": ["Control environment", "Risk assessment"]
+            },
+            "management": {
+                "nist_rmf": ["Select", "Implement"],
+                "iso_31000": ["Risk analysis", "Risk evaluation"],
+                "coso": ["Control activities", "Information & communication"]
+            },
+            "technical": {
+                "nist_rmf": ["Assess", "Monitor"],
+                "iso_31000": ["Communication", "Monitoring"],
+                "coso": ["Monitoring activities"]
+            }
+        }
+
+        return render_template("framework_mapping.html",
+                             frameworks=frameworks,
+                             mapping_data=mapping_data)
+
 
     # Helper functions for risk generation
     def generate_risks_from_checklist(assessment_id):

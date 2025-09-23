@@ -376,7 +376,12 @@ class Risk(Base):
 
     def should_escalate(self):
         """Determine if risk should be escalated based on score and thresholds"""
-        return self.score >= self.risk_tolerance_threshold
+        if self.score >= self.risk_tolerance_threshold:
+            return True
+        if self.financial_impact >= 4 or self.operational_impact >= 4:
+            return True
+        return False
+
 
     def get_escalation_level(self):
         """Determine appropriate escalation level based on risk score"""

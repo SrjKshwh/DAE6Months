@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Framework Mapping - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-sitemap"></i> Framework Mapping & Organizational Alignment
+                    </h2>
+                    <p class="card-subtitle text-muted">
+                        Visual mapping of risk management frameworks across organizational levels
+                    </p>
+                </div>
+                <div class="card-body">
+                    <!-- Framework Overview -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h4>Active Frameworks</h4>
+                            <div class="row">
+                                {% for framework in frameworks %}
+                                <div class="col-md-4 mb-3">
+                                    <div class="card border-primary">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ framework.name }}</h5>
+                                            <p class="card-text">{{ framework.description }}</p>
+                                            <small class="text-muted">Version: {{ framework.version }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Organizational Levels Mapping -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>Organizational Alignment</h4>
+
+                            <!-- Executive Level -->
+                            <div class="card mb-4 border-warning">
+                                <div class="card-header bg-warning text-dark">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-crown"></i> Executive Level
+                                        <small class="text-muted">(Strategic oversight, board reporting)</small>
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        {% for framework_key, phases in mapping_data.executive.items() %}
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card h-100">
+                                                <div class="card-header">
+                                                    <h6 class="card-title mb-0">{{ framework_key.upper() }}</h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul class="list-group list-group-flush">
+                                                        {% for phase in phases %}
+                                                        <li class="list-group-item">{{ phase }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Management Level -->
+                            <div class="card mb-4 border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-users-cog"></i> Management Level
+                                        <small class="text-muted">(Operational risk management, resource allocation)</small>
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        {% for framework_key, phases in mapping_data.management.items() %}
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card h-100">
+                                                <div class="card-header">
+                                                    <h6 class="card-title mb-0">{{ framework_key.upper() }}</h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul class="list-group list-group-flush">
+                                                        {% for phase in phases %}
+                                                        <li class="list-group-item">{{ phase }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Technical Level -->
+                            <div class="card mb-4 border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-cogs"></i> Technical Level
+                                        <small class="text-muted">(Implementation of controls, monitoring)</small>
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        {% for framework_key, phases in mapping_data.technical.items() %}
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card h-100">
+                                                <div class="card-header">
+                                                    <h6 class="card-title mb-0">{{ framework_key.upper() }}</h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul class="list-group list-group-flush">
+                                                        {% for phase in phases %}
+                                                        <li class="list-group-item">{{ phase }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Framework Integration Notes -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Integration Guidelines</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-info">
+                                        <h6><i class="fas fa-info-circle"></i> Framework Integration</h6>
+                                        <p>This mapping shows how different risk management frameworks align across organizational levels. Each framework provides specific guidance for different aspects of risk management:</p>
+                                        <ul>
+                                            <li><strong>NIST RMF:</strong> Focuses on information system risk management with structured phases</li>
+                                            <li><strong>ISO 31000:</strong> Provides principles and guidelines for risk management processes</li>
+                                            <li><strong>COSO:</strong> Emphasizes internal controls and enterprise risk management</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
