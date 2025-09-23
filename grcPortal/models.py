@@ -47,6 +47,38 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Boolean, DateTime, ForeignKey, Text, Float, Enum
 from enum import Enum as PyEnum
 
+
+def calculate_emv(probability: float, impact: float) -> float:
+    """
+    Calculate Expected Monetary Value (EMV).
+
+    EMV = Probability × Impact
+
+    Args:
+        probability: Probability of occurrence (0-1)
+        impact: Financial impact amount
+
+    Returns:
+        float: Expected monetary value
+    """
+    return probability * impact
+
+
+def calculate_ale(probability: float, impact: float) -> float:
+    """
+    Calculate Annual Loss Expectancy (ALE).
+
+    ALE = Probability × Impact
+
+    Args:
+        probability: Annual probability of occurrence (0-1)
+        impact: Single loss expectancy (financial impact)
+
+    Returns:
+        float: Annual loss expectancy
+    """
+    return probability * impact
+
 class ComplianceFramework(PyEnum):
     NIST_SP_800_53 = "NIST SP 800-53"
     NIST_CSF = "NIST CSF"
@@ -324,6 +356,11 @@ class Risk(Base):
     mtd_hours: Mapped[float] = mapped_column(Float, nullable=True)  # Maximum Tolerable Downtime in hours
     financial_impact_amount: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)  # Financial impact in currency
     dependency_mapping: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string of dependencies
+
+    # Quantitative Risk Analysis
+    annual_occurrence_probability: Mapped[float] = mapped_column(Float, nullable=True)  # Probability of occurrence per year (0-1)
+    ale_calculated: Mapped[float] = mapped_column(Float, nullable=True)  # Calculated Annual Loss Expectancy
+    emv_calculated: Mapped[float] = mapped_column(Float, nullable=True)  # Calculated Expected Monetary Value
     
     # Evaluation criteria documentation
     evaluation_criteria: Mapped[str] = mapped_column(Text, nullable=True)  # Documented evaluation criteria
@@ -360,6 +397,18 @@ class Risk(Base):
     def calculate_emv(self, mitigation_cost: float = 0.0):
         """Calculate Expected Monetary Value"""
         self.emv = self.ale - mitigation_cost
+
+    def calculate_quantitative_metrics(self):
+        """Calculate EMV and ALE using quantitative risk analysis"""
+        if self.financial_impact_amount and self.annual_occurrence_probability:
+            self.emv_calculated = calculate_emv(
+                self.annual_occurrence_probability,
+                self.financial_impact_amount
+            )
+            self.ale_calculated = calculate_ale(
+                self.annual_occurrence_probability,
+                self.financial_impact_amount
+            )
 
     def calculate_residual_score(self):
         """Calculate residual risk score after mitigation"""
