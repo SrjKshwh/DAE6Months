@@ -619,24 +619,43 @@ def create_app():
             limit: Maximum number of logs to return
 
         Returns:
-            List of audit log entries
+            List of audit log dictionaries
         """
         db = get_session()
         if user.role in ["admin", "auditor"]:
-            logs = db.query(AuditLog).order_by(AuditLog.created_at.desc()).limit(limit).all()
+            logs_query = db.query(AuditLog).order_by(AuditLog.created_at.desc()).limit(limit)
             log_audit_event(user, "AUDIT_LOG_ACCESS", "ADMINISTRATION",
-                          f"Accessed {len(logs)} audit log entries", "/audit/logs", True)
+                           f"Accessed {len(logs_query.all())} audit log entries", "/audit/logs", True)
         else:
-            logs = (db.query(AuditLog)
-                   .filter(AuditLog.user_id == user.id)
-                   .order_by(AuditLog.created_at.desc())
-                   .limit(limit)
-                   .all())
+            logs_query = (db.query(AuditLog)
+                         .filter(AuditLog.user_id == user.id)
+                         .order_by(AuditLog.created_at.desc())
+                         .limit(limit))
             log_audit_event(user, "PERSONAL_AUDIT_ACCESS", "COMPLIANCE",
-                          f"Accessed {len(logs)} personal audit log entries", "/audit/logs", True)
+                           f"Accessed {len(logs_query.all())} personal audit log entries", "/audit/logs", True)
+
+        # Convert to dictionaries before closing session
+        logs_data = []
+        for log in logs_query:
+            log_dict = {
+                'id': log.id,
+                'user_id': log.user_id,
+                'action': log.action,
+                'category': log.category,
+                'description': log.description,
+                'resource': log.resource,
+                'ip_address': log.ip_address,
+                'user_agent': log.user_agent,
+                'success': log.success,
+                'created_at': log.created_at,
+                'user': {
+                    'email': log.user.email if log.user else 'System'
+                } if log.user else None
+            }
+            logs_data.append(log_dict)
 
         close_session(db)
-        return logs
+        return logs_data
 
     # ---------------------------
     # Routes
@@ -1162,6 +1181,33 @@ def create_app():
         filename = secure_filename(filename)
         return send_from_directory("evidence", filename, as_attachment=True)
 
+    @app.route("/docs/<path:filename>")
+    @login_required
+    def docs_file(filename):
+        """
+        Serve documentation files securely.
+
+        Provides access to documentation files in the docs/ directory
+        for authenticated users.
+
+        Args:
+            filename (str): Requested documentation filename from URL path
+
+        Security Features:
+            - User authentication required (@login_required)
+            - Path traversal prevention via secure_filename()
+            - Restricted to docs/ directory only
+
+        Returns:
+            File response for viewing documentation
+
+        Note:
+            Allows access to .md files and other documentation
+        """
+        # Output encoding to avoid path traversal
+        filename = secure_filename(filename)
+        return send_from_directory("docs", filename, as_attachment=False)
+
   
     # --- Risk Routes ---
     @app.route("/risks")
@@ -1487,9 +1533,10 @@ def create_app():
         mitigation_plan = generate_risk_mitigation_plan(risk_data_for_ai)
 
         communication_plan = None
-        if risk.mitigation_plan_json:
-            stored_mitigation_plan = json.loads(risk.mitigation_plan_json)
-            communication_plan = generate_risk_communication_plan(risk_data_for_ai, stored_mitigation_plan)
+        # Communication plan generation not implemented yet
+        # if risk.mitigation_plan_json:
+        #     stored_mitigation_plan = json.loads(risk.mitigation_plan_json)
+        #     communication_plan = generate_risk_communication_plan(risk_data_for_ai, stored_mitigation_plan)
 
 
 
@@ -1507,6 +1554,17 @@ def create_app():
         compliance_impact_desc = risk.get_impact_description("compliance", risk.compliance_impact)
         reputation_impact_desc = risk.get_impact_description("reputation", risk.reputation_impact)
 
+        # Calculate quantitative analysis metrics
+        # EMV (Expected Monetary Value) = Probability × Impact
+        probability = risk.likelihood / 5.0  # Convert 1-5 scale to 0-1 probability
+        emv = probability * (risk.financial_impact_amount or 0)
+
+        # ALE (Annual Loss Expectancy) = SLE × ARO
+        # Assuming likelihood represents annual rate of occurrence (ARO)
+        sle = risk.financial_impact_amount or 0  # Single Loss Expectancy
+        aro = risk.likelihood  # Annual Rate of Occurrence
+        ale = sle * aro
+
         # DEBUG: Log before session close
         logging.info(f"DEBUG: About to close session. Risk ID: {risk.id}")
         logging.info(f"DEBUG: Approvals count: {len(approvals)}")
@@ -1522,12 +1580,14 @@ def create_app():
                      governance_decisions=governance_decisions,
                      compliance_mappings=compliance_mappings,
                      mitigation_plan=mitigation_plan,
-                     communication_plan=communication_plan, 
+                     communication_plan=communication_plan,
                      business_impact_score=business_impact_score,
                      financial_impact_desc=financial_impact_desc,
                      operational_impact_desc=operational_impact_desc,
                      compliance_impact_desc=compliance_impact_desc,
-                     reputation_impact_desc=reputation_impact_desc)
+                     reputation_impact_desc=reputation_impact_desc,
+                     emv=emv,
+                     ale=ale)
         logging.info(f"DEBUG: Template rendered successfully, closing session for risk {risk.id}")
         close_session(db)
 
@@ -2129,7 +2189,7 @@ def create_app():
             Rendered admin users template with user management interface
         """
         users = get_visible_users(current_user())
-        return render_template("admin_users.html", users=users)
+        return render_template("admin_users.html", users=users, current_user=current_user())
 
     @app.route("/admin/change_role/<int:user_id>", methods=["POST"])
     @login_required
@@ -2248,27 +2308,7 @@ def create_app():
             Rendered audit logs template with filtered log entries
         """
         user = current_user()
-        logs = get_audit_logs(user)
-
-        # Convert SQLAlchemy objects to dictionaries to avoid session issues
-        audit_logs_data = []
-        for log in logs:
-            log_dict = {
-                'id': log.id,
-                'user_id': log.user_id,
-                'action': log.action,
-                'category': log.category,
-                'description': log.description,
-                'resource': log.resource,
-                'ip_address': log.ip_address,
-                'user_agent': log.user_agent,
-                'success': log.success,
-                'created_at': log.created_at,
-                'user': {
-                    'email': log.user.email if log.user else 'System'
-                } if log.user else None
-            }
-            audit_logs_data.append(log_dict)
+        audit_logs_data = get_audit_logs(user)
 
         return render_template("audit_logs.html", audit_logs=audit_logs_data)
 

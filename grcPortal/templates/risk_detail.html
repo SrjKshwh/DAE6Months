@@ -429,6 +429,11 @@
                         <p>Financial Impact: ${{ risk.financial_impact_amount }}</p>
                         <p>Calculated BIA Score: {{ business_impact_score }}</p>
 
+                        <h3>Quantitative Analysis</h3>
+                        <p><strong>EMV (Expected Monetary Value):</strong> ${{ "%.2f"|format(emv) }}</p>
+                        <p><strong>ALE (Annual Loss Expectancy):</strong> ${{ "%.2f"|format(ale) }}</p>
+                        <p><small class="text-muted">EMV = Probability × Financial Impact<br>ALE = SLE × ARO (Annual Rate of Occurrence)</small></p>
+
                         <h3>Multi-Criteria Risk Score</h3>
                         <p>Financial Impact: {{ financial_impact_desc }}</p>
                         <p>Operational Impact: {{ operational_impact_desc }}</p>

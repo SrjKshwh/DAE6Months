@@ -4373,3 +4373,407 @@ sqlalchemy.orm.exc.DetachedInstanceError: Instance <AuditLog at 0x1eae5ea9f40> i
 2025-09-23 12:54:17,291 [INFO]  * Restarting with stat
 2025-09-23 12:54:21,731 [WARNING]  * Debugger is active!
 2025-09-23 12:54:21,733 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:44:02,345 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-24 13:44:02,346 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-24 13:44:02,348 [INFO]  * Restarting with stat
+2025-09-24 13:44:03,306 [WARNING]  * Debugger is active!
+2025-09-24 13:44:03,309 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:44:08,987 [INFO] 127.0.0.1 - - [24/Sep/2025 13:44:08] "GET / HTTP/1.1" 200 -
+2025-09-24 13:44:09,078 [INFO] 127.0.0.1 - - [24/Sep/2025 13:44:09] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 13:44:09,121 [INFO] 127.0.0.1 - - [24/Sep/2025 13:44:09] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-09-24 13:44:09,232 [INFO] 127.0.0.1 - - [24/Sep/2025 13:44:09] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-09-24 13:44:18,122 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-09-24 13:44:18,136 [INFO] 127.0.0.1 - - [24/Sep/2025 13:44:18] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-09-24 13:44:18,154 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 13:44:18,175 [ERROR] Error loading risks for scan result: (sqlite3.OperationalError) no such column: risks_1.annual_occurrence_probability
+[SQL: SELECT anon_1.scan_results_id AS anon_1_scan_results_id, anon_1.scan_results_upload_id AS anon_1_scan_results_upload_id, anon_1.scan_results_summary AS anon_1_scan_results_summary, anon_1.scan_results_compliance_hits_json AS anon_1_scan_results_compliance_hits_json, anon_1.scan_results_risks_json AS anon_1_scan_results_risks_json, anon_1.scan_results_scanned_at AS anon_1_scan_results_scanned_at, risks_1.id AS risks_1_id, risks_1.asset AS risks_1_asset, risks_1.threat AS risks_1_threat, risks_1.vulnerability AS risks_1_vulnerability, risks_1.control AS risks_1_control, risks_1.compliance_standard AS risks_1_compliance_standard, risks_1.status AS risks_1_status, risks_1.category AS risks_1_category, risks_1.likelihood AS risks_1_likelihood, risks_1.impact AS risks_1_impact, risks_1.score AS risks_1_score, risks_1.severity AS risks_1_severity, risks_1.ale AS risks_1_ale, risks_1.emv AS risks_1_emv, risks_1.mitigation_plan AS risks_1_mitigation_plan, risks_1.residual_risk AS risks_1_residual_risk, risks_1.owner AS risks_1_owner, risks_1.treatment AS risks_1_treatment, risks_1.rmf_phase AS risks_1_rmf_phase, risks_1.approval_status AS risks_1_approval_status, risks_1.approver_id AS risks_1_approver_id, risks_1.asset_value AS risks_1_asset_value, risks_1.mitigation_cost AS risks_1_mitigation_cost, risks_1.business_impact AS risks_1_business_impact, risks_1.regulatory_impact AS risks_1_regulatory_impact, risks_1.risk_appetite_level AS risks_1_risk_appetite_level, risks_1.residual_likelihood AS risks_1_residual_likelihood, risks_1.residual_impact AS risks_1_residual_impact, risks_1.residual_score AS risks_1_residual_score, risks_1.escalation_level AS risks_1_escalation_level, risks_1.escalated_to AS risks_1_escalated_to, risks_1.escalation_reason AS risks_1_escalation_reason, risks_1.escalation_date AS risks_1_escalation_date, risks_1.risk_tolerance_threshold AS risks_1_risk_tolerance_threshold, risks_1.risk_appetite_alignment AS risks_1_risk_appetite_alignment, risks_1.last_reviewed AS risks_1_last_reviewed, risks_1.next_review_date AS risks_1_next_review_date, risks_1.review_frequency_days AS risks_1_review_frequency_days, risks_1.created_at AS risks_1_created_at, risks_1.updated_at AS risks_1_updated_at, risks_1.scan_result_id AS risks_1_scan_result_id, risks_1.financial_impact AS risks_1_financial_impact, risks_1.operational_impact AS risks_1_operational_impact, risks_1.compliance_impact AS risks_1_compliance_impact, risks_1.reputation_impact AS risks_1_reputation_impact, risks_1.financial_weight AS risks_1_financial_weight, risks_1.operational_weight AS risks_1_operational_weight, risks_1.compliance_weight AS risks_1_compliance_weight, risks_1.reputation_weight AS risks_1_reputation_weight, risks_1.rto_hours AS risks_1_rto_hours, risks_1.rpo_hours AS risks_1_rpo_hours, risks_1.mtd_hours AS risks_1_mtd_hours, risks_1.financial_impact_amount AS risks_1_financial_impact_amount, risks_1.dependency_mapping AS risks_1_dependency_mapping, risks_1.annual_occurrence_probability AS risks_1_annual_occurrence_probability, risks_1.ale_calculated AS risks_1_ale_calculated, risks_1.emv_calculated AS risks_1_emv_calculated, risks_1.evaluation_criteria AS risks_1_evaluation_criteria, risks_1.stakeholder_approval_required AS risks_1_stakeholder_approval_required, risks_1.stakeholder_approval_notes AS risks_1_stakeholder_approval_notes, risks_1.mitigation_plan_json AS risks_1_mitigation_plan_json, risks_1.mitigation_plan_updated AS risks_1_mitigation_plan_updated 
+FROM (SELECT scan_results.id AS scan_results_id, scan_results.upload_id AS scan_results_upload_id, scan_results.summary AS scan_results_summary, scan_results.compliance_hits_json AS scan_results_compliance_hits_json, scan_results.risks_json AS scan_results_risks_json, scan_results.scanned_at AS scan_results_scanned_at 
+FROM scan_results 
+WHERE scan_results.id = ?
+ LIMIT ? OFFSET ?) AS anon_1 LEFT OUTER JOIN risks AS risks_1 ON anon_1.scan_results_id = risks_1.scan_result_id]
+[parameters: (18, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-09-24 13:44:18,230 [INFO] 127.0.0.1 - - [24/Sep/2025 13:44:18] "GET /home HTTP/1.1" 200 -
+2025-09-24 13:44:18,268 [INFO] 127.0.0.1 - - [24/Sep/2025 13:44:18] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 13:44:50,299 [INFO] 127.0.0.1 - - [24/Sep/2025 13:44:50] "[33mGET /templates/create_program.html HTTP/1.1[0m" 404 -
+2025-09-24 13:44:50,326 [INFO] 127.0.0.1 - - [24/Sep/2025 13:44:50] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 13:48:34,785 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\migrations\\versions\\add_missing_risk_fields.py', reloading
+2025-09-24 13:48:35,055 [INFO]  * Restarting with stat
+2025-09-24 13:48:36,894 [WARNING]  * Debugger is active!
+2025-09-24 13:48:36,898 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:48:52,010 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:48:52,276 [INFO]  * Restarting with stat
+2025-09-24 13:48:54,176 [WARNING]  * Debugger is active!
+2025-09-24 13:48:54,178 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:49:27,811 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-24 13:49:27,811 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-24 13:49:27,814 [INFO]  * Restarting with stat
+2025-09-24 13:49:28,815 [WARNING]  * Debugger is active!
+2025-09-24 13:49:28,817 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:50:47,730 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:50:47,965 [INFO]  * Restarting with stat
+2025-09-24 13:50:49,589 [WARNING]  * Debugger is active!
+2025-09-24 13:50:49,593 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:50:50,624 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:50:50,853 [INFO]  * Restarting with stat
+2025-09-24 13:50:51,230 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:50:51,400 [INFO]  * Restarting with stat
+2025-09-24 13:50:52,320 [WARNING]  * Debugger is active!
+2025-09-24 13:50:52,323 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:50:52,687 [WARNING]  * Debugger is active!
+2025-09-24 13:50:52,689 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:51:20,874 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-24 13:51:20,875 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-24 13:51:20,876 [INFO]  * Restarting with stat
+2025-09-24 13:51:21,844 [WARNING]  * Debugger is active!
+2025-09-24 13:51:21,846 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:52:57,312 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:52:57,625 [INFO]  * Restarting with stat
+2025-09-24 13:52:57,909 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:52:58,225 [INFO]  * Restarting with stat
+2025-09-24 13:52:59,503 [WARNING]  * Debugger is active!
+2025-09-24 13:52:59,506 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:52:59,998 [WARNING]  * Debugger is active!
+2025-09-24 13:53:00,002 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:53:00,331 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:53:00,523 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:53:00,567 [INFO]  * Restarting with stat
+2025-09-24 13:53:00,784 [INFO]  * Restarting with stat
+2025-09-24 13:53:02,324 [WARNING]  * Debugger is active!
+2025-09-24 13:53:02,326 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:53:02,555 [WARNING]  * Debugger is active!
+2025-09-24 13:53:02,557 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:53:34,083 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-24 13:53:34,083 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-24 13:53:34,085 [INFO]  * Restarting with stat
+2025-09-24 13:53:35,023 [WARNING]  * Debugger is active!
+2025-09-24 13:53:35,025 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:55:03,904 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:55:04,079 [INFO]  * Restarting with stat
+2025-09-24 13:55:04,149 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:55:04,376 [INFO]  * Restarting with stat
+2025-09-24 13:55:04,600 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:55:04,837 [INFO]  * Restarting with stat
+2025-09-24 13:55:06,000 [WARNING]  * Debugger is active!
+2025-09-24 13:55:06,004 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:55:06,350 [WARNING]  * Debugger is active!
+2025-09-24 13:55:06,354 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:55:06,464 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:55:06,594 [WARNING]  * Debugger is active!
+2025-09-24 13:55:06,599 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:55:06,672 [INFO]  * Restarting with stat
+2025-09-24 13:55:07,021 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:55:07,179 [INFO]  * Restarting with stat
+2025-09-24 13:55:08,062 [WARNING]  * Debugger is active!
+2025-09-24 13:55:08,065 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:55:08,548 [WARNING]  * Debugger is active!
+2025-09-24 13:55:08,550 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:55:39,182 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-24 13:55:39,182 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-24 13:55:39,184 [INFO]  * Restarting with stat
+2025-09-24 13:55:40,136 [WARNING]  * Debugger is active!
+2025-09-24 13:55:40,138 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:57:15,660 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:57:15,930 [INFO]  * Restarting with stat
+2025-09-24 13:57:15,973 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:57:16,141 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:57:16,223 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:57:16,238 [INFO]  * Restarting with stat
+2025-09-24 13:57:16,540 [INFO]  * Restarting with stat
+2025-09-24 13:57:16,613 [INFO]  * Restarting with stat
+2025-09-24 13:57:18,185 [WARNING]  * Debugger is active!
+2025-09-24 13:57:18,188 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:57:18,613 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:57:18,718 [WARNING]  * Debugger is active!
+2025-09-24 13:57:18,721 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:57:18,855 [INFO]  * Restarting with stat
+2025-09-24 13:57:18,880 [WARNING]  * Debugger is active!
+2025-09-24 13:57:18,885 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:57:18,918 [WARNING]  * Debugger is active!
+2025-09-24 13:57:18,924 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:57:19,206 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\add_columns.py', reloading
+2025-09-24 13:57:19,434 [INFO]  * Restarting with stat
+2025-09-24 13:57:20,527 [WARNING]  * Debugger is active!
+2025-09-24 13:57:20,529 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:57:20,823 [WARNING]  * Debugger is active!
+2025-09-24 13:57:20,825 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 13:57:54,270 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-24 13:57:54,270 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-24 13:57:54,271 [INFO]  * Restarting with stat
+2025-09-24 13:57:55,209 [WARNING]  * Debugger is active!
+2025-09-24 13:57:55,211 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 14:18:04,601 [INFO] Default admin user created
+2025-09-24 14:18:04,653 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-24 14:18:04,654 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-24 14:18:04,656 [INFO]  * Restarting with stat
+2025-09-24 14:18:05,637 [WARNING]  * Debugger is active!
+2025-09-24 14:18:05,641 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 14:18:09,501 [INFO] 127.0.0.1 - - [24/Sep/2025 14:18:09] "GET / HTTP/1.1" 200 -
+2025-09-24 14:18:09,581 [INFO] 127.0.0.1 - - [24/Sep/2025 14:18:09] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:18:09,611 [INFO] 127.0.0.1 - - [24/Sep/2025 14:18:09] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-09-24 14:18:09,678 [INFO] 127.0.0.1 - - [24/Sep/2025 14:18:09] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-09-24 14:18:17,769 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-09-24 14:18:17,785 [INFO] 127.0.0.1 - - [24/Sep/2025 14:18:17] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-09-24 14:18:17,804 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 14:18:17,862 [INFO] 127.0.0.1 - - [24/Sep/2025 14:18:17] "GET /home HTTP/1.1" 200 -
+2025-09-24 14:18:17,900 [INFO] 127.0.0.1 - - [24/Sep/2025 14:18:17] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:19:12,460 [INFO] 127.0.0.1 - - [24/Sep/2025 14:19:12] "GET /create_program HTTP/1.1" 200 -
+2025-09-24 14:19:12,481 [INFO] 127.0.0.1 - - [24/Sep/2025 14:19:12] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:21:10,336 [INFO] 127.0.0.1 - - [24/Sep/2025 14:21:10] "GET /create_program HTTP/1.1" 200 -
+2025-09-24 14:21:10,352 [INFO] 127.0.0.1 - - [24/Sep/2025 14:21:10] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:21:29,912 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/users
+2025-09-24 14:21:29,914 [INFO] Governance: Admin kush786srj@gmail.com accessed all user accounts
+2025-09-24 14:21:30,006 [INFO] 127.0.0.1 - - [24/Sep/2025 14:21:30] "[35m[1mGET /admin/users HTTP/1.1[0m" 500 -
+2025-09-24 14:21:30,056 [INFO] 127.0.0.1 - - [24/Sep/2025 14:21:30] "GET /admin/users?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-09-24 14:21:30,089 [INFO] 127.0.0.1 - - [24/Sep/2025 14:21:30] "GET /admin/users?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-09-24 14:21:30,126 [INFO] 127.0.0.1 - - [24/Sep/2025 14:21:30] "GET /admin/users?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-09-24 14:21:30,135 [INFO] 127.0.0.1 - - [24/Sep/2025 14:21:30] "[36mGET /admin/users?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-24 14:22:45,014 [INFO] 127.0.0.1 - - [24/Sep/2025 14:22:45] "[32mGET /admin/users HTTP/1.1[0m" 302 -
+2025-09-24 14:22:45,021 [INFO] 127.0.0.1 - - [24/Sep/2025 14:22:45] "GET /login HTTP/1.1" 200 -
+2025-09-24 14:22:45,275 [INFO] 127.0.0.1 - - [24/Sep/2025 14:22:45] "GET /static/main.css HTTP/1.1" 200 -
+2025-09-24 14:22:45,595 [INFO] 127.0.0.1 - - [24/Sep/2025 14:22:45] "GET /static/images/cybersecurityBG.png HTTP/1.1" 200 -
+2025-09-24 14:22:45,846 [INFO] 127.0.0.1 - - [24/Sep/2025 14:22:45] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-09-24 14:23:19,354 [INFO] 127.0.0.1 - - [24/Sep/2025 14:23:19] "POST /login HTTP/1.1" 200 -
+2025-09-24 14:23:19,536 [INFO] 127.0.0.1 - - [24/Sep/2025 14:23:19] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:23:19,862 [INFO] 127.0.0.1 - - [24/Sep/2025 14:23:19] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-09-24 14:24:02,448 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-09-24 14:24:02,459 [INFO] 127.0.0.1 - - [24/Sep/2025 14:24:02] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-09-24 14:24:02,603 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 14:24:02,607 [INFO] 127.0.0.1 - - [24/Sep/2025 14:24:02] "GET /home HTTP/1.1" 200 -
+2025-09-24 14:24:02,931 [INFO] 127.0.0.1 - - [24/Sep/2025 14:24:02] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:24:11,339 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/users
+2025-09-24 14:24:11,342 [INFO] Governance: Admin kush786srj@gmail.com accessed all user accounts
+2025-09-24 14:24:11,361 [INFO] 127.0.0.1 - - [24/Sep/2025 14:24:11] "[35m[1mGET /admin/users HTTP/1.1[0m" 500 -
+2025-09-24 14:24:11,646 [INFO] 127.0.0.1 - - [24/Sep/2025 14:24:11] "GET /admin/users?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-09-24 14:24:11,694 [INFO] 127.0.0.1 - - [24/Sep/2025 14:24:11] "GET /admin/users?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-09-24 14:24:12,028 [INFO] 127.0.0.1 - - [24/Sep/2025 14:24:12] "GET /admin/users?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-09-24 14:24:12,293 [INFO] 127.0.0.1 - - [24/Sep/2025 14:24:12] "[36mGET /admin/users?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-24 14:25:31,688 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/users
+2025-09-24 14:25:31,690 [INFO] Governance: Admin kush786srj@gmail.com accessed all user accounts
+2025-09-24 14:25:31,712 [INFO] 127.0.0.1 - - [24/Sep/2025 14:25:31] "[35m[1mGET /admin/users HTTP/1.1[0m" 500 -
+2025-09-24 14:25:31,725 [INFO] 127.0.0.1 - - [24/Sep/2025 14:25:31] "[36mGET /admin/users?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-24 14:25:31,949 [INFO] 127.0.0.1 - - [24/Sep/2025 14:25:31] "[36mGET /admin/users?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-24 14:25:33,141 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/users
+2025-09-24 14:25:33,144 [INFO] Governance: Admin kush786srj@gmail.com accessed all user accounts
+2025-09-24 14:25:33,169 [INFO] 127.0.0.1 - - [24/Sep/2025 14:25:33] "[35m[1mGET /admin/users HTTP/1.1[0m" 500 -
+2025-09-24 14:25:33,447 [INFO] 127.0.0.1 - - [24/Sep/2025 14:25:33] "[36mGET /admin/users?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-24 14:25:33,513 [INFO] 127.0.0.1 - - [24/Sep/2025 14:25:33] "[36mGET /admin/users?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-24 14:25:33,847 [INFO] 127.0.0.1 - - [24/Sep/2025 14:25:33] "GET /admin/users?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-09-24 14:25:34,097 [INFO] 127.0.0.1 - - [24/Sep/2025 14:25:34] "[36mGET /admin/users?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-24 14:25:41,221 [INFO] 127.0.0.1 - - [24/Sep/2025 14:25:41] "[33mGET /admin_users HTTP/1.1[0m" 404 -
+2025-09-24 14:25:41,524 [INFO] 127.0.0.1 - - [24/Sep/2025 14:25:41] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:26:34,931 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/users
+2025-09-24 14:26:34,932 [INFO] Governance: Admin kush786srj@gmail.com accessed all user accounts
+2025-09-24 14:26:34,938 [INFO] 127.0.0.1 - - [24/Sep/2025 14:26:34] "[35m[1mGET /admin/users HTTP/1.1[0m" 500 -
+2025-09-24 14:26:34,956 [INFO] 127.0.0.1 - - [24/Sep/2025 14:26:34] "[36mGET /admin/users?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-09-24 14:26:35,197 [INFO] 127.0.0.1 - - [24/Sep/2025 14:26:35] "[36mGET /admin/users?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-09-24 14:26:35,529 [INFO] 127.0.0.1 - - [24/Sep/2025 14:26:35] "[36mGET /admin/users?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-24 14:27:05,896 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\app.py', reloading
+2025-09-24 14:27:06,380 [INFO]  * Restarting with stat
+2025-09-24 14:27:07,756 [WARNING]  * Debugger is active!
+2025-09-24 14:27:07,762 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 14:27:35,277 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/users
+2025-09-24 14:27:35,278 [INFO] Governance: Admin kush786srj@gmail.com accessed all user accounts
+2025-09-24 14:27:35,291 [INFO] 127.0.0.1 - - [24/Sep/2025 14:27:35] "GET /admin/users HTTP/1.1" 200 -
+2025-09-24 14:27:35,334 [INFO] 127.0.0.1 - - [24/Sep/2025 14:27:35] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:29:09,649 [INFO] 127.0.0.1 - - [24/Sep/2025 14:29:09] "[35m[1mGET /audit/logs HTTP/1.1[0m" 500 -
+2025-09-24 14:29:09,684 [INFO] 127.0.0.1 - - [24/Sep/2025 14:29:09] "GET /audit/logs?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-09-24 14:29:09,796 [INFO] 127.0.0.1 - - [24/Sep/2025 14:29:09] "GET /audit/logs?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-09-24 14:29:10,128 [INFO] 127.0.0.1 - - [24/Sep/2025 14:29:10] "GET /audit/logs?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-09-24 14:29:10,377 [INFO] 127.0.0.1 - - [24/Sep/2025 14:29:10] "[36mGET /audit/logs?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-24 14:29:45,754 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\app.py', reloading
+2025-09-24 14:29:45,961 [INFO]  * Restarting with stat
+2025-09-24 14:29:47,219 [WARNING]  * Debugger is active!
+2025-09-24 14:29:47,223 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 14:30:03,332 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\app.py', reloading
+2025-09-24 14:30:03,516 [INFO]  * Restarting with stat
+2025-09-24 14:30:04,704 [WARNING]  * Debugger is active!
+2025-09-24 14:30:04,708 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 14:30:16,603 [INFO] 127.0.0.1 - - [24/Sep/2025 14:30:16] "GET /audit/logs HTTP/1.1" 200 -
+2025-09-24 14:30:16,647 [INFO] 127.0.0.1 - - [24/Sep/2025 14:30:16] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:32:10,464 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\app.py', reloading
+2025-09-24 14:32:10,674 [INFO]  * Restarting with stat
+2025-09-24 14:32:11,831 [WARNING]  * Debugger is active!
+2025-09-24 14:32:11,833 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 14:33:15,146 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\app.py', reloading
+2025-09-24 14:33:15,281 [INFO]  * Restarting with stat
+2025-09-24 14:33:16,324 [WARNING]  * Debugger is active!
+2025-09-24 14:33:16,327 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 14:33:26,668 [INFO] 127.0.0.1 - - [24/Sep/2025 14:33:26] "GET /docs/gdpr_compliance_matrix.md HTTP/1.1" 200 -
+2025-09-24 14:35:21,466 [INFO] 127.0.0.1 - - [24/Sep/2025 14:35:21] "[32mGET /framework_mapping HTTP/1.1[0m" 302 -
+2025-09-24 14:35:21,505 [INFO] 127.0.0.1 - - [24/Sep/2025 14:35:21] "GET /login HTTP/1.1" 200 -
+2025-09-24 14:35:21,729 [INFO] 127.0.0.1 - - [24/Sep/2025 14:35:21] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:35:22,049 [INFO] 127.0.0.1 - - [24/Sep/2025 14:35:22] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-09-24 14:35:30,223 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-09-24 14:35:30,235 [INFO] 127.0.0.1 - - [24/Sep/2025 14:35:30] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-09-24 14:35:30,358 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 14:35:30,390 [INFO] 127.0.0.1 - - [24/Sep/2025 14:35:30] "GET /home HTTP/1.1" 200 -
+2025-09-24 14:35:30,733 [INFO] 127.0.0.1 - - [24/Sep/2025 14:35:30] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:35:36,724 [INFO] 127.0.0.1 - - [24/Sep/2025 14:35:36] "GET /framework_mapping HTTP/1.1" 200 -
+2025-09-24 14:35:36,986 [INFO] 127.0.0.1 - - [24/Sep/2025 14:35:36] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:38:21,652 [INFO] 127.0.0.1 - - [24/Sep/2025 14:38:21] "GET /brainstorming HTTP/1.1" 200 -
+2025-09-24 14:38:21,677 [INFO] 127.0.0.1 - - [24/Sep/2025 14:38:21] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:39:01,322 [INFO] 127.0.0.1 - - [24/Sep/2025 14:39:01] "GET /checklists HTTP/1.1" 200 -
+2025-09-24 14:39:01,581 [INFO] 127.0.0.1 - - [24/Sep/2025 14:39:01] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:39:44,493 [INFO] 127.0.0.1 - - [24/Sep/2025 14:39:44] "GET /swot_analysis HTTP/1.1" 200 -
+2025-09-24 14:39:44,513 [INFO] 127.0.0.1 - - [24/Sep/2025 14:39:44] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:40:27,536 [INFO] 127.0.0.1 - - [24/Sep/2025 14:40:27] "[33mGET /risk_detail HTTP/1.1[0m" 404 -
+2025-09-24 14:40:27,852 [INFO] 127.0.0.1 - - [24/Sep/2025 14:40:27] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:41:36,337 [INFO] Governance: Admin kush786srj@gmail.com accessed all risks
+2025-09-24 14:41:36,360 [INFO] 127.0.0.1 - - [24/Sep/2025 14:41:36] "GET /risks HTTP/1.1" 200 -
+2025-09-24 14:41:36,377 [INFO] 127.0.0.1 - - [24/Sep/2025 14:41:36] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:41:53,737 [INFO] 127.0.0.1 - - [24/Sep/2025 14:41:53] "GET / HTTP/1.1" 200 -
+2025-09-24 14:41:54,050 [INFO] 127.0.0.1 - - [24/Sep/2025 14:41:54] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:41:54,366 [INFO] 127.0.0.1 - - [24/Sep/2025 14:41:54] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-09-24 14:42:02,120 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-09-24 14:42:02,133 [INFO] 127.0.0.1 - - [24/Sep/2025 14:42:02] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-09-24 14:42:02,258 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 14:42:02,263 [INFO] 127.0.0.1 - - [24/Sep/2025 14:42:02] "GET /home HTTP/1.1" 200 -
+2025-09-24 14:42:02,598 [INFO] 127.0.0.1 - - [24/Sep/2025 14:42:02] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:42:14,448 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 14:42:14,471 [INFO] User kush786srj@gmail.com uploaded file ISO_Compliance_Report.txt from IP 127.0.0.1
+2025-09-24 14:42:14,475 [INFO] 127.0.0.1 - - [24/Sep/2025 14:42:14] "[32mPOST /home HTTP/1.1[0m" 302 -
+2025-09-24 14:42:14,762 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 14:42:14,768 [INFO] 127.0.0.1 - - [24/Sep/2025 14:42:14] "GET /home HTTP/1.1" 200 -
+2025-09-24 14:42:15,097 [INFO] 127.0.0.1 - - [24/Sep/2025 14:42:15] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:42:28,165 [INFO] Created risk entry 1: Data Breach due to Unauthorized Access
+2025-09-24 14:42:28,187 [INFO] Created risk entry 2: Malware Infection
+2025-09-24 14:42:28,213 [INFO] Created risk entry 3: Data Loss via Phishing Attack
+2025-09-24 14:42:28,236 [INFO] Created risk entry 4: Service Outage or Misconfiguration
+2025-09-24 14:42:28,251 [INFO] Successfully created 4 risk entries (4 LLM + 0 pattern-based) and associated compliance records
+2025-09-24 14:42:28,253 [INFO] User 1 scanned file ISO_Compliance_Report.txt
+2025-09-24 14:42:28,255 [INFO] 127.0.0.1 - - [24/Sep/2025 14:42:28] "[32mPOST /scan/1 HTTP/1.1[0m" 302 -
+2025-09-24 14:42:28,283 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 14:42:28,314 [INFO] 127.0.0.1 - - [24/Sep/2025 14:42:28] "GET /home HTTP/1.1" 200 -
+2025-09-24 14:42:28,637 [INFO] 127.0.0.1 - - [24/Sep/2025 14:42:28] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:42:43,381 [INFO] DEBUG: Risk loaded with ID 1, session active: True
+2025-09-24 14:42:43,382 [INFO] DEBUG: Risk attributes accessed successfully
+2025-09-24 14:42:43,391 [INFO] DEBUG: Risk object loaded with ID 1, status: RiskStatus.OPEN
+2025-09-24 14:42:43,392 [INFO] DEBUG: Session active before mitigation plan: True
+2025-09-24 14:42:43,393 [INFO] DEBUG: Risk object session: True
+2025-09-24 14:42:57,385 [INFO] DEBUG: About to close session. Risk ID: 1
+2025-09-24 14:42:57,386 [INFO] DEBUG: Approvals count: 0
+2025-09-24 14:42:57,387 [INFO] DEBUG: Governance decisions count: 0
+2025-09-24 14:42:57,388 [INFO] DEBUG: Compliance mappings count: 0
+2025-09-24 14:42:57,389 [INFO] DEBUG: Pre-calculated values: BIA=0
+2025-09-24 14:42:57,391 [INFO] DEBUG: Starting template render for risk 1
+2025-09-24 14:42:57,567 [INFO] DEBUG: Template rendered successfully, closing session for risk 1
+2025-09-24 14:42:57,569 [ERROR] Failed to log audit event: Instance <User at 0x288f0e0f710> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-24 14:42:57,571 [INFO] 127.0.0.1 - - [24/Sep/2025 14:42:57] "GET /risk/1 HTTP/1.1" 200 -
+2025-09-24 14:42:57,594 [INFO] 127.0.0.1 - - [24/Sep/2025 14:42:57] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:44:14,476 [INFO] File uploads\ISO_Compliance_Report.txt deleted after 120 seconds.
+2025-09-24 14:45:07,609 [INFO] Governance: Admin kush786srj@gmail.com accessed all risks
+2025-09-24 14:45:07,623 [INFO] 127.0.0.1 - - [24/Sep/2025 14:45:07] "GET /risks HTTP/1.1" 200 -
+2025-09-24 14:45:07,836 [INFO] 127.0.0.1 - - [24/Sep/2025 14:45:07] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 14:45:35,015 [INFO] Governance: Admin kush786srj@gmail.com accessed all risks
+2025-09-24 14:45:35,133 [INFO] 127.0.0.1 - - [24/Sep/2025 14:45:35] "GET /risk_dashboard HTTP/1.1" 200 -
+2025-09-24 14:45:35,301 [INFO] 127.0.0.1 - - [24/Sep/2025 14:45:35] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 15:54:19,190 [INFO] 127.0.0.1 - - [24/Sep/2025 15:54:19] "[32mGET /risk/1 HTTP/1.1[0m" 302 -
+2025-09-24 15:54:19,220 [INFO] 127.0.0.1 - - [24/Sep/2025 15:54:19] "GET /login HTTP/1.1" 200 -
+2025-09-24 15:54:19,455 [INFO] 127.0.0.1 - - [24/Sep/2025 15:54:19] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 15:54:19,791 [INFO] 127.0.0.1 - - [24/Sep/2025 15:54:19] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-09-24 15:54:28,845 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-09-24 15:54:28,874 [INFO] 127.0.0.1 - - [24/Sep/2025 15:54:28] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-09-24 15:54:28,909 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 15:54:28,942 [INFO] 127.0.0.1 - - [24/Sep/2025 15:54:28] "GET /home HTTP/1.1" 200 -
+2025-09-24 15:54:29,270 [INFO] 127.0.0.1 - - [24/Sep/2025 15:54:29] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 15:54:37,943 [INFO] DEBUG: Risk loaded with ID 4, session active: True
+2025-09-24 15:54:37,945 [INFO] DEBUG: Risk attributes accessed successfully
+2025-09-24 15:54:37,963 [INFO] DEBUG: Risk object loaded with ID 4, status: RiskStatus.OPEN
+2025-09-24 15:54:37,978 [INFO] DEBUG: Session active before mitigation plan: True
+2025-09-24 15:54:37,979 [INFO] DEBUG: Risk object session: True
+2025-09-24 15:54:46,410 [INFO] DEBUG: About to close session. Risk ID: 4
+2025-09-24 15:54:46,411 [INFO] DEBUG: Approvals count: 0
+2025-09-24 15:54:46,413 [INFO] DEBUG: Governance decisions count: 0
+2025-09-24 15:54:46,414 [INFO] DEBUG: Compliance mappings count: 0
+2025-09-24 15:54:46,418 [INFO] DEBUG: Pre-calculated values: BIA=0
+2025-09-24 15:54:46,433 [INFO] DEBUG: Starting template render for risk 4
+2025-09-24 15:54:46,442 [INFO] DEBUG: Template rendered successfully, closing session for risk 4
+2025-09-24 15:54:46,444 [ERROR] Failed to log audit event: Instance <User at 0x288f0f12150> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-24 15:54:46,446 [INFO] 127.0.0.1 - - [24/Sep/2025 15:54:46] "GET /risk/4 HTTP/1.1" 200 -
+2025-09-24 15:54:46,476 [INFO] 127.0.0.1 - - [24/Sep/2025 15:54:46] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 16:00:23,858 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\app.py', reloading
+2025-09-24 16:00:24,268 [INFO]  * Restarting with stat
+2025-09-24 16:00:25,890 [WARNING]  * Debugger is active!
+2025-09-24 16:00:25,893 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 16:02:10,339 [INFO] DEBUG: Risk loaded with ID 4, session active: True
+2025-09-24 16:02:10,339 [INFO] DEBUG: Risk attributes accessed successfully
+2025-09-24 16:02:10,344 [INFO] DEBUG: Risk object loaded with ID 4, status: RiskStatus.OPEN
+2025-09-24 16:02:10,345 [INFO] DEBUG: Session active before mitigation plan: True
+2025-09-24 16:02:10,346 [INFO] DEBUG: Risk object session: True
+2025-09-24 16:02:23,512 [INFO] 127.0.0.1 - - [24/Sep/2025 16:02:23] "[35m[1mGET /risk/4 HTTP/1.1[0m" 500 -
+2025-09-24 16:02:23,777 [INFO] 127.0.0.1 - - [24/Sep/2025 16:02:23] "GET /risk/4?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-09-24 16:02:23,780 [INFO] 127.0.0.1 - - [24/Sep/2025 16:02:23] "GET /risk/4?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-09-24 16:02:24,141 [INFO] 127.0.0.1 - - [24/Sep/2025 16:02:24] "GET /risk/4?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-09-24 16:02:24,383 [INFO] 127.0.0.1 - - [24/Sep/2025 16:02:24] "[36mGET /risk/4?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-09-24 16:03:04,724 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\app.py', reloading
+2025-09-24 16:03:05,033 [INFO]  * Restarting with stat
+2025-09-24 16:03:06,908 [WARNING]  * Debugger is active!
+2025-09-24 16:03:06,913 [INFO]  * Debugger PIN: 136-772-789
+2025-09-24 16:03:22,190 [INFO] DEBUG: Risk loaded with ID 4, session active: True
+2025-09-24 16:03:22,191 [INFO] DEBUG: Risk attributes accessed successfully
+2025-09-24 16:03:22,196 [INFO] DEBUG: Risk object loaded with ID 4, status: RiskStatus.OPEN
+2025-09-24 16:03:22,196 [INFO] DEBUG: Session active before mitigation plan: True
+2025-09-24 16:03:22,197 [INFO] DEBUG: Risk object session: True
+2025-09-24 16:03:33,880 [INFO] DEBUG: About to close session. Risk ID: 4
+2025-09-24 16:03:33,881 [INFO] DEBUG: Approvals count: 0
+2025-09-24 16:03:33,882 [INFO] DEBUG: Governance decisions count: 0
+2025-09-24 16:03:33,883 [INFO] DEBUG: Compliance mappings count: 0
+2025-09-24 16:03:33,885 [INFO] DEBUG: Pre-calculated values: BIA=0
+2025-09-24 16:03:33,887 [INFO] DEBUG: Starting template render for risk 4
+2025-09-24 16:03:34,056 [INFO] DEBUG: Template rendered successfully, closing session for risk 4
+2025-09-24 16:03:34,058 [ERROR] Failed to log audit event: Instance <User at 0x17458961450> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-24 16:03:34,059 [INFO] 127.0.0.1 - - [24/Sep/2025 16:03:34] "GET /risk/4 HTTP/1.1" 200 -
+2025-09-24 16:03:34,149 [INFO] 127.0.0.1 - - [24/Sep/2025 16:03:34] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 16:07:32,733 [INFO] 127.0.0.1 - - [24/Sep/2025 16:07:32] "[32mGET /asset_register HTTP/1.1[0m" 302 -
+2025-09-24 16:07:32,749 [INFO] 127.0.0.1 - - [24/Sep/2025 16:07:32] "GET /login HTTP/1.1" 200 -
+2025-09-24 16:07:32,992 [INFO] 127.0.0.1 - - [24/Sep/2025 16:07:32] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 16:07:33,325 [INFO] 127.0.0.1 - - [24/Sep/2025 16:07:33] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-09-24 16:07:41,047 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-09-24 16:07:41,061 [INFO] 127.0.0.1 - - [24/Sep/2025 16:07:41] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-09-24 16:07:41,113 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 16:07:41,180 [INFO] 127.0.0.1 - - [24/Sep/2025 16:07:41] "GET /home HTTP/1.1" 200 -
+2025-09-24 16:07:41,543 [INFO] 127.0.0.1 - - [24/Sep/2025 16:07:41] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 16:07:50,026 [INFO] 127.0.0.1 - - [24/Sep/2025 16:07:50] "GET /asset_register HTTP/1.1" 200 -
+2025-09-24 16:07:50,279 [INFO] 127.0.0.1 - - [24/Sep/2025 16:07:50] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 16:09:06,033 [INFO] 127.0.0.1 - - [24/Sep/2025 16:09:06] "GET / HTTP/1.1" 200 -
+2025-09-24 16:09:06,070 [INFO] 127.0.0.1 - - [24/Sep/2025 16:09:06] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 16:09:06,294 [INFO] 127.0.0.1 - - [24/Sep/2025 16:09:06] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-09-24 16:09:41,548 [INFO] 127.0.0.1 - - [24/Sep/2025 16:09:41] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 16:09:41,591 [INFO] 127.0.0.1 - - [24/Sep/2025 16:09:41] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-09-24 16:10:48,244 [INFO] 127.0.0.1 - - [24/Sep/2025 16:10:48] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-09-24 16:11:35,065 [INFO] 127.0.0.1 - - [24/Sep/2025 16:11:35] "GET / HTTP/1.1" 200 -
+2025-09-24 16:11:35,381 [INFO] 127.0.0.1 - - [24/Sep/2025 16:11:35] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 16:11:35,713 [INFO] 127.0.0.1 - - [24/Sep/2025 16:11:35] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-09-24 16:12:43,440 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-09-24 16:12:43,456 [INFO] 127.0.0.1 - - [24/Sep/2025 16:12:43] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-09-24 16:12:43,499 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 16:12:43,541 [INFO] 127.0.0.1 - - [24/Sep/2025 16:12:43] "GET /home HTTP/1.1" 200 -
+2025-09-24 16:12:43,563 [INFO] 127.0.0.1 - - [24/Sep/2025 16:12:43] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 16:12:52,766 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 16:12:52,816 [INFO] User kush786srj@gmail.com uploaded file GLBA_Compliance_Report.txt from IP 127.0.0.1
+2025-09-24 16:12:52,826 [INFO] 127.0.0.1 - - [24/Sep/2025 16:12:52] "[32mPOST /home HTTP/1.1[0m" 302 -
+2025-09-24 16:12:52,845 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 16:12:52,856 [INFO] 127.0.0.1 - - [24/Sep/2025 16:12:52] "GET /home HTTP/1.1" 200 -
+2025-09-24 16:12:53,013 [INFO] 127.0.0.1 - - [24/Sep/2025 16:12:53] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 16:12:59,545 [INFO] Created risk entry 1: Unauthorized access to customer database by external attacker
+2025-09-24 16:12:59,592 [INFO] Created risk entry 2: Malware infection via phishing on employee workstations
+2025-09-24 16:12:59,614 [INFO] Created risk entry 3: Interception of sensitive customer data during transmission
+2025-09-24 16:12:59,633 [INFO] Created risk entry 4: Insider misuse of unmonitored backup access
+2025-09-24 16:12:59,649 [INFO] Successfully created 4 risk entries (4 LLM + 0 pattern-based) and associated compliance records
+2025-09-24 16:12:59,652 [INFO] User 1 scanned file GLBA_Compliance_Report.txt
+2025-09-24 16:12:59,660 [INFO] 127.0.0.1 - - [24/Sep/2025 16:12:59] "[32mPOST /scan/2 HTTP/1.1[0m" 302 -
+2025-09-24 16:12:59,682 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-24 16:12:59,710 [INFO] 127.0.0.1 - - [24/Sep/2025 16:12:59] "GET /home HTTP/1.1" 200 -
+2025-09-24 16:12:59,730 [INFO] 127.0.0.1 - - [24/Sep/2025 16:12:59] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 16:13:16,644 [INFO] Governance: Admin kush786srj@gmail.com accessed all risks
+2025-09-24 16:13:16,719 [INFO] 127.0.0.1 - - [24/Sep/2025 16:13:16] "GET /risks HTTP/1.1" 200 -
+2025-09-24 16:13:16,747 [INFO] 127.0.0.1 - - [24/Sep/2025 16:13:16] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-24 16:14:52,831 [INFO] File uploads\GLBA_Compliance_Report.txt deleted after 120 seconds.

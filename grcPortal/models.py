@@ -136,6 +136,7 @@ class RiskCategory(PyEnum):
     PERSONNEL_SECURITY = "Personnel Security"
     SUPPLY_CHAIN = "Supply Chain"
     VULNERABILITY_MANAGEMENT = "Vulnerability Management"
+
 class RiskTreatment(PyEnum):
     ACCEPT = "accept"
     MITIGATE = "mitigate"
