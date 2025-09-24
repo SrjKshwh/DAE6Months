@@ -72,6 +72,137 @@ from sqlalchemy.orm import sessionmaker
 
 from llm_scan import scan_file_for_grc, create_risks_from_scan,generate_risk_mitigation_plan
 
+def generate_risk_communication_plan(risk_data, mitigation_plan):
+    """
+    Generate a comprehensive risk communication plan based on risk data and mitigation plan.
+    """
+    # Mock implementation - in production, this would use LLM to generate detailed plan
+    communication_plan = {
+        "executive_risk_report": {
+            "key_findings": [
+                f"Risk to {risk_data['asset']} poses significant threat from {risk_data['threat']}",
+                f"Vulnerability in {risk_data['vulnerability']} requires immediate attention",
+                f"Current risk score of {risk_data['score']} indicates { 'high' if risk_data['score'] > 15 else 'moderate' } priority"
+            ],
+            "financial_impact_analysis": {
+                "total_potential_loss": f"${risk_data.get('financial_impact_amount', 100000):,}",
+                "annual_financial_impact": f"${risk_data.get('financial_impact_amount', 100000) * risk_data['likelihood']:,}",
+                "business_continuity_risk": "High" if risk_data['score'] > 15 else "Medium"
+            },
+            "actionable_recommendations": [
+                {
+                    "priority": "Critical" if risk_data['score'] > 20 else "High",
+                    "recommendation": f"Implement {mitigation_plan.get('recommended_strategy', {}).get('strategy', 'mitigation')} strategy immediately",
+                    "expected_benefits": "Reduce risk exposure by 70-80%",
+                    "timeline": "3-6 months",
+                    "responsible_party": "Risk Management Team"
+                },
+                {
+                    "priority": "High",
+                    "recommendation": "Conduct regular monitoring and reporting",
+                    "expected_benefits": "Early detection of risk changes",
+                    "timeline": "Ongoing",
+                    "responsible_party": "IT Security Team"
+                }
+            ]
+        },
+        "stakeholder_communication_plan": {
+            "stakeholder_analysis": [
+                {
+                    "stakeholder_group": "Executive Leadership",
+                    "communication_frequency": "Monthly",
+                    "preferred_format": "Executive Summary Reports",
+                    "key_concerns": ["Financial impact", "Regulatory compliance", "Business continuity"],
+                    "tailored_messaging": "Focus on strategic implications and ROI of mitigation efforts"
+                },
+                {
+                    "stakeholder_group": "IT Department",
+                    "communication_frequency": "Weekly",
+                    "preferred_format": "Technical Briefs",
+                    "key_concerns": ["Technical vulnerabilities", "Implementation details", "Resource requirements"],
+                    "tailored_messaging": "Emphasize technical solutions and implementation timelines"
+                },
+                {
+                    "stakeholder_group": "Business Units",
+                    "communication_frequency": "Quarterly",
+                    "preferred_format": "Business Impact Assessments",
+                    "key_concerns": ["Operational disruptions", "Cost implications", "Process changes"],
+                    "tailored_messaging": "Highlight business continuity and minimal disruption"
+                }
+            ]
+        },
+        "risk_dashboard_config": {
+            "key_metrics": [
+                {
+                    "metric_name": "Risk Score Trend",
+                    "visualization_type": "Line Chart",
+                    "refresh_frequency": "Daily",
+                    "alert_threshold": risk_data['score'] + 2
+                },
+                {
+                    "metric_name": "Mitigation Progress",
+                    "visualization_type": "Progress Bar",
+                    "refresh_frequency": "Weekly",
+                    "alert_threshold": 80
+                }
+            ],
+            "automated_alerts": [
+                {
+                    "alert_type": "Risk Score Increase",
+                    "condition": f"Risk score exceeds {risk_data['score'] + 5}",
+                    "severity": "High",
+                    "response_required": "Immediate review required"
+                },
+                {
+                    "alert_type": "Mitigation Delay",
+                    "condition": "Implementation behind schedule by 20%",
+                    "severity": "Medium",
+                    "response_required": "Status update required"
+                }
+            ]
+        },
+        "kpi_framework": {
+            "leading_indicators": [
+                {
+                    "kpi_name": "Vulnerability Scan Frequency",
+                    "target": "Weekly",
+                    "current_value": "Weekly",
+                    "trend": "Stable",
+                    "benchmark_comparison": "Meets industry standard"
+                },
+                {
+                    "kpi_name": "Risk Assessment Coverage",
+                    "target": "95%",
+                    "current_value": "92%",
+                    "trend": "Improving",
+                    "benchmark_comparison": "Above average"
+                }
+            ],
+            "lagging_indicators": [
+                {
+                    "kpi_name": "Incident Response Time",
+                    "target": "< 4 hours",
+                    "current_value": "3.5 hours",
+                    "benchmark_comparison": "Industry leading"
+                },
+                {
+                    "kpi_name": "Risk Mitigation Effectiveness",
+                    "target": "80%",
+                    "current_value": "75%",
+                    "benchmark_comparison": "Good performance"
+                }
+            ],
+            "tracking_systems": {
+                "data_collection": "Automated through integrated monitoring tools",
+                "reporting_frequency": "Monthly executive reports, weekly operational updates",
+                "review_process": "Quarterly governance review with annual comprehensive assessment",
+                "accountability": "Risk Manager responsible for KPI tracking and reporting"
+            }
+        }
+    }
+
+    return communication_plan
+
 # ------------------------------------------------------------------------------
 # Secure Development Environment Notes
 # - Ensure VS Code has SonarLint, GitGuardian, Python Security Linter enabled
@@ -1522,7 +1653,9 @@ def create_app():
             'threat': risk.threat,
             'vulnerability': risk.vulnerability,
             'score': risk.score,
-            'severity': risk.severity.value if risk.severity else 'Medium'
+            'severity': risk.severity.value if risk.severity else 'Medium',
+            'likelihood': risk.likelihood,
+            'financial_impact_amount': risk.financial_impact_amount or 0
             }
 
         # DEBUG: Log session state before mitigation plan generation
@@ -1533,10 +1666,9 @@ def create_app():
         mitigation_plan = generate_risk_mitigation_plan(risk_data_for_ai)
 
         communication_plan = None
-        # Communication plan generation not implemented yet
-        # if risk.mitigation_plan_json:
-        #     stored_mitigation_plan = json.loads(risk.mitigation_plan_json)
-        #     communication_plan = generate_risk_communication_plan(risk_data_for_ai, stored_mitigation_plan)
+        if risk.mitigation_plan_json:
+            stored_mitigation_plan = json.loads(risk.mitigation_plan_json)
+            communication_plan = generate_risk_communication_plan(risk_data_for_ai, stored_mitigation_plan)
 
 
 
