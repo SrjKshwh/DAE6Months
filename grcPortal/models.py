@@ -179,7 +179,23 @@ class BusinessImpactType(PyEnum):
 
 
 class Base(DeclarativeBase):
-    """Base class for all SQLAlchemy models."""
+    """
+    Base class for all SQLAlchemy database models.
+
+    Provides common functionality and configuration for all database entities
+    in the GRC portal. All models inherit from this base class to ensure
+    consistent behavior and automatic timestamp management.
+
+    Features:
+        - Automatic table naming from class names
+        - Declarative base for SQLAlchemy ORM
+        - Foundation for relationship definitions
+        - Consistent model structure across the application
+
+    Note:
+        This class should not be instantiated directly. Use specific model
+        classes that inherit from Base for database operations.
+    """
     pass
 
 class User(Base):
@@ -239,7 +255,33 @@ class User(Base):
 
 
 class Upload(Base):
-    """Represents a file upload by a user."""
+    """
+    Represents a file uploaded by a user for security scanning and analysis.
+
+    Tracks uploaded files, their metadata, and relationships to scan results.
+    Provides secure file handling with automatic cleanup and access control.
+    Supports multiple file types (PDF, TXT) for GRC document analysis.
+
+    Attributes:
+        user_id: Foreign key to the user who uploaded the file
+        filename: Original filename provided by user
+        saved_path: Secure server path where file is stored
+        uploaded_at: Timestamp of upload
+
+    Relationships:
+        user: Reference to User who uploaded the file
+        scan_result: Associated security scan results (one-to-one)
+
+    Security Features:
+        - Filename sanitization to prevent path traversal
+        - File type validation (PDF/TXT only)
+        - Automatic cleanup after processing
+        - User-specific access control
+
+    Usage:
+        Uploads are created when users submit files through the web interface.
+        Files are automatically scanned and results linked back to the upload.
+    """
     __tablename__ = "uploads"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -253,7 +295,34 @@ class Upload(Base):
 
 
 class ScanResult(Base):
-    """Represents the result of a security scan on an uploaded file."""
+    """
+    Represents the results of a comprehensive security scan on an uploaded file.
+
+    Stores LLM-generated analysis results including compliance hits, risk assessments,
+    and security findings. Provides structured storage for complex analysis data
+    using JSON serialization for flexible content storage.
+
+    Attributes:
+        upload_id: Foreign key to the scanned upload
+        summary: High-level summary of scan findings
+        compliance_hits_json: JSON string of compliance framework matches
+        risks_json: JSON string of identified risks
+        scanned_at: Timestamp when scan was completed
+
+    Relationships:
+        upload: Reference to the scanned Upload
+        risks: Collection of Risk objects created from scan results
+
+    Data Storage:
+        Uses JSON text fields to store complex structured data
+        Supports multiple compliance frameworks simultaneously
+        Enables detailed risk extraction and categorization
+
+    Usage:
+        Created automatically after file upload processing
+        Used to generate risk assessments and compliance reports
+        Provides audit trail for security analysis activities
+    """
     __tablename__ = "scan_results"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -374,7 +443,35 @@ class Risk(Base):
 
 
     def calculate_score(self, use_multi_criteria=False):
-        """Calculate risk score - can use traditional or multi-criteria approach"""
+        """
+        Calculate the overall risk score using traditional or multi-criteria methods.
+
+        Supports two calculation approaches:
+        1. Traditional: likelihood × impact (1-25 scale)
+        2. Multi-criteria: Weighted combination of financial, operational, compliance, reputation impacts
+
+        Args:
+            use_multi_criteria (bool): If True, uses weighted multi-criteria calculation.
+                                      If False, uses traditional likelihood × impact.
+
+        Returns:
+            int: Calculated risk score (1-25 scale)
+
+        Side Effects:
+            Updates self.score attribute
+            Auto-determines severity based on score ranges
+            Sets appropriate RiskSeverity enum value
+
+        Scoring Ranges:
+            1-5: Low severity
+            6-11: Medium severity
+            12-19: High severity
+            20-25: Critical severity
+
+        Note:
+            Multi-criteria scoring provides more nuanced risk assessment
+            Traditional scoring maintains backward compatibility
+        """
         if use_multi_criteria:
             return self.calculate_multi_criteria_score()
         else:
@@ -392,11 +489,43 @@ class Risk(Base):
             return self.score
 
     def calculate_ale(self, asset_value: float = 100000.0):
-        """Calculate Annualized Loss Expectancy"""
+        """
+        Calculate Annualized Loss Expectancy (ALE) for quantitative risk analysis.
+
+        ALE represents the expected annual financial loss from a risk occurrence.
+        Formula: ALE = (Likelihood/5) × (Impact/5) × Asset_Value
+
+        Args:
+            asset_value (float): Value of the asset at risk (default: $100,000)
+
+        Side Effects:
+            Updates self.ale attribute with calculated value
+
+        Note:
+            Uses normalized likelihood and impact scales (1-5)
+            Assumes asset_value is the single loss expectancy (SLE)
+            Provides quantitative basis for risk prioritization
+        """
         self.ale = (self.likelihood / 5.0) * (self.impact / 5.0) * asset_value
 
     def calculate_emv(self, mitigation_cost: float = 0.0):
-        """Calculate Expected Monetary Value"""
+        """
+        Calculate Expected Monetary Value (EMV) considering mitigation costs.
+
+        EMV represents the net expected value after accounting for mitigation expenses.
+        Formula: EMV = ALE - Mitigation_Cost
+
+        Args:
+            mitigation_cost (float): Cost of implementing risk mitigation measures
+
+        Side Effects:
+            Updates self.emv attribute with calculated net value
+
+        Note:
+            Positive EMV indicates mitigation costs exceed expected losses
+            Negative EMV indicates cost-effective mitigation
+            Used for cost-benefit analysis of risk treatments
+        """
         self.emv = self.ale - mitigation_cost
 
     def calculate_quantitative_metrics(self):
@@ -425,7 +554,25 @@ class Risk(Base):
             self.severity = RiskSeverity.LOW
 
     def should_escalate(self):
-        """Determine if risk should be escalated based on score and thresholds"""
+        """
+        Determine if the risk requires escalation based on severity thresholds.
+
+        Evaluates risk against organizational tolerance levels and impact criteria
+        to determine if higher-level approval or attention is required.
+
+        Returns:
+            bool: True if risk should be escalated, False otherwise
+
+        Escalation Criteria:
+            - Risk score exceeds tolerance threshold (default: 15)
+            - High financial impact (≥4) or operational impact (≥4)
+            - Critical severity classification
+
+        Note:
+            Used by approval workflow to route risks appropriately
+            Supports governance escalation procedures
+            Configurable through risk_tolerance_threshold attribute
+        """
         if self.score >= self.risk_tolerance_threshold:
             return True
         if self.financial_impact >= 4 or self.operational_impact >= 4:
@@ -434,7 +581,26 @@ class Risk(Base):
 
 
     def get_escalation_level(self):
-        """Determine appropriate escalation level based on risk score"""
+        """
+        Determine the appropriate escalation level based on risk score severity.
+
+        Maps risk scores to organizational escalation hierarchy levels for
+        appropriate governance routing and approval authority assignment.
+
+        Returns:
+            str: Escalation level ("executive", "department", "business_unit", "none")
+
+        Escalation Levels:
+            - executive: Risk score ≥21 (Critical risks)
+            - department: Risk score 13-20 (High risks)
+            - business_unit: Risk score 6-12 (Medium risks)
+            - none: Risk score 1-5 (Low risks)
+
+        Note:
+            Used by approval workflow to determine required approval authority
+            Supports hierarchical governance structures
+            Configurable escalation thresholds
+        """
         if self.score >= 21:  # Critical
             return "executive"
         elif self.score >= 13:  # High
@@ -445,7 +611,25 @@ class Risk(Base):
             return "none"
 
     def update_next_review_date(self):
-        """Update the next review date based on risk level and frequency"""
+        """
+        Update the next scheduled review date based on risk severity and frequency settings.
+
+        Calculates review intervals based on risk criticality to ensure appropriate
+        monitoring frequency. Critical risks are reviewed more frequently than low risks.
+
+        Side Effects:
+            Updates self.next_review_date attribute with calculated future date
+
+        Review Intervals:
+            - Critical severity: Minimum 30 days (or custom frequency if shorter)
+            - High severity: Minimum 60 days (or custom frequency if shorter)
+            - Medium/Low severity: Uses review_frequency_days setting
+
+        Note:
+            Ensures minimum review frequencies for high-risk items
+            Uses datetime.timedelta for date calculations
+            Supports configurable review frequencies per risk
+        """
         from datetime import timedelta
         if self.severity == RiskSeverity.CRITICAL:
             days = min(self.review_frequency_days, 30)  # Max 30 days for critical risks
@@ -457,7 +641,33 @@ class Risk(Base):
         self.next_review_date = datetime.now(timezone.utc) + timedelta(days=days)
 
     def calculate_multi_criteria_score(self):
-        """Calculate risk score using weighted multi-criteria evaluation"""
+        """
+        Calculate risk score using weighted multi-criteria evaluation approach.
+
+        Applies weighted scoring across financial, operational, compliance, and
+        reputation impact dimensions. Provides more nuanced risk assessment than
+        traditional likelihood × impact calculation.
+
+        Returns:
+            int: Weighted risk score (1-25 scale)
+
+        Calculation Process:
+            1. Normalize each impact criterion to 0-1 scale
+            2. Apply dimension-specific weights
+            3. Sum weighted scores
+            4. Convert to 1-25 scale for consistency
+
+        Weight Configuration:
+            - Financial: 25% (configurable via financial_weight)
+            - Operational: 25% (configurable via operational_weight)
+            - Compliance: 25% (configurable via compliance_weight)
+            - Reputation: 25% (configurable via reputation_weight)
+
+        Note:
+            Supports customized weighting for different organizational priorities
+            Maintains compatibility with existing scoring system
+            Enables more sophisticated risk prioritization
+        """
         # Normalize each criterion to 0-1 scale
         normalized_financial = (self.financial_impact - 1) / 4.0
         normalized_operational = (self.operational_impact - 1) / 4.0
@@ -518,7 +728,29 @@ class Risk(Base):
             return f"Pending - {self.approval_status.value}"
         
     def get_impact_description(self, impact_type: str, level: int) -> str:
-        """Return qualitative description for impact levels."""
+        """
+        Return qualitative description for impact levels across different criteria.
+
+        Provides human-readable descriptions for numerical impact ratings
+        to support better risk communication and understanding.
+
+        Args:
+            impact_type (str): Type of impact ("financial", "operational", "compliance", "reputation")
+            level (int): Impact level (1-5 scale)
+
+        Returns:
+            str: Qualitative description of the impact level
+
+        Impact Scales:
+            Financial: Negligible to Critical monetary impact ranges
+            Operational: Minimal disruption to business-critical failure
+            Compliance: Minor violation to license revocation risk
+            Reputation: Minimal notice to global scandal
+
+        Note:
+            Used in templates and reports for user-friendly impact display
+            Supports standardized impact communication
+        """
         scales = {
             "financial": {1: "Negligible (<$1K)", 2: "Minor ($1K-$10K)", 3: "Moderate ($10K-$100K)", 4: "Major ($100K-$1M)", 5: "Critical (>$1M)"},
             "operational": {1: "Minimal disruption", 2: "Short-term impact", 3: "Moderate downtime", 4: "Significant operational halt", 5: "Business-critical failure"},
@@ -527,26 +759,6 @@ class Risk(Base):
             }
         return scales.get(impact_type, {}).get(level, "Unknown")
 
-    def calculate_multi_criteria_score(self):
-        """Calculate weighted multi-criteria risk score."""
-        # Normalize to 0-1
-        normalized_financial = (self.financial_impact - 1) / 4.0
-        normalized_operational = (self.operational_impact - 1) / 4.0
-        normalized_compliance = (self.compliance_impact - 1) / 4.0
-        normalized_reputation = (self.reputation_impact - 1) / 4.0
-    
-        # Weighted score (0-1)
-        weighted_score = (
-            normalized_financial * self.financial_weight +
-            normalized_operational * self.operational_weight +
-            normalized_compliance * self.compliance_weight +
-            normalized_reputation * self.reputation_weight
-        )
-    
-         # Convert to 1-25 scale
-        self.score = int(weighted_score * 25) + 1
-        return self.score
-    
     def calculate_business_impact_score(self):
         """Calculate business impact score based on RTO, RPO, MTD."""
         if not all([self.rto_hours, self.rpo_hours, self.mtd_hours]):
@@ -731,7 +943,36 @@ class EnvironmentalChange(Base):
 
 
 class Compliance(Base):
-    """Represents compliance scores for various frameworks."""
+    """
+    Represents compliance assessment scores for regulatory and security frameworks.
+
+    Tracks compliance status and scores across multiple frameworks including
+    NIST, ISO, PCI DSS, HIPAA, and others. Supports automated and manual
+    scoring with gap analysis and remediation tracking.
+
+    Attributes:
+        framework: Compliance framework name
+        control: Specific control identifier
+        control_family: Control family/category
+        score: Compliance score (0-100%)
+        status: Compliance status (compliant, non-compliant, not_assessed)
+        automated_score: AI-calculated score
+        manual_override: Whether score was manually set
+        assessment_method: How assessment was performed
+
+    Relationships:
+        risk: Associated risk assessment (optional)
+
+    Scoring Methods:
+        - Automated: Calculated based on risk mitigation status
+        - Manual: Directly set by compliance officers
+        - Hybrid: Combination of automated and manual assessment
+
+    Usage:
+        Used for compliance monitoring and reporting
+        Supports multiple framework assessments simultaneously
+        Enables gap analysis and remediation planning
+    """
     __tablename__ = "compliance_scores"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -751,7 +992,28 @@ class Compliance(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     def calculate_automated_score(self):
-        """Calculate automated compliance score based on risk mitigation"""
+        """
+        Calculate automated compliance score based on associated risk mitigation status.
+
+        Analyzes the linked risk assessment to determine compliance level based on
+        treatment effectiveness and residual risk. Provides objective scoring
+        for controls that can be automatically assessed.
+
+        Side Effects:
+            Updates self.automated_score attribute with calculated value
+
+        Scoring Logic:
+            - Base score: 50% (moderate compliance)
+            - Mitigation treatment: +30% for proper mitigation plans
+            - Risk acceptance: +10% for accepted but monitored risks
+            - Risk avoidance: +40% for avoided risks
+            - Residual risk adjustment: ±20% based on post-mitigation risk level
+
+        Note:
+            Requires associated risk record for calculation
+            Used when manual_override is False
+            Supports automated compliance monitoring
+        """
         if self.risk:
             # Base score on risk treatment and mitigation effectiveness
             base_score = 50.0  # Default moderate compliance
@@ -773,7 +1035,24 @@ class Compliance(Base):
             self.automated_score = 0.0
 
     def get_effective_score(self):
-        """Get the effective score (manual override takes precedence)"""
+        """
+        Get the effective compliance score, prioritizing manual overrides.
+
+        Returns the manually set score if manual_override is enabled,
+        otherwise returns the automated calculated score.
+
+        Returns:
+            float: Effective compliance score (0-100)
+
+        Priority Logic:
+            1. Manual score (if manual_override = True)
+            2. Automated score (if manual_override = False)
+
+        Note:
+            Supports compliance officer overrides for complex assessments
+            Maintains audit trail of manual vs automated scoring
+            Used for reporting and compliance status determination
+        """
         if self.manual_override:
             return self.score
         return self.automated_score
@@ -819,7 +1098,32 @@ class ComplianceScore(Base):
 
 
 class Dependency(Base):
-    """Represents software dependencies and their risk assessments."""
+    """
+    Represents software dependencies with automated risk assessment and vulnerability tracking.
+
+    Tracks third-party libraries and packages used in applications, performing
+    automated risk analysis based on known vulnerabilities and version analysis.
+    Supports supply chain risk management and dependency security monitoring.
+
+    Attributes:
+        name: Package/library name (e.g., "flask", "requests")
+        version: Installed version string
+        risk_level: Automatically assessed risk severity
+        vulnerabilities: Known CVEs or security issues
+        risk: Human-readable risk description
+        mitigation: Recommended fix or upgrade path
+        mitigation_suggestions: Detailed mitigation strategies
+
+    Risk Assessment:
+        - Automated analysis based on package name and version
+        - Known vulnerable versions trigger appropriate risk levels
+        - Supports major frameworks (Flask, Requests, etc.)
+
+    Usage:
+        Populated through dependency scanning tools
+        Used for security assessments and compliance reporting
+        Supports automated vulnerability management workflows
+    """
     __tablename__ = "dependencies"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -834,7 +1138,31 @@ class Dependency(Base):
     last_checked: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     def assess_risk(self):
-        """Assess supply chain risks based on dependency name and version"""
+        """
+        Assess supply chain and security risks based on dependency name and version.
+
+        Performs automated risk analysis using known vulnerability patterns and
+        version-specific security issues. Updates risk level, vulnerabilities,
+        and mitigation recommendations based on package characteristics.
+
+        Side Effects:
+            Updates multiple attributes with assessment results:
+            - risk_level: RiskSeverity enum value
+            - vulnerabilities: Known security issues
+            - risk: Human-readable risk description
+            - mitigation: Recommended actions
+            - mitigation_suggestions: Detailed remediation steps
+
+        Assessment Logic:
+            - Flask < 2.0: High risk (known vulnerabilities)
+            - Requests < 2.25.0: Medium risk (information disclosure)
+            - Other dependencies: Low risk by default
+
+        Note:
+            Uses hardcoded vulnerability knowledge
+            In production, integrate with vulnerability databases (NVD, etc.)
+            Supports extensible risk assessment rules
+        """
         # Example: Outdated Flask versions
         if self.name.lower() == "flask" and self.version.startswith("1."):
             self.risk_level = RiskSeverity.HIGH

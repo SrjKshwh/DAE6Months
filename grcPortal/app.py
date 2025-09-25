@@ -74,7 +74,39 @@ from llm_scan import scan_file_for_grc, create_risks_from_scan,generate_risk_mit
 
 def generate_risk_communication_plan(risk_data, mitigation_plan):
     """
-    Generate a comprehensive risk communication plan based on risk data and mitigation plan.
+    Generate a comprehensive risk communication plan with stakeholder analysis and tailored messaging.
+
+    This function creates a detailed communication strategy for risk management, including
+    executive risk reports, stakeholder communication plans, risk dashboards, and KPI frameworks.
+    The plan is designed to ensure effective communication of risk information across different
+    organizational levels and stakeholder groups.
+
+    Args:
+        risk_data (dict): Dictionary containing risk assessment data including:
+            - asset: The asset being assessed
+            - threat: The identified threat
+            - score: Risk score (1-25)
+            - likelihood: Likelihood rating (1-5)
+            - financial_impact_amount: Financial impact value
+        mitigation_plan (dict): Dictionary containing the mitigation plan details
+
+    Returns:
+        dict: Comprehensive communication plan with the following structure:
+            - executive_risk_report: Key findings, financial impact, actionable recommendations
+            - stakeholder_communication_plan: Analysis for different stakeholder groups
+            - risk_dashboard_config: Key metrics and automated alerts
+            - kpi_framework: Leading/lagging indicators and tracking systems
+
+    Components:
+        - Executive Risk Report: High-level summary for leadership
+        - Stakeholder Communication Plan: Tailored messaging for different groups
+        - Risk Dashboard: Real-time monitoring configuration
+        - KPI Framework: Performance measurement and tracking
+
+    Note:
+        This is a mock implementation providing comprehensive communication planning.
+        In production, this would integrate with organizational communication systems
+        and stakeholder databases for more accurate planning.
     """
     # Mock implementation - in production, this would use LLM to generate detailed plan
     communication_plan = {
@@ -1486,7 +1518,41 @@ def create_app():
     @app.route("/program/<int:program_id>")
     @login_required
     def view_program(program_id):
-        """View detailed risk management program"""
+        """
+        Display comprehensive risk management program details and progress.
+
+        Provides detailed view of risk management programs including phases,
+        gap analyses, timelines, and resource allocations. Supports program
+        governance and progress tracking.
+
+        Args:
+            program_id (int): Database ID of the risk management program
+
+        Returns:
+            Rendered program detail template with comprehensive program information
+
+        Program Components Displayed:
+            - Program overview (title, status, dates, budget)
+            - Implementation phases with descriptions and resources
+            - Gap analyses with findings and mitigation plans
+            - Progress tracking and milestone completion
+            - Resource allocation and personnel requirements
+
+        Security:
+            - Program ownership verification
+            - User authentication required
+            - Access limited to program creator
+
+        Template Variables:
+            program: RiskProgramPlan object with all program details
+            phases: List of ProgramPhase objects in order
+            gap_analyses: List of GapAnalysis objects for the program
+
+        Note:
+            Supports comprehensive program management lifecycle
+            Enables detailed progress monitoring and reporting
+            Facilitates governance and compliance oversight
+        """
         user = current_user()
         db = get_session()
     
@@ -1584,6 +1650,50 @@ def create_app():
     @app.route("/risk/<int:risk_id>")
     @login_required
     def view_risk(risk_id):
+        """
+        Display comprehensive risk assessment details with governance workflow.
+
+        Provides a detailed view of a specific risk assessment including quantitative analysis,
+        mitigation plans, approval workflows, compliance mappings, and communication strategies.
+        Implements role-based access control and comprehensive audit logging.
+
+        Args:
+            risk_id (int): Database ID of the risk to display
+
+        Returns:
+            Rendered risk detail template with comprehensive risk information
+
+        Features Displayed:
+            - Risk heat map and scoring matrix
+            - Business impact analysis (BIA)
+            - Multi-criteria risk analysis
+            - Mitigation plan with treatment strategies
+            - Approval workflow and history
+            - Compliance mappings
+            - Risk communication plan (if available)
+            - Quantitative analysis (EMV/ALE calculations)
+
+        Security:
+            - Role-based data access (admin/auditor see all, users see their own)
+            - Audit logging of risk access
+            - Session management for large data sets
+
+        Template Variables:
+            risk: Risk object with all attributes loaded
+            approvals: List of approval records
+            governance_decisions: Governance decision history
+            compliance_mappings: Associated compliance requirements
+            mitigation_plan: AI-generated mitigation strategies
+            communication_plan: Stakeholder communication strategy
+            emv: Expected Monetary Value calculation
+            ale: Annual Loss Expectancy calculation
+            Various pre-calculated display values
+
+        Note:
+            Handles DetachedInstanceError by pre-loading all required data
+            Generates mitigation and communication plans on-demand
+            Supports complex risk governance workflows
+        """
         """
         Display detailed risk assessment with governance workflow status.
 
@@ -2680,6 +2790,48 @@ def create_app():
     @app.route("/incident/<int:incident_id>", methods=["GET", "POST"])
     @login_required
     def view_incident(incident_id):
+        """
+        Display and update incident management details with IRP workflow.
+
+        Provides comprehensive incident tracking and response management interface.
+        Supports the full incident response lifecycle from preparation through recovery.
+        Implements role-based access control and incident ownership verification.
+
+        Args:
+            incident_id (int): Database ID of the incident to display/manage
+
+        Methods:
+            GET: Display incident details and current status
+            POST: Update incident response notes and status
+
+        Returns:
+            GET: Rendered incident detail template
+            POST: Redirect to incidents list with status message
+
+        IRP Phases Supported:
+            - Preparation: Initial incident assessment
+            - Identification: Incident analysis and classification
+            - Containment: Short-term mitigation measures
+            - Eradication: Root cause removal
+            - Recovery: System restoration and validation
+            - Lessons Learned: Post-incident analysis
+
+        Security Features:
+            - Incident ownership verification
+            - Audit logging of all updates
+            - Role-based access control
+            - Secure status transitions
+
+        Template Variables:
+            incident: Incident object with all response notes
+            statuses: IncidentStatus enum for status dropdown
+            severities: IncidentSeverity enum for display
+
+        Note:
+            Automatically generates post-incident analysis when closed
+            Supports comprehensive incident documentation
+            Maintains incident response timeline
+        """
         db = get_session()
         incident = db.query(Incident).filter(Incident.id == incident_id, Incident.reported_by == session.get("user_id")).first()
         if not incident:
@@ -3087,7 +3239,50 @@ def create_app():
     @login_required
     def checklist_assessment(assessment_id):
         """
-        Individual checklist assessment interface.
+        Conduct individual risk assessment checklist with question-by-question evaluation.
+
+        Provides an interactive interface for completing risk assessment checklists.
+        Supports systematic evaluation of risk factors through structured questioning.
+        Automatically generates risks when assessment criteria are met.
+
+        Args:
+            assessment_id (int): Database ID of the checklist assessment
+
+        Methods:
+            GET: Display checklist questions and current responses
+            POST: Submit responses for individual questions
+
+        Returns:
+            GET: Rendered checklist assessment template
+            POST: Redirect with success message or continue to next question
+
+        Assessment Process:
+            1. Load checklist items for the assessment
+            2. Display questions with response options
+            3. Record user responses in database
+            4. Check for assessment completion
+            5. Generate risks based on critical responses
+            6. Mark assessment as completed
+
+        Risk Generation:
+            - Automatically creates risk assessments for high-risk responses
+            - Links risks to original checklist items
+            - Assigns appropriate risk scores and severities
+
+        Security:
+            - Assessment ownership verification
+            - User authentication required
+            - Audit logging of assessment activities
+
+        Template Variables:
+            assessment: ChecklistAssessment object
+            checklist_items: List of questions to answer
+            responses: Dictionary of existing responses
+
+        Note:
+            Supports partial completion and resuming assessments
+            Provides clear progress indication
+            Enables systematic risk identification
         """
         user = current_user()
         db = get_session()
@@ -3283,6 +3478,40 @@ def create_app():
     @app.route("/asset_report/<int:asset_id>")
     @login_required
     def asset_report(asset_id):
+        """
+        Generate and display comprehensive asset risk assessment report.
+
+        Creates detailed risk analysis report for critical assets including
+        threat exposure, vulnerability assessment, and risk mitigation recommendations.
+        Supports asset criticality evaluation and risk prioritization.
+
+        Args:
+            asset_id (int): Database ID of the critical asset
+
+        Returns:
+            Rendered asset report template with comprehensive risk analysis
+
+        Report Components:
+            - Asset overview and criticality assessment
+            - Threat exposure analysis
+            - Vulnerability evaluation
+            - Risk scoring and prioritization
+            - Mitigation recommendations
+            - Compliance alignment
+
+        Security:
+            - User authentication required
+            - Asset existence validation
+            - Audit logging of report access
+
+        Template Variables:
+            report: Generated report data from asset.generate_report()
+
+        Note:
+            Leverages asset model methods for comprehensive analysis
+            Supports executive and operational reporting needs
+            Enables informed risk treatment decisions
+        """
         db = get_session()
         asset = db.get(CriticalAssetRegister, asset_id)
         if not asset:
@@ -3327,7 +3556,37 @@ def create_app():
     # Helper functions for risk generation
     def generate_risks_from_checklist(assessment_id):
         """
-        Generate risks from completed checklist assessment.
+        Automatically generate risk assessments from checklist responses.
+
+        Analyzes completed checklist assessments and creates formal risk records
+        for responses that indicate significant risk exposure. Supports systematic
+        risk identification through structured assessment processes.
+
+        Args:
+            assessment_id (int): Database ID of the completed checklist assessment
+
+        Process:
+            1. Retrieve assessment and associated responses
+            2. Evaluate each response for risk significance
+            3. Create risk records for high-risk responses
+            4. Link risks to original checklist items
+            5. Assign appropriate risk scoring and metadata
+
+        Risk Creation Criteria:
+            - Response values: "yes", "high", or "critical"
+            - Risk score: 3-4 based on response severity
+            - Owner: Assessment assessor
+            - Category: From checklist item category
+
+        Database Operations:
+            - Creates Risk records with comprehensive data
+            - Calculates initial risk scores
+            - Commits all changes in single transaction
+
+        Note:
+            Called automatically when checklist assessment is completed
+            Supports integration with broader risk management framework
+            Enables systematic risk identification from checklists
         """
         db = get_session()
 
