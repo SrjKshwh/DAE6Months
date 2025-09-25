@@ -5042,3 +5042,84 @@ WHERE scan_results.id = ?
 2025-09-24 23:23:00,297 [INFO]  * Restarting with stat
 2025-09-24 23:23:01,379 [WARNING]  * Debugger is active!
 2025-09-24 23:23:01,381 [INFO]  * Debugger PIN: 136-772-789
+2025-09-25 12:53:41,701 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-25 12:53:41,703 [INFO] [33mPress CTRL+C to quit[0m
+2025-09-25 12:53:41,705 [INFO]  * Restarting with stat
+2025-09-25 12:53:42,686 [WARNING]  * Debugger is active!
+2025-09-25 12:53:42,690 [INFO]  * Debugger PIN: 136-772-789
+2025-09-25 12:53:47,004 [INFO] 127.0.0.1 - - [25/Sep/2025 12:53:47] "GET / HTTP/1.1" 200 -
+2025-09-25 12:53:47,163 [INFO] 127.0.0.1 - - [25/Sep/2025 12:53:47] "GET /static/main.css HTTP/1.1" 200 -
+2025-09-25 12:53:47,529 [INFO] 127.0.0.1 - - [25/Sep/2025 12:53:47] "GET /static/images/cybersecurityBG.png HTTP/1.1" 200 -
+2025-09-25 12:53:47,831 [INFO] 127.0.0.1 - - [25/Sep/2025 12:53:47] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-09-25 12:54:16,050 [INFO] 127.0.0.1 - - [25/Sep/2025 12:54:16] "POST / HTTP/1.1" 200 -
+2025-09-25 12:54:16,070 [INFO] 127.0.0.1 - - [25/Sep/2025 12:54:16] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-25 12:54:16,083 [INFO] 127.0.0.1 - - [25/Sep/2025 12:54:16] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-09-25 12:54:37,448 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-09-25 12:54:37,469 [INFO] 127.0.0.1 - - [25/Sep/2025 12:54:37] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-09-25 12:54:37,493 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-25 12:54:37,593 [INFO] 127.0.0.1 - - [25/Sep/2025 12:54:37] "GET /home HTTP/1.1" 200 -
+2025-09-25 12:54:37,620 [INFO] 127.0.0.1 - - [25/Sep/2025 12:54:37] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-25 12:55:10,867 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-25 12:55:10,899 [INFO] User kush786srj@gmail.com uploaded file COPPA_Compliance_Report.txt from IP 127.0.0.1
+2025-09-25 12:55:10,903 [INFO] 127.0.0.1 - - [25/Sep/2025 12:55:10] "[32mPOST /home HTTP/1.1[0m" 302 -
+2025-09-25 12:55:10,926 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-25 12:55:10,934 [INFO] 127.0.0.1 - - [25/Sep/2025 12:55:10] "GET /home HTTP/1.1" 200 -
+2025-09-25 12:55:10,960 [INFO] 127.0.0.1 - - [25/Sep/2025 12:55:10] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-25 12:55:22,274 [INFO] Created risk entry 1: Improper parental consent mechanisms
+2025-09-25 12:55:22,299 [INFO] Created risk entry 2: Insufficient data minimization practices
+2025-09-25 12:55:22,317 [INFO] Created risk entry 3: Inadequate data retention and deletion policies
+2025-09-25 12:55:22,336 [INFO] Successfully created 3 risk entries (3 LLM + 0 pattern-based) and associated compliance records
+2025-09-25 12:55:22,337 [INFO] User 1 scanned file COPPA_Compliance_Report.txt
+2025-09-25 12:55:22,340 [INFO] 127.0.0.1 - - [25/Sep/2025 12:55:22] "[32mPOST /scan/3 HTTP/1.1[0m" 302 -
+2025-09-25 12:55:22,361 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-25 12:55:22,394 [INFO] 127.0.0.1 - - [25/Sep/2025 12:55:22] "GET /home HTTP/1.1" 200 -
+2025-09-25 12:55:22,430 [INFO] 127.0.0.1 - - [25/Sep/2025 12:55:22] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-25 12:55:50,515 [INFO] DEBUG: Risk loaded with ID 9, session active: True
+2025-09-25 12:55:50,517 [INFO] DEBUG: Risk attributes accessed successfully
+2025-09-25 12:55:50,537 [INFO] DEBUG: Risk object loaded with ID 9, status: RiskStatus.OPEN
+2025-09-25 12:55:50,538 [INFO] DEBUG: Session active before mitigation plan: True
+2025-09-25 12:55:50,540 [INFO] DEBUG: Risk object session: True
+2025-09-25 12:55:52,871 [INFO] DEBUG: Risk loaded with ID 10, session active: True
+2025-09-25 12:55:52,872 [INFO] DEBUG: Risk attributes accessed successfully
+2025-09-25 12:55:52,888 [INFO] DEBUG: Risk object loaded with ID 10, status: RiskStatus.OPEN
+2025-09-25 12:55:52,889 [INFO] DEBUG: Session active before mitigation plan: True
+2025-09-25 12:55:52,891 [INFO] DEBUG: Risk object session: True
+2025-09-25 12:55:54,662 [INFO] DEBUG: Risk loaded with ID 11, session active: True
+2025-09-25 12:55:54,663 [INFO] DEBUG: Risk attributes accessed successfully
+2025-09-25 12:55:54,671 [INFO] DEBUG: Risk object loaded with ID 11, status: RiskStatus.OPEN
+2025-09-25 12:55:54,673 [INFO] DEBUG: Session active before mitigation plan: True
+2025-09-25 12:55:54,674 [INFO] DEBUG: Risk object session: True
+2025-09-25 12:56:02,982 [INFO] DEBUG: About to close session. Risk ID: 10
+2025-09-25 12:56:02,984 [INFO] DEBUG: Approvals count: 0
+2025-09-25 12:56:02,985 [INFO] DEBUG: Governance decisions count: 0
+2025-09-25 12:56:02,985 [INFO] DEBUG: Compliance mappings count: 0
+2025-09-25 12:56:02,985 [INFO] DEBUG: Pre-calculated values: BIA=0
+2025-09-25 12:56:02,986 [INFO] DEBUG: Starting template render for risk 10
+2025-09-25 12:56:03,145 [INFO] DEBUG: Template rendered successfully, closing session for risk 10
+2025-09-25 12:56:03,147 [ERROR] Failed to log audit event: Instance <User at 0x2252a5b6820> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-25 12:56:03,149 [INFO] 127.0.0.1 - - [25/Sep/2025 12:56:03] "GET /risk/10 HTTP/1.1" 200 -
+2025-09-25 12:56:03,189 [INFO] 127.0.0.1 - - [25/Sep/2025 12:56:03] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-25 12:56:04,133 [INFO] DEBUG: About to close session. Risk ID: 9
+2025-09-25 12:56:04,134 [INFO] DEBUG: Approvals count: 0
+2025-09-25 12:56:04,134 [INFO] DEBUG: Governance decisions count: 0
+2025-09-25 12:56:04,135 [INFO] DEBUG: Compliance mappings count: 0
+2025-09-25 12:56:04,135 [INFO] DEBUG: Pre-calculated values: BIA=0
+2025-09-25 12:56:04,136 [INFO] DEBUG: Starting template render for risk 9
+2025-09-25 12:56:04,138 [INFO] DEBUG: Template rendered successfully, closing session for risk 9
+2025-09-25 12:56:04,139 [ERROR] Failed to log audit event: Instance <User at 0x2252a62f770> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-25 12:56:04,141 [INFO] 127.0.0.1 - - [25/Sep/2025 12:56:04] "GET /risk/9 HTTP/1.1" 200 -
+2025-09-25 12:56:04,183 [INFO] 127.0.0.1 - - [25/Sep/2025 12:56:04] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-25 12:56:05,999 [INFO] DEBUG: About to close session. Risk ID: 11
+2025-09-25 12:56:06,000 [INFO] DEBUG: Approvals count: 0
+2025-09-25 12:56:06,000 [INFO] DEBUG: Governance decisions count: 0
+2025-09-25 12:56:06,000 [INFO] DEBUG: Compliance mappings count: 0
+2025-09-25 12:56:06,001 [INFO] DEBUG: Pre-calculated values: BIA=0
+2025-09-25 12:56:06,001 [INFO] DEBUG: Starting template render for risk 11
+2025-09-25 12:56:06,003 [INFO] DEBUG: Template rendered successfully, closing session for risk 11
+2025-09-25 12:56:06,004 [ERROR] Failed to log audit event: Instance <User at 0x2252a3df590> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2025-09-25 12:56:06,005 [INFO] 127.0.0.1 - - [25/Sep/2025 12:56:06] "GET /risk/11 HTTP/1.1" 200 -
+2025-09-25 12:56:06,041 [INFO] 127.0.0.1 - - [25/Sep/2025 12:56:06] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-09-25 12:56:08,938 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-09-25 12:56:08,959 [INFO] 127.0.0.1 - - [25/Sep/2025 12:56:08] "GET /home HTTP/1.1" 200 -
+2025-09-25 12:57:10,902 [INFO] File uploads\COPPA_Compliance_Report.txt deleted after 120 seconds.
