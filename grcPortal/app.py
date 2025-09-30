@@ -416,6 +416,13 @@ def create_app():
         SESSION_COOKIE_SAMESITE="Lax",
         MAX_CONTENT_LENGTH=10*1024*1024  # 10 MB upload cap
     )
+    # Inactivity timeout configuration
+    INACTIVITY_TIMEOUT = int(os.getenv("INACTIVITY_TIMEOUT", 2400000))  # 40 minutes default
+    WARNING_TIMEOUT = int(os.getenv("WARNING_TIMEOUT", 30000))  # 30 seconds
+    
+    # Make these available to templates/JavaScript
+    app.config['INACTIVITY_TIMEOUT'] = INACTIVITY_TIMEOUT
+    app.config['WARNING_TIMEOUT'] = WARNING_TIMEOUT
 
     # Ensure instance and uploads folders exist
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
@@ -929,6 +936,14 @@ def create_app():
         session.clear()
         flash("Logged out securely.", "info")
         return redirect(url_for("login"))
+         
+        # Handle AJAX requests
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return '', 204  # No Content response for AJAX
+    
+        return redirect(url_for("login"))
+    
+
 
     @app.route("/home", methods=["GET", "POST"])
     @login_required  # Access Control Policy

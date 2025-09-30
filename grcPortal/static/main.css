@@ -13,3 +13,8 @@ a { color: #2f6fed; text-decoration: none; }
 .flash-warning { background: #fff4e5; }
 .hint { color: #666; font-size: .9rem; }
 pre { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: #f7f7f9; padding: 12px; border-radius: 8px; }
+
+/* Blur effect for background when modal is shown */
+.modal-open-blur {filter: blur(2px); pointer-events: none;}
+
+.modal-open-blur .modal { pointer-events: auto;}
