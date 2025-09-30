@@ -74,7 +74,6 @@
                             <li><a class="dropdown-item" href="{{ url_for('report_incident') }}">
                                 <i class="fas fa-plus"></i> Report Incident
                             </a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('incidents') }}">
                                 <i class="fas fa-list"></i> View Incidents
                             </a></li>
                             <li><a class="dropdown-item" href="{{ url_for('forensics') }}">
@@ -95,6 +94,41 @@
                             </a></li>
                             <li><a class="dropdown-item" href="{{ url_for('audit_logs') }}">
                                 <i class="fas fa-history"></i> Audit Logs
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="threatDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-bug"></i> Cyber Threats
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('threat_analysis') }}">
+                                <i class="fas fa-chart-line"></i> Threat Analysis
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('malware_analysis') }}">
+                                <i class="fas fa-virus"></i> Malware Analysis
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('phishing_templates') }}">
+                                <i class="fas fa-envelope"></i> Phishing Templates
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('apt_campaigns') }}">
+                                <i class="fas fa-user-secret"></i> APT Campaigns
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="vulnerabilityDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-search"></i> Vulnerability Assessment
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('vulnerability_assessment') }}">
+                                <i class="fas fa-chart-line"></i> Assessment Dashboard
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('vulnerability_scan') }}">
+                                <i class="fas fa-search-plus"></i> Vulnerability Scans
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('asset_discovery') }}">
+                                <i class="fas fa-network-wired"></i> Asset Discovery
                             </a></li>
                         </ul>
                     </li>
@@ -181,139 +215,134 @@
 
     {% block scripts %}{% endblock %}
 
-<!-- Inactivity Timeout Script -->
-<script>
-const INACTIVITY_TIMEOUT = {{ config.INACTIVITY_TIMEOUT }}; // From Flask config
-const WARNING_TIMEOUT = {{ config.WARNING_TIMEOUT }}; // From Flask config
+    <!-- Inactivity Timeout Script -->
+    <script>
+        let INACTIVITY_TIMEOUT = {{ config.INACTIVITY_TIMEOUT }}; // From Flask config
+        let WARNING_TIMEOUT = {{ config.WARNING_TIMEOUT }}; // From Flask config
 
-let inactivityTimer;
-let warningShown = false;
-INACTIVITY_TIMEOUT = 40000; // 40 seconds
-WARNING_TIMEOUT = 30000; // 30 seconds to respond to warning
+        let inactivityTimer;
+        let warningShown = false;
+        // Default values if config not set
+        if (!INACTIVITY_TIMEOUT) INACTIVITY_TIMEOUT = 40000; // 40 seconds
+        if (!WARNING_TIMEOUT) WARNING_TIMEOUT = 30000; // 30 seconds to respond to warning
 
-// Reset timer on user activity
-function resetInactivityTimer() {
-    clearTimeout(inactivityTimer);
-    if (warningShown) {
-        hideInactivityWarning();
-    }
-    startInactivityTimer();
-}
+        // Reset timer on user activity
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            if (warningShown) {
+                hideInactivityWarning();
+            }
+            startInactivityTimer();
+        }
 
-// Start the inactivity timer
-function startInactivityTimer() {
-    warningShown = false;
-    inactivityTimer = setTimeout(showInactivityWarning, INACTIVITY_TIMEOUT);
-}
+        // Start the inactivity timer
+        function startInactivityTimer() {
+            warningShown = false;
+            inactivityTimer = setTimeout(showInactivityWarning, INACTIVITY_TIMEOUT);
+        }
 
-// Show inactivity warning modal
-function showInactivityWarning() {
-    warningShown = true;
-    
-    // Create modal if it doesn't exist
-    if (!document.getElementById('inactivityModal')) {
-        const modalHTML = `
-            <div class="modal fade" id="inactivityModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header bg-warning">
-                            <h5 class="modal-title">Session Timeout Warning</h5>
-                        </div>
-                        <div class="modal-body text-center">
-                            <p class="mb-4">Are you still here?</p>
-                            <p class="text-muted small">Your session will expire in 30 seconds due to inactivity.</p>
-                        </div>
-                        <div class="modal-footer justify-content-center">
-                            <button type="button" class="btn btn-primary" id="stayLoggedIn">Yes, I'm here</button>
-                            <button type="button" class="btn btn-secondary" id="logoutNow">No, log me out</button>
+        // Show inactivity warning modal
+        function showInactivityWarning() {
+            warningShown = true;
+
+            // Create modal if it doesn't exist
+            if (!document.getElementById('inactivityModal')) {
+                const modalHTML = `
+                    <div class="modal fade" id="inactivityModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-warning">
+                                    <h5 class="modal-title">Session Timeout Warning</h5>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <p class="mb-4">Are you still here?</p>
+                                    <p class="text-muted small">Your session will expire in 30 seconds due to inactivity.</p>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-primary" id="stayLoggedIn">Yes</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-    
-    // Show modal
-    const modal = new bootstrap.Modal(document.getElementById('inactivityModal'));
-    modal.show();
-    
-    // Add blur effect to background
-    document.body.classList.add('modal-open-blur');
-    
-    // Set up button handlers
-    document.getElementById('stayLoggedIn').onclick = function() {
-        hideInactivityWarning();
-        resetInactivityTimer();
-    };
-    
-    document.getElementById('logoutNow').onclick = function() {
-        performLogout();
-    };
-    
-    // Auto logout after warning timeout
-    setTimeout(() => {
-        if (warningShown) {
-            performLogout();
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            }
+
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('inactivityModal'));
+            modal.show();
+
+            // Add blur effect to background
+            document.body.classList.add('modal-open-blur');
+
+            // Set up button handler
+            document.getElementById('stayLoggedIn').onclick = function() {
+                hideInactivityWarning();
+                resetInactivityTimer();
+            };
+
+            // Auto logout after warning timeout
+            setTimeout(() => {
+                if (warningShown) {
+                    performLogout();
+                }
+            }, WARNING_TIMEOUT);
         }
-    }, WARNING_TIMEOUT);
-}
 
-// Hide inactivity warning
-function hideInactivityWarning() {
-    warningShown = false;
-    const modal = bootstrap.Modal.getInstance(document.getElementById('inactivityModal'));
-    if (modal) {
-        modal.hide();
-    }
-    document.body.classList.remove('modal-open-blur');
-}
-
-// Perform logout
-function performLogout() {
-    fetch('/logout', {
-        method: 'GET',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
+        // Hide inactivity warning
+        function hideInactivityWarning() {
+            warningShown = false;
+            const modal = bootstrap.Modal.getInstance(document.getElementById('inactivityModal'));
+            if (modal) {
+                modal.hide();
+            }
+            document.body.classList.remove('modal-open-blur');
         }
-    })
-    .then(response => {
-        if (response.redirected) {
-            window.location.href = response.url;
-        } else {
-            window.location.href = '/login';
+
+        // Perform logout
+        function performLogout() {
+            fetch('/logout', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    window.location.href = '/login';
+                }
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+                window.location.href = '/login';
+            });
         }
-    })
-    .catch(error => {
-        console.error('Logout error:', error);
-        window.location.href = '/login';
-    });
-}
 
-// Event listeners for user activity
-document.addEventListener('mousemove', resetInactivityTimer);
-document.addEventListener('keypress', resetInactivityTimer);
-document.addEventListener('click', resetInactivityTimer);
-document.addEventListener('scroll', resetInactivityTimer);
+        // Event listeners for user activity
+        document.addEventListener('mousemove', resetInactivityTimer);
+        document.addEventListener('keypress', resetInactivityTimer);
+        document.addEventListener('click', resetInactivityTimer);
+        document.addEventListener('scroll', resetInactivityTimer);
 
-// Start timer when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    startInactivityTimer();
-});
-</script>
+        // Start timer when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            startInactivityTimer();
+        });
+    </script>
 
-<style>
-/* Blur effect for background when modal is shown */
-.modal-open-blur {
-    filter: blur(2px);
-    pointer-events: none;
-}
+    <style>
+        /* Blur effect for background when modal is shown */
+        .modal-open-blur {
+            filter: blur(2px);
+            pointer-events: none;
+        }
 
-.modal-open-blur .modal {
-    pointer-events: auto;
-}
-</style>
-
+        .modal-open-blur .modal {
+            pointer-events: auto;
+        }
+    </style>
 
 </body>
 </html>

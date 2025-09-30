@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block title %}Phishing Templates - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-envelope text-warning"></i> Phishing Templates</h2>
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#createTemplateModal">
+                <i class="fas fa-plus"></i> Create Template
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Templates List -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Phishing Email Templates</h5>
+            </div>
+            <div class="card-body">
+                {% if templates %}
+                <div class="row">
+                    {% for template in templates %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">{{ template.name }}</h6>
+                                <span class="badge bg-{{ 'danger' if template.risk_level == 'high' else 'warning' if template.risk_level == 'medium' else 'success' }}">
+                                    {{ template.risk_level }} risk
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small">{{ template.description or 'No description' }}</p>
+                                <div class="mb-2">
+                                    <strong>Subject:</strong> {{ template.subject }}
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Spoofed Sender:</strong> {{ template.spoofed_sender or 'N/A' }}
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Created:</strong> {{ template.created_at.strftime('%Y-%m-%d') }}
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-sm btn-outline-info" onclick="viewTemplate({{ template.id }})">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteTemplate({{ template.id }})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-envelope fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No phishing templates created yet</h5>
+                    <p class="text-muted">Create templates to document phishing techniques and social engineering methods</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Template Modal -->
+<div class="modal fade" id="createTemplateModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Phishing Template</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Template Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="subject" class="form-label">Email Subject</label>
+                                <input type="text" class="form-control" id="subject" name="subject" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="spoofed_sender" class="form-label">Spoofed Sender Email</label>
+                                <input type="email" class="form-control" id="spoofed_sender" name="spoofed_sender"
+                                       placeholder="e.g., support@bank.com">
+                            </div>
+                            <div class="mb-3">
+                                <label for="risk_level" class="form-label">Risk Level</label>
+                                <select class="form-select" id="risk_level" name="risk_level" required>
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="body_html" class="form-label">Email Body (HTML)</label>
+                                <textarea class="form-control" id="body_html" name="body_html" rows="8" required
+                                          placeholder="<p>Dear user,</p><p>Your account requires verification...</p>"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="body_text" class="form-label">Email Body (Plain Text)</label>
+                                <textarea class="form-control" id="body_text" name="body_text" rows="4"
+                                          placeholder="Dear user, Your account requires verification..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">Social Engineering Techniques</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="techniques" value="urgency" id="urgency">
+                                            <label class="form-check-label" for="urgency">Urgency/Fear</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="techniques" value="authority" id="authority">
+                                            <label class="form-check-label" for="authority">Authority Impersonation</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="techniques" value="scarcity" id="scarcity">
+                                            <label class="form-check-label" for="scarcity">Scarcity</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="techniques" value="greed" id="greed">
+                                            <label class="form-check-label" for="greed">Greed/Reward</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="techniques" value="curiosity" id="curiosity">
+                                            <label class="form-check-label" for="curiosity">Curiosity</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="techniques" value="trust" id="trust">
+                                            <label class="form-check-label" for="trust">Building False Trust</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Malicious Links (one per line)</label>
+                                <textarea class="form-control" name="malicious_links" rows="3"
+                                          placeholder="https://fake-bank.com/login&#10;https://phishing-site.com/reset"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Create Template</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Template Details Modal -->
+<div class="modal fade" id="templateModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Template Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="templateContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewTemplate(templateId) {
+    // Find the template data
+    const templates = {{ templates|tojson }};
+    const template = templates.find(t => t.id === templateId);
+
+    if (!template) return;
+
+    let content = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Template Information</h6>
+                <table class="table table-sm">
+                    <tr><td><strong>Name:</strong></td><td>${template.name}</td></tr>
+                    <tr><td><strong>Description:</strong></td><td>${template.description || 'N/A'}</td></tr>
+                    <tr><td><strong>Risk Level:</strong></td><td><span class="badge bg-${template.risk_level === 'high' ? 'danger' : template.risk_level === 'medium' ? 'warning' : 'success'}">${template.risk_level}</span></td></tr>
+                    <tr><td><strong>Created:</strong></td><td>${new Date(template.created_at).toLocaleString()}</td></tr>
+                </table>
+
+                <h6>Social Engineering Techniques</h6>
+                <div class="mb-3">
+                    ${JSON.parse(template.social_engineering_techniques || '[]').map(tech =>
+                        `<span class="badge bg-secondary me-1">${tech}</span>`
+                    ).join('')}
+                </div>
+
+                <h6>Malicious Links</h6>
+                <div class="mb-3">
+                    ${JSON.parse(template.malicious_links || '[]').map(link =>
+                        `<div class="text-break"><code>${link}</code></div>`
+                    ).join('')}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h6>Email Preview</h6>
+                <div class="border p-3 bg-light">
+                    <div class="mb-2"><strong>Subject:</strong> ${template.subject}</div>
+                    <div class="mb-2"><strong>From:</strong> ${template.spoofed_sender || 'Unknown'}</div>
+                    <hr>
+                    <div>${template.body_html}</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('templateContent').innerHTML = content;
+    new bootstrap.Modal(document.getElementById('templateModal')).show();
+}
+
+function deleteTemplate(templateId) {
+    if (confirm('Are you sure you want to delete this template?')) {
+        // In a real implementation, this would make an AJAX call to delete
+        alert('Delete functionality would be implemented with AJAX');
+    }
+}
+</script>
+{% endblock %}

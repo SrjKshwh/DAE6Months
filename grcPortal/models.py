@@ -29,6 +29,15 @@ Database Tables:
 - dependencies: Software dependency risk analysis
 - incidents: Security incident management
 - evidence: Digital evidence collection
+- malware_samples: Malware sample submissions
+- malware_analyses: Malware analysis results
+- phishing_templates: Phishing email templates
+- apt_campaigns: APT campaign documentation
+- attack_mappings: MITRE ATT&CK mappings
+- vulnerability_scans: Vulnerability scan results
+- vulnerability_findings: Individual vulnerability findings
+- asset_discoveries: Asset discovery scan results
+- discovered_services: Services found on assets
 
 Security Considerations:
 - Input validation through SQLAlchemy column constraints
@@ -79,6 +88,7 @@ def calculate_ale(probability: float, impact: float) -> float:
     """
     return probability * impact
 
+
 class ComplianceFramework(PyEnum):
     NIST_SP_800_53 = "NIST SP 800-53"
     NIST_CSF = "NIST CSF"
@@ -91,11 +101,13 @@ class ComplianceFramework(PyEnum):
     CIS_CONTROLS = "CIS Controls"
     COBIT = "COBIT"
 
+
 class RiskSeverity(PyEnum):
     LOW = "Low"
     MEDIUM = "Medium"
     HIGH = "High"
     CRITICAL = "Critical"
+
 
 class IncidentStatus(PyEnum):
     OPEN = "open"
@@ -118,11 +130,13 @@ class EvidenceType(PyEnum):
     DOCUMENT = "document"
     OTHER = "other"
 
+
 class RiskStatus(PyEnum):
     OPEN = "open"
     MITIGATED = "mitigated"
     ACCEPTED = "accepted"
     CLOSED = "closed"
+
 
 class RiskCategory(PyEnum):
     ACCESS_CONTROL = "Access Control"
@@ -137,11 +151,13 @@ class RiskCategory(PyEnum):
     SUPPLY_CHAIN = "Supply Chain"
     VULNERABILITY_MANAGEMENT = "Vulnerability Management"
 
+
 class RiskTreatment(PyEnum):
     ACCEPT = "accept"
     MITIGATE = "mitigate"
     TRANSFER = "transfer"
     AVOID = "avoid"
+
 
 class ApprovalStatus(PyEnum):
     PENDING = "pending"
@@ -149,12 +165,14 @@ class ApprovalStatus(PyEnum):
     REJECTED = "rejected"
     ESCALATED = "escalated"
 
+
 class GovernanceRole(PyEnum):
     RISK_OWNER = "risk_owner"
     COMPLIANCE_OFFICER = "compliance_officer"
     AUDITOR = "auditor"
     BUSINESS_OWNER = "business_owner"
     IT_SECURITY = "it_security"
+
 
 class NIST_RMF_Phase(PyEnum):
     PREPARE = "prepare"
@@ -165,11 +183,13 @@ class NIST_RMF_Phase(PyEnum):
     AUTHORIZE = "authorize"
     MONITOR = "monitor"
 
+
 class RiskCriteria(PyEnum):
     FINANCIAL = "Financial"
     OPERATIONAL = "Operational"
     COMPLIANCE = "Compliance"
     REPUTATION = "Reputation"
+
 
 class BusinessImpactType(PyEnum):
     LOW = "Low"
@@ -197,6 +217,7 @@ class Base(DeclarativeBase):
         classes that inherit from Base for database operations.
     """
     pass
+
 
 class User(Base):
     """
@@ -413,13 +434,13 @@ class Risk(Base):
     operational_impact: Mapped[int] = mapped_column(Integer, nullable=False, default=1)  # 1-5 scale
     compliance_impact: Mapped[int] = mapped_column(Integer, nullable=False, default=1)  # 1-5 scale
     reputation_impact: Mapped[int] = mapped_column(Integer, nullable=False, default=1)  # 1-5 scale
-    
+
     # Weights for criteria (default equal weighting)
     financial_weight: Mapped[float] = mapped_column(Float, nullable=False, default=0.25)
     operational_weight: Mapped[float] = mapped_column(Float, nullable=False, default=0.25)
     compliance_weight: Mapped[float] = mapped_column(Float, nullable=False, default=0.25)
     reputation_weight: Mapped[float] = mapped_column(Float, nullable=False, default=0.25)
-    
+
     # Business Impact Analysis
     rto_hours: Mapped[float] = mapped_column(Float, nullable=True)  # Recovery Time Objective in hours
     rpo_hours: Mapped[float] = mapped_column(Float, nullable=True)  # Recovery Point Objective in hours
@@ -431,7 +452,7 @@ class Risk(Base):
     annual_occurrence_probability: Mapped[float] = mapped_column(Float, nullable=True)  # Probability of occurrence per year (0-1)
     ale_calculated: Mapped[float] = mapped_column(Float, nullable=True)  # Calculated Annual Loss Expectancy
     emv_calculated: Mapped[float] = mapped_column(Float, nullable=True)  # Calculated Expected Monetary Value
-    
+
     # Evaluation criteria documentation
     evaluation_criteria: Mapped[str] = mapped_column(Text, nullable=True)  # Documented evaluation criteria
     stakeholder_approval_required: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
@@ -673,7 +694,7 @@ class Risk(Base):
         normalized_operational = (self.operational_impact - 1) / 4.0
         normalized_compliance = (self.compliance_impact - 1) / 4.0
         normalized_reputation = (self.reputation_impact - 1) / 4.0
-    
+
         # Calculate weighted score
         weighted_score = (
             normalized_financial * self.financial_weight +
@@ -681,99 +702,26 @@ class Risk(Base):
             normalized_compliance * self.compliance_weight +
             normalized_reputation * self.reputation_weight
             )
-    
+
         # Convert to 1-25 scale for consistency with existing scoring
         self.score = int(weighted_score * 25) + 1
         return self.score
-    
-    def calculate_business_impact_score(self):
-        """Calculate business impact score based on RTO, RPO, MTD"""
-        if not all([self.rto_hours, self.rpo_hours, self.mtd_hours]):
-            return 0
-    
-        # Calculate impact based on time objectives
-        rto_impact = min(self.rto_hours / 24, 5)  # Normalize to 5-point scale
-        rpo_impact = min(self.rpo_hours / 24, 5)
-        mtd_impact = min(self.mtd_hours / 24, 5)
-    
-        # Average impact score
-        time_impact = (rto_impact + rpo_impact + mtd_impact) / 3
-    
-        # Factor in financial impact (assuming asset_value is set)
-        financial_factor = min(self.financial_impact_amount / (self.asset_value or 100000), 5)
-    
-        return (time_impact + financial_factor) / 2
-    
-    def get_dependency_graph(self):
-        """Parse dependency mapping and return structured data"""
-        import json
-        try:
-            return json.loads(self.dependency_mapping or '{}')
-        except json.JSONDecodeError:
-            return {}
-
-    def validate_evaluation_criteria(self):
-        """Validate that evaluation criteria are properly documented"""
-        return bool(self.evaluation_criteria and len(self.evaluation_criteria.strip()) > 50)
-
-    def get_stakeholder_approval_status(self):
-        """Get formatted stakeholder approval status"""
-        if not self.stakeholder_approval_required:
-            return "Not Required"
-        elif self.approval_status == ApprovalStatus.APPROVED:
-            return f"Approved - {self.stakeholder_approval_notes or 'No notes'}"
-        elif self.approval_status == ApprovalStatus.REJECTED:
-            return f"Rejected - {self.stakeholder_approval_notes or 'No notes'}"
-        else:
-            return f"Pending - {self.approval_status.value}"
-        
-    def get_impact_description(self, impact_type: str, level: int) -> str:
-        """
-        Return qualitative description for impact levels across different criteria.
-
-        Provides human-readable descriptions for numerical impact ratings
-        to support better risk communication and understanding.
-
-        Args:
-            impact_type (str): Type of impact ("financial", "operational", "compliance", "reputation")
-            level (int): Impact level (1-5 scale)
-
-        Returns:
-            str: Qualitative description of the impact level
-
-        Impact Scales:
-            Financial: Negligible to Critical monetary impact ranges
-            Operational: Minimal disruption to business-critical failure
-            Compliance: Minor violation to license revocation risk
-            Reputation: Minimal notice to global scandal
-
-        Note:
-            Used in templates and reports for user-friendly impact display
-            Supports standardized impact communication
-        """
-        scales = {
-            "financial": {1: "Negligible (<$1K)", 2: "Minor ($1K-$10K)", 3: "Moderate ($10K-$100K)", 4: "Major ($100K-$1M)", 5: "Critical (>$1M)"},
-            "operational": {1: "Minimal disruption", 2: "Short-term impact", 3: "Moderate downtime", 4: "Significant operational halt", 5: "Business-critical failure"},
-            "compliance": {1: "Minor violation", 2: "Regulatory notice", 3: "Fines possible", 4: "Legal action likely", 5: "License revocation risk"},
-            "reputation": {1: "Minimal public notice", 2: "Local media coverage", 3: "Regional attention", 4: "National coverage", 5: "Global scandal"}
-            }
-        return scales.get(impact_type, {}).get(level, "Unknown")
 
     def calculate_business_impact_score(self):
         """Calculate business impact score based on RTO, RPO, MTD."""
         if not all([self.rto_hours, self.rpo_hours, self.mtd_hours]):
             return 0
-    
+
         # Normalize to 1-5 scale
         rto_impact = min(self.rto_hours / 24, 5)  # Days to scale
         rpo_impact = min(self.rpo_hours / 24, 5)
         mtd_impact = min(self.mtd_hours / 24, 5)
-    
+
         # Factor in financial impact
         financial_factor = min(self.financial_impact_amount / (self.asset_value or 100000), 5)
-    
+
         return (rto_impact + rpo_impact + mtd_impact) / 3 + financial_factor / 2
-    
+
     def get_dependency_graph(self):
         """Parse dependency mapping JSON."""
         import json
@@ -781,11 +729,11 @@ class Risk(Base):
             return json.loads(self.dependency_mapping or '{}')
         except json.JSONDecodeError:
             return {}
-        
+
     def validate_evaluation_criteria(self):
         """Validate that evaluation criteria are properly documented."""
         return bool(self.evaluation_criteria and len(self.evaluation_criteria.strip()) > 50)
-    
+
     def get_stakeholder_approval_status(self):
         """Get formatted approval status."""
         if not self.stakeholder_approval_required:
@@ -798,13 +746,10 @@ class Risk(Base):
             return f"Pending - {self.approval_status.value}"
 
 
-
-
-
 class RiskManagementFramework(Base):
     """Risk management framework selection and customization"""
     __tablename__ = "risk_management_frameworks"
-    
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(100), nullable=False)  # NIST RMF, ISO 31000, COSO
     version: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -814,10 +759,11 @@ class RiskManagementFramework(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+
 class RiskProgramPlan(Base):
     """Complete risk management program plan"""
     __tablename__ = "risk_program_plans"
-    
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(200), nullable=False)
     framework_id: Mapped[int] = mapped_column(Integer, ForeignKey("risk_management_frameworks.id"))
@@ -826,23 +772,24 @@ class RiskProgramPlan(Base):
     end_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     total_budget: Mapped[float] = mapped_column(Float, default=0.0)
     created_by: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
-    
+
     # Program phases
     planning_phase_complete: Mapped[bool] = mapped_column(Boolean, default=False)
     implementation_phase_complete: Mapped[bool] = mapped_column(Boolean, default=False)
     monitoring_phase_complete: Mapped[bool] = mapped_column(Boolean, default=False)
-    
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationships
     framework: Mapped[RiskManagementFramework] = relationship("RiskManagementFramework")
     creator: Mapped[User] = relationship("User")
 
+
 class ProgramPhase(Base):
     """Program implementation phases with timelines and resources"""
     __tablename__ = "program_phases"
-    
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     program_id: Mapped[int] = mapped_column(Integer, ForeignKey("risk_program_plans.id"))
     phase_name: Mapped[str] = mapped_column(String(100), nullable=False)
@@ -852,25 +799,27 @@ class ProgramPhase(Base):
     end_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     budget_allocated: Mapped[float] = mapped_column(Float, default=0.0)
     status: Mapped[str] = mapped_column(String(50), default="pending")  # pending, in_progress, completed
-    
+
     # Resource allocation
     personnel_required: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string
     tools_required: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string
     training_required: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string
-    
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationships
     program: Mapped[RiskProgramPlan] = relationship("RiskProgramPlan", back_populates="phases")
+
 
 # Add to RiskProgramPlan
 RiskProgramPlan.phases: Mapped[List[ProgramPhase]] = relationship("ProgramPhase", back_populates="program", cascade="all, delete-orphan")
 
+
 class GapAnalysis(Base):
     """Gap analysis for framework implementation"""
     __tablename__ = "gap_analyses"
-    
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     program_id: Mapped[int] = mapped_column(Integer, ForeignKey("risk_program_plans.id"))
     requirement_category: Mapped[str] = mapped_column(String(100), nullable=False)
@@ -882,17 +831,18 @@ class GapAnalysis(Base):
     estimated_cost: Mapped[float] = mapped_column(Float, default=0.0)
     timeline_months: Mapped[int] = mapped_column(Integer, default=0)
     status: Mapped[str] = mapped_column(String(50), default="open")  # open, in_progress, closed
-    
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationships
     program: Mapped[RiskProgramPlan] = relationship("RiskProgramPlan")
+
 
 class RiskIndicator(Base):
     """Automated risk indicators for continuous monitoring"""
     __tablename__ = "risk_indicators"
-    
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)
@@ -905,27 +855,29 @@ class RiskIndicator(Base):
     unit: Mapped[str] = mapped_column(String(50), nullable=True)
     frequency: Mapped[str] = mapped_column(String(50), default="daily")  # hourly, daily, weekly, monthly
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
 
 class IndicatorReading(Base):
     """Historical readings for risk indicators"""
     __tablename__ = "indicator_readings"
-    
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     indicator_id: Mapped[int] = mapped_column(Integer, ForeignKey("risk_indicators.id"))
     value: Mapped[float] = mapped_column(Float, nullable=False)
     timestamp: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     notes: Mapped[str] = mapped_column(Text, nullable=True)
-    
+
     # Relationships
     indicator: Mapped[RiskIndicator] = relationship("RiskIndicator")
+
 
 class EnvironmentalChange(Base):
     """Environmental changes that could impact risk posture"""
     __tablename__ = "environmental_changes"
-    
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     change_type: Mapped[str] = mapped_column(String(100), nullable=False)  # regulatory, technological, operational, etc.
     description: Mapped[str] = mapped_column(Text, nullable=True)
@@ -935,11 +887,9 @@ class EnvironmentalChange(Base):
     assessment_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     status: Mapped[str] = mapped_column(String(50), default="detected")  # detected, assessed, mitigated
     severity: Mapped[str] = mapped_column(String(50), default="medium")  # low, medium, high, critical
-    
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-
 
 
 class Compliance(Base):
@@ -1065,6 +1015,56 @@ class ComplianceScore(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     framework: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=False)
     requirement_id: Mapped[str] = mapped_column(String(100), nullable=False)  # e.g., "NIST-AC-2", "GDPR-25"
+    calculated_score: Mapped[float] = mapped_column(Float, default=0.0)       # 0-100 percentage
+    weight: Mapped[float] = mapped_column(Float, default=1.0)                 # Importance weight for overall scoring
+    assessment_date: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # Gap analysis fields
+    gap_description: Mapped[str] = mapped_column(Text, nullable=True)
+    remediation_plan: Mapped[str] = mapped_column(Text, nullable=True)
+    priority_level: Mapped[str] = mapped_column(String(20), default="medium")  # high, medium, low
+
+    # Relationships
+    requirement_id_fk: Mapped[int] = mapped_column(Integer, ForeignKey("compliance_requirements.id"), nullable=True)
+    requirement = relationship("ComplianceRequirement", backref="automated_scores")
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    def calculate_gap_score(self, target_score: float = 100.0):
+        """Calculate compliance gap as percentage"""
+        return max(0.0, target_score - self.calculated_score)
+
+    def get_compliance_status(self):
+        """Get compliance status based on score"""
+        if self.calculated_score >= 95.0:
+            return "compliant"
+        elif self.calculated_score >= 80.0:
+            return "mostly_compliant"
+        elif self.calculated_score >= 60.0:
+            return "partially_compliant"
+        else:
+            return "non_compliant"
+
+
+class Dependency(Base):
+    """
+    Represents software dependencies with automated risk assessment and vulnerability tracking.
+
+    Tracks third-party libraries and packages used in applications, performing
+    automated risk analysis based on known vulnerabilities and version analysis.
+    Supports supply chain risk management and dependency security monitoring.
+
+    Attributes:
+        name: Package/library name (e.g., "flask", "requests")
+        version: Installed version string
+        risk_level: Automatically assessed risk severity
+        vulnerabilities: Known CVEs or security issues
+        risk: Human-readable risk description
+        mitigation: Recommended fix or upgrade path
+        mitigation_suggestions: Detailed mitigation strategies"""
+
+    # Risk Assessment:
     calculated_score: Mapped[float] = mapped_column(Float, default=0.0)       # 0-100 percentage
     weight: Mapped[float] = mapped_column(Float, default=1.0)                 # Importance weight for overall scoring
     assessment_date: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
@@ -1767,7 +1767,7 @@ class CriticalAssetRegister(Base):
 
             Asset: {self.asset_name}
             Type: {self.asset_type}
-            Value: ${self.asset_value:,.2f}
+            Value: ${:.2f}
             Criticality: {self.criticality_level.upper()}
 
             THREAT EXPOSURE
@@ -1792,4 +1792,3 @@ class CriticalAssetRegister(Base):
             Assessed by: {self.assessor.email if self.assessor else 'Unknown'}
             Last Assessment: {self.last_assessment.strftime('%Y-%m-%d')}
             Next Review: {self.next_review.strftime('%Y-%m-%d') if self.next_review else 'Not scheduled'}
-            """

@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block title %}{{ campaign.name }} - APT Campaign{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-user-secret text-danger"></i> {{ campaign.name }}</h2>
+            <div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMappingModal">
+                    <i class="fas fa-plus"></i> Add ATT&CK Mapping
+                </button>
+                <a href="{{ url_for('apt_campaigns') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Campaigns
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Campaign Overview -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Campaign Overview</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Name:</strong></td>
+                                <td>{{ campaign.name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Actor:</strong></td>
+                                <td>{{ campaign.actor_name or 'Unknown' }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Target Sector:</strong></td>
+                                <td>{{ campaign.target_sector or 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Severity:</strong></td>
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if campaign.severity == 'critical' else 'warning' if campaign.severity == 'high' else 'info' }}">
+                                        {{ campaign.severity }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Relevance:</strong></td>
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if campaign.relevance_to_organization == 'high' else 'warning' if campaign.relevance_to_organization == 'medium' else 'secondary' }}">
+                                        {{ campaign.relevance_to_organization }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Documented By:</strong></td>
+                                <td>{{ campaign.documenter.email }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Documented:</strong></td>
+                                <td>{{ campaign.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ATT&CK Mappings:</strong></td>
+                                <td>{{ mappings|length }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                {% if campaign.description %}
+                <div class="mt-3">
+                    <h6>Description</h6>
+                    <p>{{ campaign.description }}</p>
+                </div>
+                {% endif %}
+
+                {% if campaign.objectives %}
+                <div class="mt-3">
+                    <h6>Objectives</h6>
+                    <p>{{ campaign.objectives }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Techniques & IOCs</h5>
+            </div>
+            <div class="card-body">
+                {% if campaign.techniques_used %}
+                <h6>Techniques Used</h6>
+                <ul class="list-unstyled">
+                    {% for technique in campaign.techniques_used.split('\n') %}
+                    <li><i class="fas fa-cog text-muted me-2"></i>{{ technique.strip() }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if campaign.indicators_of_compromise %}
+                <h6 class="mt-3">Indicators of Compromise</h6>
+                <div class="bg-light p-2 small">
+                    {% for ioc in campaign.indicators_of_compromise.split('\n') %}
+                    <div class="text-break">{{ ioc.strip() }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ATT&CK Mappings -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">MITRE ATT&CK Framework Mappings</h5>
+            </div>
+            <div class="card-body">
+                {% if mappings %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tactic</th>
+                                <th>Technique</th>
+                                <th>Technique ID</th>
+                                <th>Subtechnique</th>
+                                <th>Description</th>
+                                <th>Confidence</th>
+                                <th>Mapped By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mapping in mappings %}
+                            <tr>
+                                <td><strong>{{ mapping.tactic }}</strong></td>
+                                <td>{{ mapping.technique }}</td>
+                                <td><code>{{ mapping.technique_id }}</code></td>
+                                <td>{{ mapping.subtechnique or 'N/A' }}</td>
+                                <td>{{ mapping.description or 'N/A' }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if mapping.confidence == 'high' else 'warning' if mapping.confidence == 'medium' else 'secondary' }}">
+                                        {{ mapping.confidence }}
+                                    </span>
+                                </td>
+                                <td>{{ mapping.mapper.email }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-sitemap fa-2x text-muted mb-2"></i>
+                    <p class="text-muted">No ATT&CK mappings added yet</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Mapping Modal -->
+<div class="modal fade" id="addMappingModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add ATT&CK Mapping</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="tactic" class="form-label">Tactic</label>
+                                <select class="form-select" id="tactic" name="tactic" required>
+                                    <option value="">Select Tactic</option>
+                                    <option value="Reconnaissance">Reconnaissance</option>
+                                    <option value="Resource Development">Resource Development</option>
+                                    <option value="Initial Access">Initial Access</option>
+                                    <option value="Execution">Execution</option>
+                                    <option value="Persistence">Persistence</option>
+                                    <option value="Privilege Escalation">Privilege Escalation</option>
+                                    <option value="Defense Evasion">Defense Evasion</option>
+                                    <option value="Credential Access">Credential Access</option>
+                                    <option value="Discovery">Discovery</option>
+                                    <option value="Lateral Movement">Lateral Movement</option>
+                                    <option value="Collection">Collection</option>
+                                    <option value="Command and Control">Command and Control</option>
+                                    <option value="Exfiltration">Exfiltration</option>
+                                    <option value="Impact">Impact</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="technique" class="form-label">Technique</label>
+                                <input type="text" class="form-control" id="technique" name="technique" required
+                                       placeholder="e.g., Phishing">
+                            </div>
+                            <div class="mb-3">
+                                <label for="technique_id" class="form-label">Technique ID</label>
+                                <input type="text" class="form-control" id="technique_id" name="technique_id" required
+                                       placeholder="e.g., T1566">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="subtechnique" class="form-label">Subtechnique (Optional)</label>
+                                <input type="text" class="form-control" id="subtechnique" name="subtechnique"
+                                       placeholder="e.g., Spearphishing Link">
+                            </div>
+                            <div class="mb-3">
+                                <label for="subtechnique_id" class="form-label">Subtechnique ID (Optional)</label>
+                                <input type="text" class="form-control" id="subtechnique_id" name="subtechnique_id"
+                                       placeholder="e.g., T1566.002">
+                            </div>
+                            <div class="mb-3">
+                                <label for="confidence" class="form-label">Confidence</label>
+                                <select class="form-select" id="confidence" name="confidence" required>
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"
+                                  placeholder="Describe how this technique was used in the campaign"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="evidence" class="form-label">Evidence</label>
+                        <textarea class="form-control" id="evidence" name="evidence" rows="2"
+                                  placeholder="Evidence supporting this mapping"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Mapping</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

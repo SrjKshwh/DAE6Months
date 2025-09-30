@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}Threat Analysis Dashboard - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-bug text-danger"></i> Cyber Threat Analysis Dashboard</h2>
+            <div>
+                <a href="{{ url_for('malware_analysis') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Submit Malware Sample
+                </a>
+                <a href="{{ url_for('phishing_templates') }}" class="btn btn-warning">
+                    <i class="fas fa-envelope"></i> Create Phishing Template
+                </a>
+                <a href="{{ url_for('apt_campaigns') }}" class="btn btn-danger">
+                    <i class="fas fa-user-secret"></i> Document APT Campaign
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Malware Analysis Summary -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-virus"></i> Malware Analysis
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h3 class="text-primary">{{ malware_samples|length }}</h3>
+                        <small class="text-muted">Samples Submitted</small>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-success">{{ malware_samples|selectattr('analysis_status', 'equalto', 'completed')|list|length }}</h3>
+                        <small class="text-muted">Analyzed</small>
+                    </div>
+                </div>
+                <hr>
+                <div class="list-group list-group-flush">
+                    {% for sample in malware_samples[:3] %}
+                    <div class="list-group-item px-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">{{ sample.sample_hash[:16] }}...</small>
+                                <br>
+                                <span class="badge bg-{{ 'success' if sample.analysis_status == 'completed' else 'warning' }}">
+                                    {{ sample.analysis_status }}
+                                </span>
+                            </div>
+                            <small class="text-muted">{{ sample.submitted_at.strftime('%m/%d') }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('malware_analysis') }}" class="btn btn-primary btn-sm w-100">
+                    View All Samples
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phishing Templates Summary -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-envelope"></i> Phishing Templates
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h3 class="text-warning">{{ phishing_templates|length }}</h3>
+                        <small class="text-muted">Templates</small>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-danger">{{ phishing_templates|selectattr('risk_level', 'equalto', 'high')|list|length }}</h3>
+                        <small class="text-muted">High Risk</small>
+                    </div>
+                </div>
+                <hr>
+                <div class="list-group list-group-flush">
+                    {% for template in phishing_templates[:3] %}
+                    <div class="list-group-item px-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ template.name }}</strong>
+                                <br>
+                                <span class="badge bg-{{ 'danger' if template.risk_level == 'high' else 'warning' if template.risk_level == 'medium' else 'success' }}">
+                                    {{ template.risk_level }} risk
+                                </span>
+                            </div>
+                            <small class="text-muted">{{ template.created_at.strftime('%m/%d') }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('phishing_templates') }}" class="btn btn-warning btn-sm w-100">
+                    Manage Templates
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- APT Campaigns Summary -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-danger text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-user-secret"></i> APT Campaigns
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h3 class="text-danger">{{ apt_campaigns|length }}</h3>
+                        <small class="text-muted">Campaigns</small>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-dark">{{ apt_campaigns|selectattr('severity', 'equalto', 'critical')|list|length }}</h3>
+                        <small class="text-muted">Critical</small>
+                    </div>
+                </div>
+                <hr>
+                <div class="list-group list-group-flush">
+                    {% for campaign in apt_campaigns[:3] %}
+                    <div class="list-group-item px-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ campaign.name }}</strong>
+                                <br>
+                                <span class="badge bg-{{ 'danger' if campaign.severity == 'critical' else 'warning' if campaign.severity == 'high' else 'info' }}">
+                                    {{ campaign.severity }}
+                                </span>
+                            </div>
+                            <small class="text-muted">{{ campaign.created_at.strftime('%m/%d') }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('apt_campaigns') }}" class="btn btn-danger btn-sm w-100">
+                    View Campaigns
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Threat Intelligence -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-line"></i> Recent Threat Intelligence
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Name/Hash</th>
+                                <th>Status</th>
+                                <th>Severity</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sample in malware_samples[:5] %}
+                            <tr>
+                                <td><span class="badge bg-primary">Malware</span></td>
+                                <td>{{ sample.sample_hash[:32] }}...</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if sample.analysis_status == 'completed' else 'warning' }}">
+                                        {{ sample.analysis_status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if sample.analyses %}
+                                        {% set analysis = sample.analyses[0] %}
+                                        <span class="badge bg-{{ 'danger' if analysis.severity == 'critical' else 'warning' if analysis.severity == 'high' else 'info' }}">
+                                            {{ analysis.severity or 'unknown' }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Not analyzed</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ sample.submitted_at.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    <a href="{{ url_for('malware_analysis') }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% for template in phishing_templates[:3] %}
+                            <tr>
+                                <td><span class="badge bg-warning">Phishing</span></td>
+                                <td>{{ template.name }}</td>
+                                <td><span class="badge bg-success">Documented</span></td>
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if template.risk_level == 'high' else 'warning' }}">
+                                        {{ template.risk_level }}
+                                    </span>
+                                </td>
+                                <td>{{ template.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    <a href="{{ url_for('phishing_templates') }}" class="btn btn-sm btn-outline-warning">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% for campaign in apt_campaigns[:3] %}
+                            <tr>
+                                <td><span class="badge bg-danger">APT</span></td>
+                                <td>{{ campaign.name }}</td>
+                                <td><span class="badge bg-success">Mapped</span></td>
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if campaign.severity == 'critical' else 'warning' if campaign.severity == 'high' else 'info' }}">
+                                        {{ campaign.severity }}
+                                    </span>
+                                </td>
+                                <td>{{ campaign.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    <a href="{{ url_for('view_apt_campaign', campaign_id=campaign.id) }}" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

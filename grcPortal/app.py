@@ -65,7 +65,7 @@ load_dotenv()
 from db import get_engine, get_session, close_session
 
 
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService
 
 
 from sqlalchemy.orm import sessionmaker
@@ -417,7 +417,7 @@ def create_app():
         MAX_CONTENT_LENGTH=10*1024*1024  # 10 MB upload cap
     )
     # Inactivity timeout configuration
-    INACTIVITY_TIMEOUT = int(os.getenv("INACTIVITY_TIMEOUT", 2400000))  # 40 minutes default
+    INACTIVITY_TIMEOUT = int(os.getenv("INACTIVITY_TIMEOUT", 50000))  # 50 seconds default
     WARNING_TIMEOUT = int(os.getenv("WARNING_TIMEOUT", 30000))  # 30 seconds
     
     # Make these available to templates/JavaScript
@@ -3630,7 +3630,378 @@ def create_app():
         db.commit()
         close_session(db)
 
-    # --- End of Risk Identification Methods Routes ---
+    # --- Cyber Threats and Vulnerabilities Routes ---
+
+    @app.route("/threat_analysis")
+    @login_required
+    def threat_analysis():
+        """Main threat analysis dashboard"""
+        user = current_user()
+        db = get_session()
+
+        # Get user's threat analysis data
+        malware_samples = db.query(MalwareSample).filter(MalwareSample.submitted_by == user.id).all()
+        phishing_templates = db.query(PhishingTemplate).filter(PhishingTemplate.created_by == user.id).all()
+        apt_campaigns = db.query(APTCampaign).filter(APTCampaign.documented_by == user.id).all()
+
+        close_session(db)
+        return render_template("threat_analysis.html",
+                             malware_samples=malware_samples,
+                             phishing_templates=phishing_templates,
+                             apt_campaigns=apt_campaigns)
+
+    @app.route("/malware_analysis", methods=["GET", "POST"])
+    @login_required
+    def malware_analysis():
+        """Malware sample submission and analysis"""
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            sample_hash = request.form.get("sample_hash").strip()
+            filename = request.form.get("filename", "").strip()
+
+            # Check if sample already exists
+            existing = db.query(MalwareSample).filter(MalwareSample.sample_hash == sample_hash).first()
+            if existing:
+                flash("Sample with this hash already exists.", "warning")
+            else:
+                sample = MalwareSample(
+                    sample_hash=sample_hash,
+                    filename=filename,
+                    submitted_by=user.id
+                )
+                db.add(sample)
+                db.commit()
+                flash("Malware sample submitted for analysis.", "success")
+                return redirect(url_for("malware_analysis"))
+
+        samples = db.query(MalwareSample).filter(MalwareSample.submitted_by == user.id).all()
+        close_session(db)
+        return render_template("malware_analysis.html", samples=samples)
+
+    @app.route("/analyze_malware/<int:sample_id>", methods=["POST"])
+    @login_required
+    def analyze_malware(sample_id):
+        """Trigger malware analysis using external API"""
+        user = current_user()
+        db = get_session()
+
+        sample = db.get(MalwareSample, sample_id)
+        if not sample or sample.submitted_by != user.id:
+            close_session(db)
+            flash("Sample not found or access denied.", "danger")
+            return redirect(url_for("malware_analysis"))
+
+        # Mock analysis - in production, integrate with VirusTotal API
+        analysis = MalwareAnalysis(
+            sample_id=sample_id,
+            platform="virustotal",
+            detection_ratio="15/70",
+            positive_detections=15,
+            total_scanners=70,
+            behavioral_indicators=json.dumps({
+                "file_operations": ["Creates registry keys", "Modifies system files"],
+                "network_activity": ["Connects to C2 server"],
+                "persistence": ["Adds to startup"]
+            }),
+            potential_impact="Data exfiltration, system compromise",
+            severity="high"
+        )
+
+        db.add(analysis)
+        sample.analysis_status = "completed"
+        db.commit()
+
+        log_audit_event(user, "MALWARE_ANALYSIS", "SECURITY",
+                       f"Analyzed malware sample {sample.sample_hash}", f"/analyze_malware/{sample_id}", True)
+
+        close_session(db)
+        flash("Malware analysis completed.", "success")
+        return redirect(url_for("malware_analysis"))
+
+    @app.route("/phishing_templates", methods=["GET", "POST"])
+    @login_required
+    def phishing_templates():
+        """Phishing template management"""
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            template = PhishingTemplate(
+                name=request.form.get("name"),
+                description=request.form.get("description"),
+                subject=request.form.get("subject"),
+                body_html=request.form.get("body_html"),
+                body_text=request.form.get("body_text"),
+                spoofed_sender=request.form.get("spoofed_sender"),
+                malicious_links=json.dumps(request.form.getlist("malicious_links")),
+                social_engineering_techniques=json.dumps(request.form.getlist("techniques")),
+                risk_level=request.form.get("risk_level", "medium"),
+                created_by=user.id
+            )
+            db.add(template)
+            db.commit()
+            flash("Phishing template created.", "success")
+            return redirect(url_for("phishing_templates"))
+
+        templates = db.query(PhishingTemplate).filter(PhishingTemplate.created_by == user.id).all()
+        close_session(db)
+        return render_template("phishing_templates.html", templates=templates)
+
+    @app.route("/apt_campaigns", methods=["GET", "POST"])
+    @login_required
+    def apt_campaigns():
+        """APT campaign documentation and mapping"""
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            campaign = APTCampaign(
+                name=request.form.get("name"),
+                description=request.form.get("description"),
+                actor_name=request.form.get("actor_name"),
+                target_sector=request.form.get("target_sector"),
+                objectives=request.form.get("objectives"),
+                techniques_used=json.dumps(request.form.getlist("techniques")),
+                indicators_of_compromise=json.dumps(request.form.getlist("indicators")),
+                severity=request.form.get("severity", "high"),
+                relevance_to_organization=request.form.get("relevance", "unknown"),
+                documented_by=user.id
+            )
+            db.add(campaign)
+            db.commit()
+            flash("APT campaign documented.", "success")
+            return redirect(url_for("apt_campaigns"))
+
+        campaigns = db.query(APTCampaign).filter(APTCampaign.documented_by == user.id).all()
+        close_session(db)
+        return render_template("apt_campaigns.html", campaigns=campaigns)
+
+    @app.route("/apt_campaign/<int:campaign_id>", methods=["GET", "POST"])
+    @login_required
+    def view_apt_campaign(campaign_id):
+        """View and map APT campaign to MITRE ATT&CK"""
+        user = current_user()
+        db = get_session()
+
+        campaign = db.get(APTCampaign, campaign_id)
+        if not campaign or campaign.documented_by != user.id:
+            close_session(db)
+            flash("Campaign not found or access denied.", "danger")
+            return redirect(url_for("apt_campaigns"))
+
+        if request.method == "POST":
+            mapping = ATTACKMapping(
+                campaign_id=campaign_id,
+                tactic=request.form.get("tactic"),
+                technique=request.form.get("technique"),
+                technique_id=request.form.get("technique_id"),
+                subtechnique=request.form.get("subtechnique"),
+                subtechnique_id=request.form.get("subtechnique_id"),
+                description=request.form.get("description"),
+                evidence=request.form.get("evidence"),
+                confidence=request.form.get("confidence", "medium"),
+                mapped_by=user.id
+            )
+            db.add(mapping)
+            db.commit()
+            flash("ATT&CK mapping added.", "success")
+            return redirect(url_for("view_apt_campaign", campaign_id=campaign_id))
+
+        mappings = db.query(ATTACKMapping).filter(ATTACKMapping.campaign_id == campaign_id).all()
+        close_session(db)
+        return render_template("apt_campaign_detail.html", campaign=campaign, mappings=mappings)
+
+    # --- Vulnerability Assessment Routes ---
+
+    @app.route("/vulnerability_assessment")
+    @login_required
+    def vulnerability_assessment():
+        """Main vulnerability assessment dashboard"""
+        user = current_user()
+        db = get_session()
+
+        scans = db.query(VulnerabilityScan).filter(VulnerabilityScan.performed_by == user.id).all()
+        discoveries = db.query(AssetDiscovery).filter(AssetDiscovery.performed_by == user.id).all()
+
+        close_session(db)
+        return render_template("vulnerability_assessment.html", scans=scans, discoveries=discoveries)
+
+    @app.route("/vulnerability_scan", methods=["GET", "POST"])
+    @login_required
+    def vulnerability_scan():
+        """Vulnerability scan management"""
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            scan = VulnerabilityScan(
+                scan_name=request.form.get("scan_name"),
+                tool_used=request.form.get("tool_used"),
+                target_range=request.form.get("target_range"),
+                scan_type=request.form.get("scan_type", "basic"),
+                scan_parameters=json.dumps(request.form.get("scan_parameters", {})),
+                performed_by=user.id
+            )
+            db.add(scan)
+            db.commit()
+            flash("Vulnerability scan initiated.", "success")
+            return redirect(url_for("vulnerability_scan"))
+
+        scans = db.query(VulnerabilityScan).filter(VulnerabilityScan.performed_by == user.id).all()
+        close_session(db)
+        return render_template("vulnerability_scan.html", scans=scans)
+
+    @app.route("/upload_scan_results/<int:scan_id>", methods=["POST"])
+    @login_required
+    def upload_scan_results(scan_id):
+        """Upload and parse vulnerability scan results"""
+        user = current_user()
+        db = get_session()
+
+        scan = db.get(VulnerabilityScan, scan_id)
+        if not scan or scan.performed_by != user.id:
+            close_session(db)
+            flash("Scan not found or access denied.", "danger")
+            return redirect(url_for("vulnerability_scan"))
+
+        if "scan_file" not in request.files:
+            flash("No file uploaded.", "danger")
+            return redirect(url_for("vulnerability_scan"))
+
+        file = request.files["scan_file"]
+        if file.filename == "":
+            flash("No file selected.", "danger")
+            return redirect(url_for("vulnerability_scan"))
+
+        # Parse scan results (mock implementation)
+        # In production, parse actual Nmap/OpenVAS XML output
+        mock_findings = [
+            {
+                "host_ip": "192.168.1.100",
+                "port": 80,
+                "service": "http",
+                "vulnerability_id": "CVE-2021-44228",
+                "title": "Apache Log4j Remote Code Execution",
+                "severity": "critical",
+                "cvss_score": 10.0,
+                "remediation": "Update Log4j to version 2.17.0 or later"
+            },
+            {
+                "host_ip": "192.168.1.101",
+                "port": 443,
+                "service": "https",
+                "vulnerability_id": "CVE-2022-2068",
+                "title": "OpenSSL Buffer Overflow",
+                "severity": "high",
+                "cvss_score": 7.5,
+                "remediation": "Update OpenSSL to latest version"
+            }
+        ]
+
+        for finding_data in mock_findings:
+            finding = VulnerabilityFinding(
+                scan_id=scan_id,
+                host_ip=finding_data["host_ip"],
+                port=finding_data["port"],
+                service=finding_data["service"],
+                vulnerability_id=finding_data["vulnerability_id"],
+                title=finding_data["title"],
+                severity=finding_data["severity"],
+                cvss_score=finding_data["cvss_score"],
+                remediation=finding_data["remediation"]
+            )
+            db.add(finding)
+
+        # Update scan summary
+        scan.vulnerabilities_found = len(mock_findings)
+        scan.critical_findings = len([f for f in mock_findings if f["severity"] == "critical"])
+        scan.high_findings = len([f for f in mock_findings if f["severity"] == "high"])
+        scan.end_time = datetime.now(timezone.utc)
+        scan.duration_seconds = int((scan.end_time - scan.start_time).total_seconds()) if scan.start_time else 0
+
+        db.commit()
+
+        log_audit_event(user, "SCAN_RESULTS_UPLOADED", "SECURITY",
+                       f"Uploaded scan results for {scan.scan_name}", f"/upload_scan_results/{scan_id}", True)
+
+        close_session(db)
+        flash("Scan results uploaded and parsed.", "success")
+        return redirect(url_for("vulnerability_scan"))
+
+    @app.route("/asset_discovery", methods=["GET", "POST"])
+    @login_required
+    def asset_discovery():
+        """Asset discovery scan management"""
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            discovery = AssetDiscovery(
+                scan_name=request.form.get("scan_name"),
+                discovery_method=request.form.get("discovery_method", "network_scan"),
+                target_network=request.form.get("target_network"),
+                scan_parameters=json.dumps(request.form.get("scan_parameters", {})),
+                performed_by=user.id
+            )
+            db.add(discovery)
+            db.commit()
+            flash("Asset discovery scan initiated.", "success")
+            return redirect(url_for("asset_discovery"))
+
+        discoveries = db.query(AssetDiscovery).filter(AssetDiscovery.performed_by == user.id).all()
+        close_session(db)
+        return render_template("asset_discovery.html", discoveries=discoveries)
+
+    @app.route("/run_asset_discovery/<int:discovery_id>", methods=["POST"])
+    @login_required
+    def run_asset_discovery(discovery_id):
+        """Simulate asset discovery scan"""
+        user = current_user()
+        db = get_session()
+
+        discovery = db.get(AssetDiscovery, discovery_id)
+        if not discovery or discovery.performed_by != user.id:
+            close_session(db)
+            flash("Discovery not found or access denied.", "danger")
+            return redirect(url_for("asset_discovery"))
+
+        # Mock asset discovery results
+        mock_assets = [
+            {"ip": "192.168.1.10", "hostname": "web-server", "services": [{"name": "http", "port": 80, "state": "open"}, {"name": "https", "port": 443, "state": "open"}]},
+            {"ip": "192.168.1.11", "hostname": "db-server", "services": [{"name": "mysql", "port": 3306, "state": "open"}]},
+            {"ip": "192.168.1.12", "hostname": "file-server", "services": [{"name": "smb", "port": 445, "state": "open"}]}
+        ]
+
+        for asset_data in mock_assets:
+            # Create discovered service records
+            for service_data in asset_data["services"]:
+                service = DiscoveredService(
+                    asset_id=discovery_id,
+                    service_name=service_data["name"],
+                    port=service_data["port"],
+                    protocol="tcp",
+                    state=service_data["state"],
+                    criticality="high" if service_data["name"] in ["mysql", "smb"] else "medium"
+                )
+                db.add(service)
+
+        # Update discovery summary
+        discovery.assets_discovered = len(mock_assets)
+        discovery.critical_assets = len([a for a in mock_assets if any(s["name"] in ["mysql", "smb"] for s in a["services"])])
+        discovery.network_topology = json.dumps({"discovered_network": "192.168.1.0/24", "asset_count": len(mock_assets)})
+
+        db.commit()
+
+        log_audit_event(user, "ASSET_DISCOVERY_RUN", "SECURITY",
+                       f"Completed asset discovery scan {discovery.scan_name}", f"/run_asset_discovery/{discovery_id}", True)
+
+        close_session(db)
+        flash("Asset discovery completed.", "success")
+        return redirect(url_for("asset_discovery"))
+
+    # --- End of Cyber Threats and Vulnerabilities Routes ---
 
 
     # error handlers
