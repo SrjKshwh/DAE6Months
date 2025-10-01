@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+
+{% block title %}OpenCTI Integration - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-plug"></i> OpenCTI Platform Integration
+                    </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addIntegrationModal">
+                            <i class="fas fa-plus"></i> Add Integration
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-info">
+                                <h5><i class="icon fas fa-info"></i> About OpenCTI Integration</h5>
+                                OpenCTI (Open Cyber Threat Intelligence) is an open-source platform for threat intelligence management.
+                                This integration allows you to sync threat intelligence data, indicators, and reports with OpenCTI platforms.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Integration Statistics -->
+                    <div class="row mb-4">
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>{{ integrations|length }}</h3>
+                                    <p>Active Integrations</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-server"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>{{ connectors|length }}</h3>
+                                    <p>Available Connectors</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-link"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>{{ integrations|selectattr('status', 'equalto', 'connected')|list|length }}</h3>
+                                    <p>Connected Platforms</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3>{{ integrations|selectattr('status', 'equalto', 'error')|list|length }}</h3>
+                                    <p>Failed Connections</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Integration List -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Platform Integrations</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="list-group">
+                                        {% for integration in integrations %}
+                                        <div class="list-group-item">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">{{ integration.platform_url }}</h6>
+                                                {% if integration.status == 'connected' %}
+                                                    <span class="badge badge-success">Connected</span>
+                                                {% elif integration.status == 'connecting' %}
+                                                    <span class="badge badge-warning">Connecting</span>
+                                                {% else %}
+                                                    <span class="badge badge-danger">Disconnected</span>
+                                                {% endif %}
+                                            </div>
+                                            <p class="mb-1">Last Sync: {{ integration.last_sync.strftime('%Y-%m-%d %H:%M') if integration.last_sync else 'Never' }}</p>
+                                            <small class="text-muted">
+                                                Indicators: {{ integration.total_indicators }} |
+                                                Reports: {{ integration.total_reports }}
+                                            </small>
+                                            <div class="mt-2">
+                                                <form method="POST" action="{{ url_for('sync_opencti', integration_id=integration.id) }}" style="display: inline;">
+                                                    <button type="submit" class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-sync"></i> Sync
+                                                    </button>
+                                                </form>
+                                                <button class="btn btn-sm btn-info" onclick="viewIntegrationDetails({{ integration.id }})">
+                                                    <i class="fas fa-eye"></i> Details
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% if not integrations %}
+                                    <div class="text-center mt-4">
+                                        <p class="text-muted">No OpenCTI integrations configured yet.</p>
+                                        <p class="text-muted">Click "Add Integration" to get started.</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Available Connectors</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="list-group">
+                                        {% for connector in connectors %}
+                                        <div class="list-group-item">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">{{ connector.name }}</h6>
+                                                {% if connector.active %}
+                                                    <span class="badge badge-success">Active</span>
+                                                {% else %}
+                                                    <span class="badge badge-secondary">Inactive</span>
+                                                {% endif %}
+                                            </div>
+                                            <p class="mb-1">{{ connector.description }}</p>
+                                            <small class="text-muted">
+                                                Type: {{ connector.connector_type }} |
+                                                Scope: {{ connector.scope }}
+                                            </small>
+                                            <div class="mt-2">
+                                                <button class="btn btn-sm btn-outline-primary" onclick="configureConnector({{ connector.id }})">
+                                                    <i class="fas fa-cog"></i> Configure
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% if not connectors %}
+                                    <div class="text-center mt-4">
+                                        <p class="text-muted">No connectors available.</p>
+                                        <p class="text-muted">Connectors are automatically registered during integration setup.</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Integration Documentation -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">OpenCTI Integration Features</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h6><i class="fas fa-shield-alt text-primary"></i> Threat Intelligence Sync</h6>
+                                            <p class="small">Automatically sync indicators, reports, and threat intelligence from OpenCTI platforms.</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6><i class="fas fa-chart-line text-success"></i> Real-time Updates</h6>
+                                            <p class="small">Receive real-time updates on emerging threats and intelligence updates.</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6><i class="fas fa-users text-warning"></i> Collaboration</h6>
+                                            <p class="small">Share intelligence with other organizations and contribute to the community.</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-4">
+                                            <h6><i class="fas fa-search text-info"></i> Advanced Search</h6>
+                                            <p class="small">Leverage OpenCTI's advanced search capabilities for threat hunting.</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6><i class="fas fa-tags text-secondary"></i> Tagging & Classification</h6>
+                                            <p class="small">Apply consistent tagging and classification to intelligence data.</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6><i class="fas fa-file-alt text-danger"></i> Report Generation</h6>
+                                            <p class="small">Generate comprehensive threat intelligence reports and briefings.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Integration Modal -->
+<div class="modal fade" id="addIntegrationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add OpenCTI Integration</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ url_for('opencti_integration') }}">
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <strong>Security Note:</strong> Ensure you are connecting to a trusted OpenCTI instance.
+                        API keys should be stored securely and rotated regularly.
+                    </div>
+
+                    <div class="form-group">
+                        <label>OpenCTI Platform URL *</label>
+                        <input type="url" name="platform_url" class="form-control" required
+                               placeholder="https://your-opencti-instance.com">
+                        <small class="form-text text-muted">The URL of your OpenCTI platform instance</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>API Key *</label>
+                        <input type="password" name="api_key" class="form-control" required
+                               placeholder="Your OpenCTI API key">
+                        <small class="form-text text-muted">API key with appropriate permissions for data access</small>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" name="test_connection" class="form-check-input" id="testConnection" checked>
+                        <label class="form-check-label" for="testConnection">
+                            Test connection after saving
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Integration</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Integration Details Modal -->
+<div class="modal fade" id="integrationDetailsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Integration Details</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="integrationDetailsContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewIntegrationDetails(integrationId) {
+    // In a real implementation, this would fetch integration details via AJAX
+    $('#integrationDetailsContent').html(`
+        <div class="alert alert-info">
+            <h5>Integration Details</h5>
+            <p>Detailed integration information would be displayed here.</p>
+            <p>This includes connection status, sync history, data statistics, and configuration details.</p>
+        </div>
+    `);
+    $('#integrationDetailsModal').modal('show');
+}
+
+function configureConnector(connectorId) {
+    // In a real implementation, this would open connector configuration
+    alert('Connector configuration would open here. This allows customization of data mapping, filters, and sync schedules.');
+}
+</script>
+
+{% endblock %}

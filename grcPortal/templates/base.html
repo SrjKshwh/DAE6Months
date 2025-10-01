@@ -117,6 +117,22 @@
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="intelligenceDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-brain"></i> Threat Intelligence
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('threat_intelligence') }}">
+                                <i class="fas fa-tachometer-alt"></i> Intelligence Dashboard
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('ioc_analysis') }}">
+                                <i class="fas fa-shield-alt"></i> IoC Analysis
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('opencti_integration') }}">
+                                <i class="fas fa-plug"></i> OpenCTI Integration
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="vulnerabilityDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-search"></i> Vulnerability Assessment
                         </a>
@@ -206,27 +222,44 @@
     </div>
 
     <!-- Main Content -->
-    <main class="container-fluid">
-        {% block content %}{% endblock %}
-    </main>
+    <div id="app-content">
+        <main class="container-fluid">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Inactivity Modal (outside app-content so it won't blur) -->
+    <div class="modal fade" id="inactivityModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">Session Timeout Warning</h5>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-4">Are you still here?</p>
+                    <p class="text-muted small">Your session will expire in 10 seconds due to inactivity.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-primary" id="stayLoggedIn">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     {% block scripts %}{% endblock %}
 
+    {% if current_user %}
     <!-- Inactivity Timeout Script -->
     <script>
-        let INACTIVITY_TIMEOUT = {{ config.INACTIVITY_TIMEOUT }}; // From Flask config
-        let WARNING_TIMEOUT = {{ config.WARNING_TIMEOUT }}; // From Flask config
+        let INACTIVITY_TIMEOUT = {{ config.INACTIVITY_TIMEOUT or 20000 }};
+        let WARNING_TIMEOUT = {{ config.WARNING_TIMEOUT or 10000 }};
 
         let inactivityTimer;
         let warningShown = false;
-        // Default values if config not set
-        if (!INACTIVITY_TIMEOUT) INACTIVITY_TIMEOUT = 40000; // 40 seconds
-        if (!WARNING_TIMEOUT) WARNING_TIMEOUT = 30000; // 30 seconds to respond to warning
 
-        // Reset timer on user activity
         function resetInactivityTimer() {
             clearTimeout(inactivityTimer);
             if (warningShown) {
@@ -235,112 +268,68 @@
             startInactivityTimer();
         }
 
-        // Start the inactivity timer
         function startInactivityTimer() {
             warningShown = false;
             inactivityTimer = setTimeout(showInactivityWarning, INACTIVITY_TIMEOUT);
         }
 
-        // Show inactivity warning modal
         function showInactivityWarning() {
             warningShown = true;
-
-            // Create modal if it doesn't exist
-            if (!document.getElementById('inactivityModal')) {
-                const modalHTML = `
-                    <div class="modal fade" id="inactivityModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-warning">
-                                    <h5 class="modal-title">Session Timeout Warning</h5>
-                                </div>
-                                <div class="modal-body text-center">
-                                    <p class="mb-4">Are you still here?</p>
-                                    <p class="text-muted small">Your session will expire in 30 seconds due to inactivity.</p>
-                                </div>
-                                <div class="modal-footer justify-content-center">
-                                    <button type="button" class="btn btn-primary" id="stayLoggedIn">Yes</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                document.body.insertAdjacentHTML('beforeend', modalHTML);
-            }
-
-            // Show modal
             const modal = new bootstrap.Modal(document.getElementById('inactivityModal'));
             modal.show();
 
-            // Add blur effect to background
-            document.body.classList.add('modal-open-blur');
+            // Blur only app content
+            document.getElementById("app-content").classList.add("blurred");
 
-            // Set up button handler
             document.getElementById('stayLoggedIn').onclick = function() {
                 hideInactivityWarning();
                 resetInactivityTimer();
             };
 
-            // Auto logout after warning timeout
             setTimeout(() => {
-                if (warningShown) {
-                    performLogout();
-                }
+                if (warningShown) performLogout();
             }, WARNING_TIMEOUT);
         }
 
-        // Hide inactivity warning
         function hideInactivityWarning() {
             warningShown = false;
             const modal = bootstrap.Modal.getInstance(document.getElementById('inactivityModal'));
-            if (modal) {
-                modal.hide();
-            }
-            document.body.classList.remove('modal-open-blur');
+            if (modal) modal.hide();
+            document.getElementById("app-content").classList.remove("blurred");
         }
 
-        // Perform logout
         function performLogout() {
-            fetch('/logout', {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else {
-                    window.location.href = '/login';
-                }
-            })
-            .catch(error => {
-                console.error('Logout error:', error);
-                window.location.href = '/login';
-            });
+            fetch('/logout', { method: 'GET', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        window.location.href = '/login';
+                    }
+                })
+                .catch(() => window.location.href = '/login');
         }
 
-        // Event listeners for user activity
         document.addEventListener('mousemove', resetInactivityTimer);
         document.addEventListener('keypress', resetInactivityTimer);
         document.addEventListener('click', resetInactivityTimer);
         document.addEventListener('scroll', resetInactivityTimer);
 
-        // Start timer when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            startInactivityTimer();
-        });
+        document.addEventListener('DOMContentLoaded', startInactivityTimer);
     </script>
+    {% endif %}
 
     <style>
-        /* Blur effect for background when modal is shown */
-        .modal-open-blur {
+        /* Only blur app content, not modal */
+        #app-content.blurred {
             filter: blur(2px);
             pointer-events: none;
         }
 
-        .modal-open-blur .modal {
-            pointer-events: auto;
+        #inactivityModal .modal-content {
+            z-index: 1060;
+            border: 2px solid #ffc107;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
     </style>
 

@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block title %}Threat Intelligence - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-brain"></i> Threat Intelligence Dashboard
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-info">
+                                <h5><i class="icon fas fa-info"></i> Threat Intelligence Overview</h5>
+                                This dashboard provides centralized access to threat intelligence capabilities including
+                                IoC analysis, OpenCTI platform integration, and automated threat detection.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="row mb-4">
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>{{ iocs|length }}</h3>
+                                    <p>IoCs Analyzed</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <a href="{{ url_for('ioc_analysis') }}" class="small-box-footer">
+                                    View Details <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>{{ integrations|length }}</h3>
+                                    <p>OpenCTI Integrations</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-plug"></i>
+                                </div>
+                                <a href="{{ url_for('opencti_integration') }}" class="small-box-footer">
+                                    Manage <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>{{ iocs|selectattr('severity', 'equalto', 'high')|list|length + iocs|selectattr('severity', 'equalto', 'critical')|list|length }}</h3>
+                                    <p>High Priority Threats</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <a href="{{ url_for('ioc_analysis') }}" class="small-box-footer">
+                                    Investigate <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3>{{ integrations|selectattr('status', 'equalto', 'connected')|list|length }}</h3>
+                                    <p>Active Integrations</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <a href="{{ url_for('opencti_integration') }}" class="small-box-footer">
+                                    Monitor <i class="fas fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Action Cards -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-shield-alt"></i> IoC Analysis
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>Analyze Indicators of Compromise (IoCs) from various sources including IP addresses,
+                                    domains, URLs, file hashes, and email addresses.</p>
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-check text-success"></i> Automated threat detection</li>
+                                        <li><i class="fas fa-check text-success"></i> Confidence scoring</li>
+                                        <li><i class="fas fa-check text-success"></i> Threat actor attribution</li>
+                                        <li><i class="fas fa-check text-success"></i> False positive management</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{{ url_for('ioc_analysis') }}" class="btn btn-primary">
+                                        <i class="fas fa-search"></i> Analyze IoCs
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card card-success">
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-plug"></i> OpenCTI Integration
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>Connect to OpenCTI platforms for comprehensive threat intelligence sharing
+                                    and collaboration with the security community.</p>
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-check text-success"></i> Real-time threat intelligence</li>
+                                        <li><i class="fas fa-check text-success"></i> Community collaboration</li>
+                                        <li><i class="fas fa-check text-success"></i> Automated data sync</li>
+                                        <li><i class="fas fa-check text-success"></i> Advanced threat hunting</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{{ url_for('opencti_integration') }}" class="btn btn-success">
+                                        <i class="fas fa-plug"></i> Manage Integrations
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-history"></i> Recent Threat Intelligence Activity
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="timeline">
+                                        <!-- Recent IoCs -->
+                                        {% for ioc in iocs[:3] %}
+                                        <div class="time-label">
+                                            <span class="bg-blue">{{ ioc.created_at.strftime('%Y-%m-%d') if ioc.created_at else 'Recent' }}</span>
+                                        </div>
+                                        <div>
+                                            <i class="fas fa-shield-alt bg-blue"></i>
+                                            <div class="timeline-item">
+                                                <span class="time"><i class="fas fa-clock"></i> {{ ioc.created_at.strftime('%H:%M') if ioc.created_at else 'N/A' }}</span>
+                                                <h3 class="timeline-header">
+                                                    <a href="{{ url_for('ioc_analysis') }}">New IoC Analyzed</a>
+                                                </h3>
+                                                <div class="timeline-body">
+                                                    <strong>{{ ioc.indicator_type|upper }}:</strong> {{ ioc.indicator_value }}<br>
+                                                    <span class="badge badge-{{ 'danger' if ioc.severity == 'critical' else 'warning' if ioc.severity == 'high' else 'info' }}">
+                                                        {{ ioc.severity|title }}
+                                                    </span>
+                                                    {% if ioc.threat_actor %}
+                                                        <span class="badge badge-secondary">{{ ioc.threat_actor }}</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+
+                                        <!-- Recent Integrations -->
+                                        {% for integration in integrations[:2] %}
+                                        <div class="time-label">
+                                            <span class="bg-green">{{ integration.created_at.strftime('%Y-%m-%d') if integration.created_at else 'Recent' }}</span>
+                                        </div>
+                                        <div>
+                                            <i class="fas fa-plug bg-green"></i>
+                                            <div class="timeline-item">
+                                                <span class="time"><i class="fas fa-clock"></i> {{ integration.created_at.strftime('%H:%M') if integration.created_at else 'N/A' }}</span>
+                                                <h3 class="timeline-header">
+                                                    <a href="{{ url_for('opencti_integration') }}">OpenCTI Integration Added</a>
+                                                </h3>
+                                                <div class="timeline-body">
+                                                    Connected to: {{ integration.platform_url }}<br>
+                                                    <span class="badge badge-{{ 'success' if integration.status == 'connected' else 'warning' }}">
+                                                        {{ integration.status|title }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+
+                                        <div>
+                                            <i class="fas fa-clock bg-gray"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Threat Intelligence Resources -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-book"></i> Threat Intelligence Resources
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="card card-outline card-primary">
+                                                <div class="card-header">
+                                                    <h6 class="card-title">
+                                                        <i class="fas fa-graduation-cap"></i> Learning Resources
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p>Access documentation and guides for effective threat intelligence practices.</p>
+                                                    <a href="{{ url_for('docs_file', filename='threat_intelligence_guide.md') }}" class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-book-open"></i> View Guide
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card card-outline card-success">
+                                                <div class="card-header">
+                                                    <h6 class="card-title">
+                                                        <i class="fas fa-chart-bar"></i> Analytics Dashboard
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p>View threat intelligence analytics and trending indicators.</p>
+                                                    <button class="btn btn-sm btn-success" onclick="showAnalytics()">
+                                                        <i class="fas fa-chart-line"></i> View Analytics
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card card-outline card-warning">
+                                                <div class="card-header">
+                                                    <h6 class="card-title">
+                                                        <i class="fas fa-bell"></i> Alert Configuration
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p>Configure alerts for new threats and intelligence updates.</p>
+                                                    <button class="btn btn-sm btn-warning" onclick="configureAlerts()">
+                                                        <i class="fas fa-cog"></i> Configure
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showAnalytics() {
+    // In a real implementation, this would show analytics dashboard
+    alert('Threat intelligence analytics would be displayed here, including:\n\n• IoC trend analysis\n• Threat actor activity\n• Integration health metrics\n• Detection effectiveness');
+}
+
+function configureAlerts() {
+    // In a real implementation, this would open alert configuration
+    alert('Alert configuration would allow you to:\n\n• Set up IoC detection alerts\n• Configure threat actor monitoring\n• Define integration sync notifications\n• Create custom alert rules');
+}
+</script>
+
+{% endblock %}

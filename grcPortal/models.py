@@ -745,6 +745,17 @@ class Risk(Base):
         else:
             return f"Pending - {self.approval_status.value}"
 
+    def get_impact_description(self, impact_type, level):
+        """Get human-readable description for impact level (1-5 scale)"""
+        descriptions = {
+            1: "Minimal impact - Negligible effect on operations",
+            2: "Low impact - Minor disruption, easily manageable",
+            3: "Moderate impact - Noticeable effect requiring attention",
+            4: "High impact - Significant disruption to operations",
+            5: "Critical impact - Severe disruption, potential business failure"
+        }
+        return descriptions.get(level, f"Unknown impact level {level}")
+
 
 class RiskManagementFramework(Base):
     """Risk management framework selection and customization"""
@@ -1015,56 +1026,6 @@ class ComplianceScore(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     framework: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=False)
     requirement_id: Mapped[str] = mapped_column(String(100), nullable=False)  # e.g., "NIST-AC-2", "GDPR-25"
-    calculated_score: Mapped[float] = mapped_column(Float, default=0.0)       # 0-100 percentage
-    weight: Mapped[float] = mapped_column(Float, default=1.0)                 # Importance weight for overall scoring
-    assessment_date: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
-
-    # Gap analysis fields
-    gap_description: Mapped[str] = mapped_column(Text, nullable=True)
-    remediation_plan: Mapped[str] = mapped_column(Text, nullable=True)
-    priority_level: Mapped[str] = mapped_column(String(20), default="medium")  # high, medium, low
-
-    # Relationships
-    requirement_id_fk: Mapped[int] = mapped_column(Integer, ForeignKey("compliance_requirements.id"), nullable=True)
-    requirement = relationship("ComplianceRequirement", backref="automated_scores")
-
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
-
-    def calculate_gap_score(self, target_score: float = 100.0):
-        """Calculate compliance gap as percentage"""
-        return max(0.0, target_score - self.calculated_score)
-
-    def get_compliance_status(self):
-        """Get compliance status based on score"""
-        if self.calculated_score >= 95.0:
-            return "compliant"
-        elif self.calculated_score >= 80.0:
-            return "mostly_compliant"
-        elif self.calculated_score >= 60.0:
-            return "partially_compliant"
-        else:
-            return "non_compliant"
-
-
-class Dependency(Base):
-    """
-    Represents software dependencies with automated risk assessment and vulnerability tracking.
-
-    Tracks third-party libraries and packages used in applications, performing
-    automated risk analysis based on known vulnerabilities and version analysis.
-    Supports supply chain risk management and dependency security monitoring.
-
-    Attributes:
-        name: Package/library name (e.g., "flask", "requests")
-        version: Installed version string
-        risk_level: Automatically assessed risk severity
-        vulnerabilities: Known CVEs or security issues
-        risk: Human-readable risk description
-        mitigation: Recommended fix or upgrade path
-        mitigation_suggestions: Detailed mitigation strategies"""
-
-    # Risk Assessment:
     calculated_score: Mapped[float] = mapped_column(Float, default=0.0)       # 0-100 percentage
     weight: Mapped[float] = mapped_column(Float, default=1.0)                 # Importance weight for overall scoring
     assessment_date: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
@@ -1767,7 +1728,7 @@ class CriticalAssetRegister(Base):
 
             Asset: {self.asset_name}
             Type: {self.asset_type}
-            Value: ${:.2f}
+            Value: ${self.asset_value:.2f}
             Criticality: {self.criticality_level.upper()}
 
             THREAT EXPOSURE
@@ -1792,3 +1753,301 @@ class CriticalAssetRegister(Base):
             Assessed by: {self.assessor.email if self.assessor else 'Unknown'}
             Last Assessment: {self.last_assessment.strftime('%Y-%m-%d')}
             Next Review: {self.next_review.strftime('%Y-%m-%d') if self.next_review else 'Not scheduled'}
+"""
+
+class IndicatorOfCompromise(Base):
+    """Represents Indicators of Compromise (IoCs) for threat intelligence"""
+    __tablename__ = "indicators_of_compromise"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    indicator_type: Mapped[str] = mapped_column(String(50), nullable=False)  # ip, domain, hash, url, email, etc.
+    indicator_value: Mapped[str] = mapped_column(String(500), nullable=False)  # The actual IoC value
+    confidence: Mapped[int] = mapped_column(Integer, default=50)  # 0-100 confidence level
+    severity: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+    status: Mapped[str] = mapped_column(String(20), default="active")  # active, retired, false_positive
+
+    # Threat context
+    threat_actor: Mapped[str] = mapped_column(String(100), nullable=True)
+    campaign: Mapped[str] = mapped_column(String(100), nullable=True)
+    malware_family: Mapped[str] = mapped_column(String(100), nullable=True)
+
+    # Detection information
+    first_seen: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    last_seen: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    detection_source: Mapped[str] = mapped_column(String(100), nullable=True)  # e.g., "VirusTotal", "Custom Analysis"
+
+    # Metadata
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    tags: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of tags
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    creator = relationship("User", backref="created_iocs")
+    analyses: Mapped[list["IoCAnalysis"]] = relationship("IoCAnalysis", back_populates="ioc")
+
+
+class IoCAnalysis(Base):
+    """Analysis of Indicators of Compromise"""
+    __tablename__ = "ioc_analyses"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    ioc_id: Mapped[int] = mapped_column(ForeignKey("indicators_of_compromise.id"), nullable=False)
+
+    # Analysis details
+    analysis_type: Mapped[str] = mapped_column(String(50), nullable=False)  # behavioral, static, network, etc.
+    detection_method: Mapped[str] = mapped_column(String(100), nullable=False)  # How it was detected
+    threat_indication: Mapped[str] = mapped_column(Text, nullable=False)  # How it indicates a threat
+
+    # Technical details
+    analysis_result: Mapped[str] = mapped_column(Text, nullable=True)  # Detailed analysis findings
+    mitigation_steps: Mapped[str] = mapped_column(Text, nullable=True)  # Recommended actions
+    false_positive_probability: Mapped[int] = mapped_column(Integer, default=0)  # 0-100
+
+    # Validation
+    validated: Mapped[bool] = mapped_column(Boolean, default=False)
+    validated_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    validation_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Metadata
+    analyst_notes: Mapped[str] = mapped_column(Text, nullable=True)
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    ioc = relationship("IndicatorOfCompromise", back_populates="analyses")
+    analyst = relationship("User", foreign_keys=[created_by])
+    validator = relationship("User", foreign_keys=[validated_by])
+
+
+class MalwareSample(Base):
+    """Malware sample submissions for analysis"""
+    __tablename__ = "malware_samples"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    sample_hash: Mapped[str] = mapped_column(String(128), nullable=False)  # SHA256 hash
+    filename: Mapped[str] = mapped_column(String(255), nullable=True)
+    analysis_status: Mapped[str] = mapped_column(String(50), default="pending")  # pending, analyzing, completed, failed
+    submitted_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    submitter = relationship("User", backref="malware_samples")
+
+
+class MalwareAnalysis(Base):
+    """Malware analysis results"""
+    __tablename__ = "malware_analyses"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    sample_id: Mapped[int] = mapped_column(ForeignKey("malware_samples.id"), nullable=False)
+    platform: Mapped[str] = mapped_column(String(100), nullable=False)  # virustotal, hybrid-analysis, etc.
+    detection_ratio: Mapped[str] = mapped_column(String(20), nullable=True)  # e.g., "15/70"
+    positive_detections: Mapped[int] = mapped_column(Integer, default=0)
+    total_scanners: Mapped[int] = mapped_column(Integer, default=0)
+    behavioral_indicators: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string
+    potential_impact: Mapped[str] = mapped_column(Text, nullable=True)
+    severity: Mapped[str] = mapped_column(String(20), default="low")  # low, medium, high, critical
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    sample = relationship("MalwareSample", backref="analyses")
+
+
+class PhishingTemplate(Base):
+    """Phishing email templates for security awareness"""
+    __tablename__ = "phishing_templates"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    subject: Mapped[str] = mapped_column(String(255), nullable=True)
+    body_html: Mapped[str] = mapped_column(Text, nullable=True)
+    body_text: Mapped[str] = mapped_column(Text, nullable=True)
+    spoofed_sender: Mapped[str] = mapped_column(String(255), nullable=True)
+    malicious_links: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array
+    social_engineering_techniques: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array
+    risk_level: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    creator = relationship("User", backref="phishing_templates")
+
+
+class APTCampaign(Base):
+    """Advanced Persistent Threat campaign documentation"""
+    __tablename__ = "apt_campaigns"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    actor_name: Mapped[str] = mapped_column(String(255), nullable=True)
+    target_sector: Mapped[str] = mapped_column(String(100), nullable=True)
+    objectives: Mapped[str] = mapped_column(Text, nullable=True)
+    techniques_used: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array
+    indicators_of_compromise: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array
+    severity: Mapped[str] = mapped_column(String(20), default="high")  # low, medium, high, critical
+    relevance_to_organization: Mapped[str] = mapped_column(String(50), default="unknown")  # low, medium, high, direct
+    documented_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    documenter = relationship("User", backref="apt_campaigns")
+
+
+class ATTACKMapping(Base):
+    """MITRE ATT&CK framework mappings for APT campaigns"""
+    __tablename__ = "attack_mappings"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    campaign_id: Mapped[int] = mapped_column(ForeignKey("apt_campaigns.id"), nullable=False)
+    tactic: Mapped[str] = mapped_column(String(255), nullable=True)
+    technique: Mapped[str] = mapped_column(String(255), nullable=True)
+    technique_id: Mapped[str] = mapped_column(String(20), nullable=True)  # e.g., T1059
+    subtechnique: Mapped[str] = mapped_column(String(255), nullable=True)
+    subtechnique_id: Mapped[str] = mapped_column(String(20), nullable=True)  # e.g., T1059.001
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    evidence: Mapped[str] = mapped_column(Text, nullable=True)
+    confidence: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high
+    mapped_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    campaign = relationship("APTCampaign", backref="attack_mappings")
+    mapper = relationship("User", backref="attack_mappings")
+
+
+class VulnerabilityScan(Base):
+    """Vulnerability scan records"""
+    __tablename__ = "vulnerability_scans"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    scan_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    tool_used: Mapped[str] = mapped_column(String(100), nullable=True)
+    target_range: Mapped[str] = mapped_column(String(255), nullable=True)
+    scan_type: Mapped[str] = mapped_column(String(50), default="basic")  # basic, comprehensive, compliance
+    scan_parameters: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string
+    vulnerabilities_found: Mapped[int] = mapped_column(Integer, default=0)
+    critical_findings: Mapped[int] = mapped_column(Integer, default=0)
+    high_findings: Mapped[int] = mapped_column(Integer, default=0)
+    start_time: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    end_time: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    duration_seconds: Mapped[int] = mapped_column(Integer, nullable=True)
+    performed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    performer = relationship("User", backref="vulnerability_scans")
+
+
+class VulnerabilityFinding(Base):
+    """Individual vulnerability findings from scans"""
+    __tablename__ = "vulnerability_findings"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    scan_id: Mapped[int] = mapped_column(ForeignKey("vulnerability_scans.id"), nullable=False)
+    host_ip: Mapped[str] = mapped_column(String(45), nullable=False)  # IPv4/IPv6
+    port: Mapped[int] = mapped_column(Integer, nullable=True)
+    service: Mapped[str] = mapped_column(String(100), nullable=True)
+    vulnerability_id: Mapped[str] = mapped_column(String(50), nullable=False)  # CVE-XXXX-XXXX
+    title: Mapped[str] = mapped_column(String(500), nullable=False)
+    severity: Mapped[str] = mapped_column(String(20), nullable=False)  # low, medium, high, critical
+    cvss_score: Mapped[float] = mapped_column(Float, nullable=True)
+    remediation: Mapped[str] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    scan = relationship("VulnerabilityScan", backref="findings")
+
+
+class AssetDiscovery(Base):
+    """Asset discovery scan records"""
+    __tablename__ = "asset_discoveries"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    scan_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    discovery_method: Mapped[str] = mapped_column(String(100), default="network_scan")
+    target_network: Mapped[str] = mapped_column(String(255), nullable=True)
+    scan_parameters: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string
+    assets_discovered: Mapped[int] = mapped_column(Integer, default=0)
+    critical_assets: Mapped[int] = mapped_column(Integer, default=0)
+    network_topology: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string
+    performed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    performer = relationship("User", backref="asset_discoveries")
+
+
+class DiscoveredService(Base):
+    """Services discovered on network assets"""
+    __tablename__ = "discovered_services"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    asset_id: Mapped[int] = mapped_column(ForeignKey("asset_discoveries.id"), nullable=False)
+    service_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    port: Mapped[int] = mapped_column(Integer, nullable=False)
+    protocol: Mapped[str] = mapped_column(String(20), default="tcp")
+    state: Mapped[str] = mapped_column(String(20), nullable=False)  # open, closed, filtered
+    criticality: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    asset = relationship("AssetDiscovery", backref="services")
+
+
+class OpenCTIConnector(Base):
+    """OpenCTI connector configurations"""
+    __tablename__ = "opencti_connectors"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    connector_type: Mapped[str] = mapped_column(String(50), nullable=False)  # import, export, internal
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    scope: Mapped[str] = mapped_column(String(50), nullable=True)  # threat-actor, observable, threat-intelligence
+    configuration: Mapped[str] = mapped_column(Text, nullable=True)  # JSON configuration
+    active: Mapped[bool] = mapped_column(Boolean, default=False)
+    last_run: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    error_message: Mapped[str] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+
+class OpenCTIIntegration(Base):
+    """OpenCTI platform integration tracking"""
+    __tablename__ = "opencti_integrations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    platform_url: Mapped[str] = mapped_column(String(255), nullable=False)
+    api_key: Mapped[str] = mapped_column(String(255), nullable=True)  # Encrypted in production
+    status: Mapped[str] = mapped_column(String(20), default="disconnected")  # connected, disconnected, error
+    last_sync: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    total_indicators: Mapped[int] = mapped_column(Integer, default=0)
+    total_reports: Mapped[int] = mapped_column(Integer, default=0)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

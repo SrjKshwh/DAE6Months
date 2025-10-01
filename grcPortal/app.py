@@ -65,7 +65,7 @@ load_dotenv()
 from db import get_engine, get_session, close_session
 
 
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService, IndicatorOfCompromise, IoCAnalysis, OpenCTIConnector, OpenCTIIntegration
 
 
 from sqlalchemy.orm import sessionmaker
@@ -417,8 +417,8 @@ def create_app():
         MAX_CONTENT_LENGTH=10*1024*1024  # 10 MB upload cap
     )
     # Inactivity timeout configuration
-    INACTIVITY_TIMEOUT = int(os.getenv("INACTIVITY_TIMEOUT", 50000))  # 50 seconds default
-    WARNING_TIMEOUT = int(os.getenv("WARNING_TIMEOUT", 30000))  # 30 seconds
+    INACTIVITY_TIMEOUT = int(os.getenv("INACTIVITY_TIMEOUT", 20000))  # 20 seconds default
+    WARNING_TIMEOUT = int(os.getenv("WARNING_TIMEOUT", 20000))  # 20 seconds
     
     # Make these available to templates/JavaScript
     app.config['INACTIVITY_TIMEOUT'] = INACTIVITY_TIMEOUT
@@ -4003,6 +4003,151 @@ def create_app():
 
     # --- End of Cyber Threats and Vulnerabilities Routes ---
 
+    # --- Threat Intelligence Routes ---
+
+    @app.route("/threat_intelligence")
+    @login_required
+    def threat_intelligence():
+        """Main threat intelligence dashboard"""
+        user = current_user()
+        db = get_session()
+
+        # Get user's threat intelligence data
+        iocs = db.query(IndicatorOfCompromise).filter(IndicatorOfCompromise.created_by == user.id).all()
+        opencti_integrations = db.query(OpenCTIIntegration).all()
+
+        close_session(db)
+        return render_template("threat_intelligence.html",
+                             iocs=iocs,
+                             opencti_integrations=opencti_integrations)
+
+    @app.route("/ioc_analysis", methods=["GET", "POST"])
+    @login_required
+    def ioc_analysis():
+        """IoC submission and analysis"""
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            ioc = IndicatorOfCompromise(
+                indicator_type=request.form.get("indicator_type"),
+                indicator_value=request.form.get("indicator_value").strip(),
+                confidence=int(request.form.get("confidence", 50)),
+                severity=request.form.get("severity", "medium"),
+                status=request.form.get("status", "active"),
+                threat_actor=request.form.get("threat_actor"),
+                campaign=request.form.get("campaign"),
+                malware_family=request.form.get("malware_family"),
+                first_seen=datetime.strptime(request.form.get("first_seen"), "%Y-%m-%d") if request.form.get("first_seen") else None,
+                last_seen=datetime.strptime(request.form.get("last_seen"), "%Y-%m-%d") if request.form.get("last_seen") else None,
+                detection_source=request.form.get("detection_source"),
+                description=request.form.get("description"),
+                tags=json.dumps(request.form.getlist("tags")),
+                created_by=user.id
+            )
+            db.add(ioc)
+            db.commit()
+            flash("IoC submitted for analysis.", "success")
+            return redirect(url_for("ioc_analysis"))
+
+        iocs = db.query(IndicatorOfCompromise).filter(IndicatorOfCompromise.created_by == user.id).all()
+        close_session(db)
+        return render_template("ioc_analysis.html", iocs=iocs)
+
+    @app.route("/analyze_ioc/<int:ioc_id>", methods=["POST"])
+    @login_required
+    def analyze_ioc(ioc_id):
+        """Trigger IoC analysis"""
+        user = current_user()
+        db = get_session()
+
+        ioc = db.get(IndicatorOfCompromise, ioc_id)
+        if not ioc or ioc.created_by != user.id:
+            close_session(db)
+            flash("IoC not found or access denied.", "danger")
+            return redirect(url_for("ioc_analysis"))
+
+        # Mock analysis - in production, integrate with threat intelligence platforms
+        analysis = IoCAnalysis(
+            ioc_id=ioc_id,
+            analysis_type="behavioral",
+            detection_method="signature_matching",
+            threat_indication=f"Indicator matches known {ioc.indicator_type} patterns associated with {ioc.threat_actor or 'unknown'} threat actor",
+            analysis_result=json.dumps({
+                "risk_score": 85,
+                "false_positive_probability": 15,
+                "related_indicators": ["similar_domain_pattern", "same_ip_range"],
+                "recommended_actions": ["Block indicator", "Monitor for related activity", "Update security controls"]
+            }),
+            mitigation_steps="Implement blocking rules, enhance monitoring, conduct targeted hunting",
+            false_positive_probability=15,
+            validated=False,
+            analyst_notes="Automated analysis completed. Manual validation recommended.",
+            created_by=user.id
+        )
+
+        db.add(analysis)
+        db.commit()
+
+        log_audit_event(user, "IOC_ANALYSIS", "SECURITY",
+                       f"Analyzed IoC {ioc.indicator_value}", f"/analyze_ioc/{ioc_id}", True)
+
+        close_session(db)
+        flash("IoC analysis completed.", "success")
+        return redirect(url_for("ioc_analysis"))
+
+    @app.route("/opencti_integration", methods=["GET", "POST"])
+    @login_required
+    def opencti_integration():
+        """OpenCTI platform integration management"""
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            integration = OpenCTIIntegration(
+                platform_url=request.form.get("platform_url"),
+                api_key=request.form.get("api_key"),
+                status="connected" if request.form.get("test_connection") else "disconnected"
+            )
+            db.add(integration)
+            db.commit()
+            flash("OpenCTI integration configured.", "success")
+            return redirect(url_for("opencti_integration"))
+
+        integrations = db.query(OpenCTIIntegration).all()
+        connectors = db.query(OpenCTIConnector).all()
+        close_session(db)
+        return render_template("opencti_integration.html",
+                             integrations=integrations,
+                             connectors=connectors)
+
+    @app.route("/sync_opencti/<int:integration_id>", methods=["POST"])
+    @login_required
+    def sync_opencti(integration_id):
+        """Sync data with OpenCTI platform"""
+        user = current_user()
+        db = get_session()
+
+        integration = db.get(OpenCTIIntegration, integration_id)
+        if not integration:
+            close_session(db)
+            flash("Integration not found.", "danger")
+            return redirect(url_for("opencti_integration"))
+
+        # Mock sync - in production, implement actual OpenCTI API calls
+        integration.last_sync = datetime.now(timezone.utc)
+        integration.total_indicators += 10  # Mock data
+        integration.total_reports += 2     # Mock data
+        db.commit()
+
+        log_audit_event(user, "OPENCTI_SYNC", "SECURITY",
+                       f"Synced with OpenCTI platform {integration.platform_url}", f"/sync_opencti/{integration_id}", True)
+
+        close_session(db)
+        flash("OpenCTI sync completed.", "success")
+        return redirect(url_for("opencti_integration"))
+
+    # --- End of Threat Intelligence Routes ---
 
     # error handlers
     @app.errorhandler(404)
@@ -4298,6 +4443,178 @@ if __name__ == "__main__":
                 "threshold_critical": 50.0,
                 "unit": "percentage"
             }]
+
+            # Seed sample IoCs
+            iocs_data = [
+            {
+                "indicator_type": "ip",
+                "indicator_value": "192.168.1.100",
+                "confidence": 85,
+                "severity": "high",
+                "status": "active",
+                "threat_actor": "APT28",
+                "campaign": "SolarWinds",
+                "description": "Command and control server IP",
+                "tags": ["c2", "apt", "solarwinds"]
+            },
+            {
+                "indicator_type": "domain",
+                "indicator_value": "malicious.example.com",
+                "confidence": 90,
+                "severity": "critical",
+                "status": "active",
+                "threat_actor": "Lazarus Group",
+                "campaign": "Banking Malware",
+                "description": "Malicious domain used for phishing",
+                "tags": ["phishing", "malware", "banking"]
+            },
+            {
+                "indicator_type": "hash",
+                "indicator_value": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+                "confidence": 95,
+                "severity": "critical",
+                "status": "active",
+                "threat_actor": "Unknown",
+                "malware_family": "Ransomware",
+                "description": "SHA256 hash of ransomware sample",
+                "tags": ["ransomware", "malware", "crypto"]
+            },
+            {
+                "indicator_type": "url",
+                "indicator_value": "https://fake-bank-login.com",
+                "confidence": 80,
+                "severity": "high",
+                "status": "active",
+                "threat_actor": "Unknown",
+                "campaign": "Credential Theft",
+                "description": "Phishing URL mimicking banking site",
+                "tags": ["phishing", "credentials", "banking"]
+            },
+            {
+                "indicator_type": "email",
+                "indicator_value": "support@fake-bank.com",
+                "confidence": 75,
+                "severity": "medium",
+                "status": "active",
+                "threat_actor": "Unknown",
+                "campaign": "BEC",
+                "description": "Email address used in business email compromise",
+                "tags": ["bec", "phishing", "email"]
+            }
+            ]
+
+            for ioc_data in iocs_data:
+                result = conn.execute(text("SELECT id FROM indicators_of_compromise WHERE indicator_value = :value"), {"value": ioc_data["indicator_value"]})
+                existing = result.fetchone()
+
+                if not existing:
+                    conn.execute(text("""
+                    INSERT INTO indicators_of_compromise (indicator_type, indicator_value, confidence, severity, status,
+                        threat_actor, campaign, malware_family, first_seen, last_seen, detection_source, description, tags, created_by, created_at, updated_at)
+                    VALUES (:indicator_type, :indicator_value, :confidence, :severity, :status,
+                        :threat_actor, :campaign, :malware_family, :first_seen, :last_seen, :detection_source, :description, :tags, :created_by, :created_at, :updated_at)"""), {
+                        "indicator_type": ioc_data["indicator_type"],
+                        "indicator_value": ioc_data["indicator_value"],
+                        "confidence": ioc_data["confidence"],
+                        "severity": ioc_data["severity"],
+                        "status": ioc_data["status"],
+                        "threat_actor": ioc_data.get("threat_actor"),
+                        "campaign": ioc_data.get("campaign"),
+                        "malware_family": ioc_data.get("malware_family"),
+                        "first_seen": datetime.now(timezone.utc) - timedelta(days=30),
+                        "last_seen": datetime.now(timezone.utc),
+                        "detection_source": "Internal Analysis",
+                        "description": ioc_data["description"],
+                        "tags": json.dumps(ioc_data["tags"]),
+                        "created_by": 1,  # Default admin user
+                        "created_at": datetime.now(timezone.utc),
+                        "updated_at": datetime.now(timezone.utc)
+                    })
+
+            # Seed sample OpenCTI integrations
+            opencti_data = [
+            {
+                "platform_url": "https://demo.opencti.io",
+                "api_key": "demo-api-key-12345",
+                "status": "connected",
+                "total_indicators": 1250,
+                "total_reports": 89
+            },
+            {
+                "platform_url": "https://threatintel.company.com",
+                "api_key": "company-api-key-67890",
+                "status": "disconnected",
+                "total_indicators": 0,
+                "total_reports": 0
+            }
+            ]
+
+            for octi_data in opencti_data:
+                result = conn.execute(text("SELECT id FROM opencti_integrations WHERE platform_url = :url"), {"url": octi_data["platform_url"]})
+                existing = result.fetchone()
+
+                if not existing:
+                    conn.execute(text("""
+                    INSERT INTO opencti_integrations (platform_url, api_key, status, total_indicators, total_reports, last_sync, created_at, updated_at)
+                    VALUES (:platform_url, :api_key, :status, :total_indicators, :total_reports, :last_sync, :created_at, :updated_at)"""), {
+                        "platform_url": octi_data["platform_url"],
+                        "api_key": octi_data["api_key"],
+                        "status": octi_data["status"],
+                        "total_indicators": octi_data["total_indicators"],
+                        "total_reports": octi_data["total_reports"],
+                        "last_sync": datetime.now(timezone.utc) if octi_data["status"] == "connected" else None,
+                        "created_at": datetime.now(timezone.utc),
+                        "updated_at": datetime.now(timezone.utc)
+                    })
+
+            # Seed sample OpenCTI connectors
+            connectors_data = [
+            {
+                "name": "MITRE ATT&CK",
+                "description": "MITRE ATT&CK framework integration for tactic and technique mapping",
+                "connector_type": "internal",
+                "scope": "threat-actor",
+                "active": True
+            },
+            {
+                "name": "VirusTotal",
+                "description": "VirusTotal malware analysis and reputation service integration",
+                "connector_type": "external",
+                "scope": "observable",
+                "active": True
+            },
+            {
+                "name": "MISP",
+                "description": "MISP threat intelligence sharing platform integration",
+                "connector_type": "external",
+                "scope": "threat-intelligence",
+                "active": False
+            },
+            {
+                "name": "AlienVault OTX",
+                "description": "AlienVault Open Threat Exchange integration",
+                "connector_type": "external",
+                "scope": "observable",
+                "active": True
+            }
+            ]
+
+            for conn_data in connectors_data:
+                result = conn.execute(text("SELECT id FROM opencti_connectors WHERE name = :name"), {"name": conn_data["name"]})
+                existing = result.fetchone()
+
+                if not existing:
+                    conn.execute(text("""
+                    INSERT INTO opencti_connectors (name, description, connector_type, scope, active, created_at, updated_at)
+                    VALUES (:name, :description, :connector_type, :scope, :active, :created_at, :updated_at)"""), {
+                        "name": conn_data["name"],
+                        "description": conn_data["description"],
+                        "connector_type": conn_data["connector_type"],
+                        "scope": conn_data["scope"],
+                        "active": conn_data["active"],
+                        "created_at": datetime.now(timezone.utc),
+                        "updated_at": datetime.now(timezone.utc)
+                    })
 
             for ind_data in indicators_data:
                 result = conn.execute(text("SELECT id FROM risk_indicators WHERE name = :name"), {"name": ind_data["name"]})

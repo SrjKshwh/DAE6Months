@@ -45,7 +45,7 @@ Proof method: Screenshot of the console log showing the function execution and S
 
 Task 3 — **Integrate Basic Scheduled Job**
 
-Description: Integrate APScheduler to run the `archive_old_risks()` function developed in Task 2 on a fixed schedule (e.g., every 5 minutes) and log the event to the console.
+Description: Integrate APScheduler to run the `archive_old_risks()` function developed in Task 2 on a fixed schedule (e.g., every week) and log the event to the console.
 
 Start date: 2025-10-21
 
