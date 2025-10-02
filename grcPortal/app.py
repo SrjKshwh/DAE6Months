@@ -410,19 +410,22 @@ def create_app():
     # Secure config
     app.config.update(
         SECRET_KEY=os.getenv("FLASK_SECRET", os.urandom(24)),
-        PERMANENT_SESSION_LIFETIME=timedelta(minutes=10),
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SECURE=not app.debug,  # true in prod
         SESSION_COOKIE_SAMESITE="Lax",
         MAX_CONTENT_LENGTH=10*1024*1024  # 10 MB upload cap
     )
     # Inactivity timeout configuration
-    INACTIVITY_TIMEOUT = int(os.getenv("INACTIVITY_TIMEOUT", 20000))  # 20 seconds default
+    INACTIVITY_TIMEOUT = int(os.getenv("INACTIVITY_TIMEOUT", 59000))  # 59 seconds default
     WARNING_TIMEOUT = int(os.getenv("WARNING_TIMEOUT", 20000))  # 20 seconds
     
     # Make these available to templates/JavaScript
     app.config['INACTIVITY_TIMEOUT'] = INACTIVITY_TIMEOUT
     app.config['WARNING_TIMEOUT'] = WARNING_TIMEOUT
+
+    # Make available in Jinja templates
+    app.jinja_env.globals['inactivity_timeout'] = INACTIVITY_TIMEOUT
+    app.jinja_env.globals['warning_timeout'] = WARNING_TIMEOUT
 
     # Ensure instance and uploads folders exist
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
@@ -478,8 +481,12 @@ def create_app():
     @app.before_request
     def check_session_timeout():
         if 'user_id' in session and 'login_time' in session:
-            # Enforce session lifetime (Zero Trust: never trust, always verify)
-            if time.time() - session['login_time'] > app.config['PERMANENT_SESSION_LIFETIME'].total_seconds():
+            elapsed = time.time() - session['login_time']
+            inactivity_timeout_seconds = app.config['INACTIVITY_TIMEOUT'] / 1000  # Convert ms to seconds
+            logging.info(f"DEBUG: Session check - elapsed: {elapsed}s, inactivity_timeout: {inactivity_timeout_seconds}s, user: {session.get('user_id')}")
+            # Enforce inactivity timeout (Zero Trust: never trust, always verify)
+            if elapsed > inactivity_timeout_seconds:
+                logging.warning(f"Session expired for user {session.get('user_id')} after {elapsed}s inactivity")
                 session.clear()     # Investigation: Check user activity logs
                 flash("Session expired due to inactivity. Please login again.", "warning")
                 return redirect(url_for("login"))   # Resolution: Force re-authentication
@@ -882,7 +889,6 @@ def create_app():
                     return render_template("login.html")
 
                 session["user_id"] = user.id
-                session.permanent = True
                 session['login_time'] = time.time()  # Zero Trust: Track session start for timeout enforcement
                 forensics_logger.info(f"User {user.email} logged in successfully from IP {request.remote_addr}")
                 log_audit_event(user, "LOGIN", "AUTHENTICATION",
@@ -4646,14 +4652,4 @@ if __name__ == "__main__":
     app.run(debug=True, host="127.0.0.1", port=5000)
 
 
-    #from apscheduler.schedulers.background import BackgroundScheduler
-    # Initialize scheduler for continuous monitoring
-    #scheduler = BackgroundScheduler()
-    #scheduler.add_job(func=perform_continuous_monitoring, trigger="interval", hours=1, id="continuous_monitoring")
-    #scheduler.add_job(func=detect_environmental_changes, trigger="interval", days=1, id="environmental_scanning")
-    #scheduler.start()
-
-    # Shut down scheduler on app exit
-    #import atexit
-    #atexit.register(lambda: scheduler.shutdown())
 

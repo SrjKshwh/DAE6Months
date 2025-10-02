@@ -98,6 +98,39 @@
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="module1Dropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-graduation-cap"></i> Cyber Threats & Vulnerabilities
+                        </a>
+                        <ul class="dropdown-menu" style="min-width: 400px;">
+                            <li><h6 class="dropdown-header">Identify and Analyze Cyber Threats</h6></li>
+                            <li><a class="dropdown-item" href="{{ url_for('malware_analysis') }}">
+                                <i class="fas fa-virus"></i> Malware Analysis (VirusTotal/Any.Run)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('phishing_templates') }}">
+                                <i class="fas fa-envelope"></i> Phishing Templates (SET)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('apt_campaigns') }}">
+                                <i class="fas fa-user-secret"></i> APT Campaigns (MITRE ATT&CK)
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Apply Vulnerability Assessment Techniques</h6></li>
+                            <li><a class="dropdown-item" href="{{ url_for('vulnerability_scan') }}">
+                                <i class="fas fa-search-plus"></i> Vulnerability Scan (Nmap/OpenVAS)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('asset_discovery') }}">
+                                <i class="fas fa-network-wired"></i> Asset Discovery Scan
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Implement Threat Intelligence Principles</h6></li>
+                            <li><a class="dropdown-item" href="{{ url_for('ioc_analysis') }}">
+                                <i class="fas fa-shield-alt"></i> IoC Analysis (2 IoCs)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('opencti_integration') }}">
+                                <i class="fas fa-plug"></i> OpenCTI Platform (2+ Connectors)
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="threatDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-bug"></i> Cyber Threats
                         </a>
@@ -171,29 +204,15 @@
                 </ul>
 
                 <ul class="navbar-nav">
-                    <!-- User Info -->
-                    <li class="nav-item">
-                        <span class="navbar-text me-2">
-                            <i class="fas fa-user text-light"></i>
-                            <strong>{{ current_user.email }}</strong>
-                        </span>
-                    </li>
-
-                    <!-- Prominent Logout Button -->
-                    <li class="nav-item">
-                        <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm me-2" title="Secure Logout">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
-                    </li>
-
-                    <!-- User Dropdown Menu -->
+                    <!-- User Dropdown Menu with Logout -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-cog"></i>
+                            <i class="fas fa-user text-light me-1"></i>
+                            <strong>{{ current_user.email }}</strong>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ url_for('logout') }}">
-                                <i class="fas fa-sign-out-alt"></i> Secure Logout
+                                <i class="fas fa-sign-out-alt"></i> Logout
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item text-muted" href="#" onclick="return false;">
@@ -229,7 +248,7 @@
     </div>
 
     <!-- Inactivity Modal (outside app-content so it won't blur) -->
-    <div class="modal fade" id="inactivityModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade" id="session-inactivity-modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-warning">
@@ -237,10 +256,10 @@
                 </div>
                 <div class="modal-body text-center">
                     <p class="mb-4">Are you still here?</p>
-                    <p class="text-muted small">Your session will expire in 10 seconds due to inactivity.</p>
+                    <p class="text-muted small">Your session will expire in {{ warning_timeout // 1000 }} seconds due to inactivity.</p>
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-primary" id="stayLoggedIn">Yes</button>
+                    <button type="button" class="btn btn-primary" id="session-extend-btn">Yes</button>
                 </div>
             </div>
         </div>
@@ -250,88 +269,133 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     {% block scripts %}{% endblock %}
+{% if current_user %}
+<script>
+    console.log('Inactivity script loaded for authenticated user');
+    let INACTIVITY_TIMEOUT = {{ inactivity_timeout }}; // Inactivity timeout in milliseconds
+    let WARNING_TIMEOUT = {{ warning_timeout }}; // Warning timeout in milliseconds
+    console.log('INACTIVITY_TIMEOUT:', INACTIVITY_TIMEOUT, 'WARNING_TIMEOUT:', WARNING_TIMEOUT);
 
-    {% if current_user %}
-    <!-- Inactivity Timeout Script -->
-    <script>
-        let INACTIVITY_TIMEOUT = {{ config.INACTIVITY_TIMEOUT or 20000 }};
-        let WARNING_TIMEOUT = {{ config.WARNING_TIMEOUT or 10000 }};
+    let inactivityTimer;
+    let warningTimeoutTimer;
+    let warningShown = false;
+    // Instantiate the Bootstrap Modal object once
+    const inactivityModalElement = document.getElementById('session-inactivity-modal');
+    const inactivityModal = new bootstrap.Modal(inactivityModalElement, {
+        backdrop: 'static',
+        keyboard: false
+    });
 
-        let inactivityTimer;
-        let warningShown = false;
 
-        function resetInactivityTimer() {
-            clearTimeout(inactivityTimer);
-            if (warningShown) {
-                hideInactivityWarning();
-            }
-            startInactivityTimer();
+    function resetInactivityTimer() {
+        console.log('Resetting inactivity timer due to user activity');
+        clearTimeout(inactivityTimer);
+        clearTimeout(warningTimeoutTimer); // Clear auto-logout timer
+        if (warningShown) {
+            hideInactivityWarning();
+        }
+        startInactivityTimer();
+    }
+
+    function startInactivityTimer() {
+        warningShown = false;
+        console.log('Starting inactivity timer for', INACTIVITY_TIMEOUT, 'ms');
+        // Set timer to trigger the warning modal
+        inactivityTimer = setTimeout(showInactivityWarning, INACTIVITY_TIMEOUT);
+    }
+
+    function showInactivityWarning() {
+        warningShown = true;
+        console.log('Showing inactivity warning');
+
+        // Show the modal
+        inactivityModal.show();
+
+        // Blur only app content
+        const appContent = document.getElementById("app-content");
+        if (appContent) {
+            appContent.classList.add("blurred");
+            console.log('App content blurred');
         }
 
-        function startInactivityTimer() {
-            warningShown = false;
-            inactivityTimer = setTimeout(showInactivityWarning, INACTIVITY_TIMEOUT);
-        }
+        // Set auto-logout timer
+        warningTimeoutTimer = setTimeout(() => {
+            if (warningShown) performLogout();
+        }, WARNING_TIMEOUT);
 
-        function showInactivityWarning() {
-            warningShown = true;
-            const modal = new bootstrap.Modal(document.getElementById('inactivityModal'));
-            modal.show();
+        // Attach click handler to the 'Yes' button
+        document.getElementById('session-extend-btn').onclick = function() {
+            // Note: The click itself will reset the main inactivity timer due to event listeners
+            // but we must manually hide the modal and clear the auto-logout timer
+            hideInactivityWarning();
+        };
+    }
 
-            // Blur only app content
-            document.getElementById("app-content").classList.add("blurred");
+    function hideInactivityWarning() {
+        if (!warningShown) return; // Only hide if it's currently shown
+        warningShown = false;
 
-            document.getElementById('stayLoggedIn').onclick = function() {
-                hideInactivityWarning();
-                resetInactivityTimer();
-            };
+        // Clear the auto-logout timer, as the user is back
+        clearTimeout(warningTimeoutTimer);
 
-            setTimeout(() => {
-                if (warningShown) performLogout();
-            }, WARNING_TIMEOUT);
-        }
+        // Hide the modal
+        inactivityModal.hide();
 
-        function hideInactivityWarning() {
-            warningShown = false;
-            const modal = bootstrap.Modal.getInstance(document.getElementById('inactivityModal'));
-            if (modal) modal.hide();
-            document.getElementById("app-content").classList.remove("blurred");
-        }
+        // Remove the blur
+        document.getElementById("app-content").classList.remove("blurred");
+        console.log('Modal hidden, blur removed');
+    }
 
-        function performLogout() {
-            fetch('/logout', { method: 'GET', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-                .then(response => {
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                    } else {
-                        window.location.href = '/login';
-                    }
-                })
-                .catch(() => window.location.href = '/login');
-        }
+    function performLogout() {
+        // Clear all timers before redirecting
+        clearTimeout(inactivityTimer);
+        clearTimeout(warningTimeoutTimer);
 
-        document.addEventListener('mousemove', resetInactivityTimer);
-        document.addEventListener('keypress', resetInactivityTimer);
-        document.addEventListener('click', resetInactivityTimer);
-        document.addEventListener('scroll', resetInactivityTimer);
+        console.log('Client-side session expired due to inactivity, performing logout...');
+        // Use a lightweight fetch to hit the /logout route, which should handle session cleanup and redirect
+        fetch('{{ url_for("logout") }}', { method: 'GET', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(response => {
+                console.log('Logout fetch response:', response.status, response.redirected ? 'redirected' : 'not redirected');
+                // If the response is a redirect (e.g., to /login), follow it. Otherwise, go to /login directly.
+                window.location.href = response.redirected ? response.url : '{{ url_for("logout") }}';
+            })
+            .catch(error => {
+                console.error('Logout fetch failed:', error);
+                window.location.href = '{{ url_for("logout") }}';
+            });
+    }
 
-        document.addEventListener('DOMContentLoaded', startInactivityTimer);
-    </script>
-    {% endif %}
+    // Event listeners to reset the timer on user activity
+    document.addEventListener('mousemove', resetInactivityTimer);
+    document.addEventListener('keypress', resetInactivityTimer);
+    document.addEventListener('click', resetInactivityTimer);
+    document.addEventListener('scroll', resetInactivityTimer);
 
-    <style>
-        /* Only blur app content, not modal */
-        #app-content.blurred {
-            filter: blur(2px);
-            pointer-events: none;
-        }
+    // Initial load
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded - starting inactivity timer');
+        startInactivityTimer();
+        // Test: Show modal after 5 seconds for debugging
+        setTimeout(() => {
+            console.log('Test: Showing inactivity warning');
+            showInactivityWarning();
+        }, 5000);
+    });
+</script>
+<style>
+    /* Only blur app content, not modal */
+    #app-content.blurred {
+        filter: blur(2px);
+        pointer-events: none;
+    }
 
-        #inactivityModal .modal-content {
-            z-index: 1060;
-            border: 2px solid #ffc107;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-    </style>
+    #session-inactivity-modal .modal-content {
+        z-index: 1060;
+        border: 2px solid #ffc107;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+</style>
+{% endif %}
 
 </body>
 </html>
