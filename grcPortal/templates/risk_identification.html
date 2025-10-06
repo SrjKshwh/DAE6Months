@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Risk Identification - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">Risk Identification</h1>
+                    <p class="text-muted">Identify risks from vulnerability scan results and assessment data</p>
+                </div>
+            </div>
+
+            <!-- Vulnerability Scan Results -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Vulnerability Scan Results</h6>
+                </div>
+                <div class="card-body">
+                    {% if scans %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Scan Name</th>
+                                        <th>Tool Used</th>
+                                        <th>Target Range</th>
+                                        <th>Critical Findings</th>
+                                        <th>High Findings</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for scan in scans %}
+                                    <tr>
+                                        <td>{{ scan.scan_name }}</td>
+                                        <td>{{ scan.tool_used }}</td>
+                                        <td>{{ scan.target_range }}</td>
+                                        <td>
+                                            <span class="badge badge-danger">{{ scan.critical_findings or 0 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-warning">{{ scan.high_findings or 0 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-success">Completed</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info" data-scan-id="{{ scan.id }}" onclick="viewFindings(this)">
+                                                <i class="fas fa-eye"></i> View Findings
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No Vulnerability Scans Found</h5>
+                            <p class="text-muted">Run a vulnerability scan to identify potential risks.</p>
+                            <a href="{{ url_for('vulnerability_scan') }}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Start New Scan
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Risk Identification Methodology -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Risk Identification Methodology</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Risk Sources</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <i class="fas fa-bug text-danger me-2"></i>
+                                    <strong>Vulnerability Scans:</strong> Automated identification of technical vulnerabilities
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-users text-warning me-2"></i>
+                                    <strong>Human Factors:</strong> Social engineering and insider threats
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-server text-info me-2"></i>
+                                    <strong>Asset-Based:</strong> Critical asset exposure and dependencies
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-globe text-success me-2"></i>
+                                    <strong>External Threats:</strong> Cyber threats and attack vectors
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Risk Assessment Criteria</h5>
+                            <div class="alert alert-info">
+                                <strong>Likelihood:</strong> Probability of occurrence (1-5 scale)<br>
+                                <strong>Impact:</strong> Potential consequences (1-5 scale)<br>
+                                <strong>Risk Score:</strong> Likelihood × Impact (1-25 scale)<br>
+                                <strong>Threshold:</strong> Score > 15 requires immediate attention
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Findings Details Modal -->
+            <div class="modal fade" id="findingsModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Scan Findings</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" id="findingsContent">
+                            <!-- Findings will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewFindings(button) {
+    const scanId = button.getAttribute('data-scan-id');
+    // In a real implementation, this would fetch findings via AJAX
+    const content = `
+        <div class="alert alert-info">
+            <strong>Sample Findings for Scan ID: ${scanId}</strong>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Vulnerability</th>
+                        <th>Severity</th>
+                        <th>CVSS Score</th>
+                        <th>Risk Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Apache Log4j Remote Code Execution</td>
+                        <td><span class="badge badge-critical">Critical</span></td>
+                        <td>10.0</td>
+                        <td><span class="badge badge-danger">High</span></td>
+                    </tr>
+                    <tr>
+                        <td>OpenSSL Buffer Overflow</td>
+                        <td><span class="badge badge-warning">High</span></td>
+                        <td>7.5</td>
+                        <td><span class="badge badge-warning">Medium</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="alert alert-warning">
+            <strong>Risk Assessment:</strong> Critical vulnerabilities require immediate remediation.
+            High-risk items should be addressed within 30 days.
+        </div>
+    `;
+    document.getElementById('findingsContent').innerHTML = content;
+    new bootstrap.Modal(document.getElementById('findingsModal')).show();
+}
+</script>
+{% endblock %}

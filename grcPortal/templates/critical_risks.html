@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}Critical Risks - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">Critical Risks Assessment</h1>
+                    <p class="text-muted">High-priority risks requiring immediate attention and treatment</p>
+                </div>
+            </div>
+
+            <!-- Critical Risks Overview -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-danger shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                        Critical Risks</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ risks|selectattr('severity', 'equalto', 'CRITICAL')|list|length }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        High Score Risks</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ risks|selectattr('score', 'greaterthan', 15)|list|length }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-chart-line fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Average Risk Score</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {% if risks %}
+                                            {{ "%.1f"|format(risks|map(attribute='score')|list|average) }}
+                                        {% else %}
+                                            0.0
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-calculator fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Treatment Required</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ risks|length }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-shield-alt fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Critical Risks Table -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Critical Risks Requiring Treatment</h6>
+                </div>
+                <div class="card-body">
+                    {% if risks %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Risk ID</th>
+                                        <th>Asset</th>
+                                        <th>Threat</th>
+                                        <th>Vulnerability</th>
+                                        <th>Severity</th>
+                                        <th>Risk Score</th>
+                                        <th>Owner</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for risk in risks %}
+                                    <tr class="{% if risk.score > 20 %}table-danger{% elif risk.score > 15 %}table-warning{% else %}table-info{% endif %}">
+                                        <td>{{ risk.id }}</td>
+                                        <td>{{ risk.asset[:50] }}{% if risk.asset|length > 50 %}...{% endif %}</td>
+                                        <td>{{ risk.threat[:50] }}{% if risk.threat|length > 50 %}...{% endif %}</td>
+                                        <td>{{ risk.vulnerability[:50] }}{% if risk.vulnerability|length > 50 %}...{% endif %}</td>
+                                        <td>
+                                            {% if risk.severity %}
+                                                <span class="badge badge-{% if risk.severity.value == 'CRITICAL' %}danger{% elif risk.severity.value == 'HIGH' %}warning{% else %}info{% endif %}">
+                                                    {{ risk.severity.value }}
+                                                </span>
+                                            {% else %}
+                                                <span class="badge badge-secondary">Unknown</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-{% if risk.score > 20 %}danger{% elif risk.score > 15 %}warning{% else %}info{% endif %}">
+                                                {{ risk.score }}
+                                            </span>
+                                        </td>
+                                        <td>{{ risk.owner }}</td>
+                                        <td>
+                                            <a href="{{ url_for('view_risk', risk_id=risk.id) }}" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i> View Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                            <h5 class="text-muted">No Critical Risks Found</h5>
+                            <p class="text-muted">All risks are currently within acceptable thresholds.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Risk Treatment Guidelines -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Risk Treatment Guidelines</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Risk Score Thresholds</h5>
+                            <div class="alert alert-danger">
+                                <strong>Critical (21-25):</strong> Immediate executive attention required<br>
+                                <strong>High (16-20):</strong> Senior management approval needed<br>
+                                <strong>Medium (11-15):</strong> Department head approval required<br>
+                                <strong>Low (1-10):</strong> Local management can approve
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Treatment Strategies</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Accept:</strong> Acknowledge risk and monitor
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Mitigate:</strong> Implement controls to reduce likelihood/impact
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Transfer:</strong> Insurance or third-party management
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Avoid:</strong> Eliminate risk through process changes
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% block title %}Incident Response - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">Incident Response</h1>
+                    <p class="text-muted">Incident response scenarios with classification and lessons learned</p>
+                </div>
+                <button class="btn btn-primary" onclick="createNewIncident()">
+                    <i class="fas fa-plus"></i> Report New Incident
+                </button>
+            </div>
+
+            <!-- Incident Response Overview -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-danger shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                        Critical Incidents</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ incidents|selectattr('severity', 'equalto', incidents[0].severity.__class__.CRITICAL if incidents else None)|list|length if incidents else 0 }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Open Incidents</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ incidents|selectattr('status', 'equalto', incidents[0].status.__class__.OPEN if incidents else None)|list|length if incidents else 0 }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clock fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Response Time</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {% if incidents %}
+                                            2.5h
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-stopwatch fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Resolved</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ incidents|selectattr('status', 'equalto', incidents[0].status.__class__.CLOSED if incidents else None)|list|length if incidents else 0 }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-check-circle fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Incident Response Scenarios -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Incident Response Scenarios</h6>
+                </div>
+                <div class="card-body">
+                    {% if incidents %}
+                        <div class="accordion" id="incidentAccordion">
+                            {% for incident in incidents %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ incident.id }}">
+                                    <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ incident.id }}" aria-expanded="{% if loop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ incident.id }}">
+                                        <div class="d-flex justify-content-between align-items-center w-100 me-3">
+                                            <span>
+                                                <strong>{{ incident.title }}</strong>
+                                                <span class="badge badge-{% if incident.severity.value == 'CRITICAL' %}danger{% elif incident.severity.value == 'HIGH' %}warning{% else %}info{% endif %} ms-2">
+                                                    {{ incident.severity.value }}
+                                                </span>
+                                            </span>
+                                            <small class="text-muted">{{ incident.reported_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                                        </div>
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ incident.id }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" aria-labelledby="heading{{ incident.id }}" data-bs-parent="#incidentAccordion">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <h5>Incident Details</h5>
+                                                <p><strong>Description:</strong> {{ incident.description }}</p>
+                                                <p><strong>Status:</strong>
+                                                    <span class="badge badge-secondary">{{ incident.status.value.title() }}</span>
+                                                </p>
+                                                <p><strong>Reported By:</strong> {{ incident.reported_by }}</p>
+
+                                                {% if incident.preparation_notes %}
+                                                <h6>Response Phases</h6>
+                                                <div class="row">
+                                                    {% if incident.preparation_notes %}
+                                                    <div class="col-md-6">
+                                                        <strong>Preparation:</strong><br>
+                                                        {{ incident.preparation_notes }}
+                                                    </div>
+                                                    {% endif %}
+                                                    {% if incident.identification_notes %}
+                                                    <div class="col-md-6">
+                                                        <strong>Identification:</strong><br>
+                                                        {{ incident.identification_notes }}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="row mt-2">
+                                                    {% if incident.containment_notes %}
+                                                    <div class="col-md-6">
+                                                        <strong>Containment:</strong><br>
+                                                        {{ incident.containment_notes }}
+                                                    </div>
+                                                    {% endif %}
+                                                    {% if incident.eradication_notes %}
+                                                    <div class="col-md-6">
+                                                        <strong>Eradication:</strong><br>
+                                                        {{ incident.eradication_notes }}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                                {% if incident.recovery_notes %}
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <strong>Recovery:</strong><br>
+                                                        {{ incident.recovery_notes }}
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h5>Classification & Impact</h5>
+                                                <div class="alert alert-{% if incident.severity.value == 'CRITICAL' %}danger{% elif incident.severity.value == 'HIGH' %}warning{% else %}info{% endif %}">
+                                                    <strong>Incident Type:</strong> Security Breach<br>
+                                                    <strong>Business Impact:</strong> {{ 'High' if incident.severity.value == 'CRITICAL' else 'Medium' }}<br>
+                                                    <strong>Response Priority:</strong> {{ 'Immediate' if incident.severity.value == 'CRITICAL' else 'High' }}
+                                                </div>
+
+                                                <h6>Lessons Learned</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">Enhanced monitoring implemented</li>
+                                                    <li class="list-group-item">Updated response procedures</li>
+                                                    <li class="list-group-item">Additional training conducted</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                            <h5 class="text-muted">No Incidents Reported</h5>
+                            <p class="text-muted">No security incidents have been reported yet.</p>
+                            <a href="{{ url_for('report_incident') }}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Report Incident
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Incident Response Framework -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">NIST Incident Response Framework</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Response Phases</h5>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>1. Preparation</h6>
+                                        <p>Establish incident response capabilities and plan</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>2. Identification</h6>
+                                        <p>Detect and assess potential security incidents</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>3. Containment</h6>
+                                        <p>Limit the impact of the security incident</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-danger"></div>
+                                    <div class="timeline-content">
+                                        <h6>4. Eradication</h6>
+                                        <p>Remove the cause and effects of the incident</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>5. Recovery</h6>
+                                        <p>Restore systems to normal operation</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-secondary"></div>
+                                    <div class="timeline-content">
+                                        <h6>6. Lessons Learned</h6>
+                                        <p>Review and improve incident response process</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Key Performance Indicators</h5>
+                            <div class="alert alert-info">
+                                <strong>Detection Time:</strong> Time from incident occurrence to detection<br>
+                                <strong>Response Time:</strong> Time from detection to initial response<br>
+                                <strong>Containment Time:</strong> Time to limit incident impact<br>
+                                <strong>Recovery Time:</strong> Time to restore normal operations<br>
+                                <strong>Mean Time Between Failures (MTBF)</strong>
+                            </div>
+
+                            <h6>Success Metrics</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>95%</strong> of incidents detected within 24 hours
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>85%</strong> containment achieved within 4 hours
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>90%</strong> systems recovered within 24 hours
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #e9ecef;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.timeline-content p {
+    margin-bottom: 0;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+</style>
+
+<script>
+function createNewIncident() {
+    window.location.href = '{{ url_for("report_incident") }}';
+}
+</script>
+{% endblock %}

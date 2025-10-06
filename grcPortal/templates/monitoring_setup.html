@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}Monitoring Setup - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">Security Monitoring Setup</h1>
+                    <p class="text-muted">Configure and demonstrate security monitoring capabilities</p>
+                </div>
+            </div>
+
+            <!-- System Metrics -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        CPU Usage</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ "%.1f"|format(cpu_percent) }}%</div>
+                                    <div class="text-xs text-muted">Real-time monitoring</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-microchip fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Memory Usage</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ "%.1f"|format(memory.percent) }}%</div>
+                                    <div class="text-xs text-muted">{{ "%.1f"|format(memory.used/1024/1024/1024) }}GB used</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-memory fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Disk Usage</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ "%.1f"|format(disk.percent) }}%</div>
+                                    <div class="text-xs text-muted">{{ "%.1f"|format(disk.free/1024/1024/1024) }}GB free</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-hdd fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Network I/O</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ "%.1f"|format(network.bytes_recv/1024/1024) }}MB</div>
+                                    <div class="text-xs text-muted">Data received</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-network-wired fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Alerts -->
+            {% if alerts %}
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-left-danger shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-danger">
+                                <i class="fas fa-exclamation-triangle"></i> Active Security Alerts
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            {% for alert in alerts %}
+                            <div class="alert alert-{% if alert.level == 'critical' %}danger{% else %}warning{% endif %} mb-2">
+                                <i class="fas fa-exclamation-circle"></i> {{ alert.message }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Process Monitoring -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-tasks"></i> Top Resource-Consuming Processes
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>PID</th>
+                                    <th>Process Name</th>
+                                    <th>CPU %</th>
+                                    <th>Memory %</th>
+                                    <th>Security Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for proc in processes %}
+                                <tr>
+                                    <td>{{ proc.pid }}</td>
+                                    <td>{{ proc.name }}</td>
+                                    <td>
+                                        <span class="badge badge-{% if proc.cpu_percent > 10 %}danger{% elif proc.cpu_percent > 5 %}warning{% else %}success{% endif %}">
+                                            {{ "%.1f"|format(proc.cpu_percent) }}%
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-{% if proc.memory_percent > 5 %}danger{% elif proc.memory_percent > 2 %}warning{% else %}success{% endif %}">
+                                            {{ "%.1f"|format(proc.memory_percent) }}%
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if 'system' in proc.name.lower() or 'svchost' in proc.name.lower() %}
+                                            <span class="badge badge-info">System Process</span>
+                                        {% elif proc.cpu_percent > 15 or proc.memory_percent > 10 %}
+                                            <span class="badge badge-warning">Monitor</span>
+                                        {% else %}
+                                            <span class="badge badge-success">Normal</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monitoring Configuration -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Monitoring Configuration</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>System Monitoring</h5>
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>CPU Monitoring</span>
+                                        <span class="badge badge-success">Active</span>
+                                    </div>
+                                    <small class="text-muted">Real-time CPU utilization tracking</small>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Memory Monitoring</span>
+                                        <span class="badge badge-success">Active</span>
+                                    </div>
+                                    <small class="text-muted">Memory usage and allocation monitoring</small>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Disk Monitoring</span>
+                                        <span class="badge badge-success">Active</span>
+                                    </div>
+                                    <small class="text-muted">Disk space and I/O operations tracking</small>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Network Monitoring</span>
+                                        <span class="badge badge-success">Active</span>
+                                    </div>
+                                    <small class="text-muted">Network traffic and connection monitoring</small>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Process Monitoring</span>
+                                        <span class="badge badge-success">Active</span>
+                                    </div>
+                                    <small class="text-muted">Real-time process resource usage tracking</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Security Monitoring</h5>
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Log Analysis</span>
+                                        <span class="badge badge-success">Active</span>
+                                    </div>
+                                    <small class="text-muted">Real-time analysis of security logs</small>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Authentication Monitoring</span>
+                                        <span class="badge badge-success">Active</span>
+                                    </div>
+                                    <small class="text-muted">Tracks login attempts and failures</small>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Process Anomaly Detection</span>
+                                        <span class="badge badge-success">Active</span>
+                                    </div>
+                                    <small class="text-muted">Detects unusual process behavior</small>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Resource Abuse Detection</span>
+                                        <span class="badge badge-success">Active</span>
+                                    </div>
+                                    <small class="text-muted">Identifies potential resource exhaustion attacks</small>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Threat Intelligence</span>
+                                        <span class="badge badge-info">Integrated</span>
+                                    </div>
+                                    <small class="text-muted">IOC matching and analysis</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Security Events -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Security Events</h6>
+                </div>
+                <div class="card-body">
+                    {% if security_events %}
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Event</th>
+                                        <th>Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for event in security_events %}
+                                    <tr>
+                                        <td>{{ event.split(' ')[0] if ' ' in event else 'N/A' }}</td>
+                                        <td>{{ event.split(' ', 1)[1] if ' ' in event else event }}</td>
+                                        <td>
+                                            {% if 'ERROR' in event %}
+                                                <span class="badge badge-danger">ERROR</span>
+                                            {% elif 'WARNING' in event %}
+                                                <span class="badge badge-warning">WARNING</span>
+                                            {% elif 'INFO' in event %}
+                                                <span class="badge badge-info">INFO</span>
+                                            {% else %}
+                                                <span class="badge badge-secondary">UNKNOWN</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                            <h5 class="text-muted">No Security Events</h5>
+                            <p class="text-muted">System is operating normally with no security events detected.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Monitoring Best Practices -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Monitoring Best Practices</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Implementation Guidelines</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>24/7 Monitoring:</strong> Continuous surveillance of critical systems
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Alert Prioritization:</strong> Focus on high-impact security events
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Automated Response:</strong> Immediate actions for known threats
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Regular Testing:</strong> Validate monitoring effectiveness
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Key Metrics to Monitor</h5>
+                            <div class="alert alert-info">
+                                <strong>Security Metrics:</strong><br>
+                                • Failed login attempts<br>
+                                • Unusual network traffic<br>
+                                • File integrity changes<br>
+                                • Privileged account usage<br>
+                                • Security policy violations
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
