@@ -39,6 +39,88 @@ A comprehensive enterprise-grade Governance, Risk, and Compliance (GRC) platform
 - **SWOT Analysis**: Strategic risk assessment with matrix-based interface
 - **Critical Asset Register**: Asset inventory with risk exposure analysis
 
+## 🛡️ Cybersecurity Risk Mitigation
+
+grcPortal addresses critical cybersecurity risks through integrated tools and Zero Trust principles:
+
+### Core Risk Areas Addressed
+
+#### 1. **Unauthorized Access & Authentication Breaches**
+- Zero Trust session management with automatic timeouts
+- Role-based access control (Admin, Auditor, User roles)
+- IP-based access restrictions and device fingerprinting
+- Comprehensive authentication audit logging
+
+#### 2. **Data Breaches & Confidentiality Violations**
+- Secure file upload with type validation and automatic cleanup
+- Digital evidence collection with integrity hashing
+- Encrypted data handling and access controls
+- Chain of custody tracking for forensic investigations
+
+#### 3. **Malware Infections & System Compromise**
+- Automated malware analysis with behavioral indicators
+- Threat family identification and mitigation recommendations
+- Integration with threat intelligence feeds
+- Real-time detection rule creation and monitoring
+
+#### 4. **Phishing & Social Engineering Attacks**
+- IoC analysis with threat actor correlation
+- Phishing template management for security awareness
+- Email and URL analysis with confidence scoring
+- Social engineering technique mapping and prevention
+
+#### 5. **Compliance Violations & Regulatory Risks**
+- Multi-framework compliance automation (NIST, ISO, GDPR, PCI DSS)
+- Automated gap analysis and remediation tracking
+- Compliance score monitoring and reporting
+- Regulatory requirement traceability
+
+#### 6. **Incident Response Failures**
+- Structured IRP workflows with phase tracking
+- Automated evidence collection and analysis
+- Incident severity classification and escalation
+- Post-incident lessons learned documentation
+
+#### 7. **Risk Oversight & Strategic Management**
+- AI-powered risk identification and scoring
+- Executive dashboards with risk heat maps
+- Multi-criteria risk analysis (Financial, Operational, Compliance, Reputation)
+- Predictive risk forecasting and trend analysis
+
+### Sample Data & Testing URLs
+
+#### Authentication & Access Control
+- **Login**: `http://localhost:5000/login` (email: kush786srj@gmail.com, password: Sksf1234)
+- **Audit Logs**: `http://localhost:5000/audit/logs`
+- **Admin Dashboard**: `http://localhost:5000/admin/dashboard`
+
+#### Incident Management
+- **Report Incident**: `http://localhost:5000/report_incident`
+- **Incidents Dashboard**: `http://localhost:5000/incidents`
+- **Sample Incidents**:
+  - Incident #1: "Suspicious Network Activity Detected" (High severity)
+  - Incident #2: "Potential Ransomware Infection" (Critical severity)
+
+#### Risk Management
+- **Risk Dashboard**: `http://localhost:5000/risk_dashboard`
+- **Risks List**: `http://localhost:5000/risks`
+- **Critical Risks**: `http://localhost:5000/critical_risks`
+
+#### Threat Intelligence
+- **IoC Analysis**: `http://localhost:5000/ioc_analysis`
+  - Sample IoCs: malicious.example.com, 192.168.1.100, fake-bank-login.com
+- **Malware Analysis**: `http://localhost:5000/malware_analysis`
+  - Sample: SHA256 hash with 47/72 detection ratio
+
+#### Compliance & Monitoring
+- **Compliance Dashboard**: `http://localhost:5000/compliance`
+- **Monitoring**: `http://localhost:5000/monitoring`
+- **Detection Rules**: `http://localhost:5000/detection_rules`
+
+#### Forensics & Evidence
+- **Digital Forensics**: `http://localhost:5000/forensics`
+- **Evidence Files**: `http://localhost:5000/evidence/[filename]`
+
 ## 🏗️ Architecture
 
 ### System Components
