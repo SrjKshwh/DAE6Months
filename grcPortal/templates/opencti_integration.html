@@ -12,7 +12,7 @@
                         <i class="fas fa-plug"></i> OpenCTI Platform Integration
                     </h3>
                     <div class="card-tools">
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addIntegrationModal">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addIntegrationModal">
                             <i class="fas fa-plus"></i> Add Integration
                         </button>
                     </div>
@@ -108,7 +108,7 @@
                                                         <i class="fas fa-sync"></i> Sync
                                                     </button>
                                                 </form>
-                                                <button class="btn btn-sm btn-info" onclick="viewIntegrationDetails({{ integration.id }})">
+                                                <button class="btn btn-sm btn-info" onclick="console.log('Details button clicked for integration', {{ integration.id }}); viewIntegrationDetails({{ integration.id }})">
                                                     <i class="fas fa-eye"></i> Details
                                                 </button>
                                             </div>
@@ -220,8 +220,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add OpenCTI Integration</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
             <form method="POST" action="{{ url_for('opencti_integration') }}">
@@ -253,7 +252,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Add Integration</button>
                 </div>
             </form>
@@ -267,8 +266,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Integration Details</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
             <div class="modal-body" id="integrationDetailsContent">
@@ -279,16 +277,122 @@
 </div>
 
 <script>
+console.log('opencti_integration script loaded');
+
+// Embed integrations data for JavaScript access
+const integrationsData = {{ integrations_json|tojson }};
+
 function viewIntegrationDetails(integrationId) {
-    // In a real implementation, this would fetch integration details via AJAX
-    $('#integrationDetailsContent').html(`
-        <div class="alert alert-info">
-            <h5>Integration Details</h5>
-            <p>Detailed integration information would be displayed here.</p>
-            <p>This includes connection status, sync history, data statistics, and configuration details.</p>
+    console.log('viewIntegrationDetails called with integrationId:', integrationId);
+
+    // Find the integration by ID
+    const integration = integrationsData.find(int => int.id === integrationId);
+
+    if (!integration) {
+        console.error('Integration not found for ID:', integrationId);
+        return;
+    }
+
+    // Format last sync date
+    const lastSyncFormatted = integration.last_sync ?
+        new Date(integration.last_sync).toLocaleString() : 'Never';
+
+    // Determine status badge class and text
+    let statusClass, statusText;
+    switch(integration.status) {
+        case 'connected':
+            statusClass = 'badge-success';
+            statusText = 'Connected';
+            break;
+        case 'connecting':
+            statusClass = 'badge-warning';
+            statusText = 'Connecting';
+            break;
+        default:
+            statusClass = 'badge-danger';
+            statusText = 'Disconnected';
+    }
+
+    // Build detailed content
+    const content = `
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Connection Information</h5>
+                <table class="table table-sm">
+                    <tr>
+                        <td><strong>Platform URL:</strong></td>
+                        <td>${integration.platform_url}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Status:</strong></td>
+                        <td><span class="badge ${statusClass}">${statusText}</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Last Sync:</strong></td>
+                        <td>${lastSyncFormatted}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h5>Data Statistics</h5>
+                <table class="table table-sm">
+                    <tr>
+                        <td><strong>Total Indicators:</strong></td>
+                        <td>${integration.total_indicators || 0}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Reports:</strong></td>
+                        <td>${integration.total_reports || 0}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Sync Status:</strong></td>
+                        <td>${integration.last_sync ? 'Up to date' : 'Not synced'}</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-    `);
-    $('#integrationDetailsModal').modal('show');
+        <div class="row mt-3">
+            <div class="col-12">
+                <h5>Configuration Details</h5>
+                <div class="alert alert-light">
+                    <p><strong>Integration ID:</strong> ${integration.id}</p>
+                    <p><strong>API Endpoint:</strong> ${integration.platform_url}/graphql</p>
+                    <p><strong>Sync Frequency:</strong> Manual (via Sync button)</p>
+                    <p><strong>Data Types:</strong> Indicators of Compromise, Threat Reports, Malware Analysis</p>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <h5>Recent Activity</h5>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Last Synchronization</h6>
+                            <small>${lastSyncFormatted}</small>
+                        </div>
+                        <p class="mb-1">Successfully synced ${integration.total_indicators || 0} indicators and ${integration.total_reports || 0} reports</p>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Connection Status</h6>
+                            <small>Real-time</small>
+                        </div>
+                        <p class="mb-1">Platform connection is ${statusText.toLowerCase()}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    try {
+        document.getElementById('integrationDetailsContent').innerHTML = content;
+        const modal = new bootstrap.Modal(document.getElementById('integrationDetailsModal'));
+        modal.show();
+        console.log('Integration details modal shown for ID:', integrationId);
+    } catch (error) {
+        console.error('Error displaying integration details:', error);
+    }
 }
 
 function configureConnector(connectorId) {

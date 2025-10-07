@@ -65,7 +65,7 @@ load_dotenv()
 from db import get_engine, get_session, close_session
 
 
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService, IndicatorOfCompromise, IoCAnalysis, OpenCTIConnector, OpenCTIIntegration
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService, IndicatorOfCompromise, IoCAnalysis, DetectionRule, OpenCTIConnector, OpenCTIIntegration, MonitoringConfiguration
 
 
 from sqlalchemy.orm import sessionmaker, joinedload
@@ -3990,7 +3990,25 @@ def create_app():
             flash("Phishing template created.", "success")
             return redirect(url_for("phishing_templates"))
 
-        templates = db.query(PhishingTemplate).filter(PhishingTemplate.created_by == user.id).all()
+        templates_raw = db.query(PhishingTemplate).filter(PhishingTemplate.created_by == user.id).all()
+
+        templates = []
+        for template in templates_raw:
+            templates.append({
+                'id': template.id,
+                'name': template.name,
+                'description': template.description,
+                'subject': template.subject,
+                'body_html': template.body_html,
+                'body_text': template.body_text,
+                'spoofed_sender': template.spoofed_sender,
+                'malicious_links': template.malicious_links,
+                'social_engineering_techniques': template.social_engineering_techniques,
+                'risk_level': template.risk_level,
+                'created_at': template.created_at.isoformat() if template.created_at else None,
+                'updated_at': template.updated_at.isoformat() if template.updated_at else None
+            })
+
         close_session(db)
         return render_template("phishing_templates.html", templates=templates)
 
@@ -4030,7 +4048,7 @@ def create_app():
         user = current_user()
         db = get_session()
 
-        campaign = db.get(APTCampaign, campaign_id)
+        campaign = db.query(APTCampaign).options(joinedload(APTCampaign.documenter)).filter(APTCampaign.id == campaign_id).first()
         if not campaign or campaign.documented_by != user.id:
             close_session(db)
             flash("Campaign not found or access denied.", "danger")
@@ -4101,7 +4119,26 @@ def create_app():
             flash("Vulnerability scan initiated.", "success")
             return redirect(url_for("vulnerability_scan"))
 
-        scans = db.query(VulnerabilityScan).filter(VulnerabilityScan.performed_by == user.id).all()
+        scans_raw = db.query(VulnerabilityScan).filter(VulnerabilityScan.performed_by == user.id).all()
+
+        scans = []
+        for scan in scans_raw:
+            scans.append({
+                'id': scan.id,
+                'scan_name': scan.scan_name,
+                'tool_used': scan.tool_used,
+                'target_range': scan.target_range,
+                'scan_type': scan.scan_type,
+                'vulnerabilities_found': scan.vulnerabilities_found,
+                'critical_findings': scan.critical_findings,
+                'high_findings': scan.high_findings,
+                'start_time': scan.start_time.isoformat() if scan.start_time else None,
+                'end_time': scan.end_time.isoformat() if scan.end_time else None,
+                'duration_seconds': scan.duration_seconds,
+                'performed_by': scan.performed_by,
+                'created_at': scan.created_at.isoformat() if scan.created_at else None
+            })
+
         close_session(db)
         return render_template("vulnerability_scan.html", scans=scans)
 
@@ -4281,26 +4318,34 @@ def create_app():
         db = get_session()
 
         if request.method == "POST":
-            ioc = IndicatorOfCompromise(
-                indicator_type=request.form.get("indicator_type"),
-                indicator_value=request.form.get("indicator_value").strip(),
-                confidence=int(request.form.get("confidence", 50)),
-                severity=request.form.get("severity", "medium"),
-                status=request.form.get("status", "active"),
-                threat_actor=request.form.get("threat_actor"),
-                campaign=request.form.get("campaign"),
-                malware_family=request.form.get("malware_family"),
-                first_seen=datetime.strptime(request.form.get("first_seen"), "%Y-%m-%d") if request.form.get("first_seen") else None,
-                last_seen=datetime.strptime(request.form.get("last_seen"), "%Y-%m-%d") if request.form.get("last_seen") else None,
-                detection_source=request.form.get("detection_source"),
-                description=request.form.get("description"),
-                tags=json.dumps(request.form.getlist("tags")),
-                created_by=user.id
-            )
-            db.add(ioc)
-            db.commit()
-            flash("IoC submitted for analysis.", "success")
-            return redirect(url_for("ioc_analysis"))
+            try:
+                indicator_value = request.form.get("indicator_value", "").strip()
+
+                ioc = IndicatorOfCompromise(
+                    indicator_type=request.form.get("indicator_type"),
+                    indicator_value=indicator_value,
+                    confidence=int(request.form.get("confidence", 50)),
+                    severity=request.form.get("severity", "medium"),
+                    status=request.form.get("status", "active"),
+                    threat_actor=request.form.get("threat_actor"),
+                    campaign=request.form.get("campaign"),
+                    malware_family=request.form.get("malware_family"),
+                    first_seen=datetime.strptime(request.form.get("first_seen"), "%Y-%m-%d") if request.form.get("first_seen") else None,
+                    last_seen=datetime.strptime(request.form.get("last_seen"), "%Y-%m-%d") if request.form.get("last_seen") else None,
+                    detection_source=request.form.get("detection_source"),
+                    description=request.form.get("description"),
+                    tags=json.dumps(request.form.getlist("tags")),
+                    created_by=user.id
+                )
+                db.add(ioc)
+                db.commit()
+                flash("IoC submitted for analysis.", "success")
+                return redirect(url_for("ioc_analysis"))
+            except Exception as e:
+                logging.error(f"Error processing IoC submission: {e}")
+                db.rollback()
+                flash(f"Error submitting IoC: {str(e)}", "danger")
+                return redirect(url_for("ioc_analysis"))
 
         iocs = db.query(IndicatorOfCompromise).filter(IndicatorOfCompromise.created_by == user.id).all()
         close_session(db)
@@ -4345,6 +4390,74 @@ def create_app():
         flash(f"IoC analysis completed. Risk score: {analysis_result['risk_score']}/100", "success")
         return redirect(url_for("ioc_analysis"))
 
+    @app.route("/api/ioc_details/<int:ioc_id>")
+    @login_required
+    def get_ioc_details(ioc_id):
+        """API endpoint to get detailed IoC information"""
+        user = current_user()
+        db = get_session()
+
+        ioc = db.get(IndicatorOfCompromise, ioc_id)
+        if not ioc or ioc.created_by != user.id:
+            close_session(db)
+            return {"error": "IoC not found or access denied"}, 404
+
+        # Get the latest analysis if available
+        latest_analysis = db.query(IoCAnalysis).filter(IoCAnalysis.ioc_id == ioc_id).order_by(IoCAnalysis.created_at.desc()).first()
+
+        # Parse tags
+        tags = []
+        if ioc.tags:
+            try:
+                tags = json.loads(ioc.tags)
+            except:
+                tags = []
+
+        ioc_details = {
+            "id": ioc.id,
+            "indicator_type": ioc.indicator_type,
+            "indicator_value": ioc.indicator_value,
+            "confidence": ioc.confidence,
+            "severity": ioc.severity,
+            "status": ioc.status,
+            "threat_actor": ioc.threat_actor,
+            "campaign": ioc.campaign,
+            "malware_family": ioc.malware_family,
+            "first_seen": ioc.first_seen.strftime('%Y-%m-%d %H:%M:%S') if ioc.first_seen else None,
+            "last_seen": ioc.last_seen.strftime('%Y-%m-%d %H:%M:%S') if ioc.last_seen else None,
+            "detection_source": ioc.detection_source,
+            "description": ioc.description,
+            "tags": tags,
+            "created_at": ioc.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            "updated_at": ioc.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+            "creator": ioc.creator.email if ioc.creator else "Unknown"
+        }
+
+        if latest_analysis:
+            analysis_details = {
+                "analysis_type": latest_analysis.analysis_type,
+                "detection_method": latest_analysis.detection_method,
+                "threat_indication": latest_analysis.threat_indication,
+                "mitigation_steps": latest_analysis.mitigation_steps,
+                "false_positive_probability": latest_analysis.false_positive_probability,
+                "validated": latest_analysis.validated,
+                "analyst_notes": latest_analysis.analyst_notes,
+                "analyzed_at": latest_analysis.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "analyst": latest_analysis.analyst.email if latest_analysis.analyst else "Unknown"
+            }
+
+            # Parse analysis result JSON
+            if latest_analysis.analysis_result:
+                try:
+                    analysis_details["analysis_result"] = json.loads(latest_analysis.analysis_result)
+                except:
+                    analysis_details["analysis_result"] = None
+
+            ioc_details["latest_analysis"] = analysis_details
+
+        close_session(db)
+        return ioc_details
+
     @app.route("/opencti_integration", methods=["GET", "POST"])
     @login_required
     def opencti_integration():
@@ -4364,11 +4477,32 @@ def create_app():
             return redirect(url_for("opencti_integration"))
 
         integrations = db.query(OpenCTIIntegration).all()
+        logging.info(f"DEBUG: integrations type: {type(integrations)}, length: {len(integrations)}")
+        for i, integration in enumerate(integrations):
+            logging.info(f"DEBUG: integration {i}: type={type(integration)}, id={integration.id}, platform_url={integration.platform_url}")
+
+        # Convert to dictionaries for JSON serialization in JavaScript
+        integrations_json = []
+        for integration in integrations:
+            integration_dict = {
+                'id': integration.id,
+                'platform_url': integration.platform_url,
+                'api_key': integration.api_key,
+                'status': integration.status,
+                'last_sync': integration.last_sync.isoformat() if integration.last_sync else None,
+                'total_indicators': integration.total_indicators,
+                'total_reports': integration.total_reports,
+                'created_at': integration.created_at.isoformat() if integration.created_at else None,
+                'updated_at': integration.updated_at.isoformat() if integration.updated_at else None
+            }
+            integrations_json.append(integration_dict)
+
         connectors = db.query(OpenCTIConnector).all()
         close_session(db)
         return render_template("opencti_integration.html",
-                             integrations=integrations,
-                             connectors=connectors)
+                              integrations=integrations,
+                              integrations_json=integrations_json,
+                              connectors=connectors)
 
     @app.route("/sync_opencti/<int:integration_id>", methods=["POST"])
     @login_required
@@ -4463,12 +4597,64 @@ def create_app():
 
     # --- Security Monitoring Routes ---
 
-    @app.route("/monitoring_setup")
+    @app.route("/monitoring_setup", methods=["GET", "POST"])
     @login_required
     def monitoring_setup():
         """Security monitoring setup with use case demonstration"""
         user = current_user()
+
+        if request.method == "POST":
+            # Handle monitoring configuration form submission
+            monitoring_name = request.form.get("monitoring_name")
+            system_metrics = request.form.getlist("system_metrics")
+            log_sources = request.form.getlist("log_sources")
+            retention_period = request.form.get("retention_period")
+
+            # Alert thresholds
+            cpu_threshold = request.form.get("cpu_threshold")
+            memory_threshold = request.form.get("memory_threshold")
+            disk_threshold = request.form.get("disk_threshold")
+            network_threshold = request.form.get("network_threshold")
+
+            # Validate required fields
+            if not monitoring_name or not system_metrics or not log_sources or not retention_period:
+                flash("All fields are required.", "danger")
+                return redirect(url_for("monitoring_setup"))
+
+            # Create monitoring configuration in database
+            config = MonitoringConfiguration(
+                name=monitoring_name,
+                retention_period_days=int(retention_period),
+                cpu_enabled="cpu" in system_metrics,
+                memory_enabled="memory" in system_metrics,
+                disk_enabled="disk" in system_metrics,
+                network_enabled="network" in system_metrics,
+                system_logs_enabled="system_logs" in log_sources,
+                application_logs_enabled="application_logs" in log_sources,
+                security_events_enabled="security_events" in log_sources,
+                cpu_threshold=int(cpu_threshold) if cpu_threshold else 90,
+                memory_threshold=int(memory_threshold) if memory_threshold else 85,
+                disk_threshold=int(disk_threshold) if disk_threshold else 95,
+                network_threshold=int(network_threshold) if network_threshold else 1000,
+                created_by=user.id
+            )
+
+            db.add(config)
+            db.commit()
+
+            # Log the configuration creation
+            forensics_logger.info(f"User {user.email} created monitoring configuration: {monitoring_name}")
+            log_audit_event(user, "MONITORING_CONFIG_CREATED", "ADMINISTRATION",
+                            f"Created monitoring configuration '{monitoring_name}'", "/monitoring_setup", True)
+
+            flash(f"Monitoring configuration '{monitoring_name}' created successfully!", "success")
+            return redirect(url_for("monitoring_setup"))
+
+        # GET request - display monitoring dashboard
         db = get_session()
+
+        # Get saved monitoring configurations
+        configurations = db.query(MonitoringConfiguration).filter(MonitoringConfiguration.is_active == True).all()
 
         # Get real system monitoring data
         cpu_percent = psutil.cpu_percent(interval=1)
@@ -4519,29 +4705,108 @@ def create_app():
 
         close_session(db)
         return render_template("monitoring_setup.html",
-                             cpu_percent=cpu_percent,
-                             memory=memory,
-                             disk=disk,
-                             network=network_stats,
-                             processes=processes,
-                             security_events=security_events,
-                             alerts=alerts)
+                               configurations=configurations,
+                               cpu_percent=cpu_percent,
+                               memory=memory,
+                               disk=disk,
+                               network=network_stats,
+                               processes=processes,
+                               security_events=security_events,
+                               alerts=alerts)
 
-    @app.route("/detection_rules")
+    @app.route("/detection_rules", methods=["GET", "POST"])
     @login_required
     def detection_rules():
         """Detection rules with alert prioritization process"""
         user = current_user()
         db = get_session()
 
-        # Get IoCs for detection rules
-        iocs = db.query(IndicatorOfCompromise).filter(IndicatorOfCompromise.created_by == user.id).all()
+        if request.method == "POST":
+            # Create new detection rule
+            rule_name = request.form.get("rule_name")
+            description = request.form.get("description")
+            rule_type = request.form.get("rule_type")
+            severity = request.form.get("severity", "medium")
+            conditions = request.form.get("conditions", "[]")
+            actions = request.form.get("actions")
+            enabled = request.form.get("enabled") == "on"
+
+            # Validate required fields
+            if not rule_name or not description or not rule_type:
+                flash("Rule name, description, and type are required.", "danger")
+                close_session(db)
+                return redirect(url_for("detection_rules"))
+
+            # Create detection rule
+            detection_rule = DetectionRule(
+                rule_name=rule_name,
+                description=description,
+                rule_type=rule_type,
+                conditions=conditions,
+                severity=severity,
+                actions=actions,
+                enabled=enabled,
+                created_by=user.id
+            )
+
+            db.add(detection_rule)
+            db.commit()
+
+            log_audit_event(user, "DETECTION_RULE_CREATED", "ADMINISTRATION",
+                           f"Created detection rule '{rule_name}'", "/detection_rules", True)
+
+            flash("Detection rule created successfully!", "success")
+            close_session(db)
+            return redirect(url_for("detection_rules"))
+
+        # GET request - display detection rules
+        # Get detection rules
+        detection_rules = db.query(DetectionRule).filter(DetectionRule.created_by == user.id).all()
 
         # Get recent incidents for prioritization examples
         incidents = db.query(Incident).filter(Incident.reported_by == user.id).order_by(Incident.reported_at.desc()).limit(5).all()
 
         close_session(db)
-        return render_template("detection_rules.html", iocs=iocs, incidents=incidents)
+        return render_template("detection_rules.html", detection_rules=detection_rules, incidents=incidents)
+
+    @app.route("/detection_rule/<int:rule_id>")
+    @login_required
+    def get_detection_rule_details(rule_id):
+        """Get detailed information for a specific detection rule"""
+        user = current_user()
+        db = get_session()
+
+        # Get the rule and verify ownership
+        rule = db.get(DetectionRule, rule_id)
+        if not rule or rule.created_by != user.id:
+            close_session(db)
+            return {"error": "Rule not found or access denied"}, 404
+
+        # Parse conditions if it's JSON
+        conditions = []
+        if rule.conditions:
+            try:
+                conditions = json.loads(rule.conditions)
+            except:
+                conditions = []
+
+        # Return rule details as JSON
+        rule_details = {
+            "id": rule.id,
+            "rule_name": rule.rule_name,
+            "description": rule.description,
+            "rule_type": rule.rule_type,
+            "severity": rule.severity,
+            "conditions": conditions,
+            "actions": rule.actions,
+            "enabled": rule.enabled,
+            "last_triggered": rule.last_triggered.strftime('%Y-%m-%d %H:%M:%S') if rule.last_triggered else None,
+            "created_at": rule.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            "updated_at": rule.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+        close_session(db)
+        return rule_details
 
     @app.route("/incident_response")
     @login_required

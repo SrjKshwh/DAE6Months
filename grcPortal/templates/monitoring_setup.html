@@ -8,8 +8,127 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h1 class="h3 mb-0 text-gray-800">Security Monitoring Setup</h1>
+                    <h1 class="h3 mb-0 text-dark">Security Monitoring Setup</h1>
                     <p class="text-muted">Configure and demonstrate security monitoring capabilities</p>
+                </div>
+            </div>
+
+            <!-- Monitoring Configuration Form -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-cogs"></i> Create Monitoring Configuration
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('monitoring_setup') }}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="monitoring_name">Monitoring Name</label>
+                                    <input type="text" class="form-control" id="monitoring_name" name="monitoring_name"
+                                           placeholder="e.g., Enterprise Security Monitoring" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="retention_period">Retention Period (days)</label>
+                                    <input type="number" class="form-control" id="retention_period" name="retention_period"
+                                           placeholder="90" min="1" max="365" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>System Metrics</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="cpu_metric" name="system_metrics" value="cpu" checked>
+                                        <label class="form-check-label" for="cpu_metric">
+                                            CPU Usage
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="memory_metric" name="system_metrics" value="memory" checked>
+                                        <label class="form-check-label" for="memory_metric">
+                                            Memory Usage
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="disk_metric" name="system_metrics" value="disk" checked>
+                                        <label class="form-check-label" for="disk_metric">
+                                            Disk Usage
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="network_metric" name="system_metrics" value="network" checked>
+                                        <label class="form-check-label" for="network_metric">
+                                            Network Traffic
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Log Sources</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="system_logs" name="log_sources" value="system_logs" checked>
+                                        <label class="form-check-label" for="system_logs">
+                                            System logs
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="application_logs" name="log_sources" value="application_logs" checked>
+                                        <label class="form-check-label" for="application_logs">
+                                            Application logs
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="security_events" name="log_sources" value="security_events" checked>
+                                        <label class="form-check-label" for="security_events">
+                                            Security events
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-primary mb-3">Alert Thresholds</h6>
+                                <div class="form-group">
+                                    <label for="cpu_threshold">CPU Usage (%)</label>
+                                    <input type="number" class="form-control" id="cpu_threshold" name="cpu_threshold"
+                                           placeholder="90" min="1" max="100" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="memory_threshold">Memory Usage (%)</label>
+                                    <input type="number" class="form-control" id="memory_threshold" name="memory_threshold"
+                                           placeholder="85" min="1" max="100" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-primary mb-3">&nbsp;</h6>
+                                <div class="form-group">
+                                    <label for="disk_threshold">Disk Usage (%)</label>
+                                    <input type="number" class="form-control" id="disk_threshold" name="disk_threshold"
+                                           placeholder="95" min="1" max="100" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="network_threshold">Network Traffic (Mbps)</label>
+                                    <input type="number" class="form-control" id="network_threshold" name="network_threshold"
+                                           placeholder="1000" min="1" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Create Monitoring Configuration
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -22,7 +141,7 @@
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                         CPU Usage</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ "%.1f"|format(cpu_percent) }}%</div>
+                                    <div class="h5 mb-0 font-weight-bold text-dark">{{ "%.1f"|format(cpu_percent) }}%</div>
                                     <div class="text-xs text-muted">Real-time monitoring</div>
                                 </div>
                                 <div class="col-auto">
@@ -39,7 +158,7 @@
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                         Memory Usage</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ "%.1f"|format(memory.percent) }}%</div>
+                                    <div class="h5 mb-0 font-weight-bold text-dark">{{ "%.1f"|format(memory.percent) }}%</div>
                                     <div class="text-xs text-muted">{{ "%.1f"|format(memory.used/1024/1024/1024) }}GB used</div>
                                 </div>
                                 <div class="col-auto">
@@ -56,7 +175,7 @@
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                         Disk Usage</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ "%.1f"|format(disk.percent) }}%</div>
+                                    <div class="h5 mb-0 font-weight-bold text-dark">{{ "%.1f"|format(disk.percent) }}%</div>
                                     <div class="text-xs text-muted">{{ "%.1f"|format(disk.free/1024/1024/1024) }}GB free</div>
                                 </div>
                                 <div class="col-auto">
@@ -73,7 +192,7 @@
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                         Network I/O</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ "%.1f"|format(network.bytes_recv/1024/1024) }}MB</div>
+                                    <div class="h5 mb-0 font-weight-bold text-dark">{{ "%.1f"|format(network.bytes_recv/1024/1024) }}MB</div>
                                     <div class="text-xs text-muted">Data received</div>
                                 </div>
                                 <div class="col-auto">
@@ -158,96 +277,104 @@
                 </div>
             </div>
 
-            <!-- Monitoring Configuration -->
+            <!-- Monitoring Configurations -->
+            {% if configurations %}
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Monitoring Configuration</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Saved Monitoring Configurations</h6>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>System Monitoring</h5>
-                            <div class="list-group list-group-flush">
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span>CPU Monitoring</span>
-                                        <span class="badge badge-success">Active</span>
+                    {% for config in configurations %}
+                    <div class="card mb-3 border-left-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ config.name }}</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>System Monitoring</h6>
+                                    <div class="list-group list-group-flush">
+                                        <div class="list-group-item">
+                                            <div class="d-flex justify-content-between">
+                                                <span>CPU Monitoring</span>
+                                                <span class="badge badge-{% if config.cpu_enabled %}success{% else %}secondary{% endif %}">
+                                                    {% if config.cpu_enabled %}Active{% else %}Disabled{% endif %}
+                                                </span>
+                                            </div>
+                                            <small class="text-muted">Threshold: {{ config.cpu_threshold }}%</small>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Memory Monitoring</span>
+                                                <span class="badge badge-{% if config.memory_enabled %}success{% else %}secondary{% endif %}">
+                                                    {% if config.memory_enabled %}Active{% else %}Disabled{% endif %}
+                                                </span>
+                                            </div>
+                                            <small class="text-muted">Threshold: {{ config.memory_threshold }}%</small>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Disk Monitoring</span>
+                                                <span class="badge badge-{% if config.disk_enabled %}success{% else %}secondary{% endif %}">
+                                                    {% if config.disk_enabled %}Active{% else %}Disabled{% endif %}
+                                                </span>
+                                            </div>
+                                            <small class="text-muted">Threshold: {{ config.disk_threshold }}%</small>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Network Monitoring</span>
+                                                <span class="badge badge-{% if config.network_enabled %}success{% else %}secondary{% endif %}">
+                                                    {% if config.network_enabled %}Active{% else %}Disabled{% endif %}
+                                                </span>
+                                            </div>
+                                            <small class="text-muted">Threshold: {{ config.network_threshold }} Mbps</small>
+                                        </div>
                                     </div>
-                                    <small class="text-muted">Real-time CPU utilization tracking</small>
                                 </div>
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span>Memory Monitoring</span>
-                                        <span class="badge badge-success">Active</span>
+                                <div class="col-md-6">
+                                    <h6>Log Sources</h6>
+                                    <div class="list-group list-group-flush">
+                                        <div class="list-group-item">
+                                            <div class="d-flex justify-content-between">
+                                                <span>System Logs</span>
+                                                <span class="badge badge-{% if config.system_logs_enabled %}success{% else %}secondary{% endif %}">
+                                                    {% if config.system_logs_enabled %}Active{% else %}Disabled{% endif %}
+                                                </span>
+                                            </div>
+                                            <small class="text-muted">System event logging</small>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Application Logs</span>
+                                                <span class="badge badge-{% if config.application_logs_enabled %}success{% else %}secondary{% endif %}">
+                                                    {% if config.application_logs_enabled %}Active{% else %}Disabled{% endif %}
+                                                </span>
+                                            </div>
+                                            <small class="text-muted">Application event logging</small>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Security Events</span>
+                                                <span class="badge badge-{% if config.security_events_enabled %}success{% else %}secondary{% endif %}">
+                                                    {% if config.security_events_enabled %}Active{% else %}Disabled{% endif %}
+                                                </span>
+                                            </div>
+                                            <small class="text-muted">Security event logging</small>
+                                        </div>
                                     </div>
-                                    <small class="text-muted">Memory usage and allocation monitoring</small>
-                                </div>
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span>Disk Monitoring</span>
-                                        <span class="badge badge-success">Active</span>
+                                    <div class="mt-3">
+                                        <small class="text-muted">
+                                            <strong>Retention Period:</strong> {{ config.retention_period_days }} days<br>
+                                            <strong>Created:</strong> {{ config.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                        </small>
                                     </div>
-                                    <small class="text-muted">Disk space and I/O operations tracking</small>
-                                </div>
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span>Network Monitoring</span>
-                                        <span class="badge badge-success">Active</span>
-                                    </div>
-                                    <small class="text-muted">Network traffic and connection monitoring</small>
-                                </div>
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span>Process Monitoring</span>
-                                        <span class="badge badge-success">Active</span>
-                                    </div>
-                                    <small class="text-muted">Real-time process resource usage tracking</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Security Monitoring</h5>
-                            <div class="list-group list-group-flush">
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span>Log Analysis</span>
-                                        <span class="badge badge-success">Active</span>
-                                    </div>
-                                    <small class="text-muted">Real-time analysis of security logs</small>
-                                </div>
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span>Authentication Monitoring</span>
-                                        <span class="badge badge-success">Active</span>
-                                    </div>
-                                    <small class="text-muted">Tracks login attempts and failures</small>
-                                </div>
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span>Process Anomaly Detection</span>
-                                        <span class="badge badge-success">Active</span>
-                                    </div>
-                                    <small class="text-muted">Detects unusual process behavior</small>
-                                </div>
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span>Resource Abuse Detection</span>
-                                        <span class="badge badge-success">Active</span>
-                                    </div>
-                                    <small class="text-muted">Identifies potential resource exhaustion attacks</small>
-                                </div>
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between">
-                                        <span>Threat Intelligence</span>
-                                        <span class="badge badge-info">Integrated</span>
-                                    </div>
-                                    <small class="text-muted">IOC matching and analysis</small>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
+            {% endif %}
 
             <!-- Recent Security Events -->
             <div class="card shadow mb-4">

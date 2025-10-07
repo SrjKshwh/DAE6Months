@@ -1824,6 +1824,34 @@ class IoCAnalysis(Base):
     validator = relationship("User", foreign_keys=[validated_by])
 
 
+class DetectionRule(Base):
+    """Detection rules for automated threat detection and alerting"""
+    __tablename__ = "detection_rules"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    rule_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    rule_type: Mapped[str] = mapped_column(String(50), nullable=False)  # threshold-based, anomaly-based, signature-based, etc.
+
+    # Conditions (stored as JSON for flexibility)
+    conditions: Mapped[str] = mapped_column(Text, nullable=False)  # JSON array of conditions
+
+    severity: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+    actions: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of actions to take
+    enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Metadata
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    last_triggered: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    trigger_count: Mapped[int] = mapped_column(Integer, default=0)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    creator = relationship("User", backref="detection_rules")
+
+
 class MalwareSample(Base):
     """Malware sample submissions for analysis"""
     __tablename__ = "malware_samples"
@@ -2035,6 +2063,42 @@ class OpenCTIConnector(Base):
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+
+class MonitoringConfiguration(Base):
+    """Security monitoring configuration settings"""
+    __tablename__ = "monitoring_configurations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    retention_period_days: Mapped[int] = mapped_column(Integer, default=90)
+
+    # System metrics
+    cpu_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    memory_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    disk_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    network_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Log sources
+    system_logs_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    application_logs_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    security_events_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Alert thresholds
+    cpu_threshold: Mapped[int] = mapped_column(Integer, default=90)  # percentage
+    memory_threshold: Mapped[int] = mapped_column(Integer, default=85)  # percentage
+    disk_threshold: Mapped[int] = mapped_column(Integer, default=95)  # percentage
+    network_threshold: Mapped[int] = mapped_column(Integer, default=1000)  # Mbps
+
+    # Status
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    creator = relationship("User", backref="monitoring_configurations")
 
 
 class OpenCTIIntegration(Base):

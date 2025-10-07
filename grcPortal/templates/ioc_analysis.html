@@ -12,7 +12,7 @@
                         <i class="fas fa-search"></i> Indicator of Compromise (IoC) Analysis
                     </h3>
                     <div class="card-tools">
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addIocModal">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addIocModal">
                             <i class="fas fa-plus"></i> Add IoC
                         </button>
                     </div>
@@ -95,20 +95,20 @@
                                 {% for ioc in iocs %}
                                 <tr>
                                     <td>
-                                        <span class="badge badge-primary">{{ ioc.indicator_type|upper }}</span>
+                                        <span class="badge bg-primary">{{ ioc.indicator_type|upper }}</span>
                                     </td>
                                     <td>
                                         <code>{{ ioc.indicator_value }}</code>
                                     </td>
                                     <td>
                                         {% if ioc.severity == 'critical' %}
-                                            <span class="badge badge-danger">Critical</span>
+                                            <span class="badge bg-danger">Critical</span>
                                         {% elif ioc.severity == 'high' %}
-                                            <span class="badge badge-warning">High</span>
+                                            <span class="badge bg-warning">High</span>
                                         {% elif ioc.severity == 'medium' %}
-                                            <span class="badge badge-info">Medium</span>
+                                            <span class="badge bg-info">Medium</span>
                                         {% else %}
-                                            <span class="badge badge-secondary">Low</span>
+                                            <span class="badge bg-secondary">Low</span>
                                         {% endif %}
                                     </td>
                                     <td>
@@ -120,11 +120,11 @@
                                     </td>
                                     <td>
                                         {% if ioc.status == 'active' %}
-                                            <span class="badge badge-success">Active</span>
+                                            <span class="badge bg-success">Active</span>
                                         {% elif ioc.status == 'retired' %}
-                                            <span class="badge badge-secondary">Retired</span>
+                                            <span class="badge bg-secondary">Retired</span>
                                         {% else %}
-                                            <span class="badge badge-warning">False Positive</span>
+                                            <span class="badge bg-warning">False Positive</span>
                                         {% endif %}
                                     </td>
                                     <td>{{ ioc.threat_actor or 'Unknown' }}</td>
@@ -164,8 +164,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add New Indicator of Compromise</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
             <form method="POST" action="{{ url_for('ioc_analysis') }}">
@@ -223,18 +222,25 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Threat Actor</label>
                                 <input type="text" name="threat_actor" class="form-control"
                                        placeholder="e.g., APT28, Lazarus Group">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Campaign</label>
                                 <input type="text" name="campaign" class="form-control"
                                        placeholder="e.g., SolarWinds, Colonial Pipeline">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Malware Family</label>
+                                <input type="text" name="malware_family" class="form-control"
+                                       placeholder="e.g., WannaCry, Emotet, TrickBot">
                             </div>
                         </div>
                     </div>
@@ -273,7 +279,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Add IoC</button>
                 </div>
             </form>
@@ -287,8 +293,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">IoC Details</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
             <div class="modal-body" id="iocDetailsContent">
@@ -299,17 +304,166 @@
 </div>
 
 <script>
-function viewIocDetails(iocId) {
-    // In a real implementation, this would fetch IoC details via AJAX
-    // For now, we'll show a placeholder
-    $('#iocDetailsContent').html(`
-        <div class="alert alert-info">
-            <h5>IoC Analysis Details</h5>
-            <p>Detailed analysis and related information would be displayed here.</p>
-            <p>This includes analysis results, related indicators, mitigation steps, and validation status.</p>
+async function viewIocDetails(iocId) {
+    const contentElement = document.getElementById('iocDetailsContent');
+    if (!contentElement) return;
+
+    // Show loading state
+    contentElement.innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading IoC details...</p>
         </div>
-    `);
-    $('#iocDetailsModal').modal('show');
+    `;
+
+    // Use Bootstrap 5 native API to show modal
+    const modalElement = document.getElementById('iocDetailsModal');
+    if (modalElement) {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    }
+
+    try {
+        // Fetch IoC details from API
+        const response = await fetch(`/api/ioc_details/${iocId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch IoC details');
+        }
+
+        const iocData = await response.json();
+
+        // Build detailed content
+        let content = `
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>IoC Information</h5>
+                    <table class="table table-sm">
+                        <tr><th>Indicator Type:</th><td><span class="badge bg-primary">${iocData.indicator_type.toUpperCase()}</span></td></tr>
+                        <tr><th>Indicator Value:</th><td><code>${iocData.indicator_value}</code></td></tr>
+                        <tr><th>Severity:</th><td><span class="badge bg-${getSeverityColor(iocData.severity)}">${iocData.severity}</span></td></tr>
+                        <tr><th>Confidence:</th><td>
+                            <div class="progress" style="width: 100px;">
+                                <div class="progress-bar" role="progressbar" style="width: ${iocData.confidence}%">${iocData.confidence}%</div>
+                            </div>
+                        </td></tr>
+                        <tr><th>Status:</th><td><span class="badge bg-${getStatusColor(iocData.status)}">${iocData.status}</span></td></tr>
+                        <tr><th>Threat Actor:</th><td>${iocData.threat_actor || 'Unknown'}</td></tr>
+                        <tr><th>Campaign:</th><td>${iocData.campaign || 'N/A'}</td></tr>
+                        <tr><th>Malware Family:</th><td>${iocData.malware_family || 'N/A'}</td></tr>
+                        <tr><th>First Seen:</th><td>${iocData.first_seen || 'N/A'}</td></tr>
+                        <tr><th>Last Seen:</th><td>${iocData.last_seen || 'N/A'}</td></tr>
+                        <tr><th>Detection Source:</th><td>${iocData.detection_source || 'N/A'}</td></tr>
+                        <tr><th>Created By:</th><td>${iocData.creator}</td></tr>
+                        <tr><th>Created At:</th><td>${iocData.created_at}</td></tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h5>Description & Tags</h5>
+                    <p>${iocData.description || 'No description provided.'}</p>
+                    ${iocData.tags && iocData.tags.length > 0 ? `
+                        <h6>Tags:</h6>
+                        <div>
+                            ${iocData.tags.map(tag => `<span class="badge bg-secondary me-1">${tag}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+
+        // Add analysis section if available
+        if (iocData.latest_analysis) {
+            const analysis = iocData.latest_analysis;
+            content += `
+                <hr>
+                <div class="row">
+                    <div class="col-12">
+                        <h5>Latest Analysis</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-sm">
+                                    <tr><th>Analysis Type:</th><td>${analysis.analysis_type}</td></tr>
+                                    <tr><th>Detection Method:</th><td>${analysis.detection_method}</td></tr>
+                                    <tr><th>False Positive Probability:</th><td>${analysis.false_positive_probability}%</td></tr>
+                                    <tr><th>Validated:</th><td>${analysis.validated ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-warning">No</span>'}</td></tr>
+                                    <tr><th>Analyzed By:</th><td>${analysis.analyst}</td></tr>
+                                    <tr><th>Analyzed At:</th><td>${analysis.analyzed_at}</td></tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Threat Indication:</h6>
+                                <p class="text-muted">${analysis.threat_indication}</p>
+
+                                ${analysis.analysis_result ? `
+                                    <h6>Analysis Results:</h6>
+                                    <div class="border p-2 bg-light">
+                                        <small>
+                                            <strong>Risk Score:</strong> ${analysis.analysis_result.risk_score || 'N/A'}/100<br>
+                                            <strong>Confidence Level:</strong> ${analysis.analysis_result.confidence_level || 'N/A'}<br>
+                                            ${analysis.analysis_result.threat_context ? `
+                                                <strong>Associated Campaigns:</strong> ${analysis.analysis_result.threat_context.associated_campaigns?.join(', ') || 'N/A'}<br>
+                                                <strong>Targeted Sectors:</strong> ${analysis.analysis_result.threat_context.targeted_sectors?.join(', ') || 'N/A'}
+                                            ` : ''}
+                                        </small>
+                                    </div>
+                                ` : ''}
+
+                                ${analysis.mitigation_steps ? `
+                                    <h6>Mitigation Steps:</h6>
+                                    <p class="text-muted small">${analysis.mitigation_steps}</p>
+                                ` : ''}
+
+                                ${analysis.analyst_notes ? `
+                                    <h6>Analyst Notes:</h6>
+                                    <p class="text-muted small">${analysis.analyst_notes}</p>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            content += `
+                <hr>
+                <div class="alert alert-info">
+                    <h6>No Analysis Available</h6>
+                    <p>This IoC has not been analyzed yet. Click the "Analyze IoC" button to perform threat intelligence analysis.</p>
+                </div>
+            `;
+        }
+
+        contentElement.innerHTML = content;
+
+    } catch (error) {
+        console.error('Error fetching IoC details:', error);
+        contentElement.innerHTML = `
+            <div class="alert alert-danger">
+                <h5>Error Loading IoC Details</h5>
+                <p>Failed to load IoC details. Please try again later.</p>
+                <p class="text-muted small">${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+function getSeverityColor(severity) {
+    const colors = {
+        'critical': 'danger',
+        'high': 'warning',
+        'medium': 'info',
+        'low': 'secondary'
+    };
+    return colors[severity] || 'secondary';
+}
+
+function getStatusColor(status) {
+    const colors = {
+        'active': 'success',
+        'retired': 'secondary',
+        'false_positive': 'warning'
+    };
+    return colors[status] || 'secondary';
 }
 </script>
 
