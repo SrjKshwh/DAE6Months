@@ -77,7 +77,7 @@ This work included teaching and explaining projects to final year university stu
 
 
 
-<img src="assets/img/daeWebLogo.png" alt="daeLogo" style="display: block; margin: 0 auto;">
+<img src="{{ site.baseurl }}/assets/img/daeWebLogo.png" alt="daeLogo" style="display: block; margin: 0 auto;">
 
 <footer style="margin-top: 2rem; text-align: center; color: #6c757d;">
   <p>&copy; 2024 Saroj Kushwaha. All rights reserved.</p>
