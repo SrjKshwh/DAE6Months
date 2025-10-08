@@ -11671,3 +11671,66 @@ OSError: [Errno 22] Invalid argument
 2025-10-07 13:49:53,418 [INFO] 127.0.0.1 - - [07/Oct/2025 13:49:53] "GET /login HTTP/1.1" 200 -
 2025-10-07 13:49:53,440 [INFO] 127.0.0.1 - - [07/Oct/2025 13:49:53] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
 2025-10-07 13:49:53,451 [INFO] 127.0.0.1 - - [07/Oct/2025 13:49:53] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-07 14:32:27,984 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-10-07 14:32:28,008 [INFO] 127.0.0.1 - - [07/Oct/2025 14:32:28] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-10-07 14:32:28,014 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-07 14:32:28,051 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001146F103B90>
+2025-10-07 14:32:28,052 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-07 14:32:28,053 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-07 14:32:28,054 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001146F1034D0>
+2025-10-07 14:32:28,055 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-07 14:32:28,056 [INFO] DEBUG: current_user() returned: <models.User object at 0x000001146F1034D0> - email: kush786srj@gmail.com
+2025-10-07 14:32:28,056 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-10-07 14:32:28,098 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-07 14:32:28,099 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001146F1034D0>
+2025-10-07 14:32:28,099 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-07 14:32:28,102 [INFO] 127.0.0.1 - - [07/Oct/2025 14:32:28] "GET /home HTTP/1.1" 200 -
+2025-10-07 14:32:28,152 [INFO] 127.0.0.1 - - [07/Oct/2025 14:32:28] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-07 14:32:35,682 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-07 14:32:35,684 [INFO] 127.0.0.1 - - [07/Oct/2025 14:32:35] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-07 14:32:35,692 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001146F100F50>
+2025-10-07 14:32:35,693 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-07 14:32:35,693 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-07 14:32:35,694 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001146F1034D0>
+2025-10-07 14:32:35,695 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-07 14:32:35,696 [INFO] 127.0.0.1 - - [07/Oct/2025 14:32:35] "GET /report_incident HTTP/1.1" 200 -
+2025-10-07 14:32:35,721 [INFO] 127.0.0.1 - - [07/Oct/2025 14:32:35] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-07 14:37:07,393 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-10-07 14:37:07,406 [INFO] 127.0.0.1 - - [07/Oct/2025 14:37:07] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-10-07 14:37:07,413 [INFO] 127.0.0.1 - - [07/Oct/2025 14:37:07] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-07 14:37:07,440 [INFO] 127.0.0.1 - - [07/Oct/2025 14:37:07] "GET /login HTTP/1.1" 200 -
+2025-10-07 14:37:07,466 [INFO] 127.0.0.1 - - [07/Oct/2025 14:37:07] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-07 14:37:07,504 [INFO] 127.0.0.1 - - [07/Oct/2025 14:37:07] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-07 20:14:17,746 [INFO] 127.0.0.1 - - [07/Oct/2025 20:14:17] "GET /threat_intelligence?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 20:14:17,761 [INFO] 127.0.0.1 - - [07/Oct/2025 20:14:17] "GET /vulnerability_scan?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 20:14:17,762 [INFO] 127.0.0.1 - - [07/Oct/2025 20:14:17] "GET /apt_campaign/1?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 20:14:17,766 [INFO] 127.0.0.1 - - [07/Oct/2025 20:14:17] "GET /opencti_integration?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 20:14:17,767 [INFO] 127.0.0.1 - - [07/Oct/2025 20:14:17] "GET /phishing_templates?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 20:14:17,770 [INFO] 127.0.0.1 - - [07/Oct/2025 20:14:17] "GET /malware_analysis?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 20:14:17,771 [INFO] 127.0.0.1 - - [07/Oct/2025 20:14:17] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:00:53,046 [INFO] 127.0.0.1 - - [07/Oct/2025 21:00:53] "[36mGET /threat_intelligence?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-10-07 21:00:53,047 [INFO] 127.0.0.1 - - [07/Oct/2025 21:00:53] "[36mGET /opencti_integration?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-10-07 21:00:53,056 [INFO] 127.0.0.1 - - [07/Oct/2025 21:00:53] "[36mGET /vulnerability_scan?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-10-07 21:00:53,062 [INFO] 127.0.0.1 - - [07/Oct/2025 21:00:53] "[36mGET /apt_campaign/1?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-10-07 21:00:53,067 [INFO] 127.0.0.1 - - [07/Oct/2025 21:00:53] "[36mGET /phishing_templates?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-10-07 21:00:53,074 [INFO] 127.0.0.1 - - [07/Oct/2025 21:00:53] "[36mGET /malware_analysis?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-10-07 21:00:53,080 [INFO] 127.0.0.1 - - [07/Oct/2025 21:00:53] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-10-07 21:01:42,020 [INFO] 127.0.0.1 - - [07/Oct/2025 21:01:42] "GET /admin/dashboard?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:01:42,021 [INFO] 127.0.0.1 - - [07/Oct/2025 21:01:42] "GET /risk/2?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:25,195 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:25] "GET /admin/users?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:25,495 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:25] "GET /risk/7?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:25,496 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:25] "GET /risk/4?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:25,498 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:25] "GET /audit/logs?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:25,498 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:25] "GET /admin/users?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,541 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk_programs?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,547 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /create_program?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,554 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/52?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,559 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/47?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,564 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/42?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,570 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/43?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,574 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/40?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,584 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/36?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,589 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/32?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,591 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/29?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,611 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/25?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,613 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/24?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
