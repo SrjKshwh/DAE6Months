@@ -6,9 +6,7 @@ permalink: /about/
 
 # About Me
 
-<img src="/assets/img/headShot.jpg" alt="headShot" style="max-width:100%; height:auto;">
-
-<img src="https://github.com/SrjKshwh/DAE6Months/blob/master/docs/assets/img/headShot.jpg" alt="headShot" style="max-width:100%; height:auto;">
+<img src="{{ site.baseurl }}/assets/img/headShot.png" alt="headShot" style="max-width:100%; height:auto;">
 
 In few simple words - I am an IT person who loves coding with brainstorming ideas. In my free time I like to take care of my indoor plants and cooking food.
 
@@ -16,7 +14,7 @@ In some technical words - I am person having combined experience in web design, 
 
 ------
 
-<img src="/assets/img/daeWebLogo.png" alt="daeLogo" style="display: block; margin: 0 auto;">
+<img src="{{ site.baseurl }}/assets/img/daeWebLogo.png" alt="daeLogo" style="display: block; margin: 0 auto;">
 <footer style="margin-top: 2rem; text-align: center; color: #6c757d;">
   <p>&copy; 2025 Saroj Kushwaha. All rights reserved.</p>
 </footer>
