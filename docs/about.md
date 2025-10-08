@@ -4,17 +4,26 @@ title: About
 permalink: /about/
 ---
 
-# About Me
+# 👋 About Me
 
-<img src="{{ site.baseurl }}/assets/img/headShot.png" alt="headShot" style="max-width:40%; height:auto;">
+<div style="text-align: center; margin-bottom: 2rem;">
+  <img src="{{ site.baseurl }}/assets/img/headShot.png" alt="headShot" style="max-width: 40%; height: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+</div>
 
-In few simple words - I am an IT person who loves coding with brainstorming ideas. In my free time I like to take care of my indoor plants and cooking food.
+## 🌟 In a Few Words
+I'm a passionate IT professional who thrives on coding and innovative ideas. When I'm not debugging code, you'll find me nurturing my indoor plants or experimenting in the kitchen with new recipes.
 
-In some technical words - I am person having combined experience in web design, development, freelancing, and teaching in both India and the USA, holding certifications as a Salesforce Platform Developer-1 and Administrator, with strong skills in various programming languages, web technologies, and databases. Currently enhancing their expertise through a 6-Month Tech Career Readiness Program, including a cybersecurity GRC project, they are seeking a challenging, stable, and remote-friendly role.
+## 💼 Professional Background
+With over a decade of experience spanning web design, development, freelancing, and teaching in both India and the USA, I bring a diverse skill set to every project. I'm a certified Salesforce Platform Developer-1 and Administrator, proficient in multiple programming languages, web technologies, and databases.
 
-------
+Currently, I'm deepening my expertise in cybersecurity through a 6-Month Tech Career Readiness Program at District Arts and Education, where I'm working on a comprehensive GRC (Governance, Risk, and Compliance) project. I'm actively seeking challenging opportunities in stable, remote-friendly roles that allow me to contribute my skills and continue growing.
 
-<img src="{{ site.baseurl }}/assets/img/daeWebLogo.png" alt="daeLogo" style="display: block; margin: 0 auto;">
+---
+
+<div style="text-align: center; margin-top: 3rem;">
+  <img src="{{ site.baseurl }}/assets/img/daeWebLogo.png" alt="daeLogo" style="display: block; margin: 0 auto; max-width: 200px;">
+</div>
+
 <footer style="margin-top: 2rem; text-align: center; color: #6c757d;">
   <p>&copy; 2025 Saroj Kushwaha. All rights reserved.</p>
 </footer>

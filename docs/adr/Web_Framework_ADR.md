@@ -6,6 +6,9 @@ We need a lightweight framework to build a secure prototype web application for 
 ## Decision:
 We chose Flask (Python) as the framework.
 
+## Rationale
+Flask is a lightweight micro-framework that offers simplicity and flexibility for building web applications. It allows for quick development and easy integration with security libraries and extensions, making it suitable for educational projects focused on cybersecurity best practices without the overhead of full-stack frameworks.
+
 ## Consequences:
 
 ### Positive:
