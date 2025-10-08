@@ -11734,3 +11734,5 @@ OSError: [Errno 22] Invalid argument
 2025-10-07 21:02:49,591 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/29?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
 2025-10-07 21:02:49,611 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/25?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
 2025-10-07 21:02:49,613 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/24?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,619 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /risk/26?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-07 21:02:49,623 [INFO] 127.0.0.1 - - [07/Oct/2025 21:02:49] "GET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
