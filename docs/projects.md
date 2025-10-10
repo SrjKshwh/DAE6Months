@@ -55,9 +55,6 @@ An engaging Python-based GUI application that creates custom word search puzzles
 - **Remote Trainer**: Guided university students on Android development via Skype, created educational video content.
 - **Tech Stack**: PHP, JavaScript, jQuery, AJAX, MySQL, Smarty, XAMPP, Dreamweaver.
 
---------
-
-
 
 ---
 
