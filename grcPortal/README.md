@@ -7,6 +7,52 @@
 
 A comprehensive enterprise-grade Governance, Risk, and Compliance (GRC) platform built with Flask and Python. This AI-powered platform provides advanced tools for risk management, compliance automation, incident response, and digital forensics with continuous monitoring capabilities.
 
+<video width="640" height="360" controls>
+  <source src="static/images/scanFileForRisksModified.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+## Overview (short introduction)
+The video showcases the **core functionality** of the GRC Portal, demonstrating how AI analyzes uploaded policy documents to automatically identify **compliance gaps, risks, and mitigation strategies**.
+
+## 1. File Upload & Scanning (0:02–0:43)
+- User logs into the GRC Portal and uploads `sample_risk_policy.txt`.  
+- After clicking **“Scan File”**, the AI initiates document analysis.
+
+## 2. Scan Results & Compliance Hits (0:44–1:02)
+- **Summary:** Policy enforces MFA, privileged account approval, and anti-virus controls.  
+- **Compliance Mapping:**
+  - NIST SP 800-53: AC-2, AC-17, IR-4  
+  - ISO/IEC 27001: A.8, A.16  
+  - CIS Controls v8: 5, 6, 17  
+- **Identified Risks (Low Severity):**
+  - Inconsistent MFA on SaaS tools  
+  - Vendor certifications not revalidated annually  
+  - No IR tabletop exercises in 18 months  
+  - Delayed quarterly access reviews  
+
+## 3. Risk Assessment & Mitigation (1:03–2:09)
+- **Risk Score:** 9 (Likelihood 3 × Impact 3) → Low Risk  
+- **Visualization:** Heat map and multi-criteria breakdown (Financial, Operational, Compliance, Reputation).  
+- **Mitigation Plan:**
+  - Recommended Control: Comprehensive MFA gap assessment  
+  - Strategies:
+    - *Mitigate:* $25K, 6 months  
+    - *Avoid:* $5K, 2 months  
+  - **Cost-Benefit:** ROI 150%, payback 8 months  
+  - **Roadmap:** Planning → Implementation → Testing → Monitoring  
+  - **Metrics:** Risk score reduction (15→3), 50% incident drop  
+
+## 4. Navigation & Reporting (2:16–3:10)
+- User views the **Risk Dashboard** and **Enterprise Risk Register** (10 total risks).  
+- Explores alternative risk identification methods (Brainstorming, SWOT).  
+- Generates a detailed **PDF Risk Assessment Report**.
+
+**Summary:**  
+The GRC Portal automates compliance mapping and risk evaluation through AI-driven document analysis, delivering structured reports, actionable mitigation plans, and quantifiable ROI insights (this project is designed from scrath).
+
+---
+
 ## 🌟 Key Features
 
 ### 🤖 AI-Powered Risk Intelligence

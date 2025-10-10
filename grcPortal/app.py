@@ -620,8 +620,8 @@ def create_app():
         MAX_CONTENT_LENGTH=10*1024*1024  # 10 MB upload cap
     )
     # Inactivity timeout configuration
-    INACTIVITY_TIMEOUT = int(os.getenv("INACTIVITY_TIMEOUT", 60000))  # 1 minute default for blur
-    WARNING_TIMEOUT = int(os.getenv("WARNING_TIMEOUT", 10000))  # 10 seconds for logout after warning
+    INACTIVITY_TIMEOUT = int(os.getenv("INACTIVITY_TIMEOUT", 120000))  # 2 minute default for blur
+    WARNING_TIMEOUT = int(os.getenv("WARNING_TIMEOUT", 20000))  # 20 seconds for logout after warning
     
     # Make these available to templates/JavaScript
     app.config['INACTIVITY_TIMEOUT'] = INACTIVITY_TIMEOUT
