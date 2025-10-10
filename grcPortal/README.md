@@ -133,7 +133,7 @@ grcPortal addresses critical cybersecurity risks through integrated tools and Ze
 ### Sample Data & Testing URLs
 
 #### Authentication & Access Control
-- **Login**: `http://localhost:5000/login` (email: kush786srj@gmail.com, password: Sksf1234)
+- **Login**: `http://localhost:5000/login` 
 - **Audit Logs**: `http://localhost:5000/audit/logs`
 - **Admin Dashboard**: `http://localhost:5000/admin/dashboard`
 
@@ -253,11 +253,6 @@ grcPortal/
 
 7. **Access the application**:
    Open your browser to `http://localhost:5000`
-
-### Default Credentials
-- **Username**: kush786srj@gmail.com
-- **Password**: Sksf1234
-- **Role**: Administrator
 
 ## 📖 Usage Guide
 
