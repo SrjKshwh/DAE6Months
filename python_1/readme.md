@@ -40,6 +40,6 @@ This video showcases the functionality of a desktop Word Search puzzle game.
    I would like to make it in a web page so that can be played by on web without any installation.
 
 ## Screenshots as of now
-![Screen on launch](../../docs/assets/img/wordPuzzleGameOnLaunch.png)  
-![Screen showing score at the end](../../docs/assets/img/scoreWindow.png)   
+![Screen on launch](/docs/assets/img/wordPuzzleGameOnLaunch.png)
+![Screen showing score at the end](/docs/assets/img/scoreWindow.png)
 
