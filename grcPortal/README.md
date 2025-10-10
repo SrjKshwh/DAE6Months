@@ -8,7 +8,7 @@
 A comprehensive enterprise-grade Governance, Risk, and Compliance (GRC) platform built with Flask and Python. This AI-powered platform provides advanced tools for risk management, compliance automation, incident response, and digital forensics with continuous monitoring capabilities.
 
 <video width="640" height="360" controls>
-  <source src="static/images/scanFileForRisksModified.mp4" type="video/mp4">
+  <source src="https://youtu.be/cZsnQvWXJZU" type="video/mp4">
   Your browser does not support the video tag.
 </video>
 
