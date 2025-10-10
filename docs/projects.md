@@ -4,7 +4,8 @@ title: Projects
 permalink: /projects
 ---
 
-# 🚀 Projects & Experience---
+# 🚀 Projects & Experience
+---
 
 ## 🔬 Current Projects
 
