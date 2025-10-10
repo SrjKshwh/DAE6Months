@@ -7,10 +7,7 @@
 
 A comprehensive enterprise-grade Governance, Risk, and Compliance (GRC) platform built with Flask and Python. This AI-powered platform provides advanced tools for risk management, compliance automation, incident response, and digital forensics with continuous monitoring capabilities.
 
-<video width="640" height="360" controls>
-  <source src="https://youtu.be/cZsnQvWXJZU" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/cZsnQvWXJZU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Overview (short introduction)
 The video showcases the **core functionality** of the GRC Portal, demonstrating how AI analyzes uploaded policy documents to automatically identify **compliance gaps, risks, and mitigation strategies**.
