@@ -10,12 +10,16 @@ permalink: /projects
 ## 🔬 Current Projects
 
 ### Cybersecurity Compliance Checker with Risk Heat Map
+
 **DAE Semester 3-5 | Aug-Oct 2025**
+
 A comprehensive web application for automated cybersecurity compliance analysis. Upload policy or configuration files to check against standards like GLBA, NIST CSF, and PCI DSS. Features include automatic non-compliance detection, security risk register generation, and interactive heat map visualization for efficient risk prioritization and remediation.
 [For more details](https://github.com/SrjKshwh/DAE6Months/tree/master/grcPortal)
 
 ### Interactive Word Search Game
+
 **DAE Semester 1 | Jul 2025**
+
 An engaging Python-based GUI application that creates custom word search puzzles. Users input 3 words, supplemented by 7 predefined terms, generating a 10-word grid. Includes a timer, input field, and dynamic word list with real-time progress tracking (green for found words).
 [For more details](https://github.com/SrjKshwh/DAE6Months/tree/master/python_1)
 ---
