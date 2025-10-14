@@ -201,17 +201,14 @@ class BusinessImpactType(PyEnum):
 class Base(DeclarativeBase):
     """
     Base class for all SQLAlchemy database models.
-
     Provides common functionality and configuration for all database entities
     in the GRC portal. All models inherit from this base class to ensure
     consistent behavior and automatic timestamp management.
-
     Features:
         - Automatic table naming from class names
         - Declarative base for SQLAlchemy ORM
         - Foundation for relationship definitions
         - Consistent model structure across the application
-
     Note:
         This class should not be instantiated directly. Use specific model
         classes that inherit from Base for database operations.
