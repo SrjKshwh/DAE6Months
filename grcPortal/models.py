@@ -2112,3 +2112,159 @@ class OpenCTIIntegration(Base):
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+
+# Data Archiving and Retention Models
+class RetentionConfig(Base):
+    """Configuration for data retention policies per table"""
+    __tablename__ = "retention_config"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    table_name: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)  # e.g., "risks", "audit_logs", "incidents"
+    retention_days: Mapped[int] = mapped_column(Integer, default=2555)  # 7 years in days
+    archive_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    auto_purge: Mapped[bool] = mapped_column(Boolean, default=False)  # Enable automatic purging of archived records
+    last_archive_run: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    records_archived: Mapped[int] = mapped_column(Integer, default=0)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+
+class RiskArchive(Base):
+    """Archive table for old risk records - identical schema to risks table"""
+    __tablename__ = "risk_archive"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    asset: Mapped[str] = mapped_column(String(500), nullable=False)
+    threat: Mapped[str] = mapped_column(String(500), nullable=False)
+    vulnerability: Mapped[str] = mapped_column(String(500), nullable=False)
+    control: Mapped[str] = mapped_column(String(500), nullable=False)
+    compliance_standard: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=True)
+    status: Mapped[RiskStatus] = mapped_column(Enum(RiskStatus), default=RiskStatus.OPEN)
+    category: Mapped[RiskCategory] = mapped_column(Enum(RiskCategory), nullable=True)
+
+    likelihood: Mapped[int] = mapped_column(Integer, default=1)
+    impact: Mapped[int] = mapped_column(Integer, default=1)
+    score: Mapped[int] = mapped_column(Integer, default=0)
+
+    severity: Mapped[RiskSeverity] = mapped_column(Enum(RiskSeverity), default=RiskSeverity.MEDIUM)
+
+    ale: Mapped[float] = mapped_column(Float, default=0.0)
+    emv: Mapped[float] = mapped_column(Float, default=0.0)
+
+    mitigation_plan: Mapped[str] = mapped_column(Text, nullable=True)
+    residual_risk: Mapped[str] = mapped_column(Text, nullable=True)
+    owner: Mapped[str] = mapped_column(String(255), nullable=True)
+
+    treatment: Mapped[RiskTreatment] = mapped_column(Enum(RiskTreatment), nullable=True)
+    rmf_phase: Mapped[NIST_RMF_Phase] = mapped_column(Enum(NIST_RMF_Phase), default=NIST_RMF_Phase.PREPARE)
+    approval_status: Mapped[ApprovalStatus] = mapped_column(Enum(ApprovalStatus), default=ApprovalStatus.PENDING)
+    approver_id: Mapped[int] = mapped_column(Integer, nullable=True)
+
+    asset_value: Mapped[float] = mapped_column(Float, default=0.0)
+    mitigation_cost: Mapped[float] = mapped_column(Float, default=0.0)
+
+    business_impact: Mapped[str] = mapped_column(Text, nullable=True)
+    regulatory_impact: Mapped[str] = mapped_column(Text, nullable=True)
+    risk_appetite_level: Mapped[int] = mapped_column(Integer, default=3)
+
+    residual_likelihood: Mapped[int] = mapped_column(Integer, default=1)
+    residual_impact: Mapped[int] = mapped_column(Integer, default=1)
+    residual_score: Mapped[int] = mapped_column(Integer, default=0)
+
+    escalation_level: Mapped[str] = mapped_column(String(50), default="business_unit")
+    escalated_to: Mapped[int] = mapped_column(Integer, nullable=True)
+    escalation_reason: Mapped[str] = mapped_column(Text, nullable=True)
+    escalation_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    risk_tolerance_threshold: Mapped[int] = mapped_column(Integer, default=15)
+    risk_appetite_alignment: Mapped[str] = mapped_column(Text, nullable=True)
+
+    last_reviewed: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    next_review_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    review_frequency_days: Mapped[int] = mapped_column(Integer, default=90)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Multi-criteria risk scoring
+    financial_impact: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    operational_impact: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    compliance_impact: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    reputation_impact: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+
+    financial_weight: Mapped[float] = mapped_column(Float, nullable=False, default=0.25)
+    operational_weight: Mapped[float] = mapped_column(Float, nullable=False, default=0.25)
+    compliance_weight: Mapped[float] = mapped_column(Float, nullable=False, default=0.25)
+    reputation_weight: Mapped[float] = mapped_column(Float, nullable=False, default=0.25)
+
+    rto_hours: Mapped[float] = mapped_column(Float, nullable=True)
+    rpo_hours: Mapped[float] = mapped_column(Float, nullable=True)
+    mtd_hours: Mapped[float] = mapped_column(Float, nullable=True)
+    financial_impact_amount: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    dependency_mapping: Mapped[str] = mapped_column(Text, nullable=True)
+
+    annual_occurrence_probability: Mapped[float] = mapped_column(Float, nullable=True)
+    ale_calculated: Mapped[float] = mapped_column(Float, nullable=True)
+    emv_calculated: Mapped[float] = mapped_column(Float, nullable=True)
+
+    evaluation_criteria: Mapped[str] = mapped_column(Text, nullable=True)
+    stakeholder_approval_required: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    stakeholder_approval_notes: Mapped[str] = mapped_column(Text, nullable=True)
+
+    mitigation_plan_json: Mapped[str] = mapped_column(Text, nullable=True)
+    mitigation_plan_updated: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Archive metadata
+    archived_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    archive_reason: Mapped[str] = mapped_column(String(255), default="retention_policy")
+
+
+class AuditArchive(Base):
+    """Archive table for old audit log records - identical schema to audit_logs table"""
+    __tablename__ = "audit_archive"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(Integer, nullable=True)
+    action: Mapped[str] = mapped_column(String(255), nullable=False)
+    category: Mapped[str] = mapped_column(String(50), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    resource: Mapped[str] = mapped_column(String(255), nullable=True)
+    ip_address: Mapped[str] = mapped_column(String(45), nullable=True)
+    user_agent: Mapped[str] = mapped_column(String(500), nullable=True)
+    success: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # Archive metadata
+    archived_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    archive_reason: Mapped[str] = mapped_column(String(255), default="retention_policy")
+
+
+class IncidentArchive(Base):
+    """Archive table for old incident records - identical schema to incidents table"""
+    __tablename__ = "incident_archive"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[IncidentStatus] = mapped_column(Enum(IncidentStatus), default=IncidentStatus.OPEN)
+    severity: Mapped[IncidentSeverity] = mapped_column(Enum(IncidentSeverity), default=IncidentSeverity.MEDIUM)
+
+    reported_by: Mapped[int] = mapped_column(Integer, nullable=False)
+    reported_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    preparation_notes: Mapped[str] = mapped_column(Text, nullable=True)
+    identification_notes: Mapped[str] = mapped_column(Text, nullable=True)
+    containment_notes: Mapped[str] = mapped_column(Text, nullable=True)
+    eradication_notes: Mapped[str] = mapped_column(Text, nullable=True)
+    recovery_notes: Mapped[str] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Archive metadata
+    archived_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    archive_reason: Mapped[str] = mapped_column(String(255), default="retention_policy")

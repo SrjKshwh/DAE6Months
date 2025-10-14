@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Archived Incidents - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-archive text-warning"></i> Archived Incident Records</h2>
+                <div>
+                    <a href="{{ url_for('admin_retention_settings') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Retention Settings
+                    </a>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-warning text-dark">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Total Archived</h5>
+                            <h3>{{ total_count }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Current Page</h5>
+                            <h3>{{ page }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Total Pages</h5>
+                            <h3>{{ total_pages }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Records/Page</h5>
+                            <h3>50</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Archived Incidents Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-table"></i> Archived Incident Records</h5>
+                </div>
+                <div class="card-body">
+                    {% if archived_incidents %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                        <th>Severity</th>
+                                        <th>Reported By</th>
+                                        <th>Reported At</th>
+                                        <th>Archived At</th>
+                                        <th>Reason</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for incident in archived_incidents %}
+                                    <tr>
+                                        <td>{{ incident.id }}</td>
+                                        <td>
+                                            <strong title="{{ incident.title }}">{{ incident.title[:50] }}{% if incident.title|length > 50 %}...{% endif %}</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if incident.status.value == 'open' %}danger{% elif incident.status.value == 'contained' %}warning{% elif incident.status.value == 'eradicated' %}info{% elif incident.status.value == 'recovered' %}primary{% else %}success{% endif %}">
+                                                {{ incident.status.value.title() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if incident.severity.value == 'Critical' %}danger{% elif incident.severity.value == 'High' %}warning{% elif incident.severity.value == 'Medium' %}info{% else %}secondary{% endif %}">
+                                                {{ incident.severity.value }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if incident.reported_by %}
+                                                <span title="User ID: {{ incident.reported_by }}">{{ incident.reported_by }}</span>
+                                            {% else %}
+                                                <span class="text-muted">Unknown</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ incident.reported_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>{{ incident.archived_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>{{ incident.archive_reason }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav aria-label="Archived incidents pagination" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                {% if page > 1 %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('admin_archived_incidents', page=page-1) }}">Previous</a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page_num in range(max(1, page-2), min(total_pages+1, page+3)) %}
+                                    <li class="page-item {% if page_num == page %}active{% endif %}">
+                                        <a class="page-link" href="{{ url_for('admin_archived_incidents', page=page_num) }}">{{ page_num }}</a>
+                                    </li>
+                                {% endfor %}
+
+                                {% if page < total_pages %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('admin_archived_incidents', page=page+1) }}">Next</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> No archived incident records found.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

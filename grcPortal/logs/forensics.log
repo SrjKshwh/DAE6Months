@@ -12628,3 +12628,93 @@ OSError: [Errno 22] Invalid argument
 2025-10-09 14:53:42,163 [INFO] 127.0.0.1 - - [09/Oct/2025 14:53:42] "GET /login HTTP/1.1" 200 -
 2025-10-09 14:53:42,189 [INFO] 127.0.0.1 - - [09/Oct/2025 14:53:42] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
 2025-10-09 14:53:42,197 [INFO] 127.0.0.1 - - [09/Oct/2025 14:53:42] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-14 12:16:19,196 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 12:16:42,861 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 12:16:43,062 [ERROR] Failed to log automated archive audit event: name 'log_audit_event' is not defined
+2025-10-14 12:16:43,062 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 12:17:10,129 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 12:17:10,180 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 12:17:10,180 [INFO] Scheduler started
+2025-10-14 12:17:10,216 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-14 12:17:19,524 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 12:17:19,604 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 12:17:19,605 [INFO] Scheduler started
+2025-10-14 12:17:19,661 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-14 12:17:35,778 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 12:17:35,928 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 12:17:35,930 [INFO] Scheduler started
+2025-10-14 12:17:35,931 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-14 12:18:14,489 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 12:18:14,556 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 12:18:14,607 [INFO] Scheduler started
+2025-10-14 12:18:14,640 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-14 12:18:26,663 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 12:18:26,692 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 12:18:26,692 [INFO] Scheduler started
+2025-10-14 12:18:26,842 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-14 12:18:26,875 [INFO] Processing archive for table: risks, retention: 2555 days, cutoff: 2018-10-16 16:18:26.875275+00:00
+2025-10-14 12:18:26,880 [INFO] Skipping archive for risks: only 0 records to archive (minimum 25 required)
+2025-10-14 12:18:26,880 [INFO] Processing archive for table: audit_logs, retention: 2555 days, cutoff: 2018-10-16 16:18:26.880866+00:00
+2025-10-14 12:18:26,882 [INFO] Skipping archive for audit_logs: only 0 records to archive (minimum 25 required)
+2025-10-14 12:18:26,882 [INFO] Processing archive for table: incidents, retention: 2555 days, cutoff: 2018-10-16 16:18:26.882956+00:00
+2025-10-14 12:18:26,883 [ERROR] Error during archiving: type object 'Incident' has no attribute 'created_at'
+2025-10-14 12:19:27,202 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 12:19:27,264 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 12:19:27,294 [INFO] Scheduler started
+2025-10-14 12:19:27,362 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-14 12:19:27,365 [INFO] Processing archive for table: risks, retention: 2555 days, cutoff: 2018-10-16 16:19:27.365840+00:00
+2025-10-14 12:19:27,377 [INFO] Skipping archive for risks: only 0 records to archive (minimum 25 required)
+2025-10-14 12:19:27,378 [INFO] Processing archive for table: audit_logs, retention: 2555 days, cutoff: 2018-10-16 16:19:27.378122+00:00
+2025-10-14 12:19:27,381 [INFO] Skipping archive for audit_logs: only 0 records to archive (minimum 25 required)
+2025-10-14 12:19:27,381 [INFO] Processing archive for table: incidents, retention: 2555 days, cutoff: 2018-10-16 16:19:27.381787+00:00
+2025-10-14 12:19:27,381 [ERROR] Model Incident does not have created_at attribute
+2025-10-14 12:20:49,620 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 12:20:49,655 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 12:20:49,704 [INFO] Scheduler started
+2025-10-14 12:20:49,738 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-14 12:20:49,808 [INFO] Processing archive for table: risks, retention: 2555 days, cutoff: 2018-10-16 16:20:49.808460+00:00
+2025-10-14 12:20:49,816 [INFO] Skipping archive for risks: only 0 records to archive (minimum 25 required)
+2025-10-14 12:20:49,816 [INFO] Processing archive for table: audit_logs, retention: 2555 days, cutoff: 2018-10-16 16:20:49.816544+00:00
+2025-10-14 12:20:49,820 [INFO] Skipping archive for audit_logs: only 0 records to archive (minimum 25 required)
+2025-10-14 12:20:49,820 [INFO] Processing archive for table: incidents, retention: 2555 days, cutoff: 2018-10-16 16:20:49.820538+00:00
+2025-10-14 12:20:49,820 [ERROR] Model Incident does not have created_at attribute
+2025-10-14 12:21:20,757 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 12:21:20,853 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 12:21:20,859 [INFO] Scheduler started
+2025-10-14 12:21:20,861 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-14 12:21:20,862 [INFO] Processing archive for table: risks, retention: 2555 days, cutoff: 2018-10-16 16:21:20.862202+00:00
+2025-10-14 12:21:20,867 [INFO] Skipping archive for risks: only 0 records to archive (minimum 25 required)
+2025-10-14 12:21:20,868 [INFO] Processing archive for table: audit_logs, retention: 2555 days, cutoff: 2018-10-16 16:21:20.868371+00:00
+2025-10-14 12:21:20,872 [INFO] Skipping archive for audit_logs: only 0 records to archive (minimum 25 required)
+2025-10-14 12:21:20,872 [INFO] Processing archive for table: incidents, retention: 2555 days, cutoff: 2018-10-16 16:21:20.872384+00:00
+2025-10-14 12:21:20,874 [INFO] Skipping archive for incidents: only 0 records to archive (minimum 25 required)
+2025-10-14 13:27:20,136 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 13:27:52,001 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 13:27:52,085 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 13:27:52,105 [INFO] Scheduler started
+2025-10-14 13:27:52,110 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-14 13:27:52,111 [ERROR] Error during archiving: (sqlite3.OperationalError) no such column: retention_config.auto_purge
+[SQL: SELECT retention_config.id AS retention_config_id, retention_config.table_name AS retention_config_table_name, retention_config.retention_days AS retention_config_retention_days, retention_config.archive_enabled AS retention_config_archive_enabled, retention_config.auto_purge AS retention_config_auto_purge, retention_config.last_archive_run AS retention_config_last_archive_run, retention_config.records_archived AS retention_config_records_archived, retention_config.created_at AS retention_config_created_at, retention_config.updated_at AS retention_config_updated_at 
+FROM retention_config 
+WHERE retention_config.archive_enabled = 1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-14 13:28:01,688 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 13:28:01,696 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 13:28:01,696 [INFO] Scheduler started
+2025-10-14 13:28:01,698 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-14 13:28:17,072 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 13:28:49,462 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 13:28:49,465 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 13:28:49,471 [INFO] Scheduler started
+2025-10-14 13:29:11,349 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 13:29:39,849 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 13:29:51,954 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-14 13:29:52,025 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-14 13:29:52,025 [INFO] Scheduler started
+2025-10-14 13:29:52,067 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-14 13:29:52,070 [INFO] Processing archive for table: risks, retention: 2555 days, cutoff: 2018-10-16 17:29:52.070545+00:00
+2025-10-14 13:29:52,077 [INFO] Skipping archive for risks: only 0 records to archive (minimum 25 required)
+2025-10-14 13:29:52,077 [INFO] Processing archive for table: audit_logs, retention: 2555 days, cutoff: 2018-10-16 17:29:52.077551+00:00
+2025-10-14 13:29:52,079 [INFO] Skipping archive for audit_logs: only 0 records to archive (minimum 25 required)
+2025-10-14 13:29:52,079 [INFO] Processing archive for table: incidents, retention: 2555 days, cutoff: 2018-10-16 17:29:52.079950+00:00
+2025-10-14 13:29:52,081 [INFO] Skipping archive for incidents: only 0 records to archive (minimum 25 required)

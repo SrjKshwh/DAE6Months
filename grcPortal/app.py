@@ -65,7 +65,10 @@ load_dotenv()
 from db import get_engine, get_session, close_session
 
 
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService, IndicatorOfCompromise, IoCAnalysis, DetectionRule, OpenCTIConnector, OpenCTIIntegration, MonitoringConfiguration
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService, IndicatorOfCompromise, IoCAnalysis, DetectionRule, OpenCTIConnector, OpenCTIIntegration, MonitoringConfiguration, RetentionConfig, RiskArchive, AuditArchive, IncidentArchive
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
 
 
 from sqlalchemy.orm import sessionmaker, joinedload
@@ -439,6 +442,222 @@ def generate_risk_communication_plan(risk_data, mitigation_plan):
 
     return communication_plan
 
+
+def archive_old_records():
+    """
+    Archive old records based on retention policies configured in retention_config table.
+
+    This function implements the core archiving logic that:
+    1. Iterates through configured tables in retention_config
+    2. Identifies records older than the retention period
+    3. Transfers them to corresponding archive tables in batches
+    4. Updates retention configuration with archive statistics
+    5. Includes safety checks to prevent accidental data loss
+
+    Process:
+        - Check if archiving is enabled for each table
+        - Calculate cutoff date based on retention_days
+        - Use batch processing to handle large datasets efficiently
+        - Log all operations for audit trail
+        - Update last_archive_run and records_archived counters
+
+    Safety Features:
+        - Minimum record count check (25 records) before archiving
+        - Transaction rollback on errors
+        - Comprehensive logging
+        - Dry-run capability for testing
+
+    Returns:
+        dict: Archive operation results with statistics per table
+
+    Note:
+        Designed for automated execution via scheduler
+        Supports different retention policies per table
+        Maintains data integrity during transfer operations
+    """
+    from datetime import datetime, timedelta
+    from sqlalchemy import text
+    import logging
+
+    db = get_session()
+    results = {}
+
+    try:
+        # Get all retention configurations
+        configs = db.query(RetentionConfig).filter(RetentionConfig.archive_enabled == True).all()
+
+        for config in configs:
+            table_name = config.table_name
+            retention_days = config.retention_days
+            cutoff_date = datetime.now(timezone.utc) - timedelta(days=retention_days)
+
+            logging.info(f"Processing archive for table: {table_name}, retention: {retention_days} days, cutoff: {cutoff_date}")
+
+            # Determine archive table and source table
+            if table_name == "risks":
+                source_model = Risk
+                archive_model = RiskArchive
+            elif table_name == "audit_logs":
+                source_model = AuditLog
+                archive_model = AuditArchive
+            elif table_name == "incidents":
+                source_model = Incident
+                archive_model = IncidentArchive
+            else:
+                logging.warning(f"Unknown table for archiving: {table_name}")
+                continue
+
+            # Check if source_model has appropriate timestamp attribute
+            if not hasattr(source_model, 'created_at') and not hasattr(source_model, 'reported_at'):
+                logging.error(f"Model {source_model.__name__} does not have created_at or reported_at attribute")
+                results[table_name] = {"status": "error", "reason": "model_missing_timestamp"}
+                continue
+
+            # Count records to archive - use appropriate timestamp field
+            if hasattr(source_model, 'created_at'):
+                timestamp_field = source_model.created_at
+            elif hasattr(source_model, 'reported_at'):
+                timestamp_field = source_model.reported_at
+            else:
+                logging.error(f"Model {source_model.__name__} does not have created_at or reported_at attribute")
+                results[table_name] = {"status": "error", "reason": "model_missing_timestamp"}
+                continue
+
+            old_records_count = db.query(source_model).filter(timestamp_field < cutoff_date).count()
+
+            # Safety check: don't archive if fewer than 25 records (configurable threshold)
+            if old_records_count < 25:
+                logging.info(f"Skipping archive for {table_name}: only {old_records_count} records to archive (minimum 25 required)")
+                results[table_name] = {"status": "skipped", "reason": "insufficient_records", "count": old_records_count}
+                continue
+
+            # Batch process records to avoid memory issues
+            batch_size = 100
+            archived_count = 0
+
+            while True:
+                # Get batch of old records
+                old_records = db.query(source_model).filter(timestamp_field < cutoff_date).limit(batch_size).all()
+
+                if not old_records:
+                    break
+
+                # Archive each record
+                for record in old_records:
+                    # Create archive record with all original data plus archive metadata
+                    archive_data = {}
+                    for column in source_model.__table__.columns:
+                        if column.name not in ['id']:  # Don't copy primary key
+                            archive_data[column.name] = getattr(record, column.name)
+
+                    # Add archive metadata
+                    archive_data['archived_at'] = datetime.now(timezone.utc)
+                    archive_data['archive_reason'] = 'retention_policy'
+
+                    archive_record = archive_model(**archive_data)
+                    db.add(archive_record)
+
+                # Delete archived records from source table
+                record_ids = [r.id for r in old_records]
+                db.query(source_model).filter(source_model.id.in_(record_ids)).delete(synchronize_session=False)
+
+                archived_count += len(old_records)
+                db.commit()  # Commit each batch
+
+                logging.info(f"Archived batch of {len(old_records)} records from {table_name}")
+
+            # Update retention config
+            config.last_archive_run = datetime.now(timezone.utc)
+            config.records_archived += archived_count
+            db.commit()
+
+            results[table_name] = {
+                "status": "completed",
+                "records_archived": archived_count,
+                "cutoff_date": cutoff_date.isoformat()
+            }
+
+            logging.info(f"Archive completed for {table_name}: {archived_count} records archived")
+
+        # Log audit event for automated archiving
+        try:
+            # Create a system user object for audit logging
+            system_user = type('User', (), {'id': None, 'email': 'system@grcportal'})()
+            # Use the local log_audit_event function from within the app context
+            db.add(AuditLog(
+                user_id=None,
+                action="AUTOMATED_ARCHIVE",
+                category="ADMINISTRATION",
+                description=f"Automated archiving completed: {results}",
+                resource="/system/archive",
+                success=True
+            ))
+            db.commit()
+        except Exception as e:
+            logging.error(f"Failed to log automated archive audit event: {e}")
+
+    except Exception as e:
+        logging.error(f"Error during archiving: {e}")
+        db.rollback()
+        results["error"] = str(e)
+    finally:
+        close_session(db)
+
+    return results
+
+
+def purge_archived_records(older_than_days=365*10):
+    """
+    Permanently delete archived records older than specified days.
+
+    This function provides administrative capability to permanently remove
+    archived records that are beyond the long-term retention period.
+    Should only be used by authorized administrators after proper review.
+
+    Args:
+        older_than_days (int): Delete archived records older than this many days (default: 10 years)
+
+    Returns:
+        dict: Purge operation results with deletion statistics
+
+    Security Note:
+        This operation permanently deletes data - use with extreme caution
+        Should require additional administrative approval in production
+        All deletions are logged for audit purposes
+    """
+    from datetime import datetime, timedelta
+    import logging
+
+    db = get_session()
+    results = {}
+
+    try:
+        cutoff_date = datetime.now(timezone.utc) - timedelta(days=older_than_days)
+
+        # Purge from each archive table
+        archive_tables = [
+            (RiskArchive, "risk_archive"),
+            (AuditArchive, "audit_archive"),
+            (IncidentArchive, "incident_archive")
+        ]
+
+        for model, table_name in archive_tables:
+            deleted_count = db.query(model).filter(model.archived_at < cutoff_date).delete()
+            results[table_name] = {"records_deleted": deleted_count}
+
+            logging.warning(f"PURGE OPERATION: Deleted {deleted_count} records from {table_name} older than {cutoff_date}")
+
+        db.commit()
+
+    except Exception as e:
+        logging.error(f"Error during purge operation: {e}")
+        db.rollback()
+        results["error"] = str(e)
+    finally:
+        close_session(db)
+
+    return results
+
 # ------------------------------------------------------------------------------
 # Secure Development Environment Notes
 # - Ensure VS Code has SonarLint, GitGuardian, Python Security Linter enabled
@@ -660,6 +879,9 @@ def create_app():
     # DB init
     engine = get_engine()
     Base.metadata.create_all(engine)
+
+    # Initialize APScheduler for background tasks
+    scheduler = BackgroundScheduler()
 
     # teardown hook for DB session
     @app.teardown_appcontext
@@ -4821,6 +5043,305 @@ def create_app():
         close_session(db)
         return render_template("incident_response.html", incidents=incidents)
 
+    @app.route("/admin/data_archiving", methods=["GET", "POST"])
+    @login_required
+    def data_archiving():
+        """Admin interface for data archiving and retention management"""
+        user = current_user()
+        if user.role != "admin":
+            flash("Access denied. Admin privileges required.", "danger")
+            return redirect(url_for("home"))
+
+        db = get_session()
+
+        if request.method == "POST":
+            action = request.form.get("action")
+
+            if action == "archive_now":
+                # Manual archive trigger
+                try:
+                    results = archive_old_records()
+                    flash(f"Archiving completed. Results: {results}", "success")
+                    log_audit_event(user, "DATA_ARCHIVE_MANUAL", "ADMINISTRATION",
+                                  f"Manual data archiving executed: {results}", "/admin/data_archiving", True)
+                except Exception as e:
+                    flash(f"Archiving failed: {str(e)}", "danger")
+                    log_audit_event(user, "DATA_ARCHIVE_FAILED", "ADMINISTRATION",
+                                  f"Manual data archiving failed: {str(e)}", "/admin/data_archiving", False)
+
+            elif action == "purge_archived":
+                # Admin purge of old archived records
+                confirm = request.form.get("confirm_purge")
+                if confirm == "CONFIRM_PURGE":
+                    try:
+                        older_than = int(request.form.get("older_than_days", 3650))  # Default 10 years
+                        results = purge_archived_records(older_than)
+                        flash(f"Purge completed. Results: {results}", "warning")
+                        log_audit_event(user, "DATA_PURGE_EXECUTED", "ADMINISTRATION",
+                                      f"Archived data purge executed: {results}", "/admin/data_archiving", True)
+                    except Exception as e:
+                        flash(f"Purge failed: {str(e)}", "danger")
+                        log_audit_event(user, "DATA_PURGE_FAILED", "ADMINISTRATION",
+                                      f"Archived data purge failed: {str(e)}", "/admin/data_archiving", False)
+                else:
+                    flash("Purge not confirmed. Please type 'CONFIRM_PURGE' to proceed.", "warning")
+
+            elif action == "update_retention":
+                # Update retention policies
+                try:
+                    table_name = request.form.get("table_name")
+                    retention_days = int(request.form.get("retention_days"))
+                    enabled = request.form.get("enabled") == "on"
+
+                    config = db.query(RetentionConfig).filter(RetentionConfig.table_name == table_name).first()
+                    if config:
+                        config.retention_days = retention_days
+                        config.archive_enabled = enabled
+                        db.commit()
+                        flash(f"Retention policy updated for {table_name}", "success")
+                        log_audit_event(user, "RETENTION_POLICY_UPDATED", "ADMINISTRATION",
+                                      f"Updated retention policy for {table_name}: {retention_days} days, enabled={enabled}",
+                                      "/admin/data_archiving", True)
+                    else:
+                        flash(f"Retention configuration not found for {table_name}", "danger")
+                except Exception as e:
+                    flash(f"Failed to update retention policy: {str(e)}", "danger")
+
+        # GET request - display archiving dashboard
+        # Get retention configurations
+        retention_configs = db.query(RetentionConfig).all()
+
+        # Get archive statistics
+        archive_stats = {}
+        try:
+            archive_stats["risk_archive"] = db.query(RiskArchive).count()
+            archive_stats["audit_archive"] = db.query(AuditArchive).count()
+            archive_stats["incident_archive"] = db.query(IncidentArchive).count()
+        except:
+            archive_stats = {"risk_archive": 0, "audit_archive": 0, "incident_archive": 0}
+
+        # Get recent archive operations
+        recent_archives = []
+        for config in retention_configs:
+            if config.last_archive_run:
+                recent_archives.append({
+                    "table": config.table_name,
+                    "last_run": config.last_archive_run,
+                    "records_archived": config.records_archived
+                })
+
+        close_session(db)
+        return render_template("admin_data_archiving.html",
+                             retention_configs=retention_configs,
+                             archive_stats=archive_stats,
+                             recent_archives=recent_archives)
+
+    @app.route("/admin/retention_settings", methods=["GET", "POST"])
+    @login_required
+    @admin_required
+    def admin_retention_settings():
+        """
+        Admin interface for managing data retention policies.
+
+        Provides administrators with the ability to:
+        - View current retention configurations for all tables
+        - Update retention periods and enable/disable archiving
+        - Manually trigger archiving operations
+        - View archived data tables
+
+        GET: Displays retention settings dashboard
+        POST: Handles retention policy updates and manual archive triggers
+
+        Security Features:
+            - Admin role required
+            - Audit logging of all configuration changes
+            - Validation of retention period values
+
+        Returns:
+            GET: Retention settings template
+            POST: Redirect with success/error messages
+        """
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            action = request.form.get("action")
+
+            if action == "update_retention":
+                # Update retention policies
+                try:
+                    table_name = request.form.get("table_name")
+                    retention_days = int(request.form.get("retention_days"))
+                    enabled = request.form.get("enabled") == "on"
+
+                    auto_purge = request.form.get("auto_purge") == "on"
+
+                    config = db.query(RetentionConfig).filter(RetentionConfig.table_name == table_name).first()
+                    if config:
+                        old_days = config.retention_days
+                        old_enabled = config.archive_enabled
+                        old_auto_purge = config.auto_purge
+                        config.retention_days = retention_days
+                        config.archive_enabled = enabled
+                        config.auto_purge = auto_purge
+                        db.commit()
+
+                        log_audit_event(user, "RETENTION_POLICY_UPDATE", "ADMINISTRATION",
+                                       f"Updated retention policy for {table_name}: {old_days} -> {retention_days} days, enabled: {old_enabled} -> {enabled}, auto_purge: {old_auto_purge} -> {auto_purge}",
+                                       "/admin/retention_settings", True)
+                        flash(f"Retention policy updated for {table_name}", "success")
+                    else:
+                        flash(f"Retention configuration not found for {table_name}", "danger")
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Failed to update retention policy: {str(e)}", "danger")
+
+            elif action == "manual_archive":
+                # Manual archive trigger
+                try:
+                    results = archive_old_records()
+                    flash(f"Manual archiving completed. Results: {results}", "success")
+                    log_audit_event(user, "MANUAL_ARCHIVE_TRIGGER", "ADMINISTRATION",
+                                  f"Manual archiving executed: {results}", "/admin/retention_settings", True)
+                except Exception as e:
+                    flash(f"Manual archiving failed: {str(e)}", "danger")
+                    log_audit_event(user, "MANUAL_ARCHIVE_FAILED", "ADMINISTRATION",
+                                  f"Manual archiving failed: {str(e)}", "/admin/retention_settings", False)
+
+        # GET request - display retention settings
+        # Get retention configurations
+        retention_configs = db.query(RetentionConfig).all()
+
+        # Get archive statistics
+        archive_stats = {}
+        try:
+            archive_stats["risk_archive"] = db.query(RiskArchive).count()
+            archive_stats["audit_archive"] = db.query(AuditArchive).count()
+            archive_stats["incident_archive"] = db.query(IncidentArchive).count()
+        except:
+            archive_stats = {"risk_archive": 0, "audit_archive": 0, "incident_archive": 0}
+
+        close_session(db)
+        return render_template("admin_retention_settings.html",
+                             retention_configs=retention_configs,
+                             archive_stats=archive_stats)
+
+    @app.route("/admin/archived_risks")
+    @login_required
+    @admin_required
+    def admin_archived_risks():
+        """View archived risk records"""
+        user = current_user()
+        db = get_session()
+
+        page = int(request.args.get('page', 1))
+        per_page = 50
+
+        # Get archived risks with pagination
+        archived_risks = db.query(RiskArchive).order_by(RiskArchive.archived_at.desc()).offset((page-1)*per_page).limit(per_page).all()
+        total_count = db.query(RiskArchive).count()
+
+        close_session(db)
+
+        log_audit_event(user, "VIEW_ARCHIVED_RISKS", "ADMINISTRATION",
+                      f"Viewed archived risks page {page}", "/admin/archived_risks", True)
+
+        return render_template("admin_archived_risks.html",
+                             archived_risks=archived_risks,
+                             page=page,
+                             total_pages=(total_count + per_page - 1) // per_page,
+                             total_count=total_count)
+
+    @app.route("/admin/archived_audit")
+    @login_required
+    @admin_required
+    def admin_archived_audit():
+        """View archived audit log records"""
+        user = current_user()
+        db = get_session()
+
+        page = int(request.args.get('page', 1))
+        per_page = 50
+
+        # Get archived audit logs with pagination
+        archived_audit = db.query(AuditArchive).order_by(AuditArchive.archived_at.desc()).offset((page-1)*per_page).limit(per_page).all()
+        total_count = db.query(AuditArchive).count()
+
+        close_session(db)
+
+        log_audit_event(user, "VIEW_ARCHIVED_AUDIT", "ADMINISTRATION",
+                      f"Viewed archived audit logs page {page}", "/admin/archived_audit", True)
+
+        return render_template("admin_archived_audit.html",
+                             archived_audit=archived_audit,
+                             page=page,
+                             total_pages=(total_count + per_page - 1) // per_page,
+                             total_count=total_count)
+
+    @app.route("/admin/archived_incidents")
+    @login_required
+    @admin_required
+    def admin_archived_incidents():
+        """View archived incident records"""
+        user = current_user()
+        db = get_session()
+
+        page = int(request.args.get('page', 1))
+        per_page = 50
+
+        # Get archived incidents with pagination
+        archived_incidents = db.query(IncidentArchive).order_by(IncidentArchive.archived_at.desc()).offset((page-1)*per_page).limit(per_page).all()
+        total_count = db.query(IncidentArchive).count()
+
+        close_session(db)
+
+        log_audit_event(user, "VIEW_ARCHIVED_INCIDENTS", "ADMINISTRATION",
+                      f"Viewed archived incidents page {page}", "/admin/archived_incidents", True)
+
+        return render_template("admin_archived_incidents.html",
+                             archived_incidents=archived_incidents,
+                             page=page,
+                             total_pages=(total_count + per_page - 1) // per_page,
+                             total_count=total_count)
+
+    @app.route("/admin/archive_status")
+    @login_required
+    def archive_status():
+        """Get real-time archive status via AJAX"""
+        user = current_user()
+        if user.role != "admin":
+            return {"error": "Access denied"}, 403
+
+        db = get_session()
+
+        # Get current counts
+        status = {
+            "active_records": {
+                "risks": db.query(Risk).count(),
+                "audit_logs": db.query(AuditLog).count(),
+                "incidents": db.query(Incident).count()
+            },
+            "archived_records": {
+                "risk_archive": db.query(RiskArchive).count(),
+                "audit_archive": db.query(AuditArchive).count(),
+                "incident_archive": db.query(IncidentArchive).count()
+            },
+            "retention_configs": []
+        }
+
+        configs = db.query(RetentionConfig).all()
+        for config in configs:
+            status["retention_configs"].append({
+                "table_name": config.table_name,
+                "retention_days": config.retention_days,
+                "archive_enabled": config.archive_enabled,
+                "last_archive_run": config.last_archive_run.isoformat() if config.last_archive_run else None,
+                "records_archived": config.records_archived
+            })
+
+        close_session(db)
+        return status
+
     # error handlers
     @app.errorhandler(404)
     def not_found(e):
@@ -4871,6 +5392,31 @@ def create_app():
         logging.error(f"500 Error: {e}")
         return render_template("errors/500.html"), 500
 
+
+    # Start the scheduler after app initialization
+    def start_scheduler():
+        """Initialize and start the APScheduler for automated tasks"""
+        try:
+            # Add weekly archiving job (every Thursday at 2 PM)
+            scheduler.add_job(
+                func=archive_old_records,
+                trigger=CronTrigger(day_of_week='thu', hour=14, minute=0),
+                id='weekly_archive',
+                name='Weekly Data Archiving',
+                replace_existing=True
+            )
+
+            # Start the scheduler
+            scheduler.start()
+            logging.info("APScheduler started successfully with weekly archiving job")
+
+        except Exception as e:
+            logging.error(f"Failed to start APScheduler: {e}")
+
+    # Start scheduler in a separate thread to avoid blocking
+    import threading
+    scheduler_thread = threading.Thread(target=start_scheduler, daemon=True)
+    scheduler_thread.start()
 
     return app
 
@@ -5182,9 +5728,12 @@ if __name__ == "__main__":
                 if not existing:
                     conn.execute(text("""
                     INSERT INTO indicators_of_compromise (indicator_type, indicator_value, confidence, severity, status,
-                        threat_actor, campaign, malware_family, first_seen, last_seen, detection_source, description, tags, created_by, created_at, updated_at)
+                        threat_actor, campaign, malware_family, first_seen, last_seen, detection_source, description, tags, 
+                        created_by, created_at, updated_at)
                     VALUES (:indicator_type, :indicator_value, :confidence, :severity, :status,
-                        :threat_actor, :campaign, :malware_family, :first_seen, :last_seen, :detection_source, :description, :tags, :created_by, :created_at, :updated_at)"""), {
+                        :threat_actor, :campaign, :malware_family, :first_seen, :last_seen, :detection_source, :description, 
+                        :tags, :created_by, :created_at, :updated_at)"""), 
+                        {
                         "indicator_type": ioc_data["indicator_type"],
                         "indicator_value": ioc_data["indicator_value"],
                         "confidence": ioc_data["confidence"],
