@@ -1,0 +1,499 @@
+{% extends "base.html" %}
+
+{% block title %}KPI Monitoring Dashboard - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-chart-line text-primary"></i> KPI Monitoring Dashboard</h2>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="refreshKPIs()">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-cog"></i> Dashboard
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="switchView('executive')">Executive View</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="switchView('compliance')">Compliance View</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="switchView('risk')">Risk Management View</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="switchView('operations')">Operations View</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current View Indicator -->
+            <div class="alert alert-info mb-4">
+                <strong>Current View:</strong> <span id="currentView">Executive Dashboard</span>
+                <span class="float-end">Last Updated: <span id="lastUpdate">{{ last_update }}</span></span>
+            </div>
+
+            <!-- Executive Dashboard -->
+            <div id="executiveView" class="dashboard-view">
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            Overall Compliance Score</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ kpis.compliance_score }}%</div>
+                                        <div class="text-xs text-{{ 'success' if kpis.compliance_trend == 'up' else 'danger' if kpis.compliance_trend == 'down' else 'warning' }}">
+                                            <i class="fas fa-arrow-{{ 'up' if kpis.compliance_trend == 'up' else 'down' if kpis.compliance_trend == 'down' else 'right' }}"></i>
+                                            {{ kpis.compliance_change }}% from last month
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card border-left-danger shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                            Critical Risks</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ kpis.critical_risks }}</div>
+                                        <div class="text-xs text-muted">Active high-risk items</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card border-left-info shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                            Incident Response Time</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ kpis.avg_mttr }}h</div>
+                                        <div class="text-xs text-{{ 'success' if kpis.mttr_trend == 'improving' else 'danger' }}">
+                                            {{ 'Improving' if kpis.mttr_trend == 'improving' else 'Needs attention' }}
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-clock fa-2x text-info"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            System Availability</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ kpis.system_availability }}%</div>
+                                        <div class="text-xs text-success">99.9% target achieved</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-server fa-2x text-success"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compliance Trend Chart -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Compliance Score Trend</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="complianceTrendChart" width="100%" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compliance Dashboard -->
+            <div id="complianceView" class="dashboard-view" style="display: none;">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-primary">Framework Compliance Scores</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="frameworkComplianceChart" width="100%" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-warning">Compliance Gaps</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Framework</th>
+                                                <th>Gaps</th>
+                                                <th>Priority</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for gap in compliance_gaps %}
+                                            <tr>
+                                                <td>{{ gap.framework }}</td>
+                                                <td>{{ gap.count }}</td>
+                                                <td>
+                                                    <span class="badge bg-{{ 'danger' if gap.priority == 'Critical' else 'warning' }}">
+                                                        {{ gap.priority }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Management Dashboard -->
+            <div id="riskView" class="dashboard-view" style="display: none;">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-danger">Risk Assessment Progress</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="progress mb-3">
+                                    <div class="progress-bar bg-success" style="width: {{ risk_progress.completed }}%">{{ risk_progress.completed }}%</div>
+                                </div>
+                                <small class="text-muted">{{ risk_progress.completed_count }}/{{ risk_progress.total_count }} assessments completed</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-warning">Risk Treatment Status</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="riskTreatmentChart" width="100%" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operations Dashboard -->
+            <div id="operationsView" class="dashboard-view" style="display: none;">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-info">System Performance</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="systemPerformanceChart" width="100%" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-success">Active Alerts</h6>
+                            </div>
+                            <div class="card-body">
+                                {% if active_alerts %}
+                                <div class="list-group list-group-flush">
+                                    {% for alert in active_alerts %}
+                                    <div class="list-group-item py-2">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-{{ 'danger' if alert.severity == 'critical' else 'warning' }}">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>{{ alert.message }}
+                                            </span>
+                                            <small class="text-muted">{{ alert.time }}</small>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                <div class="text-center py-4">
+                                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                    <p class="text-muted mb-0">No active alerts</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Details Table -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Detailed KPI Metrics</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="kpiTable">
+                            <thead>
+                                <tr>
+                                    <th>KPI Name</th>
+                                    <th>Category</th>
+                                    <th>Current Value</th>
+                                    <th>Target</th>
+                                    <th>Status</th>
+                                    <th>Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for kpi in detailed_kpis %}
+                                <tr>
+                                    <td>{{ kpi.name }}</td>
+                                    <td><span class="badge bg-secondary">{{ kpi.category }}</span></td>
+                                    <td>{{ kpi.value }}</td>
+                                    <td>{{ kpi.target }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if kpi.status == 'On Target' else 'warning' if kpi.status == 'At Risk' else 'danger' }}">
+                                            {{ kpi.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-arrow-{{ 'up text-success' if kpi.trend == 'up' else 'down text-danger' if kpi.trend == 'down' else 'right text-warning' }}"></i>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let currentView = 'executive';
+
+// Chart instances
+let complianceTrendChart;
+let frameworkComplianceChart;
+let riskTreatmentChart;
+let systemPerformanceChart;
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    updateLastRefresh();
+});
+
+function switchView(view) {
+    // Hide all views
+    document.querySelectorAll('.dashboard-view').forEach(v => v.style.display = 'none');
+
+    // Show selected view
+    document.getElementById(view + 'View').style.display = 'block';
+
+    // Update current view indicator
+    const viewNames = {
+        'executive': 'Executive Dashboard',
+        'compliance': 'Compliance Dashboard',
+        'risk': 'Risk Management Dashboard',
+        'operations': 'Operations Dashboard'
+    };
+    document.getElementById('currentView').textContent = viewNames[view];
+    currentView = view;
+
+    // Reinitialize charts for the new view
+    initializeCharts();
+}
+
+function initializeCharts() {
+    // Compliance Trend Chart
+    const complianceCtx = document.getElementById('complianceTrendChart');
+    if (complianceCtx) {
+        complianceTrendChart = new Chart(complianceCtx, {
+            type: 'line',
+            data: {
+                labels: {{ compliance_trend_labels|tojson }},
+                datasets: [{
+                    label: 'Compliance Score',
+                    data: {{ compliance_trend_data|tojson }},
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        max: 100
+                    }
+                }
+            }
+        });
+    }
+
+    // Framework Compliance Chart
+    const frameworkCtx = document.getElementById('frameworkComplianceChart');
+    if (frameworkCtx) {
+        frameworkComplianceChart = new Chart(frameworkCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ framework_labels|tojson }},
+                datasets: [{
+                    label: 'Compliance Score',
+                    data: {{ framework_scores|tojson }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        max: 100
+                    }
+                }
+            }
+        });
+    }
+
+    // Risk Treatment Chart
+    const riskCtx = document.getElementById('riskTreatmentChart');
+    if (riskCtx) {
+        riskTreatmentChart = new Chart(riskCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Completed', 'In Progress', 'Overdue'],
+                datasets: [{
+                    data: {{ risk_treatment_data|tojson }},
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(255, 205, 86, 0.5)',
+                        'rgba(255, 99, 132, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 205, 86, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    }
+
+    // System Performance Chart
+    const systemCtx = document.getElementById('systemPerformanceChart');
+    if (systemCtx) {
+        systemPerformanceChart = new Chart(systemCtx, {
+            type: 'radar',
+            data: {
+                labels: ['CPU', 'Memory', 'Disk', 'Network'],
+                datasets: [{
+                    label: 'Current Usage',
+                    data: {{ system_performance_data|tojson }},
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    }
+}
+
+function refreshKPIs() {
+    // Show loading indicator
+    const refreshBtn = document.querySelector('button[onclick="refreshKPIs()"]');
+    const originalText = refreshBtn.innerHTML;
+    refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+    refreshBtn.disabled = true;
+
+    // Simulate refresh (in real implementation, this would make an AJAX call)
+    setTimeout(() => {
+        updateLastRefresh();
+        refreshBtn.innerHTML = originalText;
+        refreshBtn.disabled = false;
+
+        // Show success message
+        showToast('KPIs refreshed successfully', 'success');
+    }, 2000);
+}
+
+function updateLastRefresh() {
+    const now = new Date();
+    document.getElementById('lastUpdate').textContent = now.toLocaleString();
+}
+
+function showToast(message, type) {
+    // Simple toast implementation
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.remove();
+        }
+    }, 5000);
+}
+
+// Auto-refresh every 5 minutes
+setInterval(refreshKPIs, 300000);
+</script>
+
+<style>
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.progress-bar {
+    transition: width 0.5s;
+}
+
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+</style>
+{% endblock %}

@@ -65,7 +65,7 @@ load_dotenv()
 from db import get_engine, get_session, close_session
 
 
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService, IndicatorOfCompromise, IoCAnalysis, DetectionRule, OpenCTIConnector, OpenCTIIntegration, MonitoringConfiguration, RetentionConfig, RiskArchive, AuditArchive, IncidentArchive, EthicalDecision, ComplianceObligation, ComplianceRiskAssessment, ComplianceIncident, ComplianceFramework
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService, IndicatorOfCompromise, IoCAnalysis, DetectionRule, OpenCTIConnector, OpenCTIIntegration, MonitoringConfiguration, RetentionConfig, RiskArchive, AuditArchive, IncidentArchive
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -800,338 +800,6 @@ def collect_forensics_data():
     return report
 
 
-def generate_compliance_status_data(db, period="current"):
-    """
-    Generate comprehensive compliance status data for reporting.
-
-    Args:
-        db: Database session
-        period: Report period ("current", "quarterly", "annual")
-
-    Returns:
-        dict: Structured compliance data for report generation
-    """
-    # Get compliance records
-    compliance_records = db.query(Compliance).all()
-
-    # Get risk-based compliance mapping
-    risk_compliance_mappings = db.query(RiskComplianceMapping).all()
-
-    # Calculate framework compliance scores
-    framework_scores = {}
-    for framework in ComplianceFramework:
-        framework_compliance = [c for c in compliance_records if c.framework == framework.value]
-        if framework_compliance:
-            avg_score = sum(c.get_effective_score() for c in framework_compliance) / len(framework_compliance)
-            compliant_count = sum(1 for c in framework_compliance if c.get_effective_score() >= 80)
-            total_count = len(framework_compliance)
-            framework_scores[framework.value] = {
-                "average_score": avg_score,
-                "compliant_controls": compliant_count,
-                "total_controls": total_count,
-                "compliance_percentage": (compliant_count / total_count) * 100 if total_count > 0 else 0
-            }
-
-    # Identify critical compliance gaps
-    critical_gaps = []
-    for compliance in compliance_records:
-        if compliance.get_effective_score() < 60:  # Critical threshold
-            critical_gaps.append({
-                "framework": compliance.framework,
-                "control": compliance.control,
-                "current_score": compliance.get_effective_score(),
-                "risk_level": "Critical" if compliance.get_effective_score() < 40 else "High"
-            })
-
-    # Risk-based compliance analysis
-    risk_compliance_analysis = []
-    for mapping in risk_compliance_mappings:
-        risk_compliance_analysis.append({
-            "risk_id": mapping.risk_id,
-            "requirement": mapping.requirement.requirement_id if mapping.requirement else "Unknown",
-            "framework": mapping.requirement.framework.value if mapping.requirement else "Unknown",
-            "impact_level": mapping.impact_level,
-            "compliance_status": "Compliant" if mapping.requirement and any(
-                c.framework == mapping.requirement.framework.value and c.control == mapping.requirement.title and c.get_effective_score() >= 80
-                for c in compliance_records
-            ) else "Non-Compliant"
-        })
-
-    return {
-        "framework_scores": framework_scores,
-        "critical_gaps": critical_gaps,
-        "risk_compliance_analysis": risk_compliance_analysis,
-        "total_compliance_records": len(compliance_records),
-        "overall_compliance_score": sum(f["average_score"] for f in framework_scores.values()) / len(framework_scores) if framework_scores else 0,
-        "generated_at": datetime.now(),
-        "report_period": period
-    }
-
-
-def generate_compliance_html_report(compliance_data, include_recommendations=True):
-    """
-    Generate HTML formatted compliance status report.
-
-    Args:
-        compliance_data: Structured compliance data
-        include_recommendations: Whether to include recommendations section
-
-    Returns:
-        dict: Template variables for HTML report
-    """
-    # Calculate key metrics
-    overall_score = compliance_data["overall_compliance_score"]
-    critical_gaps_count = len([g for g in compliance_data["critical_gaps"] if g["risk_level"] == "Critical"])
-    high_gaps_count = len([g for g in compliance_data["critical_gaps"] if g["risk_level"] == "High"])
-
-    # Generate executive summary
-    executive_summary = {
-        "overall_compliance_score": overall_score,
-        "compliance_rating": "Excellent" if overall_score >= 90 else "Good" if overall_score >= 80 else "Needs Improvement" if overall_score >= 70 else "Critical Attention Required",
-        "critical_gaps": critical_gaps_count,
-        "high_priority_gaps": high_gaps_count,
-        "frameworks_assessed": len(compliance_data["framework_scores"]),
-        "total_controls": sum(f["total_controls"] for f in compliance_data["framework_scores"].values())
-    }
-
-    # Generate recommendations if requested
-    recommendations = []
-    if include_recommendations:
-        if overall_score < 80:
-            recommendations.append({
-                "priority": "High",
-                "category": "Immediate Action Required",
-                "description": "Overall compliance score below acceptable threshold",
-                "action_items": [
-                    "Conduct immediate gap analysis for critical controls",
-                    "Implement remediation plans for high-risk compliance gaps",
-                    "Schedule urgent management review meeting"
-                ]
-            })
-
-        if critical_gaps_count > 0:
-            recommendations.append({
-                "priority": "Critical",
-                "category": "Critical Compliance Gaps",
-                "description": f"Address {critical_gaps_count} critical compliance gaps immediately",
-                "action_items": [
-                    "Prioritize remediation of critical control failures",
-                    "Allocate additional resources for compliance remediation",
-                    "Establish accountability for critical gap resolution"
-                ]
-            })
-
-        if len(compliance_data["framework_scores"]) < 3:
-            recommendations.append({
-                "priority": "Medium",
-                "category": "Framework Coverage",
-                "description": "Limited compliance framework coverage detected",
-                "action_items": [
-                    "Expand compliance monitoring to additional frameworks",
-                    "Conduct framework gap analysis",
-                    "Implement additional compliance controls as needed"
-                ]
-            })
-
-    return {
-        "executive_summary": executive_summary,
-        "framework_scores": compliance_data["framework_scores"],
-        "critical_gaps": compliance_data["critical_gaps"],
-        "risk_compliance_analysis": compliance_data["risk_compliance_analysis"],
-        "recommendations": recommendations,
-        "generated_at": compliance_data["generated_at"],
-        "report_period": compliance_data["report_period"],
-        "include_recommendations": include_recommendations,
-        "overall_compliance_score": overall_score,
-        "total_compliance_records": compliance_data["total_compliance_records"]
-    }
-
-
-def generate_compliance_pdf_report(compliance_data, include_recommendations=True):
-    """
-    Generate PDF formatted compliance status report.
-
-    Args:
-        compliance_data: Structured compliance data
-        include_recommendations: Whether to include recommendations section
-
-    Returns:
-        bytes: PDF report content
-    """
-    try:
-        from reportlab.lib import colors
-        from reportlab.lib.pagesizes import letter
-        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-        from io import BytesIO
-
-        buffer = BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=letter)
-        styles = getSampleStyleSheet()
-        story = []
-
-        # Title
-        title_style = ParagraphStyle(
-            'CustomTitle',
-            parent=styles['Heading1'],
-            fontSize=16,
-            spaceAfter=30,
-            alignment=1  # Center alignment
-        )
-        story.append(Paragraph("Compliance Status Report", title_style))
-        story.append(Spacer(1, 12))
-
-        # Generation info
-        story.append(Paragraph(f"Generated: {compliance_data['generated_at'].strftime('%B %d, %Y at %I:%M %p')}", styles['Normal']))
-        story.append(Paragraph(f"Report Period: {compliance_data['report_period'].title()}", styles['Normal']))
-        story.append(Spacer(1, 20))
-
-        # Executive Summary
-        story.append(Paragraph("Executive Summary", styles['Heading2']))
-        story.append(Spacer(1, 12))
-
-        overall_score = compliance_data['overall_compliance_score']
-        critical_gaps = len([g for g in compliance_data['critical_gaps'] if g['risk_level'] == 'Critical'])
-        high_gaps = len([g for g in compliance_data['critical_gaps'] if g['risk_level'] == 'High'])
-
-        summary_data = [
-            ["Overall Compliance Score", f"{overall_score:.1f}%"],
-            ["Compliance Rating", "Excellent" if overall_score >= 90 else "Good" if overall_score >= 80 else "Needs Improvement" if overall_score >= 70 else "Critical Attention Required"],
-            ["Critical Gaps", str(critical_gaps)],
-            ["High Priority Gaps", str(high_gaps)],
-            ["Frameworks Assessed", str(len(compliance_data['framework_scores']))],
-            ["Total Controls", str(sum(f['total_controls'] for f in compliance_data['framework_scores'].values()))]
-        ]
-
-        summary_table = Table(summary_data, colWidths=[200, 200])
-        summary_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 12),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black)
-        ]))
-        story.append(summary_table)
-        story.append(Spacer(1, 20))
-
-        # Framework Compliance Scores
-        story.append(Paragraph("Framework Compliance Scores", styles['Heading2']))
-        story.append(Spacer(1, 12))
-
-        framework_data = [["Framework", "Average Score", "Compliant Controls", "Total Controls", "Compliance %"]]
-        for framework, scores in compliance_data["framework_scores"].items():
-            framework_data.append([
-                framework,
-                f"{scores['average_score']:.1f}%",
-                str(scores['compliant_controls']),
-                str(scores['total_controls']),
-                f"{scores['compliance_percentage']:.1f}%"
-            ])
-
-        framework_table = Table(framework_data, colWidths=[100, 80, 100, 80, 80])
-        framework_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 10),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black)
-        ]))
-        story.append(framework_table)
-        story.append(Spacer(1, 20))
-
-        # Critical Compliance Gaps
-        if compliance_data['critical_gaps']:
-            story.append(Paragraph("Critical Compliance Gaps", styles['Heading2']))
-            story.append(Spacer(1, 12))
-
-            gap_data = [["Framework", "Control", "Current Score", "Risk Level"]]
-            for gap in compliance_data['critical_gaps']:
-                gap_data.append([
-                    gap['framework'],
-                    gap['control'][:30] + "..." if len(gap['control']) > 30 else gap['control'],
-                    f"{gap['current_score']:.1f}%",
-                    gap['risk_level']
-                ])
-
-            gap_table = Table(gap_data, colWidths=[80, 150, 80, 80])
-            gap_table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, 0), 9),
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                ('GRID', (0, 0), (-1, -1), 1, colors.black)
-            ]))
-            story.append(gap_table)
-            story.append(Spacer(1, 20))
-
-        # Recommendations
-        if include_recommendations:
-            story.append(Paragraph("Recommendations & Action Items", styles['Heading2']))
-            story.append(Spacer(1, 12))
-
-            recommendations = []
-            if overall_score < 80:
-                recommendations.append("• Immediate action required to improve overall compliance score")
-            if critical_gaps > 0:
-                recommendations.append(f"• Address {critical_gaps} critical compliance gaps immediately")
-            if len(compliance_data['framework_scores']) < 3:
-                recommendations.append("• Expand compliance monitoring to additional frameworks")
-
-            if recommendations:
-                for rec in recommendations:
-                    story.append(Paragraph(rec, styles['Normal']))
-                    story.append(Spacer(1, 6))
-            else:
-                story.append(Paragraph("• No critical recommendations at this time", styles['Normal']))
-
-        # Build PDF
-        doc.build(story)
-        pdf_content = buffer.getvalue()
-        buffer.close()
-        return pdf_content
-
-    except ImportError:
-        # Fallback to text-based report if ReportLab not available
-        report_content = f"""COMPLIANCE STATUS REPORT
-Generated: {compliance_data['generated_at']}
-
-EXECUTIVE SUMMARY
-=================
-Overall Compliance Score: {compliance_data['overall_compliance_score']:.1f}%
-Critical Gaps: {len([g for g in compliance_data['critical_gaps'] if g['risk_level'] == 'Critical'])}
-High Priority Gaps: {len([g for g in compliance_data['critical_gaps'] if g['risk_level'] == 'High'])}
-
-FRAMEWORK COMPLIANCE SCORES
-============================
-"""
-
-        for framework, scores in compliance_data["framework_scores"].items():
-            report_content += f"""
-{framework}:
-  Average Score: {scores['average_score']:.1f}%
-  Compliant Controls: {scores['compliant_controls']}/{scores['total_controls']}
-  Compliance Percentage: {scores['compliance_percentage']:.1f}%
-"""
-
-        if include_recommendations:
-            report_content += "\n\nRECOMMENDATIONS\n===============\n"
-            if compliance_data['overall_compliance_score'] < 80:
-                report_content += "- Immediate action required to improve overall compliance score\n"
-            if len(compliance_data['critical_gaps']) > 0:
-                report_content += f"- Address {len(compliance_data['critical_gaps'])} critical compliance gaps\n"
-
-        return report_content.encode('utf-8')
-
-
 def create_app():
     """
     Flask application factory function implementing secure configuration and Zero Trust Architecture.
@@ -1171,8 +839,8 @@ def create_app():
         MAX_CONTENT_LENGTH=10*1024*1024  # 10 MB upload cap
     )
     # Inactivity timeout configuration
-    INACTIVITY_TIMEOUT = int(os.getenv("INACTIVITY_TIMEOUT", 240000))  # 4 minutes default for blur
-    WARNING_TIMEOUT = int(os.getenv("WARNING_TIMEOUT", 60000))  # 1 minute for logout after warning
+    INACTIVITY_TIMEOUT = int(os.getenv("INACTIVITY_TIMEOUT", 120000))  # 2 minute default for blur
+    WARNING_TIMEOUT = int(os.getenv("WARNING_TIMEOUT", 20000))  # 20 seconds for logout after warning
     
     # Make these available to templates/JavaScript
     app.config['INACTIVITY_TIMEOUT'] = INACTIVITY_TIMEOUT
@@ -1186,9 +854,6 @@ def create_app():
 
     # Enable Jinja2 debug extension for template debugging
     app.jinja_env.add_extension('jinja2.ext.debug')
-
-    # Add custom Jinja2 filters
-    app.jinja_env.filters['from_json'] = json.loads
 
     # Ensure instance and uploads folders exist
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
@@ -2162,7 +1827,7 @@ def create_app():
         Serve documentation files securely.
 
         Provides access to documentation files in the docs/ directory
-        for authenticated users. Automatically tries .md extension first for requests without extension.
+        for authenticated users.
 
         Args:
             filename (str): Requested documentation filename from URL path
@@ -2176,31 +1841,11 @@ def create_app():
             File response for viewing documentation
 
         Note:
-            Prioritizes .md files for requests without extension
             Allows access to .md files and other documentation
         """
         # Output encoding to avoid path traversal
         filename = secure_filename(filename)
-
-        # Try with .md extension first if no extension provided
-        if not os.path.splitext(filename)[1]:  # No extension
-            try:
-                return send_from_directory("docs", filename + '.md', as_attachment=False)
-            except:
-                pass
-
-        # Try the filename as-is
-        try:
-            return send_from_directory("docs", filename, as_attachment=False)
-        except:
-            # If not found and no extension, try with .md extension
-            if not os.path.splitext(filename)[1]:  # No extension
-                try:
-                    return send_from_directory("docs", filename + '.md', as_attachment=False)
-                except:
-                    pass
-            # Re-raise the original exception if neither works
-            return send_from_directory("docs", filename, as_attachment=False)
+        return send_from_directory("docs", filename, as_attachment=False)
 
   
     # --- Risk Routes ---
@@ -5177,122 +4822,119 @@ def create_app():
     @app.route("/monitoring_setup", methods=["GET", "POST"])
     @login_required
     def monitoring_setup():
-        """
-        Configure security monitoring settings and thresholds.
-
-        Allows administrators to set up monitoring configurations,
-        alert thresholds, and system monitoring parameters.
-        """
+        """Security monitoring setup with use case demonstration"""
         user = current_user()
-        db = get_session()
 
         if request.method == "POST":
+            # Handle monitoring configuration form submission
+            monitoring_name = request.form.get("monitoring_name")
+            system_metrics = request.form.getlist("system_metrics")
+            log_sources = request.form.getlist("log_sources")
+            retention_period = request.form.get("retention_period")
+
+            # Alert thresholds
+            cpu_threshold = request.form.get("cpu_threshold")
+            memory_threshold = request.form.get("memory_threshold")
+            disk_threshold = request.form.get("disk_threshold")
+            network_threshold = request.form.get("network_threshold")
+
+            # Validate required fields
+            if not monitoring_name or not system_metrics or not log_sources or not retention_period:
+                flash("All fields are required.", "danger")
+                return redirect(url_for("monitoring_setup"))
+
+            # Create monitoring configuration in database
+            config = MonitoringConfiguration(
+                name=monitoring_name,
+                retention_period_days=int(retention_period),
+                cpu_enabled="cpu" in system_metrics,
+                memory_enabled="memory" in system_metrics,
+                disk_enabled="disk" in system_metrics,
+                network_enabled="network" in system_metrics,
+                system_logs_enabled="system_logs" in log_sources,
+                application_logs_enabled="application_logs" in log_sources,
+                security_events_enabled="security_events" in log_sources,
+                cpu_threshold=int(cpu_threshold) if cpu_threshold else 90,
+                memory_threshold=int(memory_threshold) if memory_threshold else 85,
+                disk_threshold=int(disk_threshold) if disk_threshold else 95,
+                network_threshold=int(network_threshold) if network_threshold else 1000,
+                created_by=user.id
+            )
+
+            db.add(config)
+            db.commit()
+
+            # Log the configuration creation
+            forensics_logger.info(f"User {user.email} created monitoring configuration: {monitoring_name}")
+            log_audit_event(user, "MONITORING_CONFIG_CREATED", "ADMINISTRATION",
+                            f"Created monitoring configuration '{monitoring_name}'", "/monitoring_setup", True)
+
+            flash(f"Monitoring configuration '{monitoring_name}' created successfully!", "success")
+            return redirect(url_for("monitoring_setup"))
+
+        # GET request - display monitoring dashboard
+        db = get_session()
+
+        # Get saved monitoring configurations
+        configurations = db.query(MonitoringConfiguration).filter(MonitoringConfiguration.is_active == True).all()
+
+        # Get real system monitoring data
+        cpu_percent = psutil.cpu_percent(interval=1)
+        memory = psutil.virtual_memory()
+        disk = psutil.disk_usage('/')
+        network = psutil.net_io_counters()
+
+        # Get running processes for security monitoring
+        processes = []
+        for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
             try:
-                # Create monitoring configuration
-                monitoring_name = request.form.get('monitoring_name')
-                retention_period = int(request.form.get('retention_period', 90))
+                processes.append({
+                    'pid': proc.info['pid'],
+                    'name': proc.info['name'],
+                    'cpu_percent': proc.info['cpu_percent'],
+                    'memory_percent': proc.info['memory_percent']
+                })
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                continue
+        # Sort by CPU usage and take top 10
+        processes = sorted(processes, key=lambda x: x['cpu_percent'], reverse=True)[:10]
 
-                # System metrics
-                system_metrics = request.form.getlist('system_metrics')
-
-                # Log sources
-                log_sources = request.form.getlist('log_sources')
-
-                # Alert thresholds
-                cpu_threshold = float(request.form.get('cpu_threshold', 90))
-                memory_threshold = float(request.form.get('memory_threshold', 85))
-                disk_threshold = float(request.form.get('disk_threshold', 95))
-                network_threshold = float(request.form.get('network_threshold', 1000))
-
-                # Create monitoring configuration
-                config = MonitoringConfiguration(
-                    name=monitoring_name,
-                    retention_period_days=retention_period,
-                    cpu_enabled='cpu' in system_metrics,
-                    memory_enabled='memory' in system_metrics,
-                    disk_enabled='disk' in system_metrics,
-                    network_enabled='network' in system_metrics,
-                    system_logs_enabled='system_logs' in log_sources,
-                    application_logs_enabled='application_logs' in log_sources,
-                    security_events_enabled='security_events' in log_sources,
-                    cpu_threshold=cpu_threshold,
-                    memory_threshold=memory_threshold,
-                    disk_threshold=disk_threshold,
-                    network_threshold=network_threshold,
-                    creator_id=user.id
-                )
-
-                db.add(config)
-                db.commit()
-
-                log_audit_event(user, "MONITORING_CONFIG_CREATED", "MONITORING",
-                               f"Created monitoring configuration: {monitoring_name}", "/monitoring_setup", True)
-
-                flash(f"Monitoring configuration '{monitoring_name}' created successfully!", "success")
-
-            except Exception as e:
-                db.rollback()
-                flash(f"Error creating monitoring configuration: {str(e)}", "error")
-
-            return redirect(url_for('monitoring_setup'))
-
-        # GET request - show monitoring setup form
+        # Recent security events from logs
+        security_events = []
         try:
-            import psutil
+            with open("logs/forensics.log", "r") as f:
+                lines = f.readlines()[-20:]  # Get more events
+                security_events = [line.strip() for line in lines]
+        except FileNotFoundError:
+            security_events = ["No security logs available"]
 
-            # Get current system metrics for display
-            cpu_percent = psutil.cpu_percent(interval=1)
-            memory = psutil.virtual_memory()
-            disk = psutil.disk_usage('/')
-            network = psutil.net_io_counters()
+        # Security monitoring alerts (simulated based on system state)
+        alerts = []
+        if cpu_percent > 80:
+            alerts.append({"level": "warning", "message": f"High CPU usage detected: {cpu_percent:.1f}%"})
+        if memory.percent > 85:
+            alerts.append({"level": "critical", "message": f"High memory usage: {memory.percent:.1f}%"})
+        if disk.percent > 90:
+            alerts.append({"level": "warning", "message": f"Low disk space: {disk.percent:.1f}% available"})
 
-            # Get existing configurations
-            configurations = db.query(MonitoringConfiguration).order_by(
-                MonitoringConfiguration.created_at.desc()
-            ).all()
+        # Network security monitoring
+        network_stats = {
+            "bytes_sent": network.bytes_sent,
+            "bytes_recv": network.bytes_recv,
+            "packets_sent": network.packets_sent,
+            "packets_recv": network.packets_recv
+        }
 
-            # Get recent alerts (simulated)
-            alerts = []
-
-            # Get recent security events
-            security_events = [
-                "INFO: System monitoring initialized",
-                "INFO: CPU usage within normal parameters",
-                "INFO: Memory usage stable"
-            ]
-
-            # Get processes for monitoring
-            processes = []
-            for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
-                try:
-                    processes.append({
-                        'pid': proc.info['pid'],
-                        'name': proc.info['name'][:25],
-                        'cpu_percent': proc.info['cpu_percent'],
-                        'memory_percent': proc.info['memory_percent']
-                    })
-                except (psutil.NoSuchProcess, psutil.AccessDenied):
-                    continue
-
-            processes.sort(key=lambda x: x['cpu_percent'], reverse=True)
-            processes = processes[:8]
-
-            close_session(db)
-
-            return render_template("monitoring_setup.html",
-                                  cpu_percent=cpu_percent,
-                                  memory=memory,
-                                  disk=disk,
-                                  network=network,
-                                  configurations=configurations,
-                                  alerts=alerts,
-                                  security_events=security_events,
-                                  processes=processes)
-
-        except ImportError:
-            flash("System monitoring requires 'psutil' library. Please install it.", "warning")
-            close_session(db)
-            return redirect(url_for('admin_dashboard'))
+        close_session(db)
+        return render_template("monitoring_setup.html",
+                               configurations=configurations,
+                               cpu_percent=cpu_percent,
+                               memory=memory,
+                               disk=disk,
+                               network=network_stats,
+                               processes=processes,
+                               security_events=security_events,
+                               alerts=alerts)
 
     @app.route("/detection_rules", methods=["GET", "POST"])
     @login_required
@@ -5700,211 +5342,482 @@ def create_app():
         close_session(db)
         return status
 
-    # --- New routes from app2.py ---
+   ######
 
-    @app.route("/compliance_status_report", methods=["GET", "POST"])
-    @login_required
-    def compliance_status_report():
-        """
-        Generate comprehensive compliance status report suitable for management.
 
-        Produces professional compliance status report including:
-        - Executive summary with key findings
-        - Compliance status across all frameworks
-        - Risk-based compliance analysis
-        - Recommendations and action items
-        - Professional formatting for management distribution
 
-        Supports multiple output formats and stakeholder-specific views.
-        """
-        user = current_user()
-        db = get_session()
 
-        if request.method == "POST":
-            # Generate compliance status report
-            report_format = request.form.get("format", "html")
-            report_period = request.form.get("period", "current")
-            include_recommendations = request.form.get("include_recommendations", "true") == "true"
+def generate_compliance_status_data(db, period="current"):
+    """
+    Generate comprehensive compliance status data for reporting.
 
-            # Collect compliance data
-            compliance_data = generate_compliance_status_data(db, report_period)
+    Args:
+        db: Database session
+        period: Report period ("current", "quarterly", "annual")
 
-            if report_format == "pdf":
-                # Generate PDF report
-                report_content = generate_compliance_pdf_report(compliance_data, include_recommendations)
-                report_filename = f"compliance_status_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+    Returns:
+        dict: Structured compliance data for report generation
+    """
+    # Get compliance records
+    compliance_records = db.query(Compliance).all()
 
-                # Save to reports directory
-                report_path = os.path.join("reports", report_filename)
-                with open(report_path, "wb") as f:
-                    f.write(report_content)
+    # Get risk-based compliance mapping
+    risk_compliance_mappings = db.query(RiskComplianceMapping).all()
 
-                # Log report generation
-                log_audit_event(user, "COMPLIANCE_REPORT_GENERATED", "COMPLIANCE",
-                              f"Generated compliance status report: {report_filename}", "/compliance_status_report", True)
-
-                flash(f"Compliance status report generated: {report_filename}", "success")
-                return send_from_directory("reports", report_filename, as_attachment=True)
-
-            else:
-                # Generate HTML report
-                report_data = generate_compliance_html_report(compliance_data, include_recommendations)
-
-                # Log report generation
-                log_audit_event(user, "COMPLIANCE_REPORT_GENERATED", "COMPLIANCE",
-                              "Generated HTML compliance status report", "/compliance_status_report", True)
-
-                return render_template("compliance_status_report.html", **report_data)
-
-        # GET request - show report generation form
-        # Get available compliance frameworks
-        framework_list = [f.value for f in ComplianceFramework]
-
-        close_session(db)
-        return render_template("compliance_status_report_form.html",
-                              frameworks=framework_list,
-                              current_date=datetime.now().strftime('%Y-%m-%d'))
-
-    @app.route("/ethical_decision_support", methods=["GET", "POST"])
-    @login_required
-    def ethical_decision_support():
-        """
-        Ethical decision support tool for compliance scenarios.
-
-        Provides structured ethical analysis framework with stakeholder impact
-        assessment, alternative evaluation, and decision documentation.
-        """
-        user = current_user()
-        db = get_session()
-
-        if request.method == "POST":
-            action = request.form.get('action')
-
-            if action == "create_decision":
-                try:
-                    # Create ethical decision record
-                    title = request.form.get('title')
-                    description = request.form.get('description')
-                    scenario_type = request.form.get('scenario_type')
-
-                    # Ethical analysis
-                    principles = request.form.getlist('ethical_principles')
-                    stakeholder_analysis = request.form.get('stakeholder_analysis')
-                    alternatives = request.form.get('alternatives')
-
-                    # Decision details
-                    decision = request.form.get('decision')
-                    rationale = request.form.get('rationale')
-                    ethical_risk = request.form.get('ethical_risk_level', 'medium')
-
-                    # Implementation
-                    implementation_plan = request.form.get('implementation_plan')
-                    monitoring = request.form.get('monitoring_requirements')
-
-                    ethical_decision = EthicalDecision(
-                        title=title,
-                        description=description,
-                        scenario_type=scenario_type,
-                        ethical_principles_applied=json.dumps(principles),
-                        stakeholder_impact_analysis=stakeholder_analysis,
-                        alternative_options=alternatives,
-                        decision_made=decision,
-                        rationale=rationale,
-                        ethical_risk_level=ethical_risk,
-                        implementation_plan=implementation_plan,
-                        monitoring_requirements=monitoring,
-                        decided_by=user.id
-                    )
-
-                    db.add(ethical_decision)
-                    db.commit()
-
-                    log_audit_event(user, "ETHICAL_DECISION_CREATED", "ETHICS",
-                                  f"Created ethical decision: {title}", "/ethical_decision_support", True)
-
-                    flash(f"Ethical decision '{title}' documented successfully!", "success")
-
-                except Exception as e:
-                    db.rollback()
-                    flash(f"Error creating ethical decision: {str(e)}", "error")
-
-            elif action == "update_decision":
-                try:
-                    decision_id = int(request.form.get('decision_id'))
-                    ethical_decision = db.query(EthicalDecision).filter_by(id=decision_id).first()
-
-                    if ethical_decision:
-                        # Update decision details
-                        ethical_decision.title = request.form.get('title')
-                        ethical_decision.description = request.form.get('description')
-                        ethical_decision.scenario_type = request.form.get('scenario_type')
-                        ethical_decision.decision_made = request.form.get('decision')
-                        ethical_decision.rationale = request.form.get('rationale')
-                        ethical_decision.ethical_risk_level = request.form.get('ethical_risk_level', 'medium')
-                        ethical_decision.implementation_plan = request.form.get('implementation_plan')
-                        ethical_decision.monitoring_requirements = request.form.get('monitoring_requirements')
-
-                        db.commit()
-
-                        log_audit_event(user, "ETHICAL_DECISION_UPDATED", "ETHICS",
-                                      f"Updated ethical decision: {ethical_decision.title}", "/ethical_decision_support", True)
-
-                        flash(f"Ethical decision updated successfully!", "success")
-                    else:
-                        flash("Ethical decision not found.", "error")
-
-                except Exception as e:
-                    db.rollback()
-                    flash(f"Error updating ethical decision: {str(e)}", "error")
-
-            return redirect(url_for('ethical_decision_support'))
-
-        # GET request - show ethical decision support interface
-        try:
-            # Get existing ethical decisions
-            ethical_decisions = db.query(EthicalDecision).order_by(
-                EthicalDecision.created_at.desc()
-            ).all()
-
-            # Get ethical scenario templates
-            scenario_templates = {
-                "data_privacy": {
-                    "title": "Data Privacy vs Business Need",
-                    "description": "Balancing data collection needs with individual privacy rights",
-                    "principles": ["Privacy", "Transparency", "Data Minimization"]
-                },
-                "security_tradeoff": {
-                    "title": "Security vs User Experience",
-                    "description": "Implementing security measures that may impact usability",
-                    "principles": ["Security", "Usability", "Risk Mitigation"]
-                },
-                "vendor_risk": {
-                    "title": "Cost vs Ethical Vendor Practices",
-                    "description": "Selecting vendors based on cost vs ethical considerations",
-                    "principles": ["Fair Labor", "Environmental Responsibility", "Corporate Ethics"]
-                },
-                "employee_monitoring": {
-                    "title": "Productivity vs Employee Privacy",
-                    "description": "Implementing monitoring tools for performance vs privacy concerns",
-                    "principles": ["Privacy", "Trust", "Productivity"]
-                },
-                "ai_decision_making": {
-                    "title": "AI Efficiency vs Algorithmic Fairness",
-                    "description": "Using AI for decisions while ensuring fairness and transparency",
-                    "principles": ["Fairness", "Transparency", "Accountability"]
-                }
+    # Calculate framework compliance scores
+    framework_scores = {}
+    for framework in ComplianceFramework:
+        framework_compliance = [c for c in compliance_records if c.framework == framework.value]
+        if framework_compliance:
+            avg_score = sum(c.get_effective_score() for c in framework_compliance) / len(framework_compliance)
+            compliant_count = sum(1 for c in framework_compliance if c.get_effective_score() >= 80)
+            total_count = len(framework_compliance)
+            framework_scores[framework.value] = {
+                "average_score": avg_score,
+                "compliant_controls": compliant_count,
+                "total_controls": total_count,
+                "compliance_percentage": (compliant_count / total_count) * 100 if total_count > 0 else 0
             }
 
-            close_session(db)
+    # Identify critical compliance gaps
+    critical_gaps = []
+    for compliance in compliance_records:
+        if compliance.get_effective_score() < 60:  # Critical threshold
+            critical_gaps.append({
+                "framework": compliance.framework,
+                "control": compliance.control,
+                "current_score": compliance.get_effective_score(),
+                "risk_level": "Critical" if compliance.get_effective_score() < 40 else "High"
+            })
 
-            return render_template("ethical_decision_support.html",
-                                  ethical_decisions=ethical_decisions,
-                                  scenario_templates=scenario_templates)
+    # Risk-based compliance analysis
+    risk_compliance_analysis = []
+    for mapping in risk_compliance_mappings:
+        risk_compliance_analysis.append({
+            "risk_id": mapping.risk_id,
+            "requirement": mapping.requirement.requirement_id if mapping.requirement else "Unknown",
+            "framework": mapping.requirement.framework.value if mapping.requirement else "Unknown",
+            "impact_level": mapping.impact_level,
+            "compliance_status": "Compliant" if mapping.requirement and any(
+                c.framework == mapping.requirement.framework.value and c.control == mapping.requirement.title and c.get_effective_score() >= 80
+                for c in compliance_records
+            ) else "Non-Compliant"
+        })
 
-        except Exception as e:
-            close_session(db)
-            flash(f"Error loading ethical decision support: {str(e)}", "error")
-            return redirect(url_for('admin_dashboard'))
+    return {
+        "framework_scores": framework_scores,
+        "critical_gaps": critical_gaps,
+        "risk_compliance_analysis": risk_compliance_analysis,
+        "total_compliance_records": len(compliance_records),
+        "overall_compliance_score": sum(f["average_score"] for f in framework_scores.values()) / len(framework_scores) if framework_scores else 0,
+        "generated_at": datetime.now(),
+        "report_period": period
+    }
+
+
+def generate_compliance_html_report(compliance_data, include_recommendations=True):
+    """
+    Generate HTML formatted compliance status report.
+
+    Args:
+        compliance_data: Structured compliance data
+        include_recommendations: Whether to include recommendations section
+
+    Returns:
+        dict: Template variables for HTML report
+    """
+    # Calculate key metrics
+    overall_score = compliance_data["overall_compliance_score"]
+    critical_gaps_count = len([g for g in compliance_data["critical_gaps"] if g["risk_level"] == "Critical"])
+    high_gaps_count = len([g for g in compliance_data["critical_gaps"] if g["risk_level"] == "High"])
+
+    # Generate executive summary
+    executive_summary = {
+        "overall_compliance_score": overall_score,
+        "compliance_rating": "Excellent" if overall_score >= 90 else "Good" if overall_score >= 80 else "Needs Improvement" if overall_score >= 70 else "Critical Attention Required",
+        "critical_gaps": critical_gaps_count,
+        "high_priority_gaps": high_gaps_count,
+        "frameworks_assessed": len(compliance_data["framework_scores"]),
+        "total_controls": sum(f["total_controls"] for f in compliance_data["framework_scores"].values())
+    }
+
+    # Generate recommendations if requested
+    recommendations = []
+    if include_recommendations:
+        if overall_score < 80:
+            recommendations.append({
+                "priority": "High",
+                "category": "Immediate Action Required",
+                "description": "Overall compliance score below acceptable threshold",
+                "action_items": [
+                    "Conduct immediate gap analysis for critical controls",
+                    "Implement remediation plans for high-risk compliance gaps",
+                    "Schedule urgent management review meeting"
+                ]
+            })
+
+        if critical_gaps_count > 0:
+            recommendations.append({
+                "priority": "Critical",
+                "category": "Critical Compliance Gaps",
+                "description": f"Address {critical_gaps_count} critical compliance gaps immediately",
+                "action_items": [
+                    "Prioritize remediation of critical control failures",
+                    "Allocate additional resources for compliance remediation",
+                    "Establish accountability for critical gap resolution"
+                ]
+            })
+
+        if len(compliance_data["framework_scores"]) < 3:
+            recommendations.append({
+                "priority": "Medium",
+                "category": "Framework Coverage",
+                "description": "Limited compliance framework coverage detected",
+                "action_items": [
+                    "Expand compliance monitoring to additional frameworks",
+                    "Conduct framework gap analysis",
+                    "Implement additional compliance controls as needed"
+                ]
+            })
+
+    return {
+        "executive_summary": executive_summary,
+        "framework_scores": compliance_data["framework_scores"],
+        "critical_gaps": compliance_data["critical_gaps"],
+        "risk_compliance_analysis": compliance_data["risk_compliance_analysis"],
+        "recommendations": recommendations,
+        "generated_at": compliance_data["generated_at"],
+        "report_period": compliance_data["report_period"],
+        "include_recommendations": include_recommendations
+    }
+
+
+def generate_compliance_pdf_report(compliance_data, include_recommendations=True):
+    """
+    Generate PDF formatted compliance status report.
+
+    Args:
+        compliance_data: Structured compliance data
+        include_recommendations: Whether to include recommendations section
+
+    Returns:
+        bytes: PDF report content
+    """
+    try:
+        from reportlab.lib import colors
+        from reportlab.lib.pagesizes import letter
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+        from io import BytesIO
+
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=letter)
+        styles = getSampleStyleSheet()
+        story = []
+
+        # Title
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Heading1'],
+            fontSize=16,
+            spaceAfter=30,
+            alignment=1  # Center alignment
+        )
+        story.append(Paragraph("Compliance Status Report", title_style))
+        story.append(Spacer(1, 12))
+
+        # Generation info
+        story.append(Paragraph(f"Generated: {compliance_data['generated_at'].strftime('%B %d, %Y at %I:%M %p')}", styles['Normal']))
+        story.append(Paragraph(f"Report Period: {compliance_data['report_period'].title()}", styles['Normal']))
+        story.append(Spacer(1, 20))
+
+        # Executive Summary
+        story.append(Paragraph("Executive Summary", styles['Heading2']))
+        story.append(Spacer(1, 12))
+
+        overall_score = compliance_data['overall_compliance_score']
+        critical_gaps = len([g for g in compliance_data['critical_gaps'] if g['risk_level'] == 'Critical'])
+        high_gaps = len([g for g in compliance_data['critical_gaps'] if g['risk_level'] == 'High'])
+
+        summary_data = [
+            ["Overall Compliance Score", f"{overall_score:.1f}%"],
+            ["Compliance Rating", "Excellent" if overall_score >= 90 else "Good" if overall_score >= 80 else "Needs Improvement" if overall_score >= 70 else "Critical Attention Required"],
+            ["Critical Gaps", str(critical_gaps)],
+            ["High Priority Gaps", str(high_gaps)],
+            ["Frameworks Assessed", str(len(compliance_data['framework_scores']))],
+            ["Total Controls", str(sum(f['total_controls'] for f in compliance_data['framework_scores'].values()))]
+        ]
+
+        summary_table = Table(summary_data, colWidths=[200, 200])
+        summary_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 12),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
+        story.append(summary_table)
+        story.append(Spacer(1, 20))
+
+        # Framework Compliance Scores
+        story.append(Paragraph("Framework Compliance Scores", styles['Heading2']))
+        story.append(Spacer(1, 12))
+
+        framework_data = [["Framework", "Average Score", "Compliant Controls", "Total Controls", "Compliance %"]]
+        for framework, scores in compliance_data["framework_scores"].items():
+            framework_data.append([
+                framework,
+                f"{scores['average_score']:.1f}%",
+                str(scores['compliant_controls']),
+                str(scores['total_controls']),
+                f"{scores['compliance_percentage']:.1f}%"
+            ])
+
+        framework_table = Table(framework_data, colWidths=[100, 80, 100, 80, 80])
+        framework_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
+        story.append(framework_table)
+        story.append(Spacer(1, 20))
+
+        # Critical Compliance Gaps
+        if compliance_data['critical_gaps']:
+            story.append(Paragraph("Critical Compliance Gaps", styles['Heading2']))
+            story.append(Spacer(1, 12))
+
+            gap_data = [["Framework", "Control", "Current Score", "Risk Level"]]
+            for gap in compliance_data['critical_gaps']:
+                gap_data.append([
+                    gap['framework'],
+                    gap['control'][:30] + "..." if len(gap['control']) > 30 else gap['control'],
+                    f"{gap['current_score']:.1f}%",
+                    gap['risk_level']
+                ])
+
+            gap_table = Table(gap_data, colWidths=[80, 150, 80, 80])
+            gap_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 9),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black)
+            ]))
+            story.append(gap_table)
+            story.append(Spacer(1, 20))
+
+        # Recommendations
+        if include_recommendations:
+            story.append(Paragraph("Recommendations & Action Items", styles['Heading2']))
+            story.append(Spacer(1, 12))
+
+            recommendations = []
+            if overall_score < 80:
+                recommendations.append("• Immediate action required to improve overall compliance score")
+            if critical_gaps > 0:
+                recommendations.append(f"• Address {critical_gaps} critical compliance gaps immediately")
+            if len(compliance_data['framework_scores']) < 3:
+                recommendations.append("• Expand compliance monitoring to additional frameworks")
+
+            if recommendations:
+                for rec in recommendations:
+                    story.append(Paragraph(rec, styles['Normal']))
+                    story.append(Spacer(1, 6))
+            else:
+                story.append(Paragraph("• No critical recommendations at this time", styles['Normal']))
+
+        # Build PDF
+        doc.build(story)
+        pdf_content = buffer.getvalue()
+        buffer.close()
+        return pdf_content
+
+    except ImportError:
+        # Fallback to text-based report if ReportLab not available
+        report_content = f"""COMPLIANCE STATUS REPORT
+Generated: {compliance_data['generated_at']}
+
+EXECUTIVE SUMMARY
+=================
+Overall Compliance Score: {compliance_data['overall_compliance_score']:.1f}%
+Critical Gaps: {len([g for g in compliance_data['critical_gaps'] if g['risk_level'] == 'Critical'])}
+High Priority Gaps: {len([g for g in compliance_data['critical_gaps'] if g['risk_level'] == 'High'])}
+
+FRAMEWORK COMPLIANCE SCORES
+===========================
+"""
+
+        for framework, scores in compliance_data["framework_scores"].items():
+            report_content += f"""
+{framework}:
+  Average Score: {scores['average_score']:.1f}%
+  Compliant Controls: {scores['compliant_controls']}/{scores['total_controls']}
+  Compliance Percentage: {scores['compliance_percentage']:.1f}%
+"""
+
+        if include_recommendations:
+            report_content += "\n\nRECOMMENDATIONS\n===============\n"
+            if compliance_data['overall_compliance_score'] < 80:
+                report_content += "- Immediate action required to improve overall compliance score\n"
+            if len(compliance_data['critical_gaps']) > 0:
+                report_content += f"- Address {len(compliance_data['critical_gaps'])} critical compliance gaps\n"
+
+        return report_content.encode('utf-8')
+
+
+        @app.route("/ethical_decision_support", methods=["GET", "POST"])
+        @login_required
+        def ethical_decision_support():
+            """
+            Ethical decision support tool for compliance scenarios.
+    
+            Provides structured ethical analysis framework with stakeholder impact
+            assessment, alternative evaluation, and decision documentation.
+            """
+            user = current_user()
+            db = get_session()
+    
+            if request.method == "POST":
+                action = request.form.get('action')
+    
+                if action == "create_decision":
+                    try:
+                        # Create ethical decision record
+                        title = request.form.get('title')
+                        description = request.form.get('description')
+                        scenario_type = request.form.get('scenario_type')
+    
+                        # Ethical analysis
+                        principles = request.form.getlist('ethical_principles')
+                        stakeholder_analysis = request.form.get('stakeholder_analysis')
+                        alternatives = request.form.get('alternatives')
+    
+                        # Decision details
+                        decision = request.form.get('decision')
+                        rationale = request.form.get('rationale')
+                        ethical_risk = request.form.get('ethical_risk_level', 'medium')
+    
+                        # Implementation
+                        implementation_plan = request.form.get('implementation_plan')
+                        monitoring = request.form.get('monitoring_requirements')
+    
+                        ethical_decision = EthicalDecision(
+                            title=title,
+                            description=description,
+                            scenario_type=scenario_type,
+                            ethical_principles_applied=json.dumps(principles),
+                            stakeholder_impact_analysis=stakeholder_analysis,
+                            alternative_options=alternatives,
+                            decision_made=decision,
+                            rationale=rationale,
+                            ethical_risk_level=ethical_risk,
+                            implementation_plan=implementation_plan,
+                            monitoring_requirements=monitoring,
+                            decided_by=user.id
+                        )
+    
+                        db.add(ethical_decision)
+                        db.commit()
+    
+                        log_audit_event(user, "ETHICAL_DECISION_CREATED", "ETHICS",
+                                      f"Created ethical decision: {title}", "/ethical_decision_support", True)
+    
+                        flash(f"Ethical decision '{title}' documented successfully!", "success")
+    
+                    except Exception as e:
+                        db.rollback()
+                        flash(f"Error creating ethical decision: {str(e)}", "error")
+    
+                elif action == "update_decision":
+                    try:
+                        decision_id = int(request.form.get('decision_id'))
+                        ethical_decision = db.query(EthicalDecision).filter_by(id=decision_id).first()
+    
+                        if ethical_decision:
+                            # Update decision details
+                            ethical_decision.title = request.form.get('title')
+                            ethical_decision.description = request.form.get('description')
+                            ethical_decision.scenario_type = request.form.get('scenario_type')
+                            ethical_decision.decision_made = request.form.get('decision')
+                            ethical_decision.rationale = request.form.get('rationale')
+                            ethical_decision.ethical_risk_level = request.form.get('ethical_risk_level', 'medium')
+                            ethical_decision.implementation_plan = request.form.get('implementation_plan')
+                            ethical_decision.monitoring_requirements = request.form.get('monitoring_requirements')
+    
+                            db.commit()
+    
+                            log_audit_event(user, "ETHICAL_DECISION_UPDATED", "ETHICS",
+                                          f"Updated ethical decision: {ethical_decision.title}", "/ethical_decision_support", True)
+    
+                            flash(f"Ethical decision updated successfully!", "success")
+                        else:
+                            flash("Ethical decision not found.", "error")
+    
+                    except Exception as e:
+                        db.rollback()
+                        flash(f"Error updating ethical decision: {str(e)}", "error")
+    
+                return redirect(url_for('ethical_decision_support'))
+    
+            # GET request - show ethical decision support interface
+            try:
+                # Get existing ethical decisions
+                ethical_decisions = db.query(EthicalDecision).order_by(
+                    EthicalDecision.created_at.desc()
+                ).all()
+    
+                # Get ethical scenario templates
+                scenario_templates = {
+                    "data_privacy": {
+                        "title": "Data Privacy vs Business Need",
+                        "description": "Balancing data collection needs with individual privacy rights",
+                        "principles": ["Privacy", "Transparency", "Data Minimization"]
+                    },
+                    "security_tradeoff": {
+                        "title": "Security vs User Experience",
+                        "description": "Implementing security measures that may impact usability",
+                        "principles": ["Security", "Usability", "Risk Mitigation"]
+                    },
+                    "vendor_risk": {
+                        "title": "Cost vs Ethical Vendor Practices",
+                        "description": "Selecting vendors based on cost vs ethical considerations",
+                        "principles": ["Fair Labor", "Environmental Responsibility", "Corporate Ethics"]
+                    },
+                    "employee_monitoring": {
+                        "title": "Productivity vs Employee Privacy",
+                        "description": "Implementing monitoring tools for performance vs privacy concerns",
+                        "principles": ["Privacy", "Trust", "Productivity"]
+                    },
+                    "ai_decision_making": {
+                        "title": "AI Efficiency vs Algorithmic Fairness",
+                        "description": "Using AI for decisions while ensuring fairness and transparency",
+                        "principles": ["Fairness", "Transparency", "Accountability"]
+                    }
+                }
+    
+                close_session(db)
+    
+                return render_template("ethical_decision_support.html",
+                                     ethical_decisions=ethical_decisions,
+                                     scenario_templates=scenario_templates)
+    
+            except Exception as e:
+                close_session(db)
+                flash(f"Error loading ethical decision support: {str(e)}", "error")
+                return redirect(url_for('admin_dashboard'))
+
 
     @app.route("/compliance_obligations", methods=["GET", "POST"])
     @login_required
@@ -5957,35 +5870,7 @@ def create_app():
             elif action == "create_obligation":
                 try:
                     # Create new compliance obligation
-                    framework_value = request.form.get('framework')
-                    # Map form value to enum - handle both enum name and value
-                    if framework_value == "ISO 27001":
-                        framework = ComplianceFramework.ISO_27001
-                    elif framework_value == "NIST SP 800-53":
-                        framework = ComplianceFramework.NIST_SP_800_53
-                    elif framework_value == "NIST CSF":
-                        framework = ComplianceFramework.NIST_CSF
-                    elif framework_value == "ISO 27002":
-                        framework = ComplianceFramework.ISO_27002
-                    elif framework_value == "PCI DSS":
-                        framework = ComplianceFramework.PCI_DSS
-                    elif framework_value == "HIPAA":
-                        framework = ComplianceFramework.HIPAA
-                    elif framework_value == "SOX":
-                        framework = ComplianceFramework.SOX
-                    elif framework_value == "GDPR":
-                        framework = ComplianceFramework.GDPR
-                    elif framework_value == "CIS Controls":
-                        framework = ComplianceFramework.CIS_CONTROLS
-                    elif framework_value == "COBIT":
-                        framework = ComplianceFramework.COBIT
-                    else:
-                        # Try to get by attribute name for backward compatibility
-                        framework = getattr(ComplianceFramework, framework_value.replace(' ', '_').replace('-', '_').upper(), None)
-                        if framework is None:
-                            flash(f"Invalid framework: {framework_value}", "danger")
-                            return redirect(url_for('compliance_obligations'))
-
+                    framework = ComplianceFramework(request.form.get('framework'))
                     requirement_id = request.form.get('requirement_id')
                     title = request.form.get('title')
                     description = request.form.get('description')
@@ -6044,17 +5929,18 @@ def create_app():
             close_session(db)
 
             return render_template("compliance_obligations.html",
-                                  obligations=obligations,
-                                  total_obligations=total_obligations,
-                                  compliant_obligations=compliant_obligations,
-                                  critical_obligations=critical_obligations,
-                                  high_risk_obligations=high_risk_obligations,
-                                  framework_stats=framework_stats)
+                                 obligations=obligations,
+                                 total_obligations=total_obligations,
+                                 compliant_obligations=compliant_obligations,
+                                 critical_obligations=critical_obligations,
+                                 high_risk_obligations=high_risk_obligations,
+                                 framework_stats=framework_stats)
 
         except Exception as e:
             close_session(db)
             flash(f"Error loading compliance obligations: {str(e)}", "error")
             return redirect(url_for('admin_dashboard'))
+
 
     @app.route("/compliance_risk_assessment", methods=["GET", "POST"])
     @login_required
@@ -6164,107 +6050,19 @@ def create_app():
             close_session(db)
 
             return render_template("compliance_risk_assessment.html",
-                                  assessments=assessments,
-                                  total_assessments=total_assessments,
-                                  completed_assessments=completed_assessments,
-                                  in_progress_assessments=in_progress_assessments,
-                                  total_critical_risks=total_critical_risks,
-                                  total_high_risks=total_high_risks,
-                                  total_risks=total_risks)
+                                 assessments=assessments,
+                                 total_assessments=total_assessments,
+                                 completed_assessments=completed_assessments,
+                                 in_progress_assessments=in_progress_assessments,
+                                 total_critical_risks=total_critical_risks,
+                                 total_high_risks=total_high_risks,
+                                 total_risks=total_risks)
 
         except Exception as e:
             close_session(db)
             flash(f"Error loading compliance risk assessment: {str(e)}", "error")
             return redirect(url_for('admin_dashboard'))
 
-    @app.route("/api/compliance_obligation/<int:obligation_id>")
-    @login_required
-    def get_compliance_obligation_details(obligation_id):
-        """Get detailed information for a specific compliance obligation"""
-        user = current_user()
-        db = get_session()
-
-        # Get the obligation and verify access
-        obligation = db.get(ComplianceObligation, obligation_id)
-        if not obligation:
-            close_session(db)
-            return {"error": "Obligation not found"}, 404
-
-        # Return obligation details as JSON
-        obligation_details = {
-            "id": obligation.id,
-            "framework": obligation.framework.value,
-            "requirement_id": obligation.requirement_id,
-            "title": obligation.title,
-            "description": obligation.description,
-            "category": obligation.category,
-            "mandatory": obligation.mandatory,
-            "priority_level": obligation.priority_level,
-            "current_compliance_score": obligation.current_compliance_score,
-            "risk_likelihood": obligation.risk_likelihood,
-            "risk_impact": obligation.risk_impact,
-            "risk_score": obligation.risk_score,
-            "remediation_plan": obligation.remediation_plan,
-            "responsible_party": obligation.responsible_party,
-            "timeline_days": obligation.timeline_days,
-            "last_assessed": obligation.last_assessed.strftime('%Y-%m-%d %H:%M:%S') if obligation.last_assessed else None,
-            "created_at": obligation.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            "updated_at": obligation.updated_at.strftime('%Y-%m-%d %H:%M:%S')
-        }
-
-        close_session(db)
-        return obligation_details
-
-    @app.route("/api/compliance_assessment/<int:assessment_id>")
-    @login_required
-    def get_compliance_assessment(assessment_id):
-        """
-        API endpoint to retrieve compliance risk assessment data for editing.
-
-        Returns assessment details as JSON for the edit modal.
-        """
-        user = current_user()
-        db = get_session()
-
-        try:
-            assessment = db.query(ComplianceRiskAssessment).filter_by(id=assessment_id).first()
-
-            if not assessment:
-                close_session(db)
-                return {"error": "Assessment not found"}, 404
-
-            # Check if user has access (admin or auditor, or if they created it)
-            if user.role not in ['admin', 'auditor'] and assessment.lead_assessor != user.id:
-                close_session(db)
-                return {"error": "Access denied"}, 403
-
-            # Return assessment data as JSON
-            assessment_data = {
-                "id": assessment.id,
-                "title": assessment.title,
-                "scope": assessment.scope,
-                "assessment_type": assessment.assessment_type,
-                "methodology": assessment.methodology,
-                "frameworks_assessed": assessment.frameworks_assessed,
-                "status": assessment.status,
-                "risks_identified": assessment.risks_identified,
-                "critical_risks": assessment.critical_risks,
-                "high_risks": assessment.high_risks,
-                "medium_risks": assessment.medium_risks,
-                "low_risks": assessment.low_risks,
-                "overall_risk_score": assessment.overall_risk_score,
-                "compliance_score": assessment.compliance_score,
-                "findings_summary": assessment.findings_summary,
-                "executive_summary": assessment.executive_summary,
-                "recommendations_count": assessment.recommendations_count
-            }
-
-            close_session(db)
-            return assessment_data
-
-        except Exception as e:
-            close_session(db)
-            return {"error": str(e)}, 500
 
     @app.route("/compliance_incidents", methods=["GET", "POST"])
     @login_required
@@ -6301,12 +6099,7 @@ def create_app():
                     financial_impact = float(request.form.get('financial_impact', 0))
                     regulatory_impact = request.form.get('regulatory_impact')
 
-                    # Generate unique incident ID before insert
-                    import uuid
-                    incident_id = f"CI-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:8].upper()}"
-
                     incident = ComplianceIncident(
-                        incident_id=incident_id,
                         title=title,
                         category=category,
                         severity=severity,
@@ -6323,7 +6116,10 @@ def create_app():
 
                     db.add(incident)
                     db.commit()
-                    db.refresh(incident)  # Re-attach object to session after commit
+
+                    # Generate incident ID after commit
+                    incident.generate_incident_id()
+                    db.commit()
 
                     log_audit_event(user, "COMPLIANCE_INCIDENT_CREATED", "INCIDENT",
                                   f"Created incident: {incident.incident_id}", "/compliance_incidents", True)
@@ -6387,8 +6183,8 @@ def create_app():
 
         # GET request - show compliance incidents dashboard
         try:
-            # Get all incidents with eager loading of assignee relationship
-            incidents = db.query(ComplianceIncident).options(joinedload(ComplianceIncident.assignee)).order_by(
+            # Get all incidents
+            incidents = db.query(ComplianceIncident).order_by(
                 ComplianceIncident.created_at.desc()
             ).all()
 
@@ -6412,18 +6208,23 @@ def create_app():
             close_session(db)
 
             return render_template("compliance_incidents.html",
-                                  incidents=incidents,
-                                  total_incidents=total_incidents,
-                                  open_incidents=open_incidents,
-                                  critical_incidents=critical_incidents,
-                                  high_severity_incidents=high_severity_incidents,
-                                  category_stats=category_stats,
-                                  users=users)
+                                 incidents=incidents,
+                                 total_incidents=total_incidents,
+                                 open_incidents=open_incidents,
+                                 critical_incidents=critical_incidents,
+                                 high_severity_incidents=high_severity_incidents,
+                                 category_stats=category_stats,
+                                 users=users)
 
         except Exception as e:
             close_session(db)
             flash(f"Error loading compliance incidents: {str(e)}", "error")
             return redirect(url_for('admin_dashboard'))
+
+
+
+
+  ########
 
     # error handlers
     @app.errorhandler(404)
@@ -6948,4 +6749,3 @@ if __name__ == "__main__":
 
     # Enable debug mode for development (shows detailed error messages)
     app.run(debug=True, host="127.0.0.1", port=5000)
-

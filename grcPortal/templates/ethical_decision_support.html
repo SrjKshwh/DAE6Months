@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+
+{% block title %}Ethical Decision Support - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-balance-scale"></i> Ethical Decision Support
+                    </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createDecisionModal">
+                            <i class="fas fa-plus"></i> New Ethical Decision
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Ethical Principles Overview -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <h5><i class="fas fa-info-circle"></i> Ethical Framework Principles</h5>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <strong>Respect for Persons:</strong><br>
+                                        Autonomy, Privacy, Dignity, Consent
+                                    </div>
+                                    <div class="col-md-3">
+                                        <strong>Beneficence:</strong><br>
+                                        Positive Impact, Risk Mitigation
+                                    </div>
+                                    <div class="col-md-3">
+                                        <strong>Non-Maleficence:</strong><br>
+                                        Do No Harm, Security, Transparency
+                                    </div>
+                                    <div class="col-md-3">
+                                        <strong>Justice & Fairness:</strong><br>
+                                        Equal Treatment, Accountability
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scenario Templates -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5>Common Ethical Scenarios</h5>
+                            <div class="row">
+                                {% for key, template in scenario_templates.items() %}
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h6 class="card-title">{{ template.title }}</h6>
+                                            <p class="card-text small">{{ template.description }}</p>
+                                            <p class="card-text"><small class="text-muted">
+                                                Key Principles: {{ template.principles|join(', ') }}
+                                            </small></p>
+                                            <button class="btn btn-outline-primary btn-sm" onclick="loadScenarioTemplate('{{ key }}')">
+                                                Use Template
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Existing Ethical Decisions -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h5>Ethical Decisions</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Scenario Type</th>
+                                            <th>Ethical Risk</th>
+                                            <th>Decision Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for decision in ethical_decisions %}
+                                        <tr>
+                                            <td>{{ decision.title }}</td>
+                                            <td>
+                                                <span class="badge badge-secondary">{{ decision.scenario_type.replace('_', ' ')|title }}</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge
+                                                    {% if decision.ethical_risk_level == 'critical' %}badge-danger
+                                                    {% elif decision.ethical_risk_level == 'high' %}badge-warning
+                                                    {% elif decision.ethical_risk_level == 'medium' %}badge-info
+                                                    {% else %}badge-success{% endif %}">
+                                                    {{ decision.ethical_risk_level|title }}
+                                                </span>
+                                            </td>
+                                            <td>{{ decision.created_at.strftime('%Y-%m-%d') }}</td>
+                                            <td>
+                                                {% if decision.reviewed_by %}
+                                                    <span class="badge badge-success">Reviewed</span>
+                                                {% else %}
+                                                    <span class="badge badge-warning">Pending Review</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" onclick="viewDecision({{ decision.id }})">
+                                                    <i class="fas fa-eye"></i> View
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-secondary" onclick="editDecision({{ decision.id }})">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Ethical Decision Modal -->
+<div class="modal fade" id="createDecisionModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Ethical Decision</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{{ url_for('ethical_decision_support') }}">
+                <input type="hidden" name="action" value="create_decision">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Title *</label>
+                                <input type="text" class="form-control" name="title" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Scenario Type *</label>
+                                <select class="form-control" name="scenario_type" required>
+                                    <option value="">Select scenario type...</option>
+                                    <option value="data_privacy">Data Privacy</option>
+                                    <option value="security_tradeoff">Security Trade-off</option>
+                                    <option value="vendor_risk">Vendor Risk</option>
+                                    <option value="employee_monitoring">Employee Monitoring</option>
+                                    <option value="ai_decision_making">AI Decision Making</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description *</label>
+                        <textarea class="form-control" name="description" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ethical Principles Applied</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="ethical_principles" value="Privacy" id="privacy">
+                                    <label class="form-check-label" for="privacy">Privacy</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="ethical_principles" value="Autonomy" id="autonomy">
+                                    <label class="form-check-label" for="autonomy">Autonomy</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="ethical_principles" value="Transparency" id="transparency">
+                                    <label class="form-check-label" for="transparency">Transparency</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="ethical_principles" value="Justice" id="justice">
+                                    <label class="form-check-label" for="justice">Justice & Fairness</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="ethical_principles" value="Beneficence" id="beneficence">
+                                    <label class="form-check-label" for="beneficence">Beneficence</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="ethical_principles" value="Non_Maleficence" id="non_maleficence">
+                                    <label class="form-check-label" for="non_maleficence">Non-Maleficence</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Stakeholder Impact Analysis</label>
+                        <textarea class="form-control" name="stakeholder_analysis" rows="3" placeholder="Analyze how this decision affects different stakeholders..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Alternative Options Considered</label>
+                        <textarea class="form-control" name="alternatives" rows="3" placeholder="List and evaluate alternative courses of action..."></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Decision Made *</label>
+                                <textarea class="form-control" name="decision" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Rationale *</label>
+                                <textarea class="form-control" name="rationale" rows="3" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Ethical Risk Level</label>
+                                <select class="form-control" name="ethical_risk_level">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Implementation Plan</label>
+                        <textarea class="form-control" name="implementation_plan" rows="2" placeholder="Steps to implement this decision..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Monitoring Requirements</label>
+                        <textarea class="form-control" name="monitoring_requirements" rows="2" placeholder="How will outcomes be monitored and measured..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Ethical Decision</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function loadScenarioTemplate(templateKey) {
+    const templates = {{ scenario_templates|tojson }};
+    const template = templates[templateKey];
+
+    if (template) {
+        // Pre-fill form with template data
+        document.querySelector('input[name="title"]').value = template.title;
+        document.querySelector('textarea[name="description"]').value = template.description;
+        document.querySelector('select[name="scenario_type"]').value = templateKey;
+
+        // Check relevant ethical principles
+        template.principles.forEach(principle => {
+            const checkbox = document.querySelector(`input[name="ethical_principles"][value="${principle}"]`);
+            if (checkbox) checkbox.checked = true;
+        });
+
+        // Show modal
+        $('#createDecisionModal').modal('show');
+    }
+}
+
+function viewDecision(decisionId) {
+    // Implement view functionality
+    window.location.href = `/ethical_decision/${decisionId}`;
+}
+
+function editDecision(decisionId) {
+    // Implement edit functionality
+    window.location.href = `/ethical_decision/${decisionId}/edit`;
+}
+</script>
+
+{% endblock %}

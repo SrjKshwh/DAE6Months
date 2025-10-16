@@ -2268,3 +2268,233 @@ class IncidentArchive(Base):
     # Archive metadata
     archived_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     archive_reason: Mapped[str] = mapped_column(String(255), default="retention_policy")
+
+
+class EthicalDecision(Base):
+    """Represents ethical decision-making process and documentation."""
+    __tablename__ = "ethical_decisions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    scenario_type: Mapped[str] = mapped_column(String(100), nullable=False)  # data_privacy, security_tradeoff, vendor_risk, etc.
+
+    # Ethical analysis
+    ethical_principles_applied: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of principles
+    stakeholder_impact_analysis: Mapped[str] = mapped_column(Text, nullable=True)  # JSON stakeholder analysis
+    alternative_options: Mapped[str] = mapped_column(Text, nullable=True)  # JSON alternatives considered
+
+    # Decision details
+    decision_made: Mapped[str] = mapped_column(Text, nullable=False)
+    rationale: Mapped[str] = mapped_column(Text, nullable=False)
+    ethical_risk_level: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+
+    # Implementation
+    implementation_plan: Mapped[str] = mapped_column(Text, nullable=True)
+    monitoring_requirements: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Governance
+    decided_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    reviewed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    approval_required: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    decision_maker = relationship("User", foreign_keys=[decided_by])
+    reviewer = relationship("User", foreign_keys=[reviewed_by])
+
+
+class ComplianceObligation(Base):
+    """Represents specific compliance obligations from regulatory requirements."""
+    __tablename__ = "compliance_obligations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    framework: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=False)
+    requirement_id: Mapped[str] = mapped_column(String(100), nullable=False)  # e.g., "GDPR-25", "HIPAA-164.308"
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Obligation details
+    category: Mapped[str] = mapped_column(String(100), nullable=True)  # Data Protection, Security, Financial, etc.
+    mandatory: Mapped[bool] = mapped_column(Boolean, default=True)
+    priority_level: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+
+    # Assessment
+    current_compliance_score: Mapped[float] = mapped_column(Float, default=0.0)
+    target_score: Mapped[float] = mapped_column(Float, default=100.0)
+    last_assessed: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    next_assessment_due: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Risk assessment
+    risk_likelihood: Mapped[int] = mapped_column(Integer, default=3)  # 1-5 scale
+    risk_impact: Mapped[int] = mapped_column(Integer, default=3)      # 1-5 scale
+    risk_score: Mapped[int] = mapped_column(Integer, default=9)       # likelihood × impact
+
+    # Control mapping
+    control_mappings: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of NIST controls
+    assessment_procedures: Mapped[str] = mapped_column(Text, nullable=True)  # JSON assessment steps
+    evidence_requirements: Mapped[str] = mapped_column(Text, nullable=True)  # JSON evidence types
+
+    # Remediation
+    remediation_plan: Mapped[str] = mapped_column(Text, nullable=True)
+    responsible_party: Mapped[str] = mapped_column(String(255), nullable=True)
+    timeline_days: Mapped[int] = mapped_column(Integer, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    def calculate_risk_score(self):
+        """Calculate compliance risk score."""
+        self.risk_score = self.risk_likelihood * self.risk_impact
+        return self.risk_score
+
+    def get_compliance_status(self):
+        """Get compliance status based on current score."""
+        if self.current_compliance_score >= 95:
+            return "compliant"
+        elif self.current_compliance_score >= 80:
+            return "mostly_compliant"
+        elif self.current_compliance_score >= 60:
+            return "partially_compliant"
+        else:
+            return "non_compliant"
+
+
+class ComplianceRiskAssessment(Base):
+    """Represents comprehensive compliance risk assessments."""
+    __tablename__ = "compliance_risk_assessments"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    scope: Mapped[str] = mapped_column(Text, nullable=True)
+    assessment_type: Mapped[str] = mapped_column(String(50), default="comprehensive")  # comprehensive, targeted, regulatory
+
+    # Assessment framework
+    methodology: Mapped[str] = mapped_column(String(100), default="NIST_SP_800_30")
+    frameworks_assessed: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of frameworks
+
+    # Risk identification
+    risks_identified: Mapped[int] = mapped_column(Integer, default=0)
+    critical_risks: Mapped[int] = mapped_column(Integer, default=0)
+    high_risks: Mapped[int] = mapped_column(Integer, default=0)
+    medium_risks: Mapped[int] = mapped_column(Integer, default=0)
+    low_risks: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Assessment results
+    overall_risk_score: Mapped[float] = mapped_column(Float, default=0.0)
+    compliance_score: Mapped[float] = mapped_column(Float, default=0.0)
+    recommendations_count: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Assessment details
+    findings_summary: Mapped[str] = mapped_column(Text, nullable=True)
+    executive_summary: Mapped[str] = mapped_column(Text, nullable=True)
+    detailed_findings: Mapped[str] = mapped_column(Text, nullable=True)  # JSON detailed results
+
+    # Status and timeline
+    status: Mapped[str] = mapped_column(String(50), default="planned")  # planned, in_progress, completed, reviewed
+    start_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    completion_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    review_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Governance
+    lead_assessor: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    approved_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    next_assessment_due: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    assessor = relationship("User", foreign_keys=[lead_assessor])
+    approver = relationship("User", foreign_keys=[approved_by])
+
+class ComplianceIncident(Base):
+    """Represents compliance incidents with standardized documentation."""
+
+    __tablename__ = "compliance_incidents"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    incident_id: Mapped[str] = mapped_column(String(50), unique=True, nullable=True)  # Auto-generated unique ID
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    category: Mapped[str] = mapped_column(String(100), nullable=False)  # data_breach, privacy_violation, security_incident, etc.
+    severity: Mapped[str] = mapped_column(String(20), nullable=False)  # critical, high, medium, low
+
+    # Incident details
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    date_occurred: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    date_discovered: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    discovery_method: Mapped[str] = mapped_column(String(100), nullable=True)
+
+    # Impact assessment
+    affected_individuals: Mapped[int] = mapped_column(Integer, default=0)
+    affected_systems: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array
+    business_impact: Mapped[str] = mapped_column(String(20), default="low")  # minimal, low, moderate, high, critical
+    financial_impact: Mapped[float] = mapped_column(Float, default=0.0)
+    regulatory_impact: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Classification and status
+    status: Mapped[str] = mapped_column(String(50), default="identified")  # identified, investigating, contained, resolved, closed
+    root_cause: Mapped[str] = mapped_column(Text, nullable=True)
+    contributing_factors: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array
+
+    # Response actions
+    immediate_actions: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array
+    containment_actions: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array
+    remediation_actions: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array
+
+    # Regulatory notifications
+    regulatory_notifications_required: Mapped[bool] = mapped_column(Boolean, default=False)
+    notifications_sent: Mapped[str] = mapped_column(Text, nullable=True)  # JSON notification records
+    notification_deadlines: Mapped[str] = mapped_column(Text, nullable=True)  # JSON deadline tracking
+
+    # Investigation and follow-up
+    investigation_findings: Mapped[str] = mapped_column(Text, nullable=True)
+    lessons_learned: Mapped[str] = mapped_column(Text, nullable=True)
+    preventive_measures: Mapped[str] = mapped_column(Text, nullable=True)  # JSON recommendations
+
+    # Governance
+    reported_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    assigned_to: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    reviewed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    # Evidence and documentation
+    evidence_count: Mapped[int] = mapped_column(Integer, default=0)
+    documentation_complete: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    resolved_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Relationships
+    reporter = relationship("User", foreign_keys=[reported_by])
+    assignee = relationship("User", foreign_keys=[assigned_to])
+    reviewer = relationship("User", foreign_keys=[reviewed_by])
+
+    def generate_incident_id(self):
+        """Generate unique incident ID."""
+        timestamp = datetime.now().strftime("%Y%m%d")
+        self.incident_id = f"CI-{timestamp}-{self.id:04d}"
+        return self.incident_id
+
+    def calculate_severity_score(self):
+        """Calculate severity score based on impact factors."""
+        severity_scores = {"low": 1, "medium": 2, "high": 3, "critical": 4}
+        impact_scores = {"minimal": 1, "low": 2, "moderate": 3, "high": 4, "critical": 5}
+
+        severity_num = severity_scores.get(self.severity, 2)
+        impact_num = impact_scores.get(self.business_impact, 2)
+        individuals_factor = min(self.affected_individuals / 100, 5) if self.affected_individuals else 0
+
+        return (severity_num + impact_num + individuals_factor) / 3
+
+    def get_response_timeline(self):
+        """Get required response timeline based on severity."""
+        timelines = {
+            "critical": "Immediate (within 1 hour)",
+            "high": "Within 24 hours",
+            "medium": "Within 1 week",
+            "low": "Within 1 month"
+        }
+        return timelines.get(self.severity, "Within 1 week")    

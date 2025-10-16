@@ -1,0 +1,448 @@
+{% extends "base.html" %}
+
+{% block title %}Compliance Incidents - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-exclamation-triangle"></i> Compliance Incident Management
+                    </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#createIncidentModal">
+                            <i class="fas fa-plus"></i> Report Incident
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Incident Statistics -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>{{ total_incidents }}</h3>
+                                    <p>Total Incidents</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-list"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>{{ open_incidents }}</h3>
+                                    <p>Open Incidents</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3>{{ critical_incidents }}</h3>
+                                    <p>Critical Severity</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="small-box bg-dark">
+                                <div class="inner">
+                                    <h3>{{ high_severity_incidents }}</h3>
+                                    <p>High Severity</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Breakdown -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5>Incidents by Category</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Count</th>
+                                            <th>Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for category, count in category_stats.items() %}
+                                        <tr>
+                                            <td>{{ category.replace('_', ' ')|title }}</td>
+                                            <td>{{ count }}</td>
+                                            <td>
+                                                <div class="progress" style="width: 100px;">
+                                                    <div class="progress-bar bg-primary" style="width: {{ (count / total_incidents * 100) if total_incidents > 0 else 0 }}%">
+                                                    </div>
+                                                </div>
+                                                {{ "%.1f"|format(count / total_incidents * 100) if total_incidents > 0 else 0 }}%
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Incidents Table -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h5>Compliance Incidents</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Incident ID</th>
+                                            <th>Title</th>
+                                            <th>Category</th>
+                                            <th>Severity</th>
+                                            <th>Status</th>
+                                            <th>Affected Individuals</th>
+                                            <th>Reported Date</th>
+                                            <th>Assigned To</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for incident in incidents %}
+                                        <tr class="{% if incident.severity == 'critical' %}table-danger
+                                                   {% elif incident.severity == 'high' %}table-warning
+                                                   {% elif incident.status in ['identified', 'investigating'] %}table-info{% endif %}">
+                                            <td>
+                                                <strong>{{ incident.incident_id }}</strong>
+                                            </td>
+                                            <td>
+                                                {{ incident.title }}
+                                                {% if incident.description %}
+                                                <br><small class="text-muted">{{ incident.description[:50] }}{% if incident.description|length > 50 %}...{% endif %}</small>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-secondary">{{ incident.category.replace('_', ' ')|title }}</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge
+                                                    {% if incident.severity == 'critical' %}badge-danger
+                                                    {% elif incident.severity == 'high' %}badge-warning
+                                                    {% elif incident.severity == 'medium' %}badge-info
+                                                    {% else %}badge-light{% endif %}">
+                                                    {{ incident.severity|title }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge
+                                                    {% if incident.status == 'closed' %}badge-success
+                                                    {% elif incident.status == 'resolved' %}badge-info
+                                                    {% elif incident.status in ['investigating', 'contained'] %}badge-warning
+                                                    {% else %}badge-danger{% endif %}">
+                                                    {{ incident.status|title }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {% if incident.affected_individuals > 0 %}
+                                                    <span class="badge badge-warning">{{ incident.affected_individuals }}</span>
+                                                {% else %}
+                                                    <span class="text-muted">-</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ incident.created_at.strftime('%Y-%m-%d') }}</td>
+                                            <td>
+                                                {% if incident.assignee %}
+                                                    {{ incident.assignee.email }}
+                                                {% else %}
+                                                    <em>Unassigned</em>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" onclick="viewIncident('{{ incident.incident_id }}')">
+                                                    <i class="fas fa-eye"></i> View
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-secondary" onclick="editIncident({{ incident.id }})">
+                                                    <i class="fas fa-edit"></i> Update
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Incident Modal -->
+<div class="modal fade" id="createIncidentModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Report Compliance Incident</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+            <form method="POST" action="{{ url_for('compliance_incidents') }}">
+                <input type="hidden" name="action" value="create_incident">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Title *</label>
+                                <input type="text" class="form-control" name="title" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Category *</label>
+                                <select class="form-control" name="category" required>
+                                    <option value="">Select category...</option>
+                                    <option value="data_breach">Data Breach</option>
+                                    <option value="privacy_violation">Privacy Violation</option>
+                                    <option value="security_incident">Security Incident</option>
+                                    <option value="regulatory_non_compliance">Regulatory Non-Compliance</option>
+                                    <option value="operational_failure">Operational Failure</option>
+                                    <option value="ethical_violation">Ethical Violation</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Severity *</label>
+                                <select class="form-control" name="severity" required>
+                                    <option value="low">Low - Minor issue, limited impact</option>
+                                    <option value="medium" selected>Medium - Moderate disruption, some business impact</option>
+                                    <option value="high">High - Significant concern, major business impact</option>
+                                    <option value="critical">Critical - Severe breach, critical business impact</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Date Occurred</label>
+                                <input type="datetime-local" class="form-control" name="date_occurred">
+                                <small class="form-text text-muted">Leave blank if unknown</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description *</label>
+                        <textarea class="form-control" name="description" rows="4" required placeholder="Provide detailed description of the incident..."></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Discovery Method</label>
+                                <select class="form-control" name="discovery_method">
+                                    <option value="">Select method...</option>
+                                    <option value="automated_monitoring">Automated Monitoring</option>
+                                    <option value="manual_reporting">Manual Reporting</option>
+                                    <option value="audit_finding">Audit Finding</option>
+                                    <option value="regulatory_notification">Regulatory Notification</option>
+                                    <option value="customer_report">Customer Report</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Affected Individuals</label>
+                                <input type="number" class="form-control" name="affected_individuals" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Affected Systems</label>
+                                <input type="text" class="form-control" name="affected_systems" placeholder="e.g., Database, Web Server, Email System">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Business Impact</label>
+                                <select class="form-control" name="business_impact">
+                                    <option value="minimal">Minimal</option>
+                                    <option value="low" selected>Low</option>
+                                    <option value="moderate">Moderate</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Financial Impact ($)</label>
+                                <input type="number" class="form-control" name="financial_impact" min="0" step="0.01" value="0">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Regulatory Impact</label>
+                                <textarea class="form-control" name="regulatory_impact" rows="2" placeholder="Potential regulatory implications..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Report Incident</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Incident Modal -->
+<div class="modal fade" id="editIncidentModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Compliance Incident</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+            <form method="POST" action="{{ url_for('compliance_incidents') }}">
+                <input type="hidden" name="action" value="update_incident">
+                <input type="hidden" name="incident_id" id="edit_incident_id">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="form-control" name="status">
+                                    <option value="identified">Identified</option>
+                                    <option value="investigating">Investigating</option>
+                                    <option value="contained">Contained</option>
+                                    <option value="resolved">Resolved</option>
+                                    <option value="closed">Closed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Assign To</label>
+                                <select class="form-control" name="assigned_to">
+                                    <option value="">Select assignee...</option>
+                                    {% for user in users %}
+                                    <option value="{{ user.id }}">{{ user.email }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Root Cause</label>
+                        <textarea class="form-control" name="root_cause" rows="3" placeholder="Describe the root cause of the incident..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contributing Factors</label>
+                        <textarea class="form-control" name="contributing_factors" rows="2" placeholder="List contributing factors..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Investigation Findings</label>
+                        <textarea class="form-control" name="investigation_findings" rows="3" placeholder="Document investigation results..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Immediate Actions Taken</label>
+                        <textarea class="form-control" name="immediate_actions" rows="2" placeholder="Actions taken immediately after discovery..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Containment Actions</label>
+                        <textarea class="form-control" name="containment_actions" rows="2" placeholder="Actions taken to contain the incident..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Remediation Actions</label>
+                        <textarea class="form-control" name="remediation_actions" rows="3" placeholder="Actions taken to resolve and prevent recurrence..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Lessons Learned</label>
+                        <textarea class="form-control" name="lessons_learned" rows="3" placeholder="Key lessons and improvements identified..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Preventive Measures</label>
+                        <textarea class="form-control" name="preventive_measures" rows="3" placeholder="Recommendations for preventing similar incidents..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Incident</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewIncident(incidentId) {
+    // Redirect to incident detail view
+    window.location.href = `/compliance_incident/${incidentId}`;
+}
+
+function editIncident(incidentId) {
+    // Fetch incident data and populate modal
+    fetch(`/api/compliance_incident/${incidentId}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('edit_incident_id').value = data.id;
+            // Populate form fields with existing data
+            // This would need to be implemented based on the API response
+            const editModal = new bootstrap.Modal(document.getElementById('editIncidentModal'));
+            editModal.show();
+        })
+        .catch(error => {
+            console.error('Error fetching incident data:', error);
+            alert('Error loading incident data');
+        });
+}
+
+// Auto-generate incident ID preview
+document.addEventListener('DOMContentLoaded', function() {
+    const titleInput = document.querySelector('input[name="title"]');
+    const categorySelect = document.querySelector('select[name="category"]');
+
+    function updateIncidentPreview() {
+        // Could implement live preview of incident ID
+    }
+
+    if (titleInput && categorySelect) {
+        titleInput.addEventListener('input', updateIncidentPreview);
+        categorySelect.addEventListener('change', updateIncidentPreview);
+    }
+});
+</script>
+
+{% endblock %}

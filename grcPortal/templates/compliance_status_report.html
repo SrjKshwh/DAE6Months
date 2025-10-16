@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block title %}Compliance Status Report - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-clipboard-check text-success"></i> Compliance Status Report</h2>
+                <div>
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print Report
+                    </button>
+                    <a href="{{ url_for('compliance_status_report') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Form
+                    </a>
+                </div>
+            </div>
+
+            <!-- Report Header -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Compliance Status Report</h4>
+                    <small>Generated on {{ generated_at.strftime('%B %d, %Y at %I:%M %p') }}</small>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Report Period: {{ report_period.title() }}</h5>
+                            <p class="mb-0">Total Compliance Records: {{ total_compliance_records }}</p>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <h5>Overall Compliance Score</h5>
+                            <h2 class="{% if overall_compliance_score >= 90 %}text-success
+                                     {% elif overall_compliance_score >= 80 %}text-warning
+                                     {% else %}text-danger{% endif %}">
+                                {{ "%.1f"|format(overall_compliance_score) }}%
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive Summary -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-line"></i> Executive Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h4 class="text-{{ 'success' if executive_summary.compliance_rating == 'Excellent' else 'warning' if executive_summary.compliance_rating == 'Good' else 'danger' }}">
+                                    {{ executive_summary.compliance_rating }}
+                                </h4>
+                                <small class="text-muted">Compliance Rating</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h4 class="text-primary">{{ executive_summary.frameworks_assessed }}</h4>
+                                <small class="text-muted">Frameworks Assessed</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h4 class="text-warning">{{ executive_summary.critical_gaps }}</h4>
+                                <small class="text-muted">Critical Gaps</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h4 class="text-info">{{ executive_summary.total_controls }}</h4>
+                                <small class="text-muted">Total Controls</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Framework Compliance Scores -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-shield-alt"></i> Framework Compliance Scores</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Framework</th>
+                                    <th>Average Score</th>
+                                    <th>Compliant Controls</th>
+                                    <th>Total Controls</th>
+                                    <th>Compliance %</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for framework, scores in framework_scores.items() %}
+                                <tr>
+                                    <td><strong>{{ framework }}</strong></td>
+                                    <td>{{ "%.1f"|format(scores.average_score) }}%</td>
+                                    <td>{{ scores.compliant_controls }}</td>
+                                    <td>{{ scores.total_controls }}</td>
+                                    <td>
+                                        <div class="progress" style="width: 100px;">
+                                            <div class="progress-bar {{ 'bg-success' if scores.compliance_percentage >= 80 else 'bg-warning' if scores.compliance_percentage >= 60 else 'bg-danger' }}"
+                                                 style="width: {{ scores.compliance_percentage }}%"></div>
+                                        </div>
+                                        {{ "%.1f"|format(scores.compliance_percentage) }}%
+                                    </td>
+                                    <td>
+                                        {% if scores.compliance_percentage >= 80 %}
+                                            <span class="badge bg-success">Compliant</span>
+                                        {% elif scores.compliance_percentage >= 60 %}
+                                            <span class="badge bg-warning">Partial</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Non-Compliant</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Critical Compliance Gaps -->
+            {% if critical_gaps %}
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Critical Compliance Gaps</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Framework</th>
+                                    <th>Control</th>
+                                    <th>Current Score</th>
+                                    <th>Risk Level</th>
+                                    <th>Priority</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for gap in critical_gaps %}
+                                <tr>
+                                    <td>{{ gap.framework }}</td>
+                                    <td>{{ gap.control }}</td>
+                                    <td>{{ "%.1f"|format(gap.current_score) }}%</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'danger' if gap.risk_level == 'Critical' else 'warning' }}">
+                                            {{ gap.risk_level }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if gap.risk_level == 'Critical' %}
+                                            <span class="badge bg-danger">High</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Medium</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Risk-Based Compliance Analysis -->
+            {% if risk_compliance_analysis %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-balance-scale"></i> Risk-Based Compliance Analysis</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Risk ID</th>
+                                    <th>Requirement</th>
+                                    <th>Framework</th>
+                                    <th>Impact Level</th>
+                                    <th>Compliance Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for analysis in risk_compliance_analysis %}
+                                <tr>
+                                    <td>{{ analysis.risk_id }}</td>
+                                    <td>{{ analysis.requirement }}</td>
+                                    <td>{{ analysis.framework }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'danger' if analysis.impact_level == 'High' else 'warning' if analysis.impact_level == 'Medium' else 'success' }}">
+                                            {{ analysis.impact_level }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if analysis.compliance_status == 'Compliant' else 'danger' }}">
+                                            {{ analysis.compliance_status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Recommendations -->
+            {% if include_recommendations and recommendations %}
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-lightbulb"></i> Recommendations & Action Items</h5>
+                </div>
+                <div class="card-body">
+                    {% for rec in recommendations %}
+                    <div class="alert alert-{{ 'danger' if rec.priority == 'Critical' else 'warning' if rec.priority == 'High' else 'info' }}">
+                        <h6><strong>{{ rec.priority }} Priority:</strong> {{ rec.category }}</h6>
+                        <p class="mb-2">{{ rec.description }}</p>
+                        <strong>Action Items:</strong>
+                        <ul class="mb-0">
+                            {% for action in rec.action_items %}
+                            <li>{{ action }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Report Footer -->
+            <div class="card">
+                <div class="card-body text-center">
+                    <p class="text-muted mb-0">
+                        <small>This report was generated automatically by the GRC Portal compliance monitoring system.
+                        For questions or concerns, please contact the compliance team.</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    .btn, .card-header .btn {
+        display: none !important;
+    }
+    .card {
+        border: 1px solid #dee2e6 !important;
+        break-inside: avoid;
+    }
+    .table-responsive {
+        overflow-x: visible !important;
+    }
+    .progress {
+        -webkit-print-color-adjust: exact;
+    }
+}
+
+.progress-bar {
+    color: white;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+</style>
+{% endblock %}
