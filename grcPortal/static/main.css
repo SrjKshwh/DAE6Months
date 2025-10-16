@@ -14,7 +14,75 @@ a { color: #2f6fed; text-decoration: none; }
 .hint { color: #666; font-size: .9rem; }
 pre { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: #f7f7f9; padding: 12px; border-radius: 8px; }
 
+/* Small box styling for colored divs */
+.small-box {
+  border-radius: 0.25rem;
+  box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+  display: block;
+  margin-bottom: 20px;
+  position: relative;
+  padding-right: 100px; /* Make room for the icon */
+  min-height: 80px; /* Ensure minimum height */
+}
+.small-box > .inner {
+  padding: 10px;
+}
+.small-box > .small-box-footer {
+  background: rgba(0,0,0,0.1);
+  color: rgba(255,255,255,0.8);
+  display: block;
+  padding: 3px 0;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+.small-box > .small-box-footer:hover {
+  background: rgba(0,0,0,0.15);
+  color: #fff;
+}
+.small-box h3 {
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  padding: 0;
+  white-space: nowrap;
+}
+.small-box p {
+  font-size: 1rem;
+}
+.small-box p > small {
+  color: #f8f9fa;
+  display: block;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+.small-box h3, .small-box p {
+  color: #000;
+  z-index: 5;
+}
+.small-box > .icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 0;
+  font-size: 70px; /* Reduced from 90px to fit better */
+  color: rgba(0,0,0,0.15);
+}
+.small-box > .icon > i.fa, .small-box > .icon > i.fas, .small-box > .icon > i.far, .small-box > .icon > i.fab {
+  font-size: 70px;
+}
+
+/* Badge styling */
+.badge-secondary {
+  color: #000 !important;
+}
+
 /* Blur effect for background when modal is shown */
 .modal-open-blur {filter: blur(2px); pointer-events: none;}
 
 .modal-open-blur .modal { pointer-events: auto;}
+
+/* Badge styling */
+.badge {
+  color: #000 !important;
+}

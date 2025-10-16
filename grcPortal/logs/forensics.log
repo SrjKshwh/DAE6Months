@@ -14889,3 +14889,276 @@ ata Archiving" to job store "default"
 2025-10-16 14:27:59,807 [INFO] 127.0.0.1 - - [16/Oct/2025 14:27:59] "GET /login HTTP/1.1" 200 -
 2025-10-16 14:27:59,971 [INFO] 127.0.0.1 - - [16/Oct/2025 14:27:59] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
 2025-10-16 14:27:59,989 [INFO] 127.0.0.1 - - [16/Oct/2025 14:27:59] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-16 14:37:15,554 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-16 14:37:15,557 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-16 14:37:15,558 [INFO] Scheduler started
+2025-10-16 14:37:15,558 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-16 14:37:15,569 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-16 14:37:15,570 [INFO] [33mPress CTRL+C to quit[0m
+2025-10-16 14:37:15,572 [INFO]  * Restarting with stat
+2025-10-16 14:37:16,587 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-16 14:37:16,589 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-16 14:37:16,590 [INFO] Scheduler started
+2025-10-16 14:37:16,590 [INFO] APScheduler started successfully with weekly archiving job
+2025-10-16 14:37:16,596 [WARNING]  * Debugger is active!
+2025-10-16 14:37:16,598 [INFO]  * Debugger PIN: 136-772-789
+2025-10-16 14:37:18,838 [INFO] 127.0.0.1 - - [16/Oct/2025 14:37:18] "GET / HTTP/1.1" 200 -
+2025-10-16 14:37:18,869 [INFO] 127.0.0.1 - - [16/Oct/2025 14:37:18] "GET /static/main.css HTTP/1.1" 200 -
+2025-10-16 14:37:18,891 [INFO] 127.0.0.1 - - [16/Oct/2025 14:37:18] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-16 14:37:27,613 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-10-16 14:37:27,627 [INFO] 127.0.0.1 - - [16/Oct/2025 14:37:27] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-10-16 14:37:27,632 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:37:27,640 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B735F7F390>
+2025-10-16 14:37:27,641 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:37:27,641 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:37:27,643 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B7364515B0>
+2025-10-16 14:37:27,644 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:37:27,644 [INFO] DEBUG: current_user() returned: <models.User object at 0x000001B7364515B0> - email: kush786srj@gmail.com
+2025-10-16 14:37:27,645 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-10-16 14:37:27,689 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:37:27,690 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B7364515B0>
+2025-10-16 14:37:27,690 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:37:27,692 [INFO] 127.0.0.1 - - [16/Oct/2025 14:37:27] "GET /home HTTP/1.1" 200 -
+2025-10-16 14:37:27,728 [INFO] 127.0.0.1 - - [16/Oct/2025 14:37:27] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:37:37,287 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:37:37,294 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B7364515B0>
+2025-10-16 14:37:37,295 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:37:37,296 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:37:37,298 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B7364CE330>
+2025-10-16 14:37:37,299 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:37:37,354 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:37:37,355 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B7364905A0>
+2025-10-16 14:37:37,356 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:37:37,357 [INFO] 127.0.0.1 - - [16/Oct/2025 14:37:37] "GET /compliance_incidents HTTP/1.1" 200 -
+2025-10-16 14:37:37,374 [INFO] 127.0.0.1 - - [16/Oct/2025 14:37:37] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:37:37,692 [INFO] 127.0.0.1 - - [16/Oct/2025 14:37:37] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:38:05,966 [INFO] 127.0.0.1 - - [16/Oct/2025 14:38:05] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:38:05,966 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:38:05,974 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736521850>
+2025-10-16 14:38:05,975 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:38:05,975 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:38:05,976 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736521450>
+2025-10-16 14:38:05,976 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:38:05,994 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:38:05,995 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B7364AA4E0>
+2025-10-16 14:38:05,996 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:38:05,997 [INFO] 127.0.0.1 - - [16/Oct/2025 14:38:05] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:38:06,021 [INFO] 127.0.0.1 - - [16/Oct/2025 14:38:06] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:39:24,383 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-10-16 14:39:24,388 [INFO] 127.0.0.1 - - [16/Oct/2025 14:39:24] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-10-16 14:39:24,408 [INFO] 127.0.0.1 - - [16/Oct/2025 14:39:24] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:39:24,409 [INFO] 127.0.0.1 - - [16/Oct/2025 14:39:24] "GET /login HTTP/1.1" 200 -
+2025-10-16 14:39:24,437 [INFO] 127.0.0.1 - - [16/Oct/2025 14:39:24] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:39:24,448 [INFO] 127.0.0.1 - - [16/Oct/2025 14:39:24] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-16 14:40:16,679 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-10-16 14:40:16,705 [INFO] 127.0.0.1 - - [16/Oct/2025 14:40:16] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-10-16 14:40:16,717 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:40:16,733 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B7364C6270>
+2025-10-16 14:40:16,734 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:40:16,735 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:40:16,736 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73653EC30>
+2025-10-16 14:40:16,737 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:40:16,737 [INFO] DEBUG: current_user() returned: <models.User object at 0x000001B73653EC30> - email: kush786srj@gmail.com
+2025-10-16 14:40:16,738 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-10-16 14:40:16,768 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:40:16,769 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73653EC30>
+2025-10-16 14:40:16,769 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:40:16,772 [INFO] 127.0.0.1 - - [16/Oct/2025 14:40:16] "GET /home HTTP/1.1" 200 -
+2025-10-16 14:40:16,809 [INFO] 127.0.0.1 - - [16/Oct/2025 14:40:16] "GET /static/main.css HTTP/1.1" 200 -
+2025-10-16 14:40:21,749 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:40:21,757 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736589B50>
+2025-10-16 14:40:21,758 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:40:21,759 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:40:21,761 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736589C10>
+2025-10-16 14:40:21,762 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:40:21,779 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:40:21,782 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A2D0>
+2025-10-16 14:40:21,783 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:40:21,787 [INFO] 127.0.0.1 - - [16/Oct/2025 14:40:21] "GET /compliance_incidents HTTP/1.1" 200 -
+2025-10-16 14:40:21,802 [INFO] 127.0.0.1 - - [16/Oct/2025 14:40:21] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:40:24,252 [INFO] 127.0.0.1 - - [16/Oct/2025 14:40:24] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:40:24,253 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:40:24,263 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A210>
+2025-10-16 14:40:24,264 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:40:24,265 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:40:24,268 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A510>
+2025-10-16 14:40:24,268 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:40:24,274 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:40:24,275 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A450>
+2025-10-16 14:40:24,276 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:40:24,278 [INFO] 127.0.0.1 - - [16/Oct/2025 14:40:24] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:40:24,301 [INFO] 127.0.0.1 - - [16/Oct/2025 14:40:24] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:40:38,813 [INFO] 127.0.0.1 - - [16/Oct/2025 14:40:38] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:40:38,815 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:40:38,825 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A210>
+2025-10-16 14:40:38,825 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:40:38,825 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:40:38,826 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A090>
+2025-10-16 14:40:38,826 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:40:38,828 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:40:38,828 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A210>
+2025-10-16 14:40:38,828 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:40:38,829 [INFO] 127.0.0.1 - - [16/Oct/2025 14:40:38] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:40:38,852 [INFO] 127.0.0.1 - - [16/Oct/2025 14:40:38] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:42:03,096 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:03] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:42:03,097 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:03,101 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736589FD0>
+2025-10-16 14:42:03,101 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:03,101 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:03,102 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736433710>
+2025-10-16 14:42:03,103 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:03,105 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:03,107 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736589FD0>
+2025-10-16 14:42:03,108 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:03,109 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:03] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:42:03,124 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:03] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:42:05,695 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:05,698 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:05] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:42:05,705 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736589C10>
+2025-10-16 14:42:05,705 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:05,705 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:05,706 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A510>
+2025-10-16 14:42:05,706 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:05,711 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:05,712 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736589C10>
+2025-10-16 14:42:05,712 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:05,713 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:05] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:42:05,730 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:05] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:42:40,041 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:40] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:42:40,041 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:40,047 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A990>
+2025-10-16 14:42:40,047 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:40,048 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:40,049 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736433710>
+2025-10-16 14:42:40,049 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:40,051 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:40,051 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A990>
+2025-10-16 14:42:40,051 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:40,052 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:40] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:42:40,069 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:40] "GET /static/main.css HTTP/1.1" 200 -
+2025-10-16 14:42:42,066 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:42,067 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:42] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:42:42,070 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658AA50>
+2025-10-16 14:42:42,070 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:42,070 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:42,071 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A450>
+2025-10-16 14:42:42,071 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:42,073 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:42,074 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658AA50>
+2025-10-16 14:42:42,074 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:42,075 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:42] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:42:42,088 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:42] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:42:43,233 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:43,234 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:43] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:42:43,241 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658AD50>
+2025-10-16 14:42:43,241 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:43,241 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:43,243 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736433710>
+2025-10-16 14:42:43,243 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:43,248 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:43,249 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658AD50>
+2025-10-16 14:42:43,249 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:43,251 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:43] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:42:43,266 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:43] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:42:44,085 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:44] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:42:44,087 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:44,092 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736589FD0>
+2025-10-16 14:42:44,092 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:44,092 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:44,093 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658AB10>
+2025-10-16 14:42:44,094 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:44,099 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:44,100 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736589FD0>
+2025-10-16 14:42:44,101 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:44,103 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:44] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:42:44,119 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:44] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:42:44,916 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:44] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:42:44,918 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:44,925 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A090>
+2025-10-16 14:42:44,926 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:44,926 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:44,928 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B736433710>
+2025-10-16 14:42:44,929 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:44,933 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:44,934 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A090>
+2025-10-16 14:42:44,935 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:44,937 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:44] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:42:44,951 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:44] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:42:45,701 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:45] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:42:45,703 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:45,710 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658AD50>
+2025-10-16 14:42:45,710 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:45,710 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:45,711 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658AB10>
+2025-10-16 14:42:45,711 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:45,717 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:45,718 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658AD50>
+2025-10-16 14:42:45,719 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:45,721 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:45] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:42:45,735 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:45] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:42:51,908 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:51] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:42:51,917 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:42:51,923 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A210>
+2025-10-16 14:42:51,924 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:42:51,924 [INFO] 127.0.0.1 - - [16/Oct/2025 14:42:51] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-10-16 14:44:15,384 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-10-16 14:44:15,391 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:15] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-10-16 14:44:15,415 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:15] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:44:15,415 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:15] "GET /login HTTP/1.1" 200 -
+2025-10-16 14:44:15,461 [INFO] DEBUG: current_user() - session user_id: None
+2025-10-16 14:44:15,461 [INFO] DEBUG: current_user() - no user_id in session
+2025-10-16 14:44:15,462 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:15] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-10-16 14:44:15,465 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:15] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:44:15,489 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:15] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-16 14:44:50,705 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-10-16 14:44:50,720 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:50] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-10-16 14:44:50,727 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:44:50,733 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658B1D0>
+2025-10-16 14:44:50,734 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:44:50,734 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:44:50,734 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658B410>
+2025-10-16 14:44:50,734 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:44:50,735 [INFO] DEBUG: current_user() returned: <models.User object at 0x000001B73658B410> - email: kush786srj@gmail.com
+2025-10-16 14:44:50,735 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-10-16 14:44:50,763 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:44:50,764 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658B410>
+2025-10-16 14:44:50,764 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:44:50,766 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:50] "GET /home HTTP/1.1" 200 -
+2025-10-16 14:44:50,807 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:44:50,816 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658B1D0>
+2025-10-16 14:44:50,817 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:44:50,818 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:50] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-10-16 14:44:50,825 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:50] "GET /static/main.css HTTP/1.1" 200 -
+2025-10-16 14:44:56,084 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:44:56,087 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:56] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:44:56,094 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A990>
+2025-10-16 14:44:56,095 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:44:56,095 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:44:56,097 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658B4D0>
+2025-10-16 14:44:56,097 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:44:56,101 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:44:56,102 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A690>
+2025-10-16 14:44:56,102 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:44:56,104 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:56] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:44:56,133 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:44:56,228 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:56] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-16 14:44:56,242 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B735E265D0>
+2025-10-16 14:44:56,244 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:44:56,245 [INFO] 127.0.0.1 - - [16/Oct/2025 14:44:56] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-10-16 14:46:14,142 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:46:14,144 [INFO] 127.0.0.1 - - [16/Oct/2025 14:46:14] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-16 14:46:14,155 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658B410>
+2025-10-16 14:46:14,157 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:46:14,157 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:46:14,159 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A990>
+2025-10-16 14:46:14,159 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:46:14,167 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:46:14,168 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658B410>
+2025-10-16 14:46:14,168 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:46:14,169 [INFO] 127.0.0.1 - - [16/Oct/2025 14:46:14] "GET /compliance_risk_assessment HTTP/1.1" 200 -
+2025-10-16 14:46:14,192 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-16 14:46:14,198 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001B73658A990>
+2025-10-16 14:46:14,198 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-16 14:46:14,198 [INFO] 127.0.0.1 - - [16/Oct/2025 14:46:14] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-10-16 14:46:14,204 [INFO] 127.0.0.1 - - [16/Oct/2025 14:46:14] "GET /static/main.css HTTP/1.1" 200 -
