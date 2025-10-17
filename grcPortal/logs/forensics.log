@@ -15162,3 +15162,12 @@ ata Archiving" to job store "default"
 2025-10-16 14:46:14,198 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
 2025-10-16 14:46:14,198 [INFO] 127.0.0.1 - - [16/Oct/2025 14:46:14] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
 2025-10-16 14:46:14,204 [INFO] 127.0.0.1 - - [16/Oct/2025 14:46:14] "GET /static/main.css HTTP/1.1" 200 -
+2025-10-17 10:22:53,476 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-10-17 10:22:53,489 [INFO] 127.0.0.1 - - [17/Oct/2025 10:22:53] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-10-17 10:22:53,529 [INFO] 127.0.0.1 - - [17/Oct/2025 10:22:53] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-17 10:22:53,532 [INFO] 127.0.0.1 - - [17/Oct/2025 10:22:53] "GET /login HTTP/1.1" 200 -
+2025-10-17 10:22:53,608 [INFO] 127.0.0.1 - - [17/Oct/2025 10:22:53] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-17 10:22:53,626 [INFO] DEBUG: current_user() - session user_id: None
+2025-10-17 10:22:53,627 [INFO] DEBUG: current_user() - no user_id in session
+2025-10-17 10:22:53,628 [INFO] 127.0.0.1 - - [17/Oct/2025 10:22:53] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-10-17 10:22:53,708 [INFO] 127.0.0.1 - - [17/Oct/2025 10:22:53] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -

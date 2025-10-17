@@ -74,7 +74,7 @@ pre { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, C
 
 /* Badge styling */
 .badge-secondary {
-  color: #000 !important;
+  color: #605f5f !important;
 }
 
 /* Blur effect for background when modal is shown */
@@ -84,5 +84,5 @@ pre { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, C
 
 /* Badge styling */
 .badge {
-  color: #000 !important;
+  color: #605f5f !important;
 }

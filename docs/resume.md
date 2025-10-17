@@ -11,7 +11,7 @@ permalink: /resume/
 ---
 
 ## 📝 Professional Summary
-Dynamic IT professional with 2+ years of experience in web design, development, freelancing, and teaching across India and the USA. Certified Salesforce Platform Developer-1 and Administrator, proficient in multiple programming languages, web technologies, and databases. Currently advancing expertise in cybersecurity through a 6-Month Tech Career Readiness Program, including a GRC project. Seeking a challenging, stable, remote-friendly role.
+Dynamic IT professional with 2+ years of experience in web design, development, freelancing, and teaching across India and the USA. Certified Salesforce Platform Developer-1 and Administrator, proficient in multiple programming languages, web technologies, and databases. Currently advancing expertise in cybersecurity through a 6-Month Tech Career Readiness Program, including a GRC project. Seeking a challenging, and stable role.
 
 ---
 

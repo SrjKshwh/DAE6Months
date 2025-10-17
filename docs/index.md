@@ -13,10 +13,10 @@ title: Home
   </div>
   <div style="flex: 2; padding: 1rem;">
     <p style="font-size: 1.1em; line-height: 1.6;">
-      Welcome! I'm a dynamic IT professional with over 10 years of experience in web design, development, freelancing, and teaching across India and the USA. Certified as a Salesforce Platform Developer-1 and Administrator, I excel in various programming languages, web technologies, and databases.
+      Welcome! I'm a dynamic IT professional with around 2 years of experience in web design, development, freelancing, and teaching across India and the USA. Certified as a Salesforce Platform Developer-1 and Administrator, I excel in various programming languages, web technologies, and databases.
     </p>
     <p style="font-size: 1.1em; line-height: 1.6;">
-      Currently, I'm advancing my skills in cybersecurity through a 6-Month Tech Career Readiness Program, focusing on a comprehensive GRC project. I'm eager to take on challenging, stable, remote-friendly roles that leverage my expertise.
+      Currently, I'm advancing my skills in cybersecurity through a 6-Month Tech Career Readiness Program, focusing on a comprehensive GRC project. I'm eager to take on challenging, and stable roles that leverage my expertise.
     </p>
   </div>
 </div>
