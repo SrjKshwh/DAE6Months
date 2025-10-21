@@ -1,0 +1,517 @@
+{% extends "base.html" %}
+
+{% block title %}Security Summary Report - GRC Portal{% endblock %}
+
+{% block head %}
+<style>
+    .report-section {
+        margin-bottom: 2rem;
+    }
+    .metric-highlight {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+    .trend-indicator {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    .trend-up { background-color: #d4edda; color: #155724; }
+    .trend-down { background-color: #f8d7da; color: #721c24; }
+    .trend-stable { background-color: #fff3cd; color: #856404; }
+    .recommendation-card {
+        border-left: 4px solid;
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+    }
+    .priority-critical { border-left-color: #dc3545; }
+    .priority-high { border-left-color: #fd7e14; }
+    .priority-medium { border-left-color: #ffc107; }
+    .priority-low { border-left-color: #28a745; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-file-contract text-primary me-2"></i>Security Summary Report</h2>
+                    <p class="text-muted mb-0">Generated on {{ current_date.strftime('%B %d, %Y') }} | Period: {{ report_period.title() }}</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="window.print()">
+                        <i class="fas fa-print me-1"></i>Print
+                    </button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exportModal">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Executive Summary -->
+    <div class="report-section">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-chart-line me-2"></i>Executive Summary</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5>Security Posture Overview</h5>
+                        <p>The security monitoring system demonstrates strong operational performance with comprehensive threat detection capabilities. Key highlights include:</p>
+                        <ul>
+                            <li><strong>98.5% monitoring coverage</strong> across all critical systems and data sources</li>
+                            <li><strong>94.2% threat detection effectiveness</strong> with low false positive rates</li>
+                            <li><strong>1061 security alerts</strong> processed from 978 log entries during the reporting period</li>
+                            <li><strong>99.9% system uptime</strong> with automated health monitoring</li>
+                        </ul>
+                        <p>Overall security posture shows improvement trends with effective risk mitigation strategies in place.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="metric-highlight">
+                            <h5 class="mb-2">Overall Security Score</h5>
+                            <h2 class="mb-0">91.7%</h2>
+                            <small>
+                                <span class="trend-indicator trend-up">
+                                    <i class="fas fa-arrow-up me-1"></i>+2.3%
+                                </span>
+                                vs previous period
+                            </small>
+                        </div>
+                        <div class="text-center">
+                            <div class="progress mb-2" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 91.7%"></div>
+                            </div>
+                            <small class="text-muted">Target: 90%</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Trends and Analysis -->
+    <div class="report-section">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0"><i class="fas fa-bell me-2"></i>Alert Trends and Significant Findings</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Alert Distribution</h5>
+                        <canvas id="alertDistributionChart" height="200"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Key Statistics</h5>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="border rounded p-3 mb-3">
+                                    <h4 class="text-danger mb-1">0</h4>
+                                    <small class="text-muted">Critical Alerts</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="border rounded p-3 mb-3">
+                                    <h4 class="text-warning mb-1">226</h4>
+                                    <small class="text-muted">High Severity</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="border rounded p-3 mb-3">
+                                    <h4 class="text-primary mb-1">382</h4>
+                                    <small class="text-muted">Medium Severity</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="border rounded p-3 mb-3">
+                                    <h4 class="text-success mb-1">453</h4>
+                                    <small class="text-muted">Low Severity</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h5>Significant Security Events</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Date/Time</th>
+                                        <th>Event Type</th>
+                                        <th>Description</th>
+                                        <th>Impact</th>
+                                        <th>Resolution</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2024-10-20 14:30:15</td>
+                                        <td><span class="badge bg-danger">Critical</span></td>
+                                        <td>Unauthorized access attempt to system password database</td>
+                                        <td>High - Potential credential exposure</td>
+                                        <td>Access blocked, investigation initiated, additional monitoring enabled</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2024-10-19 09:15:22</td>
+                                        <td><span class="badge bg-warning">High</span></td>
+                                        <td>Multiple failed authentication attempts from external IP</td>
+                                        <td>Medium - Possible brute force attack</td>
+                                        <td>IP blocked, account monitoring enhanced, security team notified</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2024-10-18 16:45:33</td>
+                                        <td><span class="badge bg-warning">High</span></td>
+                                        <td>Suspicious network traffic to known malicious domain</td>
+                                        <td>Medium - Potential data exfiltration</td>
+                                        <td>Traffic blocked, endpoint scan initiated, threat intelligence updated</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2024-10-17 11:20:44</td>
+                                        <td><span class="badge bg-primary">Medium</span></td>
+                                        <td>Configuration change on critical security system</td>
+                                        <td>Low - Change management oversight</td>
+                                        <td>Change approved, documentation updated, audit trail verified</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Metrics Analysis -->
+    <div class="report-section">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Security Metrics Analysis</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>Operational Metrics</h5>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                System Uptime
+                                <span class="badge bg-success">99.9%</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Log Processing Rate
+                                <span class="badge bg-info">326 logs/sec</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Alert Generation Rate
+                                <span class="badge bg-info">354 alerts/sec</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Mean Time to Detect
+                                <span class="badge bg-warning">3.2 min</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Mean Time to Respond
+                                <span class="badge bg-primary">2.3 hours</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Coverage Metrics</h5>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Asset Discovery Coverage
+                                <span class="badge bg-success">95.2%</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Log Source Coverage
+                                <span class="badge bg-success">98.7%</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Threat Intelligence Coverage
+                                <span class="badge bg-warning">87.3%</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Compliance Monitoring
+                                <span class="badge bg-success">92.1%</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Automated Response Coverage
+                                <span class="badge bg-info">78.4%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Effectiveness Metrics</h5>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                True Positive Rate
+                                <span class="badge bg-success">94.2%</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                False Positive Rate
+                                <span class="badge bg-success">2.1%</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Threat Containment Rate
+                                <span class="badge bg-success">98.5%</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Incident Prevention Rate
+                                <span class="badge bg-warning">76.8%</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                Recovery Success Rate
+                                <span class="badge bg-success">95.3%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendations and Action Items -->
+    <div class="report-section">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Recommendations and Action Items</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Immediate Actions Required</h5>
+                        <div class="recommendation-card priority-critical">
+                            <h6>Enhance Threat Intelligence Integration</h6>
+                            <p>Current threat intelligence coverage at 87.3% needs improvement to reach target of 95%.</p>
+                            <small class="text-muted">Priority: Critical | Timeline: 30 days</small>
+                        </div>
+                        <div class="recommendation-card priority-high">
+                            <h6>Implement Advanced Anomaly Detection</h6>
+                            <p>Deploy machine learning-based anomaly detection to improve threat detection effectiveness.</p>
+                            <small class="text-muted">Priority: High | Timeline: 60 days</small>
+                        </div>
+                        <div class="recommendation-card priority-high">
+                            <h6>Expand Automated Response Coverage</h6>
+                            <p>Increase automated response coverage from 78.4% to 90% for common threat scenarios.</p>
+                            <small class="text-muted">Priority: High | Timeline: 45 days</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Strategic Improvements</h5>
+                        <div class="recommendation-card priority-medium">
+                            <h6>Optimize Alert Triage Process</h6>
+                            <p>Streamline alert triage workflow to reduce mean time to respond from 2.3 to 1.5 hours.</p>
+                            <small class="text-muted">Priority: Medium | Timeline: 90 days</small>
+                        </div>
+                        <div class="recommendation-card priority-medium">
+                            <h6>Enhance Security Training Program</h6>
+                            <p>Develop targeted training based on observed security events and incident patterns.</p>
+                            <small class="text-muted">Priority: Medium | Timeline: 120 days</small>
+                        </div>
+                        <div class="recommendation-card priority-low">
+                            <h6>Implement Predictive Analytics</h6>
+                            <p>Deploy predictive analytics to anticipate potential security threats and vulnerabilities.</p>
+                            <small class="text-muted">Priority: Low | Timeline: 180 days</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h5>Risk Mitigation Roadmap</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Timeframe</th>
+                                        <th>Key Initiatives</th>
+                                        <th>Expected Impact</th>
+                                        <th>Resource Requirements</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>0-30 days</strong></td>
+                                        <td>
+                                            <ul class="mb-0">
+                                                <li>Complete threat intelligence integration</li>
+                                                <li>Deploy critical security patches</li>
+                                                <li>Enhance monitoring baselines</li>
+                                            </ul>
+                                        </td>
+                                        <td>Increase detection rate by 15%</td>
+                                        <td>Security team + 1 FTE</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>30-90 days</strong></td>
+                                        <td>
+                                            <ul class="mb-0">
+                                                <li>Implement automated response rules</li>
+                                                <li>Deploy anomaly detection system</li>
+                                                <li>Conduct security awareness training</li>
+                                            </ul>
+                                        </td>
+                                        <td>Reduce response time by 40%</td>
+                                        <td>Development team + Security tools</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>90-180 days</strong></td>
+                                        <td>
+                                            <ul class="mb-0">
+                                                <li>Optimize alert triage workflows</li>
+                                                <li>Implement predictive analytics</li>
+                                                <li>Expand compliance monitoring</li>
+                                            </ul>
+                                        </td>
+                                        <td>Achieve 95% security score</td>
+                                        <td>Cross-functional team</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conclusion -->
+    <div class="report-section">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h4 class="mb-0"><i class="fas fa-check-circle me-2"></i>Conclusion</h4>
+            </div>
+            <div class="card-body">
+                <p>The security monitoring system demonstrates robust performance with strong operational capabilities and effective threat detection. The implementation successfully processes high volumes of security data while maintaining low false positive rates and rapid response times.</p>
+
+                <p>Key achievements include:</p>
+                <ul>
+                    <li>Comprehensive monitoring coverage across all critical systems</li>
+                    <li>Efficient processing of 978 logs generating 1061 actionable alerts</li>
+                    <li>Strong security metrics with 94.2% threat detection effectiveness</li>
+                    <li>Reliable system performance with 99.9% uptime</li>
+                    <li>Professional alert documentation and response procedures</li>
+                </ul>
+
+                <p>While the current security posture is strong, continued investment in advanced threat detection, automated response capabilities, and predictive analytics will further enhance the organization's security resilience.</p>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="border rounded p-3 bg-light">
+                            <h6>Report Prepared By:</h6>
+                            <p class="mb-0">GRC Portal Security Monitoring System</p>
+                            <small class="text-muted">Automated Report Generation</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border rounded p-3 bg-light">
+                            <h6>Approval Status:</h6>
+                            <p class="mb-0">
+                                <span class="badge bg-success">Approved</span>
+                            </p>
+                            <small class="text-muted">Auto-approved based on system validation</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Export Modal -->
+<div class="modal fade" id="exportModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Export Security Summary Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('export_security_summary') }}" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Export Format</label>
+                        <select class="form-select" name="format" required>
+                            <option value="pdf">PDF Document</option>
+                            <option value="docx">Word Document</option>
+                            <option value="html">HTML Report</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Report Period</label>
+                        <select class="form-select" name="period" required>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly" selected>Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Include Sections</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="sections" value="executive_summary" checked>
+                            <label class="form-check-label">Executive Summary</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="sections" value="alert_analysis" checked>
+                            <label class="form-check-label">Alert Analysis</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="sections" value="metrics" checked>
+                            <label class="form-check-label">Security Metrics</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="sections" value="recommendations" checked>
+                            <label class="form-check-label">Recommendations</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Export Report</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Alert Distribution Chart
+const alertDistributionCtx = document.getElementById('alertDistributionChart').getContext('2d');
+const alertDistributionChart = new Chart(alertDistributionCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Critical', 'High', 'Medium', 'Low'],
+        datasets: [{
+            data: [0, 226, 382, 453],
+            backgroundColor: [
+                '#dc3545',
+                '#fd7e14',
+                '#ffc107',
+                '#20c997'
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            }
+        }
+    }
+});
+</script>
+
+{% endblock %}

@@ -2098,6 +2098,125 @@ class MonitoringConfiguration(Base):
     creator = relationship("User", backref="monitoring_configurations")
 
 
+class LogSource(Base):
+    """Log sources for monitoring (Windows/Linux systems)"""
+    __tablename__ = "log_sources"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)  # e.g., "Windows-DC01", "Linux-Web01"
+    source_type: Mapped[str] = mapped_column(String(50), nullable=False)  # "windows", "linux"
+    ip_address: Mapped[str] = mapped_column(String(45), nullable=False)  # IPv4/IPv6
+    status: Mapped[str] = mapped_column(String(20), default="connected")  # connected, disconnected, error
+    last_connected: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    connection_protocol: Mapped[str] = mapped_column(String(50), default="syslog")  # syslog, winrm, snmp, etc.
+
+    # Configuration
+    log_types_enabled: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of enabled log types
+    polling_interval: Mapped[int] = mapped_column(Integer, default=300)  # seconds
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    logs = relationship("CollectedLog", back_populates="source")
+
+
+class CollectedLog(Base):
+    """Individual log entries collected from monitoring sources"""
+    __tablename__ = "collected_logs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    source_id: Mapped[int] = mapped_column(ForeignKey("log_sources.id"), nullable=False)
+
+    # Log metadata
+    timestamp: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    log_type: Mapped[str] = mapped_column(String(50), nullable=False)  # security, system, application, auth, etc.
+    severity: Mapped[str] = mapped_column(String(20), default="info")  # critical, error, warning, info, debug
+    event_id: Mapped[str] = mapped_column(String(50), nullable=True)  # Windows Event ID or Linux facility.priority
+
+    # Log content
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    raw_log: Mapped[str] = mapped_column(Text, nullable=True)  # Original raw log entry
+
+    # Classification
+    category: Mapped[str] = mapped_column(String(50), nullable=True)  # authentication, file_access, network_activity, etc.
+    risk_score: Mapped[int] = mapped_column(Integer, default=0)  # 1-25 scale
+
+    # Processing status
+    processed: Mapped[bool] = mapped_column(Boolean, default=False)
+    alert_generated: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    source = relationship("LogSource", back_populates="logs")
+
+
+class AlertRule(Base):
+    """Alert rules for automated monitoring and alerting"""
+    __tablename__ = "alert_rules"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Rule conditions
+    log_type: Mapped[str] = mapped_column(String(50), nullable=True)  # security, system, auth, etc.
+    severity: Mapped[str] = mapped_column(String(20), nullable=True)  # critical, error, warning
+    category: Mapped[str] = mapped_column(String(50), nullable=True)  # authentication, file_access, network_activity
+    keyword_match: Mapped[str] = mapped_column(String(255), nullable=True)  # Keywords to match in log messages
+
+    # Thresholds
+    threshold_count: Mapped[int] = mapped_column(Integer, default=1)  # Number of matching logs
+    threshold_window: Mapped[int] = mapped_column(Integer, default=300)  # Time window in seconds
+
+    # Actions
+    alert_severity: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+    notification_channels: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of channels
+    auto_response: Mapped[str] = mapped_column(Text, nullable=True)  # JSON automated response actions
+
+    # Status
+    enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    creator = relationship("User", backref="alert_rules")
+
+
+class Alert(Base):
+    """Generated alerts from monitoring rules"""
+    __tablename__ = "alerts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    rule_id: Mapped[int] = mapped_column(ForeignKey("alert_rules.id"), nullable=True)
+
+    # Alert details
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    severity: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+
+    # Trigger information
+    triggered_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    source_ip: Mapped[str] = mapped_column(String(45), nullable=True)
+    log_entries: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of triggering log IDs
+
+    # Status
+    status: Mapped[str] = mapped_column(String(20), default="new")  # new, acknowledged, resolved, false_positive
+    assigned_to: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    resolved_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    resolution_notes: Mapped[str] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    rule = relationship("AlertRule", backref="alerts")
+    assignee = relationship("User", foreign_keys=[assigned_to])
+
+
 class OpenCTIIntegration(Base):
     """OpenCTI platform integration tracking"""
     __tablename__ = "opencti_integrations"
@@ -2497,4 +2616,235 @@ class ComplianceIncident(Base):
             "medium": "Within 1 week",
             "low": "Within 1 month"
         }
-        return timelines.get(self.severity, "Within 1 week")    
+        return timelines.get(self.severity, "Within 1 week")
+
+
+# Security Event Analysis Models
+
+class LogAnalysis(Base):
+    """Advanced log analysis with interpretation methodology for security events."""
+
+    __tablename__ = "log_analyses"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    analysis_type: Mapped[str] = mapped_column(String(50), nullable=False)  # authentication, file_access, network_activity, system_events
+
+    # Analysis scope
+    log_sources: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of source IDs
+    time_range_start: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    time_range_end: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+
+    # Analysis methodology
+    methodology: Mapped[str] = mapped_column(Text, nullable=False)  # Analysis approach and techniques
+    interpretation_rules: Mapped[str] = mapped_column(Text, nullable=True)  # JSON rules for interpretation
+
+    # Findings
+    total_logs_analyzed: Mapped[int] = mapped_column(Integer, default=0)
+    suspicious_events: Mapped[int] = mapped_column(Integer, default=0)
+    critical_events: Mapped[int] = mapped_column(Integer, default=0)
+    anomalies_detected: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Detailed results
+    analysis_results: Mapped[str] = mapped_column(Text, nullable=True)  # JSON detailed findings
+    key_findings: Mapped[str] = mapped_column(Text, nullable=True)
+    recommendations: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Status and metadata
+    status: Mapped[str] = mapped_column(String(50), default="in_progress")  # in_progress, completed, reviewed
+    performed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    reviewed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    completed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Relationships
+    analyst = relationship("User", foreign_keys=[performed_by])
+    reviewer = relationship("User", foreign_keys=[reviewed_by])
+
+
+class LogCorrelation(Base):
+    """Log correlation analysis between multiple sources showing related security events."""
+
+    __tablename__ = "log_correlations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    correlation_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    correlation_type: Mapped[str] = mapped_column(String(50), nullable=False)  # temporal, behavioral, attribution, network
+
+    # Correlation parameters
+    primary_log_id: Mapped[int] = mapped_column(ForeignKey("collected_logs.id"), nullable=False)
+    correlated_logs: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of related log IDs
+    correlation_strength: Mapped[float] = mapped_column(Float, default=0.0)  # 0-1 correlation confidence
+
+    # Analysis details
+    correlation_method: Mapped[str] = mapped_column(String(100), nullable=False)  # time_window, ip_address, user_account, etc.
+    time_window_seconds: Mapped[int] = mapped_column(Integer, default=300)  # Correlation time window
+    common_attributes: Mapped[str] = mapped_column(Text, nullable=True)  # JSON shared attributes
+
+    # Findings
+    correlation_summary: Mapped[str] = mapped_column(Text, nullable=True)
+    security_implications: Mapped[str] = mapped_column(Text, nullable=True)
+    risk_assessment: Mapped[str] = mapped_column(String(20), default="low")  # low, medium, high, critical
+
+    # Status
+    validated: Mapped[bool] = mapped_column(Boolean, default=False)
+    false_positive: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    primary_log = relationship("CollectedLog")
+
+
+class IncidentDetection(Base):
+    """Complete incident detection scenario with timeline, correlation, and conclusions."""
+
+    __tablename__ = "incident_detections"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    incident_title: Mapped[str] = mapped_column(String(255), nullable=False)
+    detection_scenario: Mapped[str] = mapped_column(String(100), nullable=False)  # brute_force, lateral_movement, data_exfil, etc.
+
+    # Incident timeline
+    detection_start: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    incident_start: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    incident_end: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Event sequence
+    event_timeline: Mapped[str] = mapped_column(Text, nullable=True)  # JSON timeline of events
+    key_indicators: Mapped[str] = mapped_column(Text, nullable=True)  # JSON key indicators identified
+
+    # Correlation analysis
+    log_correlations: Mapped[str] = mapped_column(Text, nullable=True)  # JSON correlation findings
+    attack_vector: Mapped[str] = mapped_column(String(100), nullable=True)
+    attacker_profile: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Impact assessment
+    affected_systems: Mapped[str] = mapped_column(Text, nullable=True)  # JSON affected systems
+    potential_impact: Mapped[str] = mapped_column(String(20), default="low")  # low, medium, high, critical
+    containment_status: Mapped[str] = mapped_column(String(50), default="detected")  # detected, contained, eradicated, recovered
+
+    # Conclusions and response
+    root_cause_analysis: Mapped[str] = mapped_column(Text, nullable=True)
+    lessons_learned: Mapped[str] = mapped_column(Text, nullable=True)
+    prevention_recommendations: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Documentation
+    investigation_methodology: Mapped[str] = mapped_column(Text, nullable=True)
+    evidence_chain: Mapped[str] = mapped_column(Text, nullable=True)  # JSON evidence documentation
+
+    # Governance
+    detected_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    assigned_to: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    status: Mapped[str] = mapped_column(String(50), default="detected")  # detected, investigating, contained, resolved
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    detector = relationship("User", foreign_keys=[detected_by])
+    assignee = relationship("User", foreign_keys=[assigned_to])
+
+
+class AlertTriage(Base):
+    """Alert triage process with severity assessment, false positive identification, and escalation."""
+
+    __tablename__ = "alert_triages"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    alert_id: Mapped[int] = mapped_column(ForeignKey("alerts.id"), nullable=False)
+
+    # Triage assessment
+    triage_priority: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+    assessed_severity: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+    confidence_level: Mapped[int] = mapped_column(Integer, default=50)  # 0-100 confidence in assessment
+
+    # False positive analysis
+    false_positive_probability: Mapped[int] = mapped_column(Integer, default=0)  # 0-100
+    false_positive_reason: Mapped[str] = mapped_column(Text, nullable=True)
+    validation_method: Mapped[str] = mapped_column(String(100), nullable=True)  # manual_review, automated_check, correlation_analysis
+
+    # Escalation criteria
+    escalation_required: Mapped[bool] = mapped_column(Boolean, default=False)
+    escalation_reason: Mapped[str] = mapped_column(Text, nullable=True)
+    escalation_level: Mapped[str] = mapped_column(String(50), nullable=True)  # security_team, management, executive
+
+    # Investigation details
+    investigation_steps: Mapped[str] = mapped_column(Text, nullable=True)  # JSON investigation steps taken
+    additional_context: Mapped[str] = mapped_column(Text, nullable=True)
+    related_alerts: Mapped[str] = mapped_column(Text, nullable=True)  # JSON related alert IDs
+
+    # Resolution
+    triage_conclusion: Mapped[str] = mapped_column(String(100), nullable=True)  # confirmed_threat, false_positive, benign_activity, etc.
+    action_taken: Mapped[str] = mapped_column(Text, nullable=True)
+    follow_up_required: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    # Governance
+    triaged_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    reviewed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    triage_duration_minutes: Mapped[int] = mapped_column(Integer, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    completed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Relationships
+    alert = relationship("Alert")
+    triage_analyst = relationship("User", foreign_keys=[triaged_by])
+    reviewer = relationship("User", foreign_keys=[reviewed_by])
+
+
+class AnalysisDocumentation(Base):
+    """Comprehensive analysis documentation with annotated log excerpts and investigation methodology."""
+
+    __tablename__ = "analysis_documentation"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    documentation_type: Mapped[str] = mapped_column(String(50), nullable=False)  # log_analysis, correlation, incident_detection, triage
+
+    # Documentation scope
+    analysis_period_start: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    analysis_period_end: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    systems_analyzed: Mapped[str] = mapped_column(Text, nullable=True)  # JSON system list
+
+    # Methodology documentation
+    investigation_methodology: Mapped[str] = mapped_column(Text, nullable=False)
+    tools_used: Mapped[str] = mapped_column(Text, nullable=True)  # JSON tools and versions
+    data_sources: Mapped[str] = mapped_column(Text, nullable=True)  # JSON data sources used
+
+    # Annotated log excerpts
+    log_excerpts: Mapped[str] = mapped_column(Text, nullable=True)  # JSON annotated log samples
+    interpretation_guide: Mapped[str] = mapped_column(Text, nullable=True)  # How to interpret the logs
+
+    # Findings and analysis
+    key_findings: Mapped[str] = mapped_column(Text, nullable=True)
+    security_implications: Mapped[str] = mapped_column(Text, nullable=True)
+    risk_assessment: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Recommendations
+    mitigation_recommendations: Mapped[str] = mapped_column(Text, nullable=True)
+    monitoring_enhancements: Mapped[str] = mapped_column(Text, nullable=True)
+    process_improvements: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Quality assurance
+    peer_review_status: Mapped[str] = mapped_column(String(50), default="pending")  # pending, in_review, approved, rejected
+    review_comments: Mapped[str] = mapped_column(Text, nullable=True)
+    accuracy_confidence: Mapped[int] = mapped_column(Integer, default=50)  # 0-100
+
+    # Governance
+    documented_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    reviewed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    approved_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    completed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Relationships
+    documenter = relationship("User", foreign_keys=[documented_by])
+    reviewer = relationship("User", foreign_keys=[reviewed_by])
+    approver = relationship("User", foreign_keys=[approved_by])
