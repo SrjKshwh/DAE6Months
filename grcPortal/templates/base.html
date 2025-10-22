@@ -86,7 +86,20 @@
                             <li><a class="dropdown-item" href="{{ url_for('vulnerability_scan') }}"><i class="fas fa-search-plus me-2"></i>Vulnerability Scans</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('asset_discovery') }}"><i class="fas fa-network-wired me-2"></i>Asset Discovery</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('asset_register') }}"><i class="fas fa-server me-2"></i>Asset Register</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('monitoring') }}"><i class="fas fa-eye me-2"></i>Security Monitoring</a></li>
+                            <!-- Security Monitoring Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-eye me-2"></i>Security Monitoring
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <li><a class="dropdown-item" href="{{ url_for('add_log_data') }}"><i class="fas fa-plus me-2"></i>Add Log Data</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('collected_logs') }}"><i class="fas fa-list me-2"></i>Collected Logs</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('monitoring') }}"><i class="fas fa-eye me-2"></i>Monitoring Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('security_event_analysis') }}"><i class="fas fa-chart-line me-2"></i>Security Event Analysis</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('security_summary_report') }}"><i class="fas fa-file-alt me-2"></i>Security Summary Report</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('alert_documentation') }}"><i class="fas fa-book me-2"></i>Alert Documentation</a></li>
+                                </ul>
+                            </li>
                             <li><a class="dropdown-item" href="{{ url_for('monitoring_setup') }}"><i class="fas fa-cogs me-2"></i>Monitoring Setup</a></li>
                         </ul>
                     </li>

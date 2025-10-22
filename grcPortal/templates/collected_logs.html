@@ -1,0 +1,283 @@
+<!-- templates/collected_logs.html -->
+{% extends "base.html" %}
+
+{% block title %}Collected Logs - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="text-primary"><i class="fas fa-list"></i> Collected Logs</h1>
+                <div>
+                    <a href="{{ url_for('add_log_data') }}" class="btn btn-success me-2">
+                        <i class="fas fa-plus"></i> Add Log Data
+                    </a>
+                    <a href="{{ url_for('security_event_analysis') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-chart-line"></i> Security Event Analysis
+                    </a>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-database"></i> Total Logs</h5>
+                            <h3>{{ total_logs }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-info-circle"></i> Info Level</h5>
+                            <h3>{{ logs|selectattr('severity', 'equalto', 'info')|list|length }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-exclamation-triangle"></i> Warning Level</h5>
+                            <h3>{{ logs|selectattr('severity', 'equalto', 'warning')|list|length }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-exclamation-circle"></i> Error/Critical</h5>
+                            <h3>{{ logs|selectattr('severity', 'in', ['error', 'critical'])|list|length }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logs Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-table"></i> Log Entries</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th><i class="fas fa-clock"></i> Timestamp</th>
+                                    <th><i class="fas fa-server"></i> Source</th>
+                                    <th><i class="fas fa-tag"></i> Type</th>
+                                    <th><i class="fas fa-exclamation-circle"></i> Severity</th>
+                                    <th><i class="fas fa-folder"></i> Category</th>
+                                    <th><i class="fas fa-comment"></i> Message Preview</th>
+                                    <th><i class="fas fa-cogs"></i> Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in logs %}
+                                <tr>
+                                    <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') if log.timestamp else 'N/A' }}</td>
+                                    <td>
+                                        {% if log.source %}
+                                            <span class="badge bg-secondary">{{ log.source.name }}</span>
+                                        {% else %}
+                                            <span class="text-muted">Unknown</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ log.log_type|title }}</span>
+                                    </td>
+                                    <td>
+                                        {% if log.severity == 'critical' %}
+                                            <span class="badge bg-danger">{{ log.severity|title }}</span>
+                                        {% elif log.severity == 'error' %}
+                                            <span class="badge bg-danger">{{ log.severity|title }}</span>
+                                        {% elif log.severity == 'warning' %}
+                                            <span class="badge bg-warning">{{ log.severity|title }}</span>
+                                        {% else %}
+                                            <span class="badge bg-info">{{ log.severity|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if log.category %}
+                                            <span class="badge bg-light text-dark">{{ log.category|replace('_', ' ')|title }}</span>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span title="{{ log.message }}">
+                                            {{ log.message[:100] }}{% if log.message|length > 100 %}...{% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewLogDetails({{ log.id }})">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if total_pages > 1 %}
+                    <nav aria-label="Log pagination" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if page > 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('collected_logs', page=page-1, per_page=per_page) }}">
+                                    <i class="fas fa-chevron-left"></i> Previous
+                                </a>
+                            </li>
+                            {% endif %}
+
+                            {% for page_num in page_range %}
+                            <li class="page-item {% if page_num == page %}active{% endif %}">
+                                <a class="page-link" href="{{ url_for('collected_logs', page=page_num, per_page=per_page) }}">
+                                    {{ page_num }}
+                                </a>
+                            </li>
+                            {% endfor %}
+
+                            {% if page < total_pages %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('collected_logs', page=page+1, per_page=per_page) }}">
+                                    Next <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Log Details Modal -->
+<div class="modal fade" id="logDetailsModal" tabindex="-1" aria-labelledby="logDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logDetailsModalLabel">
+                    <i class="fas fa-file-alt"></i> Log Entry Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="logDetailsContent">
+                <!-- Content will be loaded dynamically -->
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewLogDetails(logId) {
+    const modal = new bootstrap.Modal(document.getElementById('logDetailsModal'));
+    const content = document.getElementById('logDetailsContent');
+
+    // Show loading spinner
+    content.innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading log details...</p>
+        </div>
+    `;
+
+    modal.show();
+
+    // Fetch log details via AJAX
+    fetch(`/api/log_details/${logId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                content.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i> Error: ${data.error}
+                    </div>
+                `;
+                return;
+            }
+
+            // Build detailed view
+            let html = '<div class="row">';
+
+            // Left column - Basic Info
+            html += '<div class="col-md-6">';
+            html += '<h6 class="text-primary"><i class="fas fa-info-circle"></i> Basic Information</h6>';
+            html += '<table class="table table-sm">';
+            html += `<tr><th>Log ID:</th><td>${data.id}</td></tr>`;
+            html += `<tr><th>Timestamp:</th><td>${data.timestamp}</td></tr>`;
+            html += `<tr><th>Source:</th><td><span class="badge bg-secondary">${data.source_name || 'Unknown'}</span></td></tr>`;
+            html += `<tr><th>Log Type:</th><td><span class="badge bg-info">${data.log_type}</span></td></tr>`;
+            html += `<tr><th>Severity:</th><td><span class="badge bg-${getSeverityClass(data.severity)}">${data.severity}</span></td></tr>`;
+            html += `<tr><th>Category:</th><td>${data.category || 'N/A'}</td></tr>`;
+            html += '</table>';
+            html += '</div>';
+
+            // Right column - Message
+            html += '<div class="col-md-6">';
+            html += '<h6 class="text-primary"><i class="fas fa-comment"></i> Log Message</h6>';
+            html += `<div class="bg-light p-3 rounded" style="max-height: 300px; overflow-y: auto;">`;
+            html += `<pre class="mb-0" style="white-space: pre-wrap; font-size: 0.9em;">${data.message}</pre>`;
+            html += '</div>';
+
+            if (data.raw_log) {
+                html += '<h6 class="text-primary mt-3"><i class="fas fa-code"></i> Raw Log</h6>';
+                html += `<div class="bg-dark text-light p-3 rounded" style="max-height: 200px; overflow-y: auto;">`;
+                html += `<pre class="mb-0" style="font-size: 0.8em;">${data.raw_log}</pre>`;
+                html += '</div>';
+            }
+
+            html += '</div>';
+            html += '</div>';
+
+            content.innerHTML = html;
+        })
+        .catch(error => {
+            content.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i> Error loading log details: ${error.message}
+                </div>
+            `;
+        });
+}
+
+function getSeverityClass(severity) {
+    switch(severity) {
+        case 'critical': return 'danger';
+        case 'error': return 'danger';
+        case 'warning': return 'warning';
+        default: return 'info';
+    }
+}
+</script>
+
+<style>
+.table th {
+    vertical-align: middle;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+
+.modal-body pre {
+    font-family: 'Courier New', monospace;
+}
+</style>
+{% endblock %}

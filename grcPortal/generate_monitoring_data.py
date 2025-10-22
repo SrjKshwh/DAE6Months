@@ -13,14 +13,24 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from app import create_app, simulate_log_collection, create_default_alert_rules, process_alerts_from_logs
+from app import create_app, create_default_alert_rules, simulate_log_collection, process_alerts_from_logs
 from models import LogSource, CollectedLog, AlertRule, Alert, MonitoringConfiguration
-from db import close_session
+from db import close_session, get_session
 
 def generate_sample_data():
     """Generate sample monitoring data for demonstration"""
 
-    app = create_app()
+    # Create app context
+    try:
+        app = create_app()
+        if app is None:
+            print("Error: create_app() returned None")
+            return
+    except Exception as e:
+        print(f"Error creating app: {e}")
+        import traceback
+        traceback.print_exc()
+        return
 
     with app.app_context():
         print("Generating sample monitoring data for GRC Portal...")
@@ -35,7 +45,6 @@ def generate_sample_data():
 
         # Step 1.5: Create default monitoring configuration
         print("\nStep 1.5: Creating default monitoring configuration...")
-        from db import get_session
         db = get_session()
         existing_config = db.query(MonitoringConfiguration).first()
         if not existing_config:
@@ -71,7 +80,6 @@ def generate_sample_data():
             print(f"   - Total logs collected: {log_data['total_logs']}")
 
             # Get log counts by category
-            from db import get_session
             db = get_session()
             auth_logs = db.query(CollectedLog).filter(CollectedLog.category == 'authentication').count()
             file_logs = db.query(CollectedLog).filter(CollectedLog.category == 'file_access').count()
@@ -86,7 +94,6 @@ def generate_sample_data():
 
         # Step 3: Process alerts from logs
         print("\nStep 3: Processing alerts from collected logs...")
-        from db import get_session
         db = get_session()
         logs = db.query(CollectedLog).all()
         alerts = process_alerts_from_logs(logs)

@@ -9,6 +9,9 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2><i class="fas fa-file-alt text-primary me-2"></i>Alert Documentation</h2>
                 <div>
+                    <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addAlertModal">
+                        <i class="fas fa-plus me-1"></i>Add Alerts
+                    </button>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exportModal">
                         <i class="fas fa-download me-1"></i>Export Documentation
                     </button>
@@ -296,6 +299,75 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Alert Modal -->
+<div class="modal fade" id="addAlertModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Add New Alert</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('add_alert') }}" method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Alert ID *</label>
+                                <input type="text" class="form-control" name="alert_id" required placeholder="e.g., ALERT-2024-001">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Timestamp *</label>
+                                <input type="datetime-local" class="form-control" name="timestamp" required value="{{ current_date.strftime('%Y-%m-%dT%H:%M') if current_date else '' }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Severity *</label>
+                                <select class="form-select" name="severity" required>
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Category *</label>
+                                <select class="form-select" name="category" required>
+                                    <option value="authentication">Authentication</option>
+                                    <option value="file_access">File Access</option>
+                                    <option value="network_activity">Network Activity</option>
+                                    <option value="system">System</option>
+                                    <option value="application">Application</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Source *</label>
+                                <input type="text" class="form-control" name="source" required placeholder="e.g., Windows-DC01, Linux-Web01, Firewall">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Impact *</label>
+                                <input type="text" class="form-control" name="impact" required placeholder="e.g., High - Potential data breach, Moderate - Service disruption">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description *</label>
+                        <textarea class="form-control" name="description" rows="3" required placeholder="Describe the alert details, trigger conditions, and any relevant context"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Actions Taken *</label>
+                        <textarea class="form-control" name="actions_taken" rows="3" required placeholder="Describe the actions taken in response to this alert"></textarea>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Add Alert</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

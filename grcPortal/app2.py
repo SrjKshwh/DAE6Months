@@ -7145,9 +7145,8 @@ def create_app():
 
         close_session(db)
         return status
-        
-    def perform_log_analysis(db, log_type):
-        """
+def perform_log_analysis(db, log_type):
+    """
     Perform log analysis for a specific log type.
 
     Analyzes collected logs to identify patterns, anomalies, and security events.
@@ -7160,60 +7159,60 @@ def create_app():
     Returns:
         list: List of analysis results with event types, counts, and severity levels
     """
-        try:
-            # Query logs by type
-            if log_type == "authentication":
-             logs = db.query(CollectedLog).filter(
-                    CollectedLog.category == "authentication"
-                ).all()
-            elif log_type == "system":
-                logs = db.query(CollectedLog).filter(
-                    CollectedLog.category.in_(["system", "security"])
-                ).all()
-            elif log_type == "application":
-                logs = db.query(CollectedLog).filter(
-                    CollectedLog.category == "application"
-                ).all()
-            else:
-                logs = db.query(CollectedLog).filter(
-                    CollectedLog.log_type == log_type
-                ).all()
+    try:
+        # Query logs by type
+        if log_type == "authentication":
+            logs = db.query(CollectedLog).filter(
+                CollectedLog.category == "authentication"
+            ).all()
+        elif log_type == "system":
+            logs = db.query(CollectedLog).filter(
+                CollectedLog.category.in_(["system", "security"])
+            ).all()
+        elif log_type == "application":
+            logs = db.query(CollectedLog).filter(
+                CollectedLog.category == "application"
+            ).all()
+        else:
+            logs = db.query(CollectedLog).filter(
+                CollectedLog.log_type == log_type
+            ).all()
 
-            # Analyze logs for patterns
-            analysis_results = []
+        # Analyze logs for patterns
+        analysis_results = []
 
-            # Count events by type and severity
-            event_counts = {}
-            for log in logs:
-                key = f"{log.severity}_{log.event_id or 'unknown'}"
-                if key not in event_counts:
-                    event_counts[key] = {
-                        'count': 0,
-                        'severity': log.severity,
-                        'event_type': log.event_id or 'Unknown Event',
-                        'messages': []
-                    }
-                event_counts[key]['count'] += 1
-                if len(event_counts[key]['messages']) < 3:  # Keep sample messages
-                    event_counts[key]['messages'].append(log.message[:100])
+        # Count events by type and severity
+        event_counts = {}
+        for log in logs:
+            key = f"{log.severity}_{log.event_id or 'unknown'}"
+            if key not in event_counts:
+                event_counts[key] = {
+                    'count': 0,
+                    'severity': log.severity,
+                    'event_type': log.event_id or 'Unknown Event',
+                    'messages': []
+                }
+            event_counts[key]['count'] += 1
+            if len(event_counts[key]['messages']) < 3:  # Keep sample messages
+                event_counts[key]['messages'].append(log.message[:100])
 
-            # Convert to analysis format
-            for key, data in event_counts.items():
-                analysis_results.append({
-                    'event_type': data['event_type'],
-                    'count': data['count'],
-                    'severity': data['severity'],
-                    'sample_messages': data['messages']
-                })
+        # Convert to analysis format
+        for key, data in event_counts.items():
+            analysis_results.append({
+                'event_type': data['event_type'],
+                'count': data['count'],
+                'severity': data['severity'],
+                'sample_messages': data['messages']
+            })
 
-            # Sort by count descending
-            analysis_results.sort(key=lambda x: x['count'], reverse=True)
+        # Sort by count descending
+        analysis_results.sort(key=lambda x: x['count'], reverse=True)
 
-            return analysis_results[:10]  # Return top 10
+        return analysis_results[:10]  # Return top 10
 
-        except Exception as e:
-            logging.error(f"Error performing log analysis for {log_type}: {e}")
-            return []
+    except Exception as e:
+        logging.error(f"Error performing log analysis for {log_type}: {e}")
+        return []
 
     @app.route("/security_event_analysis")
     @login_required
@@ -7408,54 +7407,203 @@ def create_app():
             flash(f"Error loading add log data form: {str(e)}", "error")
             return redirect(url_for('security_event_analysis'))
 
-    @app.route("/collected_logs", methods=["GET"])
-    @login_required
-    def collected_logs():
-        """
-        Display list of all collected logs with view details functionality.
+    # --- New routes from app2.py ---
 
-        Shows a paginated list of all CollectedLog entries with the ability to view
-        full details of each log entry in a modal.
+    @app.route("/security_event_analysis")
+    @login_required
+    def security_event_analysis():
+        """
+        Security Event Analysis Dashboard - Comprehensive analysis of security logs and events.
+
+        Provides analysis of at least 3 different types of security logs with clear explanation
+        of interpretation methodology. Demonstrates basic correlation between different log sources
+        showing related security events. Includes complete incident detection scenarios with
+        event timelines, correlation, and conclusions. Documents alert triage process including
+        severity assessment, false positive identification, and escalation criteria.
+        Analysis documentation includes properly annotated log excerpts, interpretation of findings,
+        and investigation methodology.
         """
         user = current_user()
         db = get_session()
 
         try:
-            # Get pagination parameters
-            page = int(request.args.get('page', 1))
-            per_page = int(request.args.get('per_page', 50))
+            # Get log sources
+            log_sources = db.query(LogSource).filter(LogSource.status == "connected").all()
 
-            # Get total count for pagination
+            # Get total logs count
             total_logs = db.query(CollectedLog).count()
 
-            # Get paginated logs with source information
-            logs = db.query(CollectedLog).options(joinedload(CollectedLog.source)).order_by(
-                CollectedLog.timestamp.desc()
-            ).offset((page - 1) * per_page).limit(per_page).all()
+            # Get active alerts
+            alerts = db.query(Alert).filter(Alert.status == "new").order_by(Alert.created_at.desc()).limit(10).all()
 
-            # Calculate pagination info
-            total_pages = (total_logs + per_page - 1) // per_page
+            # Get log correlations
+            correlations = db.query(LogCorrelation).order_by(LogCorrelation.created_at.desc()).limit(10).all()
 
-            # Calculate pagination range for template
-            start_page = max(1, page - 2)
-            end_page = min(total_pages + 1, page + 3)
-            page_range = list(range(start_page, end_page))
+            # Perform log analysis for different types
+            auth_analysis = perform_log_analysis(db, "authentication")
+            system_analysis = perform_log_analysis(db, "system")
+            app_analysis = perform_log_analysis(db, "application")
+
+            # Get incident detections
+            incident_detections = db.query(IncidentDetection).order_by(IncidentDetection.created_at.desc()).limit(6).all()
+
+            # Get alert triages
+            alert_triages = db.query(AlertTriage).order_by(AlertTriage.created_at.desc()).limit(5).all()
+
+            # Get analysis documentation
+            analysis_docs = db.query(AnalysisDocumentation).order_by(AnalysisDocumentation.created_at.desc()).limit(5).all()
 
             close_session(db)
 
-            return render_template("collected_logs.html",
-                                 logs=logs,
-                                 page=page,
-                                 per_page=per_page,
+            return render_template("security_event_analysis.html",
+                                 log_sources=log_sources,
                                  total_logs=total_logs,
-                                 total_pages=total_pages,
-                                 page_range=page_range)
+                                 alerts=alerts,
+                                 correlations=correlations,
+                                 auth_analysis=auth_analysis,
+                                 system_analysis=system_analysis,
+                                 app_analysis=app_analysis,
+                                 incident_detections=incident_detections,
+                                 alert_triages=alert_triages,
+                                 analysis_docs=analysis_docs)
 
         except Exception as e:
             close_session(db)
-            flash(f"Error loading collected logs: {str(e)}", "error")
+            flash(f"Error loading security event analysis: {str(e)}", "error")
+            return redirect(url_for('monitoring'))
+
+    @app.route("/add_log_data", methods=["GET", "POST"])
+    @login_required
+    def add_log_data():
+        """
+        Form to add more logs/data for security event analysis.
+
+        Allows users to submit additional log data through forms for testing
+        the implemented security event analysis functionality.
+        """
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            action = request.form.get('action')
+
+            if action == "add_log_entry":
+                try:
+                    # Add individual log entry
+                    source_name = request.form.get('source_name')
+                    log_type = request.form.get('log_type')
+                    severity = request.form.get('severity', 'info')
+                    message = request.form.get('message')
+                    category = request.form.get('category')
+
+                    # Get or create log source
+                    source = db.query(LogSource).filter(LogSource.name == source_name).first()
+                    if not source:
+                        source = LogSource(
+                            name=source_name,
+                            source_type="manual",
+                            ip_address="127.0.0.1",
+                            status="connected",
+                            log_types_enabled=json.dumps([log_type])
+                        )
+                        db.add(source)
+                        db.flush()
+
+                    # Create log entry
+                    log_entry = CollectedLog(
+                        source_id=source.id,
+                        log_type=log_type,
+                        severity=severity,
+                        message=message,
+                        category=category
+                    )
+                    db.add(log_entry)
+                    db.commit()
+
+                    log_audit_event(user, "LOG_DATA_ADDED", "SECURITY",
+                                  f"Added log entry to {source_name}", "/add_log_data", True)
+
+                    flash(f"Log entry added successfully to {source_name}!", "success")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error adding log entry: {str(e)}", "error")
+
+            elif action == "bulk_upload":
+                try:
+                    # Handle bulk log upload
+                    log_data = request.form.get('bulk_log_data')
+                    source_name = request.form.get('bulk_source_name', 'bulk_upload')
+
+                    # Get or create log source
+                    source = db.query(LogSource).filter(LogSource.name == source_name).first()
+                    if not source:
+                        source = LogSource(
+                            name=source_name,
+                            source_type="bulk_upload",
+                            ip_address="127.0.0.1",
+                            status="connected",
+                            log_types_enabled=json.dumps(["mixed"])
+                        )
+                        db.add(source)
+                        db.flush()
+
+                    # Parse and add log entries
+                    lines = log_data.strip().split('\n')
+                    added_count = 0
+
+                    for line in lines:
+                        if line.strip():
+                            # Parse log line (basic parsing - can be enhanced)
+                            parts = line.split(' ', 2)
+                            if len(parts) >= 3:
+                                timestamp_str, severity, message = parts
+                                try:
+                                    # Basic timestamp parsing
+                                    timestamp = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
+                                except:
+                                    timestamp = datetime.now(timezone.utc)
+
+                                log_entry = CollectedLog(
+                                    source_id=source.id,
+                                    timestamp=timestamp,
+                                    log_type="bulk",
+                                    severity=severity.lower(),
+                                    message=message,
+                                    raw_log=line
+                                )
+                                db.add(log_entry)
+                                added_count += 1
+
+                    db.commit()
+
+                    log_audit_event(user, "BULK_LOG_UPLOAD", "SECURITY",
+                                  f"Bulk uploaded {added_count} log entries", "/add_log_data", True)
+
+                    flash(f"Successfully uploaded {added_count} log entries!", "success")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error during bulk upload: {str(e)}", "error")
+
+            return redirect(url_for('add_log_data'))
+
+        # GET request - show form
+        try:
+            # Get existing log sources for reference
+            existing_sources = db.query(LogSource).all()
+
+            close_session(db)
+
+            return render_template("add_log_data.html", existing_sources=existing_sources)
+
+        except Exception as e:
+            close_session(db)
+            flash(f"Error loading add log data form: {str(e)}", "error")
             return redirect(url_for('security_event_analysis'))
 
+    # --- New routes from app2.py ---
+    # --- New routes from app2.py ---
 
     @app.route("/compliance_status_report", methods=["GET", "POST"])
     @login_required
@@ -8016,115 +8164,6 @@ def create_app():
 
             close_session(db)
             return assessment_data
-
-        except Exception as e:
-            close_session(db)
-            return {"error": str(e)}, 500
-
-    @app.route("/add_alert", methods=["POST"])
-    @login_required
-    def add_alert():
-        """
-        Handle alert creation from the alert documentation page.
-
-        Processes form data from the add alert modal and creates a new alert record
-        in the database with proper validation and error handling.
-        """
-        user = current_user()
-        db = get_session()
-
-        try:
-            # Extract form data
-            alert_id = request.form.get('alert_id')
-            timestamp_str = request.form.get('timestamp')
-            severity = request.form.get('severity', 'medium')
-            description = request.form.get('description')
-            source = request.form.get('source')
-            category = request.form.get('category', 'authentication')
-            impact = request.form.get('impact', 'low')
-            actions_taken = request.form.get('actions_taken')
-
-            # Validate required fields
-            if not alert_id or not description or not source or not actions_taken:
-                flash("Alert ID, description, source, and actions taken are required.", "error")
-                return redirect(url_for('alert_documentation'))
-
-            # Parse timestamp
-            if timestamp_str:
-                try:
-                    timestamp = datetime.fromisoformat(timestamp_str.replace('T', ' '))
-                except ValueError:
-                    timestamp = datetime.now(timezone.utc)
-            else:
-                timestamp = datetime.now(timezone.utc)
-
-            # Create alert object
-            alert = Alert(
-                title=f"Alert {alert_id}",  # Use alert_id as title
-                description=description,
-                severity=severity,
-                status="new",
-                triggered_at=timestamp,
-                source_ip=source,  # Use source as source_ip field
-                created_at=datetime.now(timezone.utc)
-            )
-
-            # Set rule_id to None for manual alerts (they don't come from automated rules)
-            alert.rule_id = None
-
-            # Add alert to database
-            db.add(alert)
-            db.commit()
-
-            # Log the action
-            log_audit_event(user, "ALERT_CREATED", "SECURITY",
-                          f"Created alert: {alert_id}", "/add_alert", True)
-
-            flash(f"Alert '{alert_id}' created successfully!", "success")
-
-        except Exception as e:
-            db.rollback()
-            logging.error(f"Error creating alert: {e}")
-            flash(f"Error creating alert: {str(e)}", "error")
-
-        finally:
-            close_session(db)
-
-        return redirect(url_for('alert_documentation'))
-
-    @app.route("/api/log_details/<int:log_id>")
-    @login_required
-    def get_log_details(log_id):
-        """
-        API endpoint to retrieve detailed information for a specific log entry.
-
-        Returns log details as JSON for the modal display.
-        """
-        user = current_user()
-        db = get_session()
-
-        try:
-            log = db.query(CollectedLog).options(joinedload(CollectedLog.source)).filter_by(id=log_id).first()
-
-            if not log:
-                close_session(db)
-                return {"error": "Log entry not found"}, 404
-
-            # Return log data as JSON
-            log_data = {
-                "id": log.id,
-                "timestamp": log.timestamp.strftime('%Y-%m-%d %H:%M:%S UTC') if log.timestamp else 'N/A',
-                "source_name": log.source.name if log.source else 'Unknown',
-                "log_type": log.log_type,
-                "severity": log.severity,
-                "category": log.category,
-                "message": log.message,
-                "raw_log": log.raw_log,
-                "created_at": log.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') if log.created_at else 'N/A'
-            }
-
-            close_session(db)
-            return log_data
 
         except Exception as e:
             close_session(db)

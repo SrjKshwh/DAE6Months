@@ -1,0 +1,420 @@
+<!-- templates/security_event_analysis.html -->
+{% extends "base.html" %}
+
+{% block title %}Security Event Analysis - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="text-danger"><i class="fas fa-search"></i> Security Event Analysis</h1>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="refreshAnalysis()">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                    <a href="{{ url_for('add_log_data') }}" class="btn btn-outline-success me-2">
+                        <i class="fas fa-plus"></i> Add Log Data
+                    </a>
+                    <a href="{{ url_for('monitoring') }}" class="btn btn-outline-info">
+                        <i class="fas fa-desktop"></i> SOC Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Analysis Overview -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center border-primary">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-file-alt"></i> Log Sources</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-4 mb-2 text-primary">{{ log_sources|length }}</div>
+                            <small class="text-muted">Active log sources</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-info">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-database"></i> Total Logs</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-4 mb-2 text-info">{{ "{:,}".format(total_logs) }}</div>
+                            <small class="text-muted">Logs analyzed</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-warning">
+                        <div class="card-header bg-warning">
+                            <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Alerts</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-4 mb-2 text-warning">{{ alerts|length }}</div>
+                            <small class="text-muted">Active alerts</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-danger">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0"><i class="fas fa-bolt"></i> Correlations</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-4 mb-2 text-danger">{{ correlations|length }}</div>
+                            <small class="text-muted">Event correlations</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Log Analysis Section -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Log Analysis by Type</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6 class="text-primary mb-3">Authentication Logs</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Event Type</th>
+                                            <th>Count</th>
+                                            <th>Severity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for analysis in auth_analysis %}
+                                        <tr>
+                                            <td>{{ analysis.event_type }}</td>
+                                            <td>{{ analysis.count }}</td>
+                                            <td>
+                                                {% if analysis.severity == 'high' %}
+                                                    <span class="badge bg-danger">High</span>
+                                                {% elif analysis.severity == 'medium' %}
+                                                    <span class="badge bg-warning">Medium</span>
+                                                {% else %}
+                                                    <span class="badge bg-success">Low</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-success mb-3">System Logs</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Event Type</th>
+                                            <th>Count</th>
+                                            <th>Severity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for analysis in system_analysis %}
+                                        <tr>
+                                            <td>{{ analysis.event_type }}</td>
+                                            <td>{{ analysis.count }}</td>
+                                            <td>
+                                                {% if analysis.severity == 'high' %}
+                                                    <span class="badge bg-danger">High</span>
+                                                {% elif analysis.severity == 'medium' %}
+                                                    <span class="badge bg-warning">Medium</span>
+                                                {% else %}
+                                                    <span class="badge bg-success">Low</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-info mb-3">Application Logs</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Event Type</th>
+                                            <th>Count</th>
+                                            <th>Severity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for analysis in app_analysis %}
+                                        <tr>
+                                            <td>{{ analysis.event_type }}</td>
+                                            <td>{{ analysis.count }}</td>
+                                            <td>
+                                                {% if analysis.severity == 'high' %}
+                                                    <span class="badge bg-danger">High</span>
+                                                {% elif analysis.severity == 'medium' %}
+                                                    <span class="badge bg-warning">Medium</span>
+                                                {% else %}
+                                                    <span class="badge bg-success">Low</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Log Correlation Analysis -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-link"></i> Log Correlation Analysis</h5>
+                </div>
+                <div class="card-body">
+                    {% if correlations %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Correlation Type</th>
+                                    <th>Primary Event</th>
+                                    <th>Related Events</th>
+                                    <th>Confidence</th>
+                                    <th>Risk Level</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for correlation in correlations %}
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-primary">{{ correlation.correlation_type }}</span>
+                                    </td>
+                                    <td>
+                                        <small>{{ correlation.primary_log.message[:50] }}...</small>
+                                    </td>
+                                    <td>{{ correlation.correlated_logs|length }} related events</td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-success" style="width: {{ correlation.correlation_strength * 100 }}%">
+                                                {{ "%.0f"|format(correlation.correlation_strength * 100) }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if correlation.risk_assessment == 'critical' %}
+                                            <span class="badge bg-danger">Critical</span>
+                                        {% elif correlation.risk_assessment == 'high' %}
+                                            <span class="badge bg-warning">High</span>
+                                        {% elif correlation.risk_assessment == 'medium' %}
+                                            <span class="badge bg-info">Medium</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Low</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewCorrelation({{ correlation.id }})">
+                                            <i class="fas fa-eye"></i> View
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-link fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Log Correlations Found</h5>
+                        <p class="text-muted">Log correlation analysis will identify relationships between security events.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Incident Detection Scenarios -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-timeline"></i> Incident Detection Scenarios</h5>
+                </div>
+                <div class="card-body">
+                    {% if incident_detections %}
+                    <div class="row">
+                        {% for detection in incident_detections %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-danger">
+                                <div class="card-header bg-danger text-white">
+                                    <h6 class="mb-0">{{ detection.incident_title }}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small mb-2"><strong>Scenario:</strong> {{ detection.detection_scenario }}</p>
+                                    <p class="small mb-2"><strong>Timeline:</strong> {{ detection.detection_start.strftime('%Y-%m-%d %H:%M') }} - {{ detection.incident_end.strftime('%Y-%m-%d %H:%M') if detection.incident_end else 'Ongoing' }}</p>
+                                    <p class="small mb-2"><strong>Status:</strong>
+                                        {% if detection.status == 'detected' %}
+                                            <span class="badge bg-warning">Detected</span>
+                                        {% elif detection.status == 'investigating' %}
+                                            <span class="badge bg-info">Investigating</span>
+                                        {% elif detection.status == 'contained' %}
+                                            <span class="badge bg-warning">Contained</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Resolved</span>
+                                        {% endif %}
+                                    </p>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="viewIncidentTimeline({{ detection.id }})">
+                                        <i class="fas fa-clock"></i> View Timeline
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Incident Detection Scenarios</h5>
+                        <p class="text-muted">Incident detection will show complete security event timelines and correlations.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Alert Triage Section -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-tasks"></i> Alert Triage Process</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if alert_triages %}
+                            <div class="list-group list-group-flush">
+                                {% for triage in alert_triages %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">{{ triage.alert.title }}</h6>
+                                            <p class="small mb-1">{{ triage.alert.description[:60] }}...</p>
+                                            <small class="text-muted">
+                                                Priority: <span class="badge bg-{{ 'danger' if triage.triage_priority == 'critical' else 'warning' if triage.triage_priority == 'high' else 'info' if triage.triage_priority == 'medium' else 'success' }}">{{ triage.triage_priority }}</span>
+                                                | Confidence: {{ triage.confidence_level }}%
+                                                | False Positive: {{ 'Yes' if triage.false_positive_probability > 50 else 'No' }}
+                                            </small>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewTriageDetails({{ triage.id }})">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                <p class="text-muted mb-0">No alerts requiring triage</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-book"></i> Analysis Documentation</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if analysis_docs %}
+                            <div class="list-group list-group-flush">
+                                {% for doc in analysis_docs %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">{{ doc.title }}</h6>
+                                            <p class="small mb-1">{{ doc.key_findings[:80] }}...</p>
+                                            <small class="text-muted">
+                                                Type: {{ doc.documentation_type }}
+                                                | Status: <span class="badge bg-{{ 'success' if doc.peer_review_status == 'approved' else 'warning' if doc.peer_review_status == 'in_review' else 'secondary' }}">{{ doc.peer_review_status }}</span>
+                                            </small>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-info" onclick="viewDocumentation({{ doc.id }})">
+                                            <i class="fas fa-file-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-book fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0">No analysis documentation available</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.display-4 {
+    font-size: 2.5rem;
+    font-weight: 300;
+}
+
+.progress {
+    border-radius: 10px;
+}
+
+.progress-bar {
+    border-radius: 10px;
+}
+
+.card:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+</style>
+
+<script>
+function refreshAnalysis() {
+    location.reload();
+}
+
+function viewCorrelation(correlationId) {
+    // Implement correlation details view
+    alert('Viewing correlation details for ID: ' + correlationId);
+}
+
+function viewIncidentTimeline(detectionId) {
+    // Implement incident timeline view
+    alert('Viewing incident timeline for ID: ' + detectionId);
+}
+
+function viewTriageDetails(triageId) {
+    // Implement triage details view
+    alert('Viewing triage details for ID: ' + triageId);
+}
+
+function viewDocumentation(docId) {
+    // Implement documentation view
+    alert('Viewing documentation for ID: ' + docId);
+}
+
+// Auto-refresh every 60 seconds
+setInterval(refreshAnalysis, 60000);
+</script>
+{% endblock %}

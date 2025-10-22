@@ -1,0 +1,264 @@
+<!-- templates/add_log_data.html -->
+{% extends "base.html" %}
+
+{% block title %}Add Log Data - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="text-success"><i class="fas fa-plus"></i> Add Log Data</h1>
+                <a href="{{ url_for('security_event_analysis') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left"></i> Back to Analysis
+                </a>
+            </div>
+
+            <!-- Individual Log Entry Form -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-edit"></i> Add Individual Log Entry</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <input type="hidden" name="action" value="add_log_entry">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="source_name" class="form-label">Log Source Name</label>
+                                    <input type="text" class="form-control" id="source_name" name="source_name"
+                                           placeholder="e.g., Windows-DC01, Linux-Web01" required>
+                                    <div class="form-text">Name of the system or service generating the log</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="log_type" class="form-label">Log Type</label>
+                                    <select class="form-select" id="log_type" name="log_type" required>
+                                        <option value="">Select Type</option>
+                                        <option value="security">Security</option>
+                                        <option value="system">System</option>
+                                        <option value="application">Application</option>
+                                        <option value="auth">Authentication</option>
+                                        <option value="access">Access</option>
+                                        <option value="audit">Audit</option>
+                                        <option value="firewall">Firewall</option>
+                                        <option value="error">Error</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="severity" class="form-label">Severity</label>
+                                    <select class="form-select" id="severity" name="severity">
+                                        <option value="info">Info</option>
+                                        <option value="warning">Warning</option>
+                                        <option value="error">Error</option>
+                                        <option value="critical">Critical</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-select" id="category" name="category">
+                                <option value="">Select Category</option>
+                                <option value="authentication">Authentication</option>
+                                <option value="authorization">Authorization</option>
+                                <option value="access_control">Access Control</option>
+                                <option value="system">System</option>
+                                <option value="security">Security</option>
+                                <option value="application">Application</option>
+                                <option value="network">Network</option>
+                                <option value="file_access">File Access</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Log Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="3"
+                                      placeholder="Enter the log message content..." required></textarea>
+                            <div class="form-text">Detailed log message describing the event</div>
+                        </div>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Add Log Entry
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bulk Upload Form -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-upload"></i> Bulk Log Upload</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <input type="hidden" name="action" value="bulk_upload">
+                        <div class="mb-3">
+                            <label for="bulk_source_name" class="form-label">Source Name for Bulk Upload</label>
+                            <input type="text" class="form-control" id="bulk_source_name" name="bulk_source_name"
+                                   value="bulk_upload" placeholder="Name for this bulk upload batch" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bulk_log_data" class="form-label">Log Data (One log entry per line)</label>
+                            <textarea class="form-control" id="bulk_log_data" name="bulk_log_data" rows="10"
+                                      placeholder="Paste your log data here. Format: timestamp severity message
+Example:
+2024-01-15T10:30:00Z info User login successful: admin
+2024-01-15T10:31:00Z warning Failed login attempt: unknown_user
+2024-01-15T10:32:00Z error Database connection failed" required></textarea>
+                            <div class="form-text">
+                                Each line should contain: timestamp severity message<br>
+                                Timestamp format: ISO 8601 (e.g., 2024-01-15T10:30:00Z)
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Upload Bulk Logs
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sample Data Templates -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-lightbulb"></i> Sample Data Templates</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6 class="text-primary">Authentication Logs</h6>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <small>
+                                    <code>2024-01-15T10:30:00Z info User login successful: admin<br>
+2024-01-15T10:31:00Z warning Failed login attempt: unknown_user<br>
+2024-01-15T10:32:00Z error Account locked: admin (too many failures)</code>
+                                </small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" onclick="loadSample('auth')">
+                                <i class="fas fa-copy"></i> Load Sample
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-success">System Logs</h6>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <small>
+                                    <code>2024-01-15T10:30:00Z info System startup completed<br>
+2024-01-15T10:31:00Z warning High CPU usage detected: 95%<br>
+2024-01-15T10:32:00Z error Service failed: apache2</code>
+                                </small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-success" onclick="loadSample('system')">
+                                <i class="fas fa-copy"></i> Load Sample
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-info">Security Events</h6>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <small>
+                                    <code>2024-01-15T10:30:00Z warning Suspicious file access: /etc/passwd<br>
+2024-01-15T10:31:00Z error Firewall blocked connection from 192.168.1.100<br>
+2024-01-15T10:32:00Z critical Malware detected: trojan.exe</code>
+                                </small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-info" onclick="loadSample('security')">
+                                <i class="fas fa-copy"></i> Load Sample
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function loadSample(type) {
+    const samples = {
+        'auth': `2024-01-15T10:30:00Z info User login successful: admin from 192.168.1.100
+2024-01-15T10:31:00Z warning Failed login attempt for user: admin from 192.168.1.100
+2024-01-15T10:32:00Z warning Failed login attempt for user: admin from 192.168.1.100
+2024-01-15T10:33:00Z warning Failed login attempt for user: admin from 192.168.1.100
+2024-01-15T10:34:00Z error Account locked due to too many failed attempts: admin
+2024-01-15T10:35:00Z info User login successful: auditor from 192.168.1.101
+2024-01-15T10:36:00Z info User logout: admin
+2024-01-15T10:37:00Z warning Suspicious login pattern detected for user: admin`,
+
+        'system': `2024-01-15T10:30:00Z info System startup completed successfully
+2024-01-15T10:31:00Z warning High CPU usage detected: 95% utilization
+2024-01-15T10:32:00Z error Service failed to start: apache2 - connection refused
+2024-01-15T10:33:00Z info Disk space check: 75% used (15GB free)
+2024-01-15T10:34:00Z warning Memory usage high: 88% of 8GB used
+2024-01-15T10:35:00Z info System update completed: kernel patched
+2024-01-15T10:36:00Z error Database connection timeout: retrying in 30 seconds
+2024-01-15T10:37:00Z info Backup completed successfully: 2.3GB archived`,
+
+        'security': `2024-01-15T10:30:00Z warning Suspicious file access attempt: /etc/passwd by user www-data
+2024-01-15T10:31:00Z error Firewall blocked inbound connection from 203.0.113.1:443
+2024-01-15T10:32:00Z critical Malware signature detected: trojan.exe (SHA256: a665a459...)
+2024-01-15T10:33:00Z warning Unusual network traffic detected: 500 connections/minute
+2024-01-15T10:34:00Z info IDS alert: SQL injection attempt blocked
+2024-01-15T10:35:00Z warning Privilege escalation attempt detected: user apache to root
+2024-01-15T10:36:00Z error Unauthorized SSH access attempt from 198.51.100.1
+2024-01-15T10:37:00Z info Security scan completed: 3 vulnerabilities found`
+    };
+
+    document.getElementById('bulk_log_data').value = samples[type];
+    document.getElementById('bulk_source_name').value = type + '_logs_sample';
+}
+
+// Auto-fill form with sample data for individual entries
+function fillSampleForm(type) {
+    const samples = {
+        'auth': {
+            source: 'Windows-DC01',
+            log_type: 'auth',
+            severity: 'warning',
+            category: 'authentication',
+            message: 'Failed login attempt for user: administrator from IP 192.168.1.100'
+        },
+        'system': {
+            source: 'Linux-Web01',
+            log_type: 'system',
+            severity: 'error',
+            category: 'system',
+            message: 'Service apache2 failed to start - connection refused on port 80'
+        },
+        'security': {
+            source: 'Firewall-01',
+            log_type: 'security',
+            severity: 'warning',
+            category: 'network',
+            message: 'Blocked suspicious outbound connection to known C2 server: 203.0.113.195:443'
+        }
+    };
+
+    const sample = samples[type];
+    if (sample) {
+        document.getElementById('source_name').value = sample.source;
+        document.getElementById('log_type').value = sample.log_type;
+        document.getElementById('severity').value = sample.severity;
+        document.getElementById('category').value = sample.category;
+        document.getElementById('message').value = sample.message;
+    }
+}
+</script>
+
+<style>
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+code {
+    font-size: 0.8em;
+}
+
+.form-text {
+    font-size: 0.875em;
+}
+</style>
+{% endblock %}
