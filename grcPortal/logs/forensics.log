@@ -28187,3 +28187,246 @@ WHERE alerts.created_at >= ?) AS anon_1]
 [parameters: ('2025-10-23 02:45:00.060641',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 2025-10-22 23:45:00,067 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-22 23:50:00 EDT)" executed successfully
+2025-10-23 11:17:02,674 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:17:02,675 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:17:02,678 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-23 11:17:02,679 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-23 11:17:02,679 [INFO] Scheduler started
+2025-10-23 11:17:02,679 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-10-23 11:17:02,718 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-23 11:17:02,718 [INFO] [33mPress CTRL+C to quit[0m
+2025-10-23 11:17:02,720 [INFO]  * Restarting with stat
+2025-10-23 11:17:04,042 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:17:04,043 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:17:04,044 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-23 11:17:04,044 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-23 11:17:04,045 [INFO] Scheduler started
+2025-10-23 11:17:04,046 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-10-23 11:17:04,053 [WARNING]  * Debugger is active!
+2025-10-23 11:17:04,057 [INFO]  * Debugger PIN: 136-772-789
+2025-10-23 11:17:09,099 [INFO] 127.0.0.1 - - [23/Oct/2025 11:17:09] "GET / HTTP/1.1" 200 -
+2025-10-23 11:17:09,170 [INFO] 127.0.0.1 - - [23/Oct/2025 11:17:09] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-23 11:17:09,198 [INFO] 127.0.0.1 - - [23/Oct/2025 11:17:09] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-23 11:17:09,348 [INFO] DEBUG: current_user() - session user_id: None
+2025-10-23 11:17:09,348 [INFO] DEBUG: current_user() - no user_id in session
+2025-10-23 11:17:09,349 [INFO] 127.0.0.1 - - [23/Oct/2025 11:17:09] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-10-23 11:17:22,969 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-10-23 11:17:23,029 [INFO] 127.0.0.1 - - [23/Oct/2025 11:17:23] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-10-23 11:17:23,038 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:17:23,063 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021B9C4B0F50>
+2025-10-23 11:17:23,064 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:17:23,066 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:17:23,073 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021B9C4B11D0>
+2025-10-23 11:17:23,076 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:17:23,077 [INFO] DEBUG: current_user() returned: <models.User object at 0x0000021B9C4B11D0> - email: kush786srj@gmail.com
+2025-10-23 11:17:23,079 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-10-23 11:17:23,154 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:17:23,155 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021B9C4B11D0>
+2025-10-23 11:17:23,155 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:17:23,159 [INFO] 127.0.0.1 - - [23/Oct/2025 11:17:23] "GET /home HTTP/1.1" 200 -
+2025-10-23 11:17:23,239 [INFO] 127.0.0.1 - - [23/Oct/2025 11:17:23] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-23 11:18:46,714 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-10-23 11:18:46,727 [INFO] 127.0.0.1 - - [23/Oct/2025 11:18:46] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-10-23 11:18:46,779 [INFO] 127.0.0.1 - - [23/Oct/2025 11:18:46] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-23 11:18:46,779 [INFO] 127.0.0.1 - - [23/Oct/2025 11:18:46] "GET /login HTTP/1.1" 200 -
+2025-10-23 11:18:46,809 [INFO] 127.0.0.1 - - [23/Oct/2025 11:18:46] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-23 11:18:46,822 [INFO] 127.0.0.1 - - [23/Oct/2025 11:18:46] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-23 11:19:19,904 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:19:19,907 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:19:19,910 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-23 11:19:19,911 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-23 11:19:19,911 [INFO] Scheduler started
+2025-10-23 11:19:36,084 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:19:36,088 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:20:00,014 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-23 11:25:00 EDT)" (scheduled at 2025-10-23 11:20:00-04:00)
+2025-10-23 11:20:00,064 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.impact
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-10-23 14:20:00.060802',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-23 11:20:00,065 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-23 11:25:00 EDT)" executed successfully
+2025-10-23 11:20:00,183 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.impact
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-10-23 14:20:00.181485',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-23 11:20:00,184 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-23 11:25:00 EDT)" executed successfully
+2025-10-23 11:20:08,504 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:20:08,505 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:20:08,512 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-23 11:20:08,517 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-23 11:20:08,518 [INFO] Scheduler started
+2025-10-23 11:20:22,438 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:20:22,453 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:23:31,509 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:23:31,522 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:24:04,280 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:24:04,296 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:24:13,620 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:24:13,622 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:24:13,625 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-23 11:24:13,625 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-23 11:24:13,628 [INFO] Scheduler started
+2025-10-23 11:24:27,202 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\migrations\\versions\\5a6f6c12291b_add_impact_column_to_alerts.py', reloading
+2025-10-23 11:24:27,575 [INFO]  * Restarting with stat
+2025-10-23 11:24:29,221 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:24:29,222 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:24:29,223 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-23 11:24:29,225 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-23 11:24:29,226 [INFO] Scheduler started
+2025-10-23 11:24:29,227 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-10-23 11:24:29,234 [WARNING]  * Debugger is active!
+2025-10-23 11:24:29,237 [INFO]  * Debugger PIN: 136-772-789
+2025-10-23 11:24:39,151 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:24:39,152 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:24:48,371 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\migrations\\versions\\5a6f6c12291b_add_impact_column_to_alerts.py', reloading
+2025-10-23 11:24:48,611 [INFO]  * Restarting with stat
+2025-10-23 11:24:50,369 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:24:50,370 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:24:50,372 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-23 11:24:50,373 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-23 11:24:50,374 [INFO] Scheduler started
+2025-10-23 11:24:50,383 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-10-23 11:24:50,389 [WARNING]  * Debugger is active!
+2025-10-23 11:24:50,394 [INFO]  * Debugger PIN: 136-772-789
+2025-10-23 11:24:58,472 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\migrations\\versions\\5a6f6c12291b_add_impact_column_to_alerts.py', reloading
+2025-10-23 11:24:58,739 [INFO]  * Restarting with stat
+2025-10-23 11:25:00,008 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-23 11:30:00 EDT)" (scheduled at 2025-10-23 11:25:00-04:00)
+2025-10-23 11:25:00,285 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:25:00,286 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:25:00,288 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-23 11:25:00,289 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-23 11:25:00,290 [INFO] Scheduler started
+2025-10-23 11:25:00,295 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-10-23 11:25:00,305 [WARNING]  * Debugger is active!
+2025-10-23 11:25:00,307 [INFO]  * Debugger PIN: 136-772-789
+2025-10-23 11:25:01,036 [WARNING] Health check completed: 1 issues detected
+2025-10-23 11:25:01,063 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-10-23 11:25:01,070 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-23 11:30:00 EDT)" executed successfully
+2025-10-23 11:25:09,264 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:25:09,264 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:25:09,271 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-23 11:25:09,271 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-23 11:25:09,271 [INFO] Scheduler started
+2025-10-23 11:25:21,257 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:25:21,290 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:26:33,375 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:26:33,378 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:26:33,380 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-23 11:26:33,381 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-23 11:26:33,381 [INFO] Scheduler started
+2025-10-23 11:26:33,382 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-10-23 11:26:33,393 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-23 11:26:33,393 [INFO] [33mPress CTRL+C to quit[0m
+2025-10-23 11:26:33,396 [INFO]  * Restarting with stat
+2025-10-23 11:26:34,645 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:26:34,646 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:26:34,648 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-23 11:26:34,649 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-23 11:26:34,649 [INFO] Scheduler started
+2025-10-23 11:26:34,652 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-10-23 11:26:34,657 [WARNING]  * Debugger is active!
+2025-10-23 11:26:34,660 [INFO]  * Debugger PIN: 136-772-789
+2025-10-23 11:26:56,914 [INFO] 127.0.0.1 - - [23/Oct/2025 11:26:56] "GET / HTTP/1.1" 200 -
+2025-10-23 11:26:57,015 [INFO] 127.0.0.1 - - [23/Oct/2025 11:26:57] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-23 11:26:57,048 [INFO] 127.0.0.1 - - [23/Oct/2025 11:26:57] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-23 11:27:08,210 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-10-23 11:27:08,244 [INFO] 127.0.0.1 - - [23/Oct/2025 11:27:08] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-10-23 11:27:08,255 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:27:08,273 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F08098CD0>
+2025-10-23 11:27:08,274 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:27:08,278 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:27:08,284 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F08098F50>
+2025-10-23 11:27:08,286 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:27:08,287 [INFO] DEBUG: current_user() returned: <models.User object at 0x0000021F08098F50> - email: kush786srj@gmail.com
+2025-10-23 11:27:08,289 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-10-23 11:27:08,370 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:27:08,371 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F08098F50>
+2025-10-23 11:27:08,372 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:27:08,376 [INFO] 127.0.0.1 - - [23/Oct/2025 11:27:08] "GET /home HTTP/1.1" 200 -
+2025-10-23 11:27:08,413 [INFO] 127.0.0.1 - - [23/Oct/2025 11:27:08] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-23 11:27:17,552 [INFO] 127.0.0.1 - - [23/Oct/2025 11:27:17] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-23 11:27:17,569 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:27:17,597 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F085DEFD0>
+2025-10-23 11:27:17,598 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:27:17,648 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:27:17,650 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F085DF820>
+2025-10-23 11:27:17,652 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:27:17,654 [INFO] 127.0.0.1 - - [23/Oct/2025 11:27:17] "GET /alert_documentation HTTP/1.1" 200 -
+2025-10-23 11:27:17,687 [INFO] 127.0.0.1 - - [23/Oct/2025 11:27:17] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-23 11:30:00,018 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-23 11:30:00 EDT)" (scheduled at 2025-10-23 11:30:00-04:00)
+2025-10-23 11:30:00,020 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-23 11:30:00 EDT)" (scheduled at 2025-10-23 11:30:00-04:00)
+2025-10-23 11:30:01,117 [WARNING] Health check completed: 1 issues detected
+2025-10-23 11:30:01,158 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-10-23 11:30:01,164 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-23 11:35:00 EDT)" executed successfully
+2025-10-23 11:30:01,455 [WARNING] Health check completed: 1 issues detected
+2025-10-23 11:30:01,489 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-10-23 11:30:01,491 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-23 11:35:00 EDT)" executed successfully
+2025-10-23 11:30:15,719 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-10-23 11:30:15,787 [INFO] 127.0.0.1 - - [23/Oct/2025 11:30:15] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-10-23 11:30:15,802 [INFO] 127.0.0.1 - - [23/Oct/2025 11:30:15] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-23 11:30:15,822 [INFO] 127.0.0.1 - - [23/Oct/2025 11:30:15] "GET /login HTTP/1.1" 200 -
+2025-10-23 11:30:15,846 [INFO] 127.0.0.1 - - [23/Oct/2025 11:30:15] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-23 11:30:15,891 [INFO] 127.0.0.1 - - [23/Oct/2025 11:30:15] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-23 11:31:37,784 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-10-23 11:31:37,901 [INFO] 127.0.0.1 - - [23/Oct/2025 11:31:37] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-10-23 11:31:37,932 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:31:37,952 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F08660C00>
+2025-10-23 11:31:37,954 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:31:37,956 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:31:37,959 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F086F8350>
+2025-10-23 11:31:37,965 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:31:37,966 [INFO] DEBUG: current_user() returned: <models.User object at 0x0000021F086F8350> - email: kush786srj@gmail.com
+2025-10-23 11:31:37,968 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-10-23 11:31:38,014 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:31:38,015 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F086F8350>
+2025-10-23 11:31:38,017 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:31:38,022 [INFO] 127.0.0.1 - - [23/Oct/2025 11:31:38] "GET /home HTTP/1.1" 200 -
+2025-10-23 11:31:38,056 [INFO] 127.0.0.1 - - [23/Oct/2025 11:31:38] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-23 11:31:43,504 [INFO] 127.0.0.1 - - [23/Oct/2025 11:31:43] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-23 11:31:43,509 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:31:43,530 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F08755B50>
+2025-10-23 11:31:43,531 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:31:43,532 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:31:43,533 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F08742B70>
+2025-10-23 11:31:43,533 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:31:43,535 [INFO] 127.0.0.1 - - [23/Oct/2025 11:31:43] "GET /alert_documentation HTTP/1.1" 200 -
+2025-10-23 11:31:43,563 [INFO] 127.0.0.1 - - [23/Oct/2025 11:31:43] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-23 11:32:47,292 [INFO] 127.0.0.1 - - [23/Oct/2025 11:32:47] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-23 11:32:47,305 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:32:47,322 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F0879CF50>
+2025-10-23 11:32:47,323 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:32:47,325 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:32:47,326 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F08791E10>
+2025-10-23 11:32:47,328 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:32:47,432 [INFO] 127.0.0.1 - - [23/Oct/2025 11:32:47] "[32mPOST /add_alert HTTP/1.1[0m" 302 -
+2025-10-23 11:32:47,514 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:32:47,531 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F08792190>
+2025-10-23 11:32:47,532 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:32:47,533 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-23 11:32:47,534 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000021F0876D4A0>
+2025-10-23 11:32:47,535 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-23 11:32:47,539 [INFO] 127.0.0.1 - - [23/Oct/2025 11:32:47] "GET /alert_documentation HTTP/1.1" 200 -
+2025-10-23 11:32:47,697 [INFO] 127.0.0.1 - - [23/Oct/2025 11:32:47] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-23 11:34:10,173 [INFO]  * Detected change in 'c:\\Users\\saroj\\OneDrive\\Desktop\\course\\FirstSetup\\grcPortal\\app.py', reloading
+2025-10-23 11:34:10,609 [INFO]  * Restarting with stat
+2025-10-23 11:34:12,536 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:34:12,541 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-23 11:34:12,547 [WARNING]  * Debugger is active!
+2025-10-23 11:34:12,550 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-23 11:34:12,585 [INFO]  * Debugger PIN: 136-772-789
+2025-10-23 11:34:12,587 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-23 11:34:12,601 [INFO] Scheduler started
+2025-10-23 11:34:12,607 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-10-23 11:34:17,890 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-10-23 11:34:17,901 [INFO] 127.0.0.1 - - [23/Oct/2025 11:34:17] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-10-23 11:34:17,932 [INFO] 127.0.0.1 - - [23/Oct/2025 11:34:17] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-23 11:34:17,955 [INFO] 127.0.0.1 - - [23/Oct/2025 11:34:17] "GET /login HTTP/1.1" 200 -
+2025-10-23 11:34:18,032 [INFO] 127.0.0.1 - - [23/Oct/2025 11:34:18] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-23 11:34:18,047 [INFO] 127.0.0.1 - - [23/Oct/2025 11:34:18] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -

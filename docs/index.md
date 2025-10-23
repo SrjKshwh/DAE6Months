@@ -33,7 +33,7 @@ title: Home
 - **Servers**: Tomcat, WAMP/XAMPP
 - **Databases**: MySQL, Oracle 8i
 
-### Salesforce CRM Expertise
+### Salesforce CRM
 - Workflow Rules, Approval Processes, Lightning Web Components (LWC), Profiles, Roles, Permission Sets
 - Relationships, Validation Rules, Custom Objects, Dashboards, Reports, Search/Page Layouts
 - Record Types, Process Builders, Flows, OmniScript, OmniStudio
