@@ -13,7 +13,20 @@ permalink: /projects
 
 **DAE Semester 3-5 (Aug-Oct 2025)**
 
-A comprehensive web application for automated cybersecurity compliance analysis. Upload policy or configuration files to check against standards like GLBA, NIST CSF, and PCI DSS. Features include automatic non-compliance detection, security risk register generation, and interactive heat map visualization for efficient risk prioritization and remediation.
+- AI-powered risk intelligence with LLM integration for automated document analysis and compliance gap identification
+- Multi-framework compliance support (NIST RMF, ISO 31000, COSO ERM, PCI DSS, HIPAA, GDPR, CIS Controls)
+- Advanced risk scoring with multi-criteria analysis (Financial, Operational, Compliance, Reputation)
+- Interactive heat map visualization for risk prioritization and remediation planning
+- Zero Trust architecture with comprehensive security features including session management and audit logging
+- Incident response and digital forensics capabilities with evidence collection and chain of custody
+- Continuous monitoring and predictive analytics with automated alerting and KPI tracking
+
+**Tech Stack:**
+- Backend: Python, Flask, SQLAlchemy
+- Frontend: Bootstrap, JavaScript
+- AI: OpenRouter API
+- Database: SQLite
+- Security: Werkzeug, Zero Trust implementation
 
 [For more details](https://github.com/SrjKshwh/DAE6Months/tree/master/grcPortal)
 
@@ -21,7 +34,19 @@ A comprehensive web application for automated cybersecurity compliance analysis.
 
 **DAE Semester 1 (Jul 2025)**
 
-An engaging Python-based GUI application that creates custom word search puzzles. Users input 3 words, supplemented by 7 predefined terms, generating a 10-word grid. Includes a timer, input field, and dynamic word list with real-time progress tracking (green for found words).
+- Interactive GUI application built with Tkinter for custom word search puzzle generation
+- User inputs 3 custom words combined with 7 predefined terms to create a 10-word puzzle grid
+- Advanced word placement algorithm that handles diagonal, horizontal, and vertical orientations without overlapping
+- Real-time timer with pause/resume functionality and scoring system based on time and words found
+- Dynamic word list with visual progress tracking (words turn green when found)
+- Input validation ensuring only alphabetic characters and maximum 12-character word length
+- Exception handling for edge cases like oversized words or grid constraints
+
+**Tech Stack:**
+- Language: Python
+- GUI Framework: Tkinter
+- Core Concepts: Loops, conditionals, functions, file handling, exception handling
+- Data Structures: Lists, matrices, coordinates tracking
 
 [For more details](https://github.com/SrjKshwh/DAE6Months/tree/master/python_1)
 

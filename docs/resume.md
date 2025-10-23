@@ -66,15 +66,29 @@ Dynamic IT professional with 2+ years of experience in web design, development, 
 
 ### Cybersecurity Compliance Checker | DAE Semester 3-5 | Aug-Oct 2025
 Web-based tool analyzing files against GLBA, NIST CSF, PCI DSS. Generates risk registers and heat maps for compliance prioritization.
+- Developed comprehensive GRC (Governance, Risk, and Compliance) portal with AI-powered document analysis
+- Implemented Zero Trust Architecture with role-based access control and session management
+- Built automated compliance scanning, risk assessment, and incident response workflows
+- Integrated threat intelligence feeds and digital forensics capabilities
+- **Tech Stack**: Python, Flask, SQLAlchemy, OpenRouter API, Bootstrap, JavaScript, SQLite
 
 ### Interactive Word Search Game | DAE Semester 1 | Jul 2025
 Python GUI app with user-input words, grid generation, timer, and dynamic word list updates.
+- Built interactive word search game using Tkinter with dynamic grid generation
+- Implemented word placement algorithms with collision detection and diagonal placement
+- Added timer functionality, scoring system, and user input validation
+- Created mouse event handling for word selection and highlighting
+- **Tech Stack**: Python, Tkinter, Random library, File I/O operations
 
 ---
 
 ## 🎓 Education
 - **6-Month Tech Career Readiness Program** in Computer & Information Systems Security/Information Assurance
   District Arts and Education, Stamford, CT, USA | Jun 2025 – Nov 2025
+  - Comprehensive training in cybersecurity fundamentals, risk management, and compliance frameworks
+  - Hands-on development of enterprise-grade security applications and tools
+  - Focus on Zero Trust Architecture, incident response, and digital forensics
+  - **Tech Stack**: Python, Flask, SQLAlchemy, JavaScript, HTML/CSS, SQLite, Git
 
 - **Master of Computer Applications (MCA)**
   Shree Dadaji Institute of Technology and Science, Khandwa (RGPV, Bhopal) | 2010
