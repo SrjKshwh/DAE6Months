@@ -612,107 +612,203 @@ def collect_security_metrics():
     db = get_session()
     metrics = {
         "timestamp": datetime.now(timezone.utc),
-        "operational": {},
-        "coverage": {},
-        "effectiveness": {},
+        "operational": {
+            "system_uptime_hours": 0,
+            "system_availability_percentage": 0,
+            "logs_processed_per_hour": 0,
+            "alerts_generated_per_hour": 0,
+            "processing_efficiency": 0,
+            "cpu_utilization": 0,
+            "memory_utilization": 0,
+            "disk_utilization": 0,
+            "average_alert_response_time_hours": 0,
+            "alerts_triaged_24h": 0
+        },
+        "coverage": {
+            "total_critical_assets": 0,
+            "monitored_assets": 0,
+            "asset_coverage_percentage": 0,
+            "total_log_sources": 0,
+            "active_log_sources": 0,
+            "configured_log_types": 0,
+            "log_source_coverage_percentage": 0,
+            "total_security_controls": 0,
+            "compliant_controls": 0,
+            "control_compliance_percentage": 0,
+            "total_threat_indicators": 0,
+            "active_threat_indicators": 0,
+            "threat_coverage_percentage": 0
+        },
+        "effectiveness": {
+            "true_positive_rate": 0,
+            "alert_accuracy_percentage": 0,
+            "total_incidents": 0,
+            "incidents_detected_by_monitoring": 0,
+            "automated_detection_rate": 0,
+            "mean_time_to_detect_hours": 0,
+            "mean_time_to_respond_hours": 0,
+            "risks_mitigated_weekly": 0,
+            "risk_reduction_percentage": 0,
+            "total_vulnerabilities": 0,
+            "patched_vulnerabilities": 0,
+            "vulnerability_patch_rate": 0
+        },
         "measurement_methodology": {}
     }
 
     try:
         # OPERATIONAL METRICS
         # 1. System Uptime and Availability
-        uptime_seconds = psutil.boot_time()
-        uptime_hours = (datetime.now(timezone.utc).timestamp() - uptime_seconds) / 3600
-        metrics["operational"]["system_uptime_hours"] = uptime_hours
+        try:
+            uptime_seconds = psutil.boot_time()
+            uptime_hours = (datetime.now(timezone.utc).timestamp() - uptime_seconds) / 3600
+            metrics["operational"]["system_uptime_hours"] = uptime_hours
+        except Exception as e:
+            logging.warning(f"Could not get system uptime: {e}")
+            metrics["operational"]["system_uptime_hours"] = 0
+
         metrics["operational"]["system_availability_percentage"] = 99.9  # Simulated SLA
 
         # 2. Log Processing Performance
-        hour_cutoff = datetime.now(timezone.utc) - timedelta(hours=1)
-        logs_processed_hour = db.query(CollectedLog).filter(CollectedLog.timestamp >= hour_cutoff).count()
-        alerts_generated_hour = db.query(Alert).filter(Alert.created_at >= hour_cutoff).count()
+        try:
+            hour_cutoff = datetime.now(timezone.utc) - timedelta(hours=1)
+            logs_processed_hour = db.query(CollectedLog).filter(CollectedLog.timestamp >= hour_cutoff).count()
+            alerts_generated_hour = db.query(Alert).filter(Alert.created_at >= hour_cutoff).count()
 
-        metrics["operational"]["logs_processed_per_hour"] = logs_processed_hour
-        metrics["operational"]["alerts_generated_per_hour"] = alerts_generated_hour
-        metrics["operational"]["processing_efficiency"] = (alerts_generated_hour / logs_processed_hour * 100) if logs_processed_hour > 0 else 0
+            metrics["operational"]["logs_processed_per_hour"] = logs_processed_hour
+            metrics["operational"]["alerts_generated_per_hour"] = alerts_generated_hour
+            metrics["operational"]["processing_efficiency"] = (alerts_generated_hour / logs_processed_hour * 100) if logs_processed_hour > 0 else 0
+        except Exception as e:
+            logging.warning(f"Could not get log processing metrics: {e}")
+            metrics["operational"]["logs_processed_per_hour"] = 0
+            metrics["operational"]["alerts_generated_per_hour"] = 0
+            metrics["operational"]["processing_efficiency"] = 0
 
         # 3. Resource Utilization
-        cpu_percent = psutil.cpu_percent(interval=1)
-        memory = psutil.virtual_memory()
-        disk = psutil.disk_usage('/')
+        try:
+            cpu_percent = psutil.cpu_percent(interval=1)
+            memory = psutil.virtual_memory()
+            disk = psutil.disk_usage('/')
 
-        metrics["operational"]["cpu_utilization"] = cpu_percent
-        metrics["operational"]["memory_utilization"] = memory.percent
-        metrics["operational"]["disk_utilization"] = disk.percent
+            metrics["operational"]["cpu_utilization"] = cpu_percent
+            metrics["operational"]["memory_utilization"] = memory.percent
+            metrics["operational"]["disk_utilization"] = disk.percent
+        except Exception as e:
+            logging.warning(f"Could not get resource utilization metrics: {e}")
+            metrics["operational"]["cpu_utilization"] = 0
+            metrics["operational"]["memory_utilization"] = 0
+            metrics["operational"]["disk_utilization"] = 0
 
         # 4. Alert Response Times (average time from alert creation to triage)
-        day_cutoff = datetime.now(timezone.utc) - timedelta(days=1)
-        recent_alerts = db.query(Alert).filter(Alert.created_at >= day_cutoff).all()
+        try:
+            day_cutoff = datetime.now(timezone.utc) - timedelta(days=1)
+            recent_alerts = db.query(Alert).filter(Alert.created_at >= day_cutoff).all()
 
-        response_times = []
-        for alert in recent_alerts:
-            if alert.status != "new":  # Alert has been triaged
-                # Calculate time difference (simplified - would need actual triage timestamp)
-                response_time_hours = 2.5  # Simulated average response time
-                response_times.append(response_time_hours)
+            response_times = []
+            for alert in recent_alerts:
+                if alert.status != "new":  # Alert has been triaged
+                    # Calculate time difference (simplified - would need actual triage timestamp)
+                    response_time_hours = 2.5  # Simulated average response time
+                    response_times.append(response_time_hours)
 
-        metrics["operational"]["average_alert_response_time_hours"] = sum(response_times) / len(response_times) if response_times else 0
-        metrics["operational"]["alerts_triaged_24h"] = len([a for a in recent_alerts if a.status != "new"])
+            metrics["operational"]["average_alert_response_time_hours"] = sum(response_times) / len(response_times) if response_times else 0
+            metrics["operational"]["alerts_triaged_24h"] = len([a for a in recent_alerts if a.status != "new"])
+        except Exception as e:
+            logging.warning(f"Could not get alert response time metrics: {e}")
+            metrics["operational"]["average_alert_response_time_hours"] = 0
+            metrics["operational"]["alerts_triaged_24h"] = 0
 
         # COVERAGE METRICS
         # 1. Asset Coverage
-        total_assets = db.query(CriticalAssetRegister).count()
-        monitored_assets = db.query(CriticalAssetRegister).filter(CriticalAssetRegister.criticality_level.in_(["high", "critical"])).count()
+        try:
+            total_assets = db.query(CriticalAssetRegister).count()
+            monitored_assets = db.query(CriticalAssetRegister).filter(CriticalAssetRegister.criticality_level.in_(["high", "critical"])).count()
 
-        metrics["coverage"]["total_critical_assets"] = total_assets
-        metrics["coverage"]["monitored_assets"] = monitored_assets
-        metrics["coverage"]["asset_coverage_percentage"] = (monitored_assets / total_assets * 100) if total_assets > 0 else 0
+            metrics["coverage"]["total_critical_assets"] = total_assets
+            metrics["coverage"]["monitored_assets"] = monitored_assets
+            metrics["coverage"]["asset_coverage_percentage"] = (monitored_assets / total_assets * 100) if total_assets > 0 else 0
+        except Exception as e:
+            logging.warning(f"Could not get asset coverage metrics: {e}")
+            metrics["coverage"]["total_critical_assets"] = 0
+            metrics["coverage"]["monitored_assets"] = 0
+            metrics["coverage"]["asset_coverage_percentage"] = 0
 
         # 2. Log Source Coverage
-        total_log_sources = db.query(LogSource).count()
-        active_log_sources = db.query(LogSource).filter(LogSource.status == "connected").count()
-        configured_log_types = db.query(LogSource).filter(LogSource.log_types_enabled.isnot(None)).count()
+        try:
+            total_log_sources = db.query(LogSource).count()
+            active_log_sources = db.query(LogSource).filter(LogSource.status == "connected").count()
+            configured_log_types = db.query(LogSource).filter(LogSource.log_types_enabled.isnot(None)).count()
 
-        metrics["coverage"]["total_log_sources"] = total_log_sources
-        metrics["coverage"]["active_log_sources"] = active_log_sources
-        metrics["coverage"]["configured_log_types"] = configured_log_types
-        metrics["coverage"]["log_source_coverage_percentage"] = (active_log_sources / total_log_sources * 100) if total_log_sources > 0 else 0
+            metrics["coverage"]["total_log_sources"] = total_log_sources
+            metrics["coverage"]["active_log_sources"] = active_log_sources
+            metrics["coverage"]["configured_log_types"] = configured_log_types
+            metrics["coverage"]["log_source_coverage_percentage"] = (active_log_sources / total_log_sources * 100) if total_log_sources > 0 else 0
+        except Exception as e:
+            logging.warning(f"Could not get log source coverage metrics: {e}")
+            metrics["coverage"]["total_log_sources"] = 0
+            metrics["coverage"]["active_log_sources"] = 0
+            metrics["coverage"]["configured_log_types"] = 0
+            metrics["coverage"]["log_source_coverage_percentage"] = 0
 
         # 3. Security Control Coverage
-        total_compliance_records = db.query(Compliance).count()
-        compliant_controls = db.query(Compliance).filter(Compliance.score >= 80).count()
+        try:
+            total_compliance_records = db.query(Compliance).count()
+            compliant_controls = db.query(Compliance).filter(Compliance.score >= 80).count()
 
-        metrics["coverage"]["total_security_controls"] = total_compliance_records
-        metrics["coverage"]["compliant_controls"] = compliant_controls
-        metrics["coverage"]["control_compliance_percentage"] = (compliant_controls / total_compliance_records * 100) if total_compliance_records > 0 else 0
+            metrics["coverage"]["total_security_controls"] = total_compliance_records
+            metrics["coverage"]["compliant_controls"] = compliant_controls
+            metrics["coverage"]["control_compliance_percentage"] = (compliant_controls / total_compliance_records * 100) if total_compliance_records > 0 else 0
+        except Exception as e:
+            logging.warning(f"Could not get security control coverage metrics: {e}")
+            metrics["coverage"]["total_security_controls"] = 0
+            metrics["coverage"]["compliant_controls"] = 0
+            metrics["coverage"]["control_compliance_percentage"] = 0
 
         # 4. Threat Intelligence Coverage
-        total_iocs = db.query(IndicatorOfCompromise).count()
-        active_iocs = db.query(IndicatorOfCompromise).filter(IndicatorOfCompromise.status == "active").count()
+        try:
+            total_iocs = db.query(IndicatorOfCompromise).count()
+            active_iocs = db.query(IndicatorOfCompromise).filter(IndicatorOfCompromise.status == "active").count()
 
-        metrics["coverage"]["total_threat_indicators"] = total_iocs
-        metrics["coverage"]["active_threat_indicators"] = active_iocs
-        metrics["coverage"]["threat_coverage_percentage"] = (active_iocs / total_iocs * 100) if total_iocs > 0 else 0
+            metrics["coverage"]["total_threat_indicators"] = total_iocs
+            metrics["coverage"]["active_threat_indicators"] = active_iocs
+            metrics["coverage"]["threat_coverage_percentage"] = (active_iocs / total_iocs * 100) if total_iocs > 0 else 0
+        except Exception as e:
+            logging.warning(f"Could not get threat intelligence coverage metrics: {e}")
+            metrics["coverage"]["total_threat_indicators"] = 0
+            metrics["coverage"]["active_threat_indicators"] = 0
+            metrics["coverage"]["threat_coverage_percentage"] = 0
 
         # EFFECTIVENESS METRICS
         # 1. Alert Accuracy (True Positive Rate)
-        week_cutoff = datetime.now(timezone.utc) - timedelta(days=7)
-        weekly_alerts = db.query(Alert).filter(Alert.created_at >= week_cutoff).all()
+        try:
+            week_cutoff = datetime.now(timezone.utc) - timedelta(days=7)
+            weekly_alerts = db.query(Alert).filter(Alert.created_at >= week_cutoff).all()
 
-        # Simulated true positive calculation (would need manual classification in production)
-        true_positives = len([a for a in weekly_alerts if a.severity in ["high", "critical"]])
-        false_positives = len([a for a in weekly_alerts if a.severity == "low"])
+            # Simulated true positive calculation (would need manual classification in production)
+            true_positives = len([a for a in weekly_alerts if a.severity in ["high", "critical"]])
+            false_positives = len([a for a in weekly_alerts if a.severity == "low"])
 
-        total_classified = true_positives + false_positives
-        metrics["effectiveness"]["true_positive_rate"] = (true_positives / total_classified * 100) if total_classified > 0 else 0
-        metrics["effectiveness"]["alert_accuracy_percentage"] = metrics["effectiveness"]["true_positive_rate"]
+            total_classified = true_positives + false_positives
+            metrics["effectiveness"]["true_positive_rate"] = (true_positives / total_classified * 100) if total_classified > 0 else 0
+            metrics["effectiveness"]["alert_accuracy_percentage"] = metrics["effectiveness"]["true_positive_rate"]
+        except Exception as e:
+            logging.warning(f"Could not get alert accuracy metrics: {e}")
+            metrics["effectiveness"]["true_positive_rate"] = 0
+            metrics["effectiveness"]["alert_accuracy_percentage"] = 0
 
         # 2. Incident Detection Effectiveness
-        total_incidents = db.query(Incident).count()
-        detected_by_monitoring = db.query(Incident).filter(Incident.title.contains("Alert")).count()  # Simplified detection
+        try:
+            total_incidents = db.query(Incident).count()
+            detected_by_monitoring = db.query(Incident).filter(Incident.title.contains("Alert")).count()  # Simplified detection
 
-        metrics["effectiveness"]["total_incidents"] = total_incidents
-        metrics["effectiveness"]["incidents_detected_by_monitoring"] = detected_by_monitoring
-        metrics["effectiveness"]["automated_detection_rate"] = (detected_by_monitoring / total_incidents * 100) if total_incidents > 0 else 0
+            metrics["effectiveness"]["total_incidents"] = total_incidents
+            metrics["effectiveness"]["incidents_detected_by_monitoring"] = detected_by_monitoring
+            metrics["effectiveness"]["automated_detection_rate"] = (detected_by_monitoring / total_incidents * 100) if total_incidents > 0 else 0
+        except Exception as e:
+            logging.warning(f"Could not get incident detection effectiveness metrics: {e}")
+            metrics["effectiveness"]["total_incidents"] = 0
+            metrics["effectiveness"]["incidents_detected_by_monitoring"] = 0
+            metrics["effectiveness"]["automated_detection_rate"] = 0
 
         # 3. Mean Time to Detect (MTTD) and Mean Time to Respond (MTTR)
         # Simulated metrics - would need actual timestamp tracking
@@ -720,20 +816,31 @@ def collect_security_metrics():
         metrics["effectiveness"]["mean_time_to_respond_hours"] = 4.2  # Average hours to respond
 
         # 4. Risk Reduction Effectiveness
-        initial_risks = db.query(Risk).filter(Risk.created_at < week_cutoff).count()
-        current_risks = db.query(Risk).count()
-        mitigated_risks = max(0, initial_risks - current_risks)
+        try:
+            initial_risks = db.query(Risk).filter(Risk.created_at < week_cutoff).count()
+            current_risks = db.query(Risk).count()
+            mitigated_risks = max(0, initial_risks - current_risks)
 
-        metrics["effectiveness"]["risks_mitigated_weekly"] = mitigated_risks
-        metrics["effectiveness"]["risk_reduction_percentage"] = (mitigated_risks / initial_risks * 100) if initial_risks > 0 else 0
+            metrics["effectiveness"]["risks_mitigated_weekly"] = mitigated_risks
+            metrics["effectiveness"]["risk_reduction_percentage"] = (mitigated_risks / initial_risks * 100) if initial_risks > 0 else 0
+        except Exception as e:
+            logging.warning(f"Could not get risk reduction effectiveness metrics: {e}")
+            metrics["effectiveness"]["risks_mitigated_weekly"] = 0
+            metrics["effectiveness"]["risk_reduction_percentage"] = 0
 
         # 5. Vulnerability Management Effectiveness
-        total_vulnerabilities = db.query(VulnerabilityFinding).count()
-        patched_vulnerabilities = db.query(VulnerabilityFinding).filter(VulnerabilityFinding.title.contains("patched")).count()  # Simplified
+        try:
+            total_vulnerabilities = db.query(VulnerabilityFinding).count()
+            patched_vulnerabilities = db.query(VulnerabilityFinding).filter(VulnerabilityFinding.title.contains("patched")).count()  # Simplified
 
-        metrics["effectiveness"]["total_vulnerabilities"] = total_vulnerabilities
-        metrics["effectiveness"]["patched_vulnerabilities"] = patched_vulnerabilities
-        metrics["effectiveness"]["vulnerability_patch_rate"] = (patched_vulnerabilities / total_vulnerabilities * 100) if total_vulnerabilities > 0 else 0
+            metrics["effectiveness"]["total_vulnerabilities"] = total_vulnerabilities
+            metrics["effectiveness"]["patched_vulnerabilities"] = patched_vulnerabilities
+            metrics["effectiveness"]["vulnerability_patch_rate"] = (patched_vulnerabilities / total_vulnerabilities * 100) if total_vulnerabilities > 0 else 0
+        except Exception as e:
+            logging.warning(f"Could not get vulnerability management effectiveness metrics: {e}")
+            metrics["effectiveness"]["total_vulnerabilities"] = 0
+            metrics["effectiveness"]["patched_vulnerabilities"] = 0
+            metrics["effectiveness"]["vulnerability_patch_rate"] = 0
 
         # MEASUREMENT METHODOLOGY
         metrics["measurement_methodology"] = {
@@ -4916,7 +5023,13 @@ def create_app():
             }
         }
 
-        return render_template("alert_documentation.html", **alert_documentation_data, timedelta=timedelta, current_date=datetime.now())
+        alerts_by_category = {
+            'authentication': [],
+            'file_access': [],
+            'network_activity': []
+        }
+        
+        return render_template("alert_documentation.html", **alert_documentation_data, alerts_by_category=alerts_by_category, timedelta=timedelta, current_date=datetime.now())
 
     # --- Incident Routes ---
     @app.route("/incidents")
@@ -8021,6 +8134,48 @@ def create_app():
             close_session(db)
             return {"error": str(e)}, 500
 
+    @app.route("/api/alert_details/<int:alert_id>")
+    @login_required
+    def get_alert_details(alert_id):
+        """
+        API endpoint to retrieve detailed information for a specific alert.
+
+        Returns alert details as JSON for the modal display.
+        """
+        user = current_user()
+        db = get_session()
+
+        try:
+            alert = db.query(Alert).filter_by(id=alert_id).first()
+
+            if not alert:
+                close_session(db)
+                return {"error": "Alert not found"}, 404
+
+            # Return alert data as JSON
+            alert_data = {
+                "id": alert.id,
+                "title": alert.title,
+                "description": alert.description,
+                "severity": alert.severity,
+                "category": alert.category,
+                "impact": alert.impact,
+                "actions_taken": alert.actions_taken,
+                "status": alert.status,
+                "triggered_at": alert.triggered_at.strftime('%Y-%m-%d %H:%M:%S UTC') if alert.triggered_at else 'N/A',
+                "source_ip": alert.source_ip,
+                "log_entries": alert.log_entries,
+                "created_at": alert.created_at.strftime('%Y-%m-%d %H:%M:%S UTC') if alert.created_at else 'N/A',
+                "updated_at": alert.updated_at.strftime('%Y-%m-%d %H:%M:%S UTC') if alert.updated_at else 'N/A'
+            }
+
+            close_session(db)
+            return alert_data
+
+        except Exception as e:
+            close_session(db)
+            return {"error": str(e)}, 500
+
     @app.route("/add_alert", methods=["POST"])
     @login_required
     def add_alert():
@@ -8058,11 +8213,14 @@ def create_app():
             else:
                 timestamp = datetime.now(timezone.utc)
 
-            # Create alert object
+            # Create alert object with all form fields mapped
             alert = Alert(
                 title=f"Alert {alert_id}",  # Use alert_id as title
                 description=description,
                 severity=severity,
+                category=category,  # Map category field
+                impact=impact,      # Map impact field
+                actions_taken=actions_taken,  # Map actions_taken field
                 status="new",
                 triggered_at=timestamp,
                 source_ip=source,  # Use source as source_ip field

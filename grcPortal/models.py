@@ -2187,7 +2187,7 @@ class AlertRule(Base):
 
 
 class Alert(Base):
-    """Generated alerts from monitoring rules"""
+    """Generated alerts from monitoring rules and manual alert documentation"""
     __tablename__ = "alerts"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -2197,6 +2197,11 @@ class Alert(Base):
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     severity: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+
+    # Manual alert documentation fields
+    category: Mapped[str] = mapped_column(String(100), nullable=True)
+    impact: Mapped[str] = mapped_column(String(20), default="low")
+    actions_taken: Mapped[str] = mapped_column(Text, nullable=True)
 
     # Trigger information
     triggered_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))

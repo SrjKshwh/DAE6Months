@@ -89,7 +89,7 @@
 
                             <div class="row mt-4">
                                 <div class="col-12">
-                                    <h6>Sample Alert Documentation</h6>
+                                    <h6>Alert Documentation</h6>
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <thead>
@@ -97,28 +97,54 @@
                                                     <th>Alert ID</th>
                                                     <th>Timestamp</th>
                                                     <th>Description</th>
-                                                    <th>Impact Assessment</th>
-                                                    <th>Actions Taken</th>
+                                                    <th>Severity</th>
                                                     <th>Status</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                {% for alert in alerts_by_category.get('authentication', []) %}
                                                 <tr>
-                                                    <td>AUTH-2024-001</td>
-                                                    <td>2024-10-21 14:30:15</td>
-                                                    <td>Multiple failed login attempts for admin account from IP 192.168.1.100</td>
-                                                    <td><span class="badge bg-warning">Medium</span><br>Potential brute force attack</td>
-                                                    <td>Account temporarily locked, IP blocked, security team notified</td>
-                                                    <td><span class="badge bg-success">Resolved</span></td>
+                                                    <td>{{ alert.title }}</td>
+                                                    <td>{{ alert.triggered_at.strftime('%Y-%m-%d %H:%M:%S') if alert.triggered_at else 'N/A' }}</td>
+                                                    <td>{{ alert.description[:100] }}{% if alert.description|length > 100 %}...{% endif %}</td>
+                                                    <td>
+                                                        {% if alert.severity == 'critical' %}
+                                                            <span class="badge bg-danger">Critical</span>
+                                                        {% elif alert.severity == 'high' %}
+                                                            <span class="badge bg-danger">High</span>
+                                                        {% elif alert.severity == 'medium' %}
+                                                            <span class="badge bg-warning">Medium</span>
+                                                        {% else %}
+                                                            <span class="badge bg-secondary">Low</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if alert.status == 'new' %}
+                                                            <span class="badge bg-primary">New</span>
+                                                        {% elif alert.status == 'investigating' %}
+                                                            <span class="badge bg-warning">Investigating</span>
+                                                        {% elif alert.status == 'resolved' %}
+                                                            <span class="badge bg-success">Resolved</span>
+                                                        {% else %}
+                                                            <span class="badge bg-secondary">{{ alert.status.title() }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary view-details-btn"
+                                                                data-alert-id="{{ alert.id }}"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#alertDetailModal">
+                                                            <i class="fas fa-eye"></i> View Details
+                                                        </button>
+                                                    </td>
                                                 </tr>
+                                                {% endfor %}
+                                                {% if not alerts_by_category.get('authentication', []) %}
                                                 <tr>
-                                                    <td>AUTH-2024-002</td>
-                                                    <td>2024-10-21 15:45:22</td>
-                                                    <td>Suspicious authentication pattern detected</td>
-                                                    <td><span class="badge bg-danger">High</span><br>Privileged account access anomaly</td>
-                                                    <td>Multi-factor authentication enforced, credential rotation initiated</td>
-                                                    <td><span class="badge bg-warning">Investigating</span></td>
+                                                    <td colspan="6" class="text-center text-muted">No authentication alerts found.</td>
                                                 </tr>
+                                                {% endif %}
                                             </tbody>
                                         </table>
                                     </div>
@@ -175,7 +201,7 @@
 
                             <div class="row mt-4">
                                 <div class="col-12">
-                                    <h6>Sample Alert Documentation</h6>
+                                    <h6>Alert Documentation</h6>
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <thead>
@@ -183,28 +209,54 @@
                                                     <th>Alert ID</th>
                                                     <th>Timestamp</th>
                                                     <th>Description</th>
-                                                    <th>Impact Assessment</th>
-                                                    <th>Actions Taken</th>
+                                                    <th>Severity</th>
                                                     <th>Status</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                {% for alert in alerts_by_category.get('file_access', []) %}
                                                 <tr>
-                                                    <td>FILE-2024-001</td>
-                                                    <td>2024-10-21 13:15:30</td>
-                                                    <td>Unauthorized access to /etc/shadow file</td>
-                                                    <td><span class="badge bg-danger">Critical</span><br>Password database exposure risk</td>
-                                                    <td>Access revoked, security audit initiated, incident declared</td>
-                                                    <td><span class="badge bg-success">Resolved</span></td>
+                                                    <td>{{ alert.title }}</td>
+                                                    <td>{{ alert.triggered_at.strftime('%Y-%m-%d %H:%M:%S') if alert.triggered_at else 'N/A' }}</td>
+                                                    <td>{{ alert.description[:100] }}{% if alert.description|length > 100 %}...{% endif %}</td>
+                                                    <td>
+                                                        {% if alert.severity == 'critical' %}
+                                                            <span class="badge bg-danger">Critical</span>
+                                                        {% elif alert.severity == 'high' %}
+                                                            <span class="badge bg-danger">High</span>
+                                                        {% elif alert.severity == 'medium' %}
+                                                            <span class="badge bg-warning">Medium</span>
+                                                        {% else %}
+                                                            <span class="badge bg-secondary">Low</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if alert.status == 'new' %}
+                                                            <span class="badge bg-primary">New</span>
+                                                        {% elif alert.status == 'investigating' %}
+                                                            <span class="badge bg-warning">Investigating</span>
+                                                        {% elif alert.status == 'resolved' %}
+                                                            <span class="badge bg-success">Resolved</span>
+                                                        {% else %}
+                                                            <span class="badge bg-secondary">{{ alert.status.title() }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary view-details-btn"
+                                                                data-alert-id="{{ alert.id }}"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#alertDetailModal">
+                                                            <i class="fas fa-eye"></i> View Details
+                                                        </button>
+                                                    </td>
                                                 </tr>
+                                                {% endfor %}
+                                                {% if not alerts_by_category.get('file_access', []) %}
                                                 <tr>
-                                                    <td>FILE-2024-002</td>
-                                                    <td>2024-10-21 16:20:45</td>
-                                                    <td>Permission changes on system configuration files</td>
-                                                    <td><span class="badge bg-warning">Medium</span><br>Potential misconfiguration</td>
-                                                    <td>Permissions restored, change review initiated</td>
-                                                    <td><span class="badge bg-success">Resolved</span></td>
+                                                    <td colspan="6" class="text-center text-muted">No file access alerts found.</td>
                                                 </tr>
+                                                {% endif %}
                                             </tbody>
                                         </table>
                                     </div>
@@ -261,7 +313,7 @@
 
                             <div class="row mt-4">
                                 <div class="col-12">
-                                    <h6>Sample Alert Documentation</h6>
+                                    <h6>Alert Documentation</h6>
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <thead>
@@ -269,28 +321,54 @@
                                                     <th>Alert ID</th>
                                                     <th>Timestamp</th>
                                                     <th>Description</th>
-                                                    <th>Impact Assessment</th>
-                                                    <th>Actions Taken</th>
+                                                    <th>Severity</th>
                                                     <th>Status</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                {% for alert in alerts_by_category.get('network_activity', []) %}
                                                 <tr>
-                                                    <td>NET-2024-001</td>
-                                                    <td>2024-10-21 12:45:10</td>
-                                                    <td>Firewall blocked 15 connection attempts to port 3389</td>
-                                                    <td><span class="badge bg-warning">Medium</span><br>Potential RDP brute force</td>
-                                                    <td>RDP service hardened, additional monitoring enabled</td>
-                                                    <td><span class="badge bg-success">Resolved</span></td>
+                                                    <td>{{ alert.title }}</td>
+                                                    <td>{{ alert.triggered_at.strftime('%Y-%m-%d %H:%M:%S') if alert.triggered_at else 'N/A' }}</td>
+                                                    <td>{{ alert.description[:100] }}{% if alert.description|length > 100 %}...{% endif %}</td>
+                                                    <td>
+                                                        {% if alert.severity == 'critical' %}
+                                                            <span class="badge bg-danger">Critical</span>
+                                                        {% elif alert.severity == 'high' %}
+                                                            <span class="badge bg-danger">High</span>
+                                                        {% elif alert.severity == 'medium' %}
+                                                            <span class="badge bg-warning">Medium</span>
+                                                        {% else %}
+                                                            <span class="badge bg-secondary">Low</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if alert.status == 'new' %}
+                                                            <span class="badge bg-primary">New</span>
+                                                        {% elif alert.status == 'investigating' %}
+                                                            <span class="badge bg-warning">Investigating</span>
+                                                        {% elif alert.status == 'resolved' %}
+                                                            <span class="badge bg-success">Resolved</span>
+                                                        {% else %}
+                                                            <span class="badge bg-secondary">{{ alert.status.title() }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary view-details-btn"
+                                                                data-alert-id="{{ alert.id }}"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#alertDetailModal">
+                                                            <i class="fas fa-eye"></i> View Details
+                                                        </button>
+                                                    </td>
                                                 </tr>
+                                                {% endfor %}
+                                                {% if not alerts_by_category.get('network_activity', []) %}
                                                 <tr>
-                                                    <td>NET-2024-002</td>
-                                                    <td>2024-10-21 17:30:55</td>
-                                                    <td>Suspicious outbound traffic to known C2 server</td>
-                                                    <td><span class="badge bg-danger">High</span><br>Possible data exfiltration</td>
-                                                    <td>Traffic blocked, endpoint investigation initiated</td>
-                                                    <td><span class="badge bg-warning">Investigating</span></td>
+                                                    <td colspan="6" class="text-center text-muted">No network activity alerts found.</td>
                                                 </tr>
+                                                {% endif %}
                                             </tbody>
                                         </table>
                                     </div>
@@ -373,6 +451,31 @@
     </div>
 </div>
 
+<!-- Alert Detail Modal -->
+<div class="modal fade" id="alertDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-eye me-2"></i>Alert Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="alertDetailContent">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading alert details...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Export Modal -->
 <div class="modal fade" id="exportModal" tabindex="-1">
     <div class="modal-dialog">
@@ -417,5 +520,138 @@
         </div>
     </div>
 </div>
+
+<script>
+// Handle View Details button clicks
+document.addEventListener('DOMContentLoaded', function() {
+    const viewDetailButtons = document.querySelectorAll('.view-details-btn');
+
+    viewDetailButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const alertId = this.getAttribute('data-alert-id');
+            loadAlertDetails(alertId);
+        });
+    });
+});
+
+function loadAlertDetails(alertId) {
+    const modalContent = document.getElementById('alertDetailContent');
+
+    // Show loading spinner
+    modalContent.innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading alert details...</p>
+        </div>
+    `;
+
+    // Fetch alert details from API
+    fetch(`/api/alert_details/${alertId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load alert details');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Build detailed view
+            const severityClass = getSeverityClass(data.severity);
+            const statusClass = getStatusClass(data.status);
+
+            modalContent.innerHTML = `
+                <div class="row">
+                    <div class="col-md-8">
+                        <h6 class="mb-3">Alert Information</h6>
+                        <table class="table table-sm">
+                            <tr>
+                                <th width="30%">Alert ID:</th>
+                                <td>${data.title || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <th>Category:</th>
+                                <td>${data.category ? data.category.charAt(0).toUpperCase() + data.category.slice(1).replace('_', ' ') : 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <th>Severity:</th>
+                                <td><span class="badge ${severityClass}">${data.severity ? data.severity.charAt(0).toUpperCase() + data.severity.slice(1) : 'N/A'}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Status:</th>
+                                <td><span class="badge ${statusClass}">${data.status ? data.status.charAt(0).toUpperCase() + data.status.slice(1) : 'N/A'}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Triggered At:</th>
+                                <td>${data.triggered_at || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <th>Source IP:</th>
+                                <td>${data.source_ip || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <th>Created At:</th>
+                                <td>${data.created_at || 'N/A'}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="mb-3">Additional Details</h6>
+                        <div class="small">
+                            <p><strong>Impact:</strong> ${data.impact || 'N/A'}</p>
+                            <p><strong>Actions Taken:</strong> ${data.actions_taken || 'N/A'}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h6>Description</h6>
+                        <div class="border rounded p-3 bg-light">
+                            ${data.description || 'No description available.'}
+                        </div>
+                    </div>
+                </div>
+                ${data.log_entries ? `
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h6>Log Entries</h6>
+                        <div class="border rounded p-3 bg-light">
+                            <pre class="mb-0 small">${data.log_entries}</pre>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+        })
+        .catch(error => {
+            modalContent.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Error loading alert details: ${error.message}
+                </div>
+            `;
+        });
+}
+
+function getSeverityClass(severity) {
+    switch(severity) {
+        case 'critical': return 'bg-danger';
+        case 'high': return 'bg-danger';
+        case 'medium': return 'bg-warning';
+        case 'low': return 'bg-secondary';
+        default: return 'bg-secondary';
+    }
+}
+
+function getStatusClass(status) {
+    switch(status) {
+        case 'new': return 'bg-primary';
+        case 'investigating': return 'bg-warning';
+        case 'resolved': return 'bg-success';
+        case 'closed': return 'bg-secondary';
+        default: return 'bg-secondary';
+    }
+}
+</script>
 
 {% endblock %}
