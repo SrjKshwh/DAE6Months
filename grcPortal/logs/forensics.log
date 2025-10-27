@@ -29948,3 +29948,174 @@ WHERE collected_logs.timestamp >= ?) AS anon_1]
 2025-10-26 23:26:21,421 [INFO] 127.0.0.1 - - [26/Oct/2025 23:26:21] "GET /login HTTP/1.1" 200 -
 2025-10-26 23:26:21,450 [INFO] 127.0.0.1 - - [26/Oct/2025 23:26:21] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
 2025-10-26 23:26:21,524 [INFO] 127.0.0.1 - - [26/Oct/2025 23:26:21] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-27 11:14:52,091 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-27 11:14:52,094 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-27 11:14:52,097 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-27 11:14:52,098 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-27 11:14:52,099 [INFO] Scheduler started
+2025-10-27 11:14:52,100 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-10-27 11:14:52,139 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-27 11:14:52,139 [INFO] [33mPress CTRL+C to quit[0m
+2025-10-27 11:14:52,142 [INFO]  * Restarting with stat
+2025-10-27 11:14:53,914 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-27 11:14:53,915 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-27 11:14:53,918 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-27 11:14:53,919 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-27 11:14:53,919 [INFO] Scheduler started
+2025-10-27 11:14:53,920 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-10-27 11:14:53,932 [WARNING]  * Debugger is active!
+2025-10-27 11:14:53,937 [INFO]  * Debugger PIN: 136-772-789
+2025-10-27 11:15:00,001 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:15:00 EDT)" (scheduled at 2025-10-27 11:15:00-04:00)
+2025-10-27 11:15:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:15:00 EDT)" (scheduled at 2025-10-27 11:15:00-04:00)
+2025-10-27 11:15:00,393 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 15:10:00.382393',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 11:15:00,394 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:20:00 EDT)" executed successfully
+2025-10-27 11:15:00,560 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 15:10:00.548612',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 11:15:00,562 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:20:00 EDT)" executed successfully
+2025-10-27 11:15:07,994 [INFO] 127.0.0.1 - - [27/Oct/2025 11:15:07] "GET / HTTP/1.1" 200 -
+2025-10-27 11:15:08,317 [INFO] 127.0.0.1 - - [27/Oct/2025 11:15:08] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-27 11:15:08,338 [INFO] 127.0.0.1 - - [27/Oct/2025 11:15:08] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-27 11:15:08,428 [INFO] DEBUG: current_user() - session user_id: None
+2025-10-27 11:15:08,428 [INFO] DEBUG: current_user() - no user_id in session
+2025-10-27 11:15:08,431 [INFO] 127.0.0.1 - - [27/Oct/2025 11:15:08] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-10-27 11:15:16,693 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-10-27 11:15:16,706 [INFO] 127.0.0.1 - - [27/Oct/2025 11:15:16] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-10-27 11:15:16,713 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-27 11:15:16,724 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D0192C5950>
+2025-10-27 11:15:16,725 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-27 11:15:16,725 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-27 11:15:16,727 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D0192C7250>
+2025-10-27 11:15:16,727 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-27 11:15:16,727 [INFO] DEBUG: current_user() returned: <models.User object at 0x000001D0192C7250> - email: kush786srj@gmail.com
+2025-10-27 11:15:16,728 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-10-27 11:15:16,769 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-27 11:15:16,770 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D0192C7250>
+2025-10-27 11:15:16,770 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-27 11:15:16,772 [INFO] 127.0.0.1 - - [27/Oct/2025 11:15:16] "GET /home HTTP/1.1" 200 -
+2025-10-27 11:15:16,828 [INFO] 127.0.0.1 - - [27/Oct/2025 11:15:16] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-27 11:15:32,370 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-27 11:15:32,373 [INFO] 127.0.0.1 - - [27/Oct/2025 11:15:32] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-27 11:15:32,379 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D019921220>
+2025-10-27 11:15:32,380 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-27 11:15:32,427 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-27 11:15:32,429 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D019920510>
+2025-10-27 11:15:32,429 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-27 11:15:32,431 [INFO] 127.0.0.1 - - [27/Oct/2025 11:15:32] "GET /guide HTTP/1.1" 200 -
+2025-10-27 11:15:32,460 [INFO] 127.0.0.1 - - [27/Oct/2025 11:15:32] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-27 11:17:47,433 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-27 11:17:47,443 [INFO] 127.0.0.1 - - [27/Oct/2025 11:17:47] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-27 11:17:47,459 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D0199B4170>
+2025-10-27 11:17:47,461 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-27 11:17:47,602 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-27 11:17:47,605 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D01986A030>
+2025-10-27 11:17:47,606 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-27 11:17:47,610 [INFO] 127.0.0.1 - - [27/Oct/2025 11:17:47] "GET /alert_documentation HTTP/1.1" 200 -
+2025-10-27 11:17:47,643 [INFO] 127.0.0.1 - - [27/Oct/2025 11:17:47] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-27 11:20:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:25:00 EDT)" (scheduled at 2025-10-27 11:20:00-04:00)
+2025-10-27 11:20:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:25:00 EDT)" (scheduled at 2025-10-27 11:20:00-04:00)
+2025-10-27 11:20:00,032 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 15:15:00.026141',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 11:20:00,039 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 15:15:00.030902',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 11:20:00,041 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:25:00 EDT)" executed successfully
+2025-10-27 11:20:00,043 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:25:00 EDT)" executed successfully
+2025-10-27 11:21:56,351 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-10-27 11:21:56,371 [INFO] 127.0.0.1 - - [27/Oct/2025 11:21:56] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-10-27 11:21:56,413 [INFO] 127.0.0.1 - - [27/Oct/2025 11:21:56] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-27 11:21:56,417 [INFO] 127.0.0.1 - - [27/Oct/2025 11:21:56] "GET /login HTTP/1.1" 200 -
+2025-10-27 11:21:56,444 [INFO] 127.0.0.1 - - [27/Oct/2025 11:21:56] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-27 11:21:56,457 [INFO] 127.0.0.1 - - [27/Oct/2025 11:21:56] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-27 11:25:00,006 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:30:00 EDT)" (scheduled at 2025-10-27 11:25:00-04:00)
+2025-10-27 11:25:00,008 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:30:00 EDT)" (scheduled at 2025-10-27 11:25:00-04:00)
+2025-10-27 11:25:00,099 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 15:20:00.085976',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 11:25:00,101 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:30:00 EDT)" executed successfully
+2025-10-27 11:25:00,105 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 15:20:00.097910',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 11:25:00,106 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:30:00 EDT)" executed successfully
+2025-10-27 11:38:15,691 [WARNING] Run time of job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:40:00 EDT)" was missed by 0:03:15.691563
+2025-10-27 11:38:15,710 [WARNING] Run time of job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:40:00 EDT)" was missed by 0:03:15.710381
+2025-10-27 11:40:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:45:00 EDT)" (scheduled at 2025-10-27 11:40:00-04:00)
+2025-10-27 11:40:00,033 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 15:35:00.026805',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 11:40:00,036 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:45:00 EDT)" executed successfully
+2025-10-27 11:40:00,115 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 15:35:00.024270',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 11:40:00,116 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:45:00 EDT)" executed successfully
+2025-10-27 11:45:00,018 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:50:00 EDT)" (scheduled at 2025-10-27 11:45:00-04:00)
+2025-10-27 11:45:00,039 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 15:40:00.034104',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 11:45:00,041 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 15:40:00.034706',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 11:45:00,042 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:50:00 EDT)" executed successfully
+2025-10-27 11:45:00,043 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:50:00 EDT)" executed successfully
+2025-10-27 11:50:00,001 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:55:00 EDT)" (scheduled at 2025-10-27 11:50:00-04:00)
+2025-10-27 11:50:00,050 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:55:00 EDT)" (scheduled at 2025-10-27 11:50:00-04:00)
+2025-10-27 11:50:00,059 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 15:45:00.056421',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 11:50:00,061 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:55:00 EDT)" executed successfully
+2025-10-27 11:50:00,064 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 15:45:00.062326',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 11:50:00,066 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:55:00 EDT)" executed successfully
