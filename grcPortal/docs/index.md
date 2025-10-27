@@ -276,14 +276,17 @@ if not up or up.user_id != session.get("user_id"):
 ## 5. Risk Generation from Scan Results
 
 ### Process Flow:
-1. **File Upload** → User uploads PDF/TXT security policy
-2. **Text Extraction** → PyPDF2 or file.read() extracts content
-3. **AI Analysis** → OpenRouter API analyzes for compliance gaps
-4. **Risk Creation** → Automatic Risk entries for identified issues
-5. **Compliance Mapping** → Failed controls linked to risks
+1. **File Upload** → User uploads PDF/TXT security policy via secure upload form
+2. **Text Extraction** → PyPDF2 extracts PDF content or direct file.read() for TXT files
+3. **Pattern-based Threat Detection** → Automated scanning for plaintext passwords, SQL injection patterns
+4. **AI Analysis** → OpenRouter API analyzes for compliance gaps and risk identification
+5. **Risk Creation** → Automatic Risk entries for AI-detected and pattern-matched issues
+6. **Compliance Mapping** → Failed controls linked to risks with framework-specific mapping
+7. **Database Persistence** → Risks and compliance records committed to database with proper error handling
 
 ### Risk Entry Structure:
 ```python
+# AI-detected risks from LLM analysis
 risk = Risk(
     asset="Uploaded Policy Document",
     threat=risk_item.get("risk", "Unspecified threat"),
@@ -293,42 +296,191 @@ risk = Risk(
     status=RiskStatus.OPEN,
     category=RiskCategory.CONFIGURATION,
     likelihood=3, impact=3,  # Default medium
-    severity=severity  # Auto-calculated
+    severity=severity,  # Auto-calculated from score
+    scan_result_id=scan_result_id  # Links to scan results
+)
+risk.calculate_score()  # Auto-calculates score and severity
+
+# Pattern-detected threats (higher default likelihood/impact)
+threat_risk = Risk(
+    asset="Uploaded Policy Document",
+    threat=threat_item.get("threat"),
+    vulnerability=threat_item.get("detection_method", "Pattern-based detection"),
+    control=threat_item.get("remediation", "Implement recommended security control"),
+    compliance_standard=ComplianceFramework.NIST_SP_800_53,
+    status=RiskStatus.OPEN,
+    category=RiskCategory.CONFIGURATION,
+    likelihood=4,  # Higher likelihood for detected threats
+    impact=4,      # Higher impact for detected threats
+    severity=severity,
+    scan_result_id=scan_result_id
 )
 ```
 
 ### Compliance Entry Structure:
 ```python
+# Compliance records linked to risks
 compliance = Compliance(
-    framework=ComplianceFramework.NIST_SP_800_53,
+    framework=compliance_item.get("framework", "NIST SP 800-53"),
     control=compliance_item.get("control", "Unknown Control"),
     control_family=control.split("-")[0] if "-" in control else "XX",
     score=0.0,  # Failed control
     status="non-compliant",
-    risk_id=risk.id
+    risk_id=risk.id  # Links compliance to specific risk
 )
+```
+
+### Threat Detection Patterns:
+```python
+# Pattern-based threat detection in scan_file_for_grc()
+threats = []
+
+# Plaintext password detection
+if "password" in text.lower() and "plaintext" in text.lower():
+    threats.append({
+        "threat": "Plaintext password storage detected",
+        "severity": "High",
+        "detection_method": "Pattern matching in uploaded content",
+        "impact": "Potential credential exposure",
+        "remediation": "Implement proper password hashing"
+    })
+
+# SQL injection vulnerability detection
+if "sql" in text.lower() and ("select" in text.lower() or "union" in text.lower()):
+    threats.append({
+        "threat": "Potential SQL injection vulnerability",
+        "severity": "Critical",
+        "detection_method": "SQL keyword pattern analysis",
+        "impact": "Database compromise risk",
+        "remediation": "Use parameterized queries"
+    })
 ```
 
 ## 6. Risk Assessment Functions
 
 ### Built-in Risk Calculations:
 ```python
-def calculate_score(self):
-    """Calculate risk score using likelihood × impact"""
-    self.score = self.likelihood * self.impact
-    # Auto-determine severity
-    if self.score >= 20: self.severity = RiskSeverity.CRITICAL
-    elif self.score >= 12: self.severity = RiskSeverity.HIGH
-    elif self.score >= 6: self.severity = RiskSeverity.MEDIUM
-    else: self.severity = RiskSeverity.LOW
+def calculate_score(self, use_multi_criteria=False):
+    """
+    Calculate the overall risk score using traditional or multi-criteria methods.
+
+    Supports two calculation approaches:
+    1. Traditional: likelihood × impact (1-25 scale)
+    2. Multi-criteria: Weighted combination of financial, operational, compliance, reputation impacts
+
+    Args:
+        use_multi_criteria (bool): If True, uses weighted multi-criteria calculation.
+                                  If False, uses traditional likelihood × impact.
+
+    Returns:
+        int: Calculated risk score (1-25 scale)
+
+    Side Effects:
+        Updates self.score attribute
+        Auto-determines severity based on score ranges
+        Sets appropriate RiskSeverity enum value
+    """
+    if use_multi_criteria:
+        return self.calculate_multi_criteria_score()
+    else:
+        # Original logic
+        self.score = self.likelihood * self.impact
+        # Auto-determine severity based on score
+        if self.score >= 20:
+            self.severity = RiskSeverity.CRITICAL
+        elif self.score >= 12:
+            self.severity = RiskSeverity.HIGH
+        elif self.score >= 6:
+            self.severity = RiskSeverity.MEDIUM
+        else:
+            self.severity = RiskSeverity.LOW
+        return self.score
 
 def calculate_ale(self, asset_value: float = 100000.0):
-    """Annualized Loss Expectancy"""
+    """
+    Calculate Annualized Loss Expectancy (ALE) for quantitative risk analysis.
+
+    ALE represents the expected annual financial loss from a risk occurrence.
+    Formula: ALE = (Likelihood/5) × (Impact/5) × Asset_Value
+
+    Args:
+        asset_value (float): Value of the asset at risk (default: $100,000)
+
+    Side Effects:
+        Updates self.ale attribute with calculated value
+
+    Note:
+        Uses normalized likelihood and impact scales (1-5)
+        Assumes asset_value is the single loss expectancy (SLE)
+        Provides quantitative basis for risk prioritization
+    """
     self.ale = (self.likelihood / 5.0) * (self.impact / 5.0) * asset_value
 
 def calculate_emv(self, mitigation_cost: float = 0.0):
-    """Expected Monetary Value"""
+    """
+    Calculate Expected Monetary Value (EMV) considering mitigation costs.
+
+    EMV represents the net expected value after accounting for mitigation expenses.
+    Formula: EMV = ALE - Mitigation_Cost
+
+    Args:
+        mitigation_cost (float): Cost of implementing risk mitigation measures
+
+    Side Effects:
+        Updates self.emv attribute with calculated net value
+
+    Note:
+        Positive EMV indicates mitigation costs exceed expected losses
+        Negative EMV indicates cost-effective mitigation
+        Used for cost-benefit analysis of risk treatments
+    """
     self.emv = self.ale - mitigation_cost
+
+def calculate_multi_criteria_score(self):
+    """
+    Calculate risk score using weighted multi-criteria evaluation approach.
+
+    Applies weighted scoring across financial, operational, compliance, and
+    reputation impact dimensions. Provides more nuanced risk assessment than
+    traditional likelihood × impact calculation.
+
+    Returns:
+        int: Weighted risk score (1-25 scale)
+
+    Calculation Process:
+        1. Normalize each impact criterion to 0-1 scale
+        2. Apply dimension-specific weights
+        3. Sum weighted scores
+        4. Convert to 1-25 scale for consistency
+
+    Weight Configuration:
+        - Financial: 25% (configurable via financial_weight)
+        - Operational: 25% (configurable via operational_weight)
+        - Compliance: 25% (configurable via compliance_weight)
+        - Reputation: 25% (configurable via reputation_weight)
+
+    Note:
+        Supports customized weighting for different organizational priorities
+        Maintains compatibility with existing scoring system
+        Enables more sophisticated risk prioritization
+    """
+    # Normalize each criterion to 0-1 scale
+    normalized_financial = (self.financial_impact - 1) / 4.0
+    normalized_operational = (self.operational_impact - 1) / 4.0
+    normalized_compliance = (self.compliance_impact - 1) / 4.0
+    normalized_reputation = (self.reputation_impact - 1) / 4.0
+
+    # Calculate weighted score
+    weighted_score = (
+        normalized_financial * self.financial_weight +
+        normalized_operational * self.operational_weight +
+        normalized_compliance * self.compliance_weight +
+        normalized_reputation * self.reputation_weight
+        )
+
+    # Convert to 1-25 scale for consistency with existing scoring
+    self.score = int(weighted_score * 25) + 1
+    return self.score
 ```
 
 ## 7. Security Features Summary
@@ -966,24 +1118,48 @@ USER: Personal risk/incident management, document scanning
 
 #### AI-Generated Mitigation Planning:
 ```python
-# Comprehensive mitigation planning with AI assistance
-generate_risk_mitigation_plan(risk_data) -> dict:
-    - Framework control recommendations (NIST, ISO, COBIT)
-    - Treatment strategies (Mitigate, Avoid, Transfer, Accept)
-    - Cost-benefit analysis with ROI calculations
-    - Implementation roadmaps with phase planning
-    - Success metrics and KPIs
+def generate_risk_mitigation_plan(risk_data: dict) -> dict:
+    """
+    Generate comprehensive risk mitigation planning using OpenRouter AI.
+
+    Args:
+        risk_data (dict): Risk information containing threat, vulnerability, asset, etc.
+
+    Returns:
+        dict: Structured JSON response with mitigation planning details including:
+            - framework_controls: NIST/ISO/COBIT control recommendations
+            - treatment_strategies: Mitigate/Avoid/Transfer/Accept strategies with costs/timelines
+            - cost_benefit_analysis: ROI, payback period, risk reduction metrics
+            - recommended_strategy: Best approach with rationale
+            - implementation_roadmap: Phased implementation plan
+            - success_metrics: KPIs and measurement methods
+    """
+    # Calls OpenRouter API with detailed prompt for comprehensive mitigation planning
+    # Returns structured JSON with all mitigation aspects
 ```
 
 #### Communication Strategy Generation:
 ```python
-# Automated stakeholder communication planning
-generate_risk_communication_plan(risk_data, mitigation_plan) -> dict:
-    - Executive risk reports with financial impact analysis
-    - Stakeholder communication matrices
-    - Risk dashboard configuration
-    - KPI frameworks for monitoring
-    - Escalation procedures and alert systems
+def generate_risk_communication_plan(risk_data: dict, mitigation_plan: dict) -> dict:
+    """
+    Generate comprehensive risk communication plan using stored mitigation data.
+
+    Creates detailed communication strategies for executive leadership and stakeholders,
+    including tailored messaging, escalation procedures, and KPI frameworks.
+
+    Args:
+        risk_data (dict): Risk assessment data including asset, threat, score, severity
+        mitigation_plan (dict): AI-generated mitigation plan with cost-benefit analysis
+
+    Returns:
+        dict: Structured communication plan with:
+            - executive_risk_report: Key findings, financial impact, actionable recommendations
+            - stakeholder_communication_plan: Analysis for different stakeholder groups
+            - risk_dashboard_config: Key metrics and automated alerts
+            - kpi_framework: Leading/lagging indicators and tracking systems
+    """
+    # Calls OpenRouter API with detailed prompt for stakeholder communication planning
+    # Returns structured JSON with comprehensive communication strategy
 ```
 
 ### Continuous Risk Monitoring
@@ -1018,13 +1194,51 @@ generate_risk_communication_plan(risk_data, mitigation_plan) -> dict:
 
 #### Multi-Criteria Risk Scoring:
 ```python
-# Enhanced risk quantification
-calculate_multi_criteria_score():
-    - Financial impact weighting
-    - Operational impact assessment
-    - Compliance risk evaluation
-    - Reputation impact analysis
-    - Weighted scoring algorithm
+def calculate_multi_criteria_score(self):
+    """
+    Calculate risk score using weighted multi-criteria evaluation approach.
+
+    Applies weighted scoring across financial, operational, compliance, and
+    reputation impact dimensions. Provides more nuanced risk assessment than
+    traditional likelihood × impact calculation.
+
+    Returns:
+        int: Weighted risk score (1-25 scale)
+
+    Calculation Process:
+        1. Normalize each impact criterion to 0-1 scale
+        2. Apply dimension-specific weights
+        3. Sum weighted scores
+        4. Convert to 1-25 scale for consistency
+
+    Weight Configuration:
+        - Financial: 25% (configurable via financial_weight)
+        - Operational: 25% (configurable via operational_weight)
+        - Compliance: 25% (configurable via compliance_weight)
+        - Reputation: 25% (configurable via reputation_weight)
+
+    Note:
+        Supports customized weighting for different organizational priorities
+        Maintains compatibility with existing scoring system
+        Enables more sophisticated risk prioritization
+    """
+    # Normalize each criterion to 0-1 scale
+    normalized_financial = (self.financial_impact - 1) / 4.0
+    normalized_operational = (self.operational_impact - 1) / 4.0
+    normalized_compliance = (self.compliance_impact - 1) / 4.0
+    normalized_reputation = (self.reputation_impact - 1) / 4.0
+
+    # Calculate weighted score
+    weighted_score = (
+        normalized_financial * self.financial_weight +
+        normalized_operational * self.operational_weight +
+        normalized_compliance * self.compliance_weight +
+        normalized_reputation * self.reputation_weight
+        )
+
+    # Convert to 1-25 scale for consistency with existing scoring
+    self.score = int(weighted_score * 25) + 1
+    return self.score
 ```
 
 #### Business Impact Analysis:

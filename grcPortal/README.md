@@ -2,10 +2,11 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/flask-2.0+-blue.svg)](https://flask.palletsprojects.com/)
+[![Flask](https://img.shields.io/badge/flask-3.0+-blue.svg)](https://flask.palletsprojects.com/)
+[![SQLAlchemy](https://img.shields.io/badge/sqlalchemy-2.0+-blue.svg)](https://www.sqlalchemy.org/)
 [![Security](https://img.shields.io/badge/security-Zero%20Trust-green.svg)]()
 
-A comprehensive enterprise-grade Governance, Risk, and Compliance (GRC) platform built with Flask and Python. This AI-powered platform provides advanced tools for risk management, compliance automation, incident response, and digital forensics with continuous monitoring capabilities.
+A comprehensive enterprise-grade Governance, Risk, and Compliance (GRC) portal built with Flask and Python. This AI-powered platform provides advanced tools for risk management, compliance automation, incident response, digital forensics, and continuous monitoring capabilities. Features LLM integration for document analysis, automated risk assessment, and intelligent mitigation planning.
 
 [Watch the demo video](https://youtu.be/cZsnQvWXJZU)
 
@@ -53,10 +54,11 @@ The GRC Portal automates compliance mapping and risk evaluation through AI-drive
 ## 🌟 Key Features
 
 ### 🤖 AI-Powered Risk Intelligence
-- **LLM Integration**: Advanced document analysis using OpenRouter API
+- **LLM Integration**: Advanced document analysis using OpenRouter API with GPT models
 - **Automated Risk Assessment**: AI-generated compliance and risk analysis from policy documents
-- **Intelligent Mitigation Planning**: AI-assisted comprehensive mitigation strategies
-- **Communication Strategy Generation**: Automated stakeholder communication planning
+- **Intelligent Mitigation Planning**: AI-assisted comprehensive mitigation strategies with cost-benefit analysis
+- **Communication Strategy Generation**: Automated stakeholder communication planning with tailored messaging
+- **Pattern-based Threat Detection**: Automated detection of security threats in uploaded documents
 
 ### 📊 Enterprise Risk Management
 - **Multi-Framework Support**: NIST RMF, ISO 31000, COSO ERM, PCI DSS, HIPAA, GDPR, CIS Controls, COBIT
@@ -71,16 +73,21 @@ The GRC Portal automates compliance mapping and risk evaluation through AI-drive
 - **Predictive Analytics**: Trend analysis and risk forecasting
 
 ### 🛡️ Advanced Security Features
-- **Zero Trust Architecture**: Complete implementation across all layers
+- **Zero Trust Architecture**: Complete implementation across all layers with session management
 - **Digital Forensics**: Evidence collection with integrity hashing and chain of custody
-- **Incident Response**: IRP tracking with automated evidence management
+- **Incident Response**: IRP tracking with automated evidence management and compliance incidents
 - **Audit Trail**: Comprehensive security event logging and compliance reporting
+- **Malware Analysis**: Automated malware analysis with behavioral indicators and threat intelligence
+- **IoC Analysis**: Indicator of compromise analysis with threat actor correlation
+- **Phishing Template Management**: Security awareness templates for phishing prevention
+- **Vulnerability Scanning**: Integration with vulnerability scanning tools and risk assessment
 
 ### 🎯 Risk Identification Methods
 - **Brainstorming Sessions**: Facilitated sessions with participant tracking and idea management
 - **Risk Checklists**: Industry-standard templates with automated scoring
 - **SWOT Analysis**: Strategic risk assessment with matrix-based interface
 - **Critical Asset Register**: Asset inventory with risk exposure analysis
+- **Environmental Change Detection**: Proactive risk adjustment for external changes
 
 ## 🛡️ Cybersecurity Risk Mitigation
 
@@ -113,10 +120,12 @@ grcPortal addresses critical cybersecurity risks through integrated tools and Ze
 - Social engineering technique mapping and prevention
 
 #### 5. **Compliance Violations & Regulatory Risks**
-- Multi-framework compliance automation (NIST, ISO, GDPR, PCI DSS)
+- Multi-framework compliance automation (NIST, ISO, GDPR, PCI DSS, HIPAA, SOX, CIS Controls, COBIT)
 - Automated gap analysis and remediation tracking
 - Compliance score monitoring and reporting
 - Regulatory requirement traceability
+- Compliance obligation management with risk assessment
+- Compliance risk assessments and incident tracking
 
 #### 6. **Incident Response Failures**
 - Structured IRP workflows with phase tracking
@@ -154,6 +163,8 @@ grcPortal addresses critical cybersecurity risks through integrated tools and Ze
   - Sample IoCs: malicious.example.com, 192.168.1.100, fake-bank-login.com
 - **Malware Analysis**: `http://localhost:5000/malware_analysis`
   - Sample: SHA256 hash with 47/72 detection ratio
+- **APT Campaigns**: `http://localhost:5000/apt_campaigns`
+- **Phishing Templates**: `http://localhost:5000/phishing_templates`
 
 #### Compliance & Monitoring
 - **Compliance Dashboard**: `http://localhost:5000/compliance`
@@ -163,6 +174,8 @@ grcPortal addresses critical cybersecurity risks through integrated tools and Ze
 #### Forensics & Evidence
 - **Digital Forensics**: `http://localhost:5000/forensics`
 - **Evidence Files**: `http://localhost:5000/evidence/[filename]`
+- **Asset Discovery**: `http://localhost:5000/asset_discovery`
+- **Vulnerability Scanning**: `http://localhost:5000/vulnerability_scan`
 
 ## 🏗️ Architecture
 
@@ -186,10 +199,12 @@ grcPortal/
 ### Technology Stack
 
 #### Backend
-- **Framework**: Flask 2.0+ with application factory pattern
-- **Database**: SQLite/PostgreSQL with SQLAlchemy ORM
-- **Authentication**: Werkzeug security with session management
+- **Framework**: Flask 3.0+ with application factory pattern
+- **Database**: SQLite with SQLAlchemy 2.0+ ORM and Flask-Migrate
+- **Authentication**: Werkzeug security with session management and Zero Trust
 - **API**: RESTful endpoints with JSON responses
+- **Task Scheduling**: APScheduler for automated background tasks
+- **Monitoring**: psutil for system resource monitoring
 
 #### Frontend
 - **UI Framework**: Bootstrap 5 with responsive design
@@ -198,16 +213,18 @@ grcPortal/
 - **Charts**: Bootstrap components with custom visualizations
 
 #### AI & Integration
-- **LLM**: OpenRouter API integration for document analysis
+- **LLM**: OpenRouter API integration with GPT models for document analysis
+- **Document Processing**: PyPDF2 for PDF text extraction
 - **External APIs**: Webhook system for real-time notifications
 - **Identity**: LDAP/Active Directory integration ready
 - **SIEM**: Security event correlation and alerting
 
 #### Security & Compliance
-- **Encryption**: End-to-end data protection
-- **Audit**: Comprehensive logging with structured events
-- **Compliance**: Multi-framework automated assessment
-- **Forensics**: Digital evidence with integrity verification
+- **Encryption**: End-to-end data protection with secure file handling
+- **Audit**: Comprehensive logging with structured events and audit trails
+- **Compliance**: Multi-framework automated assessment (NIST, ISO, GDPR, PCI DSS, HIPAA, SOX)
+- **Forensics**: Digital evidence with integrity hashing and chain of custody
+- **Threat Intelligence**: IoC analysis and malware detection integration
 
 ## 🚀 Quick Start
 
@@ -215,6 +232,7 @@ grcPortal/
 - Python 3.8 or higher
 - pip package manager
 - Git (for cloning)
+- SQLite (included with Python)
 
 ### Installation
 
@@ -307,10 +325,11 @@ SIEM_WEBHOOK_URL=https://your-siem-webhook
 ```
 
 ### Advanced Configuration
-- **Database**: Supports SQLite (development) and PostgreSQL (production)
-- **Caching**: Redis integration for session and metrics caching
-- **Monitoring**: Prometheus metrics endpoint at `/metrics`
-- **Logging**: Structured JSON logging with configurable levels
+- **Database**: SQLite with SQLAlchemy ORM (production-ready with proper migrations)
+- **Task Scheduling**: APScheduler for automated archiving and health monitoring
+- **Monitoring**: Built-in security metrics collection and health checks
+- **Logging**: Structured logging with audit trails and security event tracking
+- **File Security**: Secure file upload handling with type validation and cleanup
 
 ## 🐳 Docker Deployment
 
@@ -382,15 +401,19 @@ POST   /webhook/compliance     # Compliance updates
 
 ### Built-in Monitoring
 - **Application Metrics**: Response times, error rates, throughput
-- **Security Events**: Authentication attempts, access patterns
-- **Risk Metrics**: Risk score trends, compliance status
-- **System Health**: CPU, memory, disk usage monitoring
+- **Security Events**: Authentication attempts, access patterns, audit trails
+- **Risk Metrics**: Risk score trends, compliance status, indicator monitoring
+- **System Health**: CPU, memory, disk usage monitoring with automated health checks
+- **Threat Intelligence**: IoC tracking, malware analysis, APT campaign monitoring
+- **Compliance Monitoring**: Framework compliance scores, gap analysis, remediation tracking
 
 ### Dashboard Features
-- **Executive Dashboard**: High-level risk and compliance overview
-- **Operational Dashboard**: Real-time monitoring and alerts
-- **Compliance Dashboard**: Framework-specific compliance tracking
-- **Security Dashboard**: Incident and forensic activity monitoring
+- **Executive Dashboard**: High-level risk and compliance overview with KPI tracking
+- **Operational Dashboard**: Real-time monitoring and alerts with automated health checks
+- **Compliance Dashboard**: Framework-specific compliance tracking with gap analysis
+- **Security Dashboard**: Incident and forensic activity monitoring with threat intelligence
+- **Risk Dashboard**: Multi-criteria risk assessment with heat maps and trend analysis
+- **KPI Dashboard**: Leading and lagging indicators with automated reporting
 
 ## 🤝 Contributing
 
@@ -402,10 +425,11 @@ POST   /webhook/compliance     # Compliance updates
 5. Submit a pull request
 
 ### Code Standards
-- **Python**: PEP 8 compliance with type hints
-- **Security**: Input validation and secure coding practices
-- **Testing**: Comprehensive unit and integration tests
-- **Documentation**: Detailed docstrings and README updates
+- **Python**: PEP 8 compliance with type hints and modern Python features
+- **Security**: Input validation, secure coding practices, and Zero Trust principles
+- **Testing**: Comprehensive unit and integration tests with security testing
+- **Documentation**: Detailed docstrings, README updates, and inline comments
+- **Database**: SQLAlchemy ORM with proper migrations and session management
 
 ## 📄 Documentation
 
@@ -424,10 +448,12 @@ docs/
 
 ### Key Documentation Areas
 - **Architecture**: System design and component relationships
-- **Security**: Implementation details and compliance mappings
-- **API Reference**: Complete endpoint documentation
+- **Security**: Zero Trust implementation and compliance mappings
+- **API Reference**: Complete endpoint documentation with examples
 - **Deployment**: Production deployment and configuration
-- **Operations**: Monitoring, backup, and maintenance procedures
+- **Operations**: Monitoring, backup, maintenance, and automated tasks
+- **Risk Management**: Framework implementation and assessment methodologies
+- **Threat Intelligence**: IoC analysis and malware detection procedures
 
 ## 🐛 Troubleshooting
 
@@ -477,17 +503,19 @@ sudo chmod -R 755 /var/www/grc-portal
 ## 📋 Roadmap
 
 ### Version 2.0 Features
-- [ ] Multi-tenant architecture
-- [ ] Advanced AI risk prediction
-- [ ] Real-time collaborative features
-- [ ] Mobile application
-- [ ] Advanced reporting and analytics
+- [ ] Multi-tenant architecture with organization isolation
+- [ ] Advanced AI risk prediction with machine learning
+- [ ] Real-time collaborative features and shared workspaces
+- [ ] Mobile application for risk management on-the-go
+- [ ] Advanced reporting and analytics with predictive insights
 
-### Version 1.5 Enhancements
-- [ ] Enhanced SIEM integration
-- [ ] Automated compliance remediation
-- [ ] Advanced threat intelligence
-- [ ] Performance optimization
+### Version 1.5 Enhancements (Current)
+- [x] Enhanced SIEM integration with automated log correlation
+- [x] Automated compliance remediation workflows
+- [x] Advanced threat intelligence with IoC analysis
+- [x] Performance optimization with background task processing
+- [x] Comprehensive monitoring and health checks
+- [x] Multi-framework compliance support (NIST, ISO, GDPR, PCI DSS, HIPAA, SOX)
 
 ## 📜 License
 
