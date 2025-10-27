@@ -2,6 +2,17 @@
 
 {% block content %}
 <h2>Asset Risk Exposure Report</h2>
+<div class="alert alert-info" role="alert">
+    <h5>Introduction</h5>
+    <p>The Asset Risk Exposure Report provides detailed analysis of individual asset vulnerabilities and risk factors. It combines asset data with threat intelligence to generate comprehensive risk assessments.</p>
+    <h6>How it Works</h6>
+    <ul>
+        <li><strong>Risk Calculation:</strong> Analyzes asset value, criticality, threat exposure, and vulnerability count to determine overall risk exposure.</li>
+        <li><strong>Detailed Breakdown:</strong> Presents structured risk assessment data in a readable format for security decision-making.</li>
+        <li><strong>Actionable Insights:</strong> Helps prioritize remediation efforts based on quantitative risk scores.</li>
+        <li><strong>Historical Tracking:</strong> Maintains records of risk assessments for compliance and audit purposes.</li>
+    </ul>
+</div>
 <pre>{{ report }}</pre>
 <a href="{{ url_for('asset_register') }}">Back to Register</a>
 {% endblock %}

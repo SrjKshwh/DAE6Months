@@ -8288,6 +8288,645 @@ def create_app():
             close_session(db)
             return {"error": str(e)}, 500
 
+    @app.route("/api/triage_alert/<int:alert_id>", methods=["POST"])
+    @login_required
+    def triage_alert(alert_id):
+        """
+        API endpoint to create or update alert triage with automatic risk escalation.
+
+        When an alert is triaged as a confirmed threat, automatically creates a risk assessment
+        linked back to the alert for traceability and risk management.
+
+        Expected JSON payload:
+        {
+            "triage_priority": "low|medium|high|critical",
+            "assessed_severity": "low|medium|high|critical",
+            "confidence_level": 0-100,
+            "false_positive_probability": 0-100,
+            "false_positive_reason": "optional explanation",
+            "validation_method": "manual_review|automated_check|correlation_analysis",
+            "escalation_required": true|false,
+            "escalation_reason": "optional reason",
+            "escalation_level": "security_team|management|executive",
+            "investigation_steps": "JSON array of steps taken",
+            "additional_context": "additional notes",
+            "related_alerts": "JSON array of related alert IDs",
+            "triage_conclusion": "confirmed_threat|false_positive|benign_activity|etc.",
+            "action_taken": "description of actions taken",
+            "follow_up_required": true|false
+        }
+
+        Returns:
+            JSON response with triage details and any created risk assessment
+        """
+        user = current_user()
+        db = get_session()
+
+        try:
+            data = request.get_json()
+            if not data:
+                return {"error": "JSON payload required"}, 400
+
+            # Get the alert
+            alert = db.query(Alert).filter_by(id=alert_id).first()
+            if not alert:
+                return {"error": "Alert not found"}, 404
+
+            # Check if triage already exists for this alert
+            existing_triage = db.query(AlertTriage).filter_by(alert_id=alert_id).first()
+
+            if existing_triage:
+                # Update existing triage
+                triage = existing_triage
+                triage.updated_at = datetime.now(timezone.utc)
+            else:
+                # Create new triage
+                triage = AlertTriage(
+                    alert_id=alert_id,
+                    triaged_by=user.id,
+                    created_at=datetime.now(timezone.utc),
+                    updated_at=datetime.now(timezone.utc)
+                )
+                db.add(triage)
+
+            # Update triage fields
+            triage.triage_priority = data.get('triage_priority', 'medium')
+            triage.assessed_severity = data.get('assessed_severity', 'medium')
+            triage.confidence_level = min(max(data.get('confidence_level', 50), 0), 100)
+            triage.false_positive_probability = min(max(data.get('false_positive_probability', 0), 0), 100)
+            triage.false_positive_reason = data.get('false_positive_reason')
+            triage.validation_method = data.get('validation_method')
+            triage.escalation_required = data.get('escalation_required', False)
+            triage.escalation_reason = data.get('escalation_reason')
+            triage.escalation_level = data.get('escalation_level')
+            triage.investigation_steps = json.dumps(data.get('investigation_steps', [])) if data.get('investigation_steps') else None
+            triage.additional_context = data.get('additional_context')
+            triage.related_alerts = json.dumps(data.get('related_alerts', [])) if data.get('related_alerts') else None
+            triage.triage_conclusion = data.get('triage_conclusion')
+            triage.action_taken = data.get('action_taken')
+            triage.follow_up_required = data.get('follow_up_required', False)
+
+            # Set completion timestamp if conclusion is provided
+            if triage.triage_conclusion:
+                triage.completed_at = datetime.now(timezone.utc)
+
+            # Automatic risk escalation for confirmed threats
+            risk_created = None
+            if triage.triage_conclusion == "confirmed_threat":
+                try:
+                    # Check if risk already exists for this alert
+                    existing_risk = db.query(Risk).filter_by(
+                        source_table="alerts",
+                        source_id=alert_id
+                    ).first()
+
+                    if not existing_risk:
+                        # Create risk assessment automatically
+                        risk_data = {
+                            "source_table": "alerts",
+                            "source_id": alert_id,
+                            "custom_asset": f"Systems affected by alert: {alert.title}",
+                            "custom_threat": alert.title,
+                            "custom_vulnerability": alert.description,
+                            "custom_likelihood": 4 if triage.assessed_severity in ['high', 'critical'] else 3,
+                            "custom_impact": 4 if triage.assessed_severity == 'critical' else 3
+                        }
+
+                        # Use internal risk creation function
+                        risk = Risk(
+                            asset=risk_data['custom_asset'],
+                            threat=risk_data['custom_threat'],
+                            vulnerability=risk_data['custom_vulnerability'],
+                            control="Implement monitoring and alerting controls",
+                            compliance_standard=ComplianceFramework.NIST_SP_800_53,
+                            status=RiskStatus.OPEN,
+                            category=RiskCategory.AUDIT_LOGGING,
+                            likelihood=risk_data['custom_likelihood'],
+                            impact=risk_data['custom_impact'],
+                            severity=map_alert_severity(triage.assessed_severity),
+                            source_table="alerts",
+                            source_id=alert_id
+                        )
+
+                        risk.calculate_score()
+                        db.add(risk)
+                        db.flush()  # Get the risk ID
+
+                        risk_created = {
+                            "id": risk.id,
+                            "asset": risk.asset,
+                            "threat": risk.threat,
+                            "score": risk.score,
+                            "severity": risk.severity.value,
+                            "message": "Risk assessment automatically created for confirmed threat"
+                        }
+
+                        # Log the automatic risk creation
+                        log_audit_event(user, "AUTO_RISK_CREATED_FROM_TRIAGE", "RISK",
+                                      f"Automatic risk created from alert triage: {alert.title}", "/api/triage_alert", True)
+
+                    else:
+                        risk_created = {
+                            "message": "Risk assessment already exists for this alert",
+                            "existing_risk_id": existing_risk.id
+                        }
+
+                except Exception as e:
+                    logging.error(f"Error creating automatic risk from triage: {e}")
+                    risk_created = {"error": f"Failed to create risk assessment: {str(e)}"}
+
+            db.commit()
+
+            # Log the triage action
+            log_audit_event(user, "ALERT_TRIAGED", "SECURITY",
+                          f"Alert triaged: {alert.title} - Conclusion: {triage.triage_conclusion}", "/api/triage_alert", True)
+
+            # Return triage details
+            triage_response = {
+                "triage_id": triage.id,
+                "alert_id": alert_id,
+                "triage_priority": triage.triage_priority,
+                "assessed_severity": triage.assessed_severity,
+                "confidence_level": triage.confidence_level,
+                "triage_conclusion": triage.triage_conclusion,
+                "completed_at": triage.completed_at.isoformat() if triage.completed_at else None,
+                "risk_created": risk_created
+            }
+
+            close_session(db)
+            return triage_response
+
+        except Exception as e:
+            db.rollback()
+            logging.error(f"Error triaging alert: {e}")
+            close_session(db)
+            return {"error": str(e)}, 500
+
+    @app.route("/bulk_create_risks/<int:scan_id>", methods=["POST"])
+    @login_required
+    def bulk_create_risks(scan_id):
+        """
+        Bulk create risk assessments from selected vulnerability findings in a scan.
+
+        This endpoint processes multiple vulnerability findings and creates corresponding
+        risk assessments with proper traceability and duplicate prevention.
+
+        Expected JSON payload:
+        {
+            "finding_ids": [1, 2, 3, ...]  // List of vulnerability finding IDs
+        }
+
+        Returns:
+            JSON response with creation results and statistics
+        """
+        user = current_user()
+        db = get_session()
+
+        try:
+            data = request.get_json()
+            if not data or 'finding_ids' not in data:
+                return {"error": "finding_ids array is required"}, 400
+
+            finding_ids = data['finding_ids']
+            if not isinstance(finding_ids, list) or not finding_ids:
+                return {"error": "finding_ids must be a non-empty array"}, 400
+
+            # Verify scan exists and user has access
+            scan = db.query(VulnerabilityScan).filter_by(id=scan_id).first()
+            if not scan:
+                return {"error": "Scan not found"}, 404
+
+            created_risks = []
+            skipped_findings = []
+            errors = []
+
+            for finding_id in finding_ids:
+                try:
+                    # Get the finding
+                    finding = db.query(VulnerabilityFinding).filter_by(id=finding_id).first()
+                    if not finding:
+                        errors.append(f"Finding {finding_id} not found")
+                        continue
+
+                    # Check if finding belongs to the scan
+                    if finding.scan_id != scan_id:
+                        errors.append(f"Finding {finding_id} does not belong to scan {scan_id}")
+                        continue
+
+                    # Check if risk already exists
+                    existing_risk = db.query(Risk).filter_by(
+                        source_table="vulnerability_findings",
+                        source_id=finding_id
+                    ).first()
+
+                    if existing_risk:
+                        skipped_findings.append({
+                            "finding_id": finding_id,
+                            "reason": "Risk already exists",
+                            "existing_risk_id": existing_risk.id
+                        })
+                        continue
+
+                    # Create risk data
+                    risk_data = {
+                        'asset': f"System/Asset with vulnerability: {finding.host_ip}",
+                        'threat': f"Vulnerability Finding [{finding.vulnerability_id}]",
+                        'vulnerability': f"CVE-{finding.vulnerability_id}: {finding.title}",
+                        'control': finding.remediation or "Apply security patch/update",
+                        'severity': map_cvss_to_severity(finding.cvss_score) if finding.cvss_score else RiskSeverity.MEDIUM,
+                        'likelihood': 4,  # High likelihood for known vulnerabilities
+                        'impact': 4,     # High impact for security vulnerabilities
+                        'category': RiskCategory.VULNERABILITY_MANAGEMENT,
+                        'business_impact': f"Potential exploitation of {finding.vulnerability_id} vulnerability affecting {finding.host_ip}",
+                        'regulatory_impact': "May violate security compliance requirements depending on asset classification"
+                    }
+
+                    # Create the risk assessment
+                    risk = Risk(
+                        asset=risk_data['asset'],
+                        threat=risk_data['threat'],
+                        vulnerability=risk_data['vulnerability'],
+                        control=risk_data['control'],
+                        compliance_standard=ComplianceFramework.NIST_SP_800_53,
+                        status=RiskStatus.OPEN,
+                        category=risk_data['category'],
+                        likelihood=risk_data['likelihood'],
+                        impact=risk_data['impact'],
+                        severity=risk_data['severity'],
+                        source_table="vulnerability_findings",
+                        source_id=finding_id,
+                        business_impact=risk_data.get('business_impact'),
+                        regulatory_impact=risk_data.get('regulatory_impact')
+                    )
+
+                    risk.calculate_score()
+                    db.add(risk)
+                    db.flush()  # Get the risk ID
+
+                    # Update finding's risk_status
+                    finding.risk_status = "risk_created"
+                    db.add(finding)
+
+                    created_risks.append({
+                        "finding_id": finding_id,
+                        "risk_id": risk.id,
+                        "asset": risk.asset,
+                        "threat": risk.threat,
+                        "score": risk.score,
+                        "severity": risk.severity.value
+                    })
+
+                except Exception as e:
+                    errors.append(f"Error processing finding {finding_id}: {str(e)}")
+                    continue
+
+            db.commit()
+
+            # Log the bulk operation
+            log_audit_event(user, "BULK_RISK_CREATED_FROM_VULNERABILITY_SCAN", "RISK",
+                          f"Bulk created {len(created_risks)} risks from scan {scan_id}", "/bulk_create_risks", True)
+
+            response = {
+                "scan_id": scan_id,
+                "total_findings_processed": len(finding_ids),
+                "risks_created": len(created_risks),
+                "findings_skipped": len(skipped_findings),
+                "errors": len(errors),
+                "created_risks": created_risks,
+                "skipped_findings": skipped_findings,
+                "error_details": errors
+            }
+
+            close_session(db)
+            return response
+
+        except Exception as e:
+            db.rollback()
+            logging.error(f"Error in bulk risk creation: {e}")
+            close_session(db)
+            return {"error": str(e)}, 500
+
+    @app.route("/api/create_risk_from_source", methods=["POST"])
+    @login_required
+    def create_risk_from_source():
+        """
+        Create a risk assessment from a source record (vulnerability_findings, incidents, alerts, etc.).
+
+        This endpoint establishes traceability between potential risk data sources and the risks table
+        by automatically creating risk assessments with proper source linking.
+
+        Expected JSON payload:
+        {
+            "source_table": "vulnerability_findings|incidents|alerts|collected_logs",
+            "source_id": <integer>,
+            "custom_asset": <optional string>,
+            "custom_threat": <optional string>,
+            "custom_vulnerability": <optional string>,
+            "custom_likelihood": <optional integer 1-5>,
+            "custom_impact": <optional integer 1-5>
+        }
+
+        Returns:
+            JSON response with created risk details or error message
+        """
+        user = current_user()
+        db = get_session()
+
+        try:
+            data = request.get_json()
+            if not data:
+                return {"error": "JSON payload required"}, 400
+
+            source_table = data.get('source_table')
+            source_id = data.get('source_id')
+
+            if not source_table or not source_id:
+                return {"error": "source_table and source_id are required"}, 400
+
+            # Validate source table
+            allowed_tables = ['vulnerability_findings', 'incidents', 'alerts', 'collected_logs']
+            if source_table not in allowed_tables:
+                return {"error": f"source_table must be one of: {', '.join(allowed_tables)}"}, 400
+
+            # Retrieve source record and perform intelligent data mapping
+            source_record = None
+            risk_data = {}
+
+            if source_table == 'vulnerability_findings':
+                source_record = db.query(VulnerabilityFinding).filter_by(id=source_id).first()
+                if source_record:
+                    # Enhanced mapping for vulnerability findings
+                    risk_name = f"Vulnerability Finding [{source_record.vulnerability_id}]"
+                    risk_data = {
+                        'asset': f"System/Asset with vulnerability: {source_record.host_ip}",
+                        'threat': risk_name,  # Use the formatted risk name as threat
+                        'vulnerability': f"CVE-{source_record.vulnerability_id}: {source_record.title}",
+                        'control': source_record.remediation or "Apply security patch/update",
+                        'severity': map_cvss_to_severity(source_record.cvss_score) if source_record.cvss_score else RiskSeverity.MEDIUM,
+                        'likelihood': 4,  # High likelihood for known vulnerabilities
+                        'impact': 4,     # High impact for security vulnerabilities
+                        'category': RiskCategory.VULNERABILITY_MANAGEMENT,
+                        'business_impact': f"Potential exploitation of {source_record.vulnerability_id} vulnerability affecting {source_record.host_ip}",
+                        'regulatory_impact': "May violate security compliance requirements depending on asset classification"
+                    }
+
+            elif source_table == 'incidents':
+                source_record = db.query(Incident).filter_by(id=source_id).first()
+                if source_record:
+                    # Enhanced mapping for incidents
+                    risk_name = f"Post-Incident Risk: {source_record.title}"
+                    risk_data = {
+                        'asset': "Information Systems/Organization Assets",
+                        'threat': risk_name,  # Use the formatted risk name as threat
+                        'vulnerability': source_record.description,
+                        'control': "Implement incident response procedures and security controls",
+                        'severity': map_incident_severity(source_record.severity),
+                        'likelihood': 3,  # Medium likelihood for past incidents
+                        'impact': map_incident_severity_to_impact(source_record.severity),
+                        'category': RiskCategory.INCIDENT_RESPONSE,
+                        'business_impact': f"Recurrence of incident: {source_record.title}",
+                        'regulatory_impact': "Potential compliance violations and reporting requirements"
+                    }
+
+            elif source_table == 'alerts':
+                source_record = db.query(Alert).filter_by(id=source_id).first()
+                if source_record:
+                    risk_data = {
+                        'asset': "Information Systems",
+                        'threat': source_record.title,
+                        'vulnerability': source_record.description,
+                        'control': "Implement monitoring and alerting controls",
+                        'severity': map_alert_severity(source_record.severity),
+                        'likelihood': 3,  # Medium likelihood for alerts
+                        'impact': 3,     # Medium impact for alerts
+                        'category': RiskCategory.AUDIT_LOGGING,
+                        'business_impact': f"Security monitoring alert: {source_record.title}",
+                        'regulatory_impact': "May indicate compliance monitoring gaps"
+                    }
+
+            elif source_table == 'collected_logs':
+                source_record = db.query(CollectedLog).filter_by(id=source_id).first()
+                if source_record:
+                    # Enhanced mapping for collected logs with frequency analysis
+                    # Analyze log frequency to determine likelihood
+                    log_frequency = db.query(CollectedLog).filter(
+                        CollectedLog.category == source_record.category,
+                        CollectedLog.severity == source_record.severity,
+                        CollectedLog.timestamp >= datetime.now(timezone.utc) - timedelta(hours=24)
+                    ).count()
+
+                    # Higher frequency = higher likelihood
+                    likelihood = min(log_frequency // 10 + 1, 5)  # Scale frequency to 1-5 range
+
+                    risk_data = {
+                        'asset': "Information Systems",
+                        'threat': f"Log-based threat: {source_record.category}",
+                        'vulnerability': source_record.message[:200] + "..." if len(source_record.message) > 200 else source_record.message,
+                        'control': "Implement log monitoring and analysis controls",
+                        'severity': map_log_severity(source_record.severity),
+                        'likelihood': likelihood,  # Data-driven likelihood based on frequency
+                        'impact': 2,     # Lower impact for log-based risks
+                        'category': RiskCategory.AUDIT_LOGGING,
+                        'business_impact': f"Recurring log events indicating potential security issues: {source_record.category}",
+                        'regulatory_impact': "May indicate monitoring and logging compliance gaps"
+                    }
+
+            elif source_table == 'indicators_of_compromise':
+                source_record = db.query(IndicatorOfCompromise).filter_by(id=source_id).first()
+                if source_record:
+                    # Enhanced mapping for IoCs with threat intelligence context
+                    description_parts = []
+
+                    if source_record.threat_actor:
+                        description_parts.append(f"Threat Actor: {source_record.threat_actor}")
+                    if source_record.campaign:
+                        description_parts.append(f"Campaign: {source_record.campaign}")
+                    if source_record.malware_family:
+                        description_parts.append(f"Malware Family: {source_record.malware_family}")
+                    if source_record.description:
+                        description_parts.append(f"Details: {source_record.description}")
+
+                    full_description = " | ".join(description_parts) if description_parts else source_record.description or "Unknown IoC"
+
+                    risk_data = {
+                        'asset': "Information Systems/Network Assets",
+                        'threat': f"IoC Threat: {source_record.indicator_type.upper()} - {source_record.indicator_value}",
+                        'vulnerability': full_description,
+                        'control': "Implement threat intelligence monitoring and blocking controls",
+                        'severity': RiskSeverity.CRITICAL if source_record.severity == 'critical' else
+                                  RiskSeverity.HIGH if source_record.severity == 'high' else
+                                  RiskSeverity.MEDIUM if source_record.severity == 'medium' else RiskSeverity.LOW,
+                        'likelihood': 4 if source_record.confidence > 80 else 3,  # Based on confidence level
+                        'impact': 5 if source_record.severity == 'critical' else
+                                 4 if source_record.severity == 'high' else
+                                 3 if source_record.severity == 'medium' else 2,
+                        'category': RiskCategory.VULNERABILITY_MANAGEMENT,
+                        'business_impact': f"Active threat intelligence indicator: {source_record.indicator_type} associated with {source_record.threat_actor or 'unknown threat actor'}",
+                        'regulatory_impact': "Potential advanced persistent threat requiring immediate attention"
+                    }
+
+            elif source_table == 'log_correlations':
+                source_record = db.query(LogCorrelation).filter_by(id=source_id).first()
+                if source_record:
+                    # Enhanced mapping for log correlations with frequency analysis
+                    primary_log = source_record.primary_log
+
+                    # Analyze correlation strength and frequency for likelihood
+                    correlation_strength = source_record.correlation_strength or 0.5
+                    likelihood = int(correlation_strength * 5)  # Convert 0-1 to 1-5 scale
+
+                    risk_data = {
+                        'asset': "Information Systems",
+                        'threat': f"Correlated Security Events: {source_record.correlation_type}",
+                        'vulnerability': f"Primary Event: {primary_log.message[:100]}... | Risk Assessment: {source_record.risk_assessment}",
+                        'control': "Implement advanced log correlation and analysis controls",
+                        'severity': RiskSeverity.CRITICAL if source_record.risk_assessment == 'critical' else
+                                  RiskSeverity.HIGH if source_record.risk_assessment == 'high' else
+                                  RiskSeverity.MEDIUM if source_record.risk_assessment == 'medium' else RiskSeverity.LOW,
+                        'likelihood': likelihood,  # Based on correlation strength
+                        'impact': 4 if source_record.risk_assessment in ['high', 'critical'] else 3,
+                        'category': RiskCategory.AUDIT_LOGGING,
+                        'business_impact': f"Correlated security events indicating {source_record.correlation_type} pattern with {source_record.correlated_logs.count('log_id') if source_record.correlated_logs else 0} related events",
+                        'regulatory_impact': "May indicate sophisticated attack patterns requiring enhanced monitoring"
+                    }
+
+            if not source_record:
+                return {"error": f"Source record not found in {source_table} with id {source_id}"}, 404
+
+            # Apply custom overrides if provided
+            if data.get('custom_asset'):
+                risk_data['asset'] = data['custom_asset']
+            if data.get('custom_threat'):
+                risk_data['threat'] = data['custom_threat']
+            if data.get('custom_vulnerability'):
+                risk_data['vulnerability'] = data['custom_vulnerability']
+            if data.get('custom_likelihood'):
+                risk_data['likelihood'] = min(max(data['custom_likelihood'], 1), 5)
+            if data.get('custom_impact'):
+                risk_data['impact'] = min(max(data['custom_impact'], 1), 5)
+
+            # Check if risk already exists for this source
+            existing_risk = db.query(Risk).filter_by(
+                source_table=source_table,
+                source_id=source_id
+            ).first()
+
+            if existing_risk:
+                return {"error": "Risk assessment already exists for this source record"}, 409
+
+            # Create the risk assessment with enhanced data mapping
+            risk = Risk(
+                asset=risk_data['asset'],
+                threat=risk_data['threat'],
+                vulnerability=risk_data['vulnerability'],
+                control=risk_data['control'],
+                compliance_standard=ComplianceFramework.NIST_SP_800_53,
+                status=RiskStatus.OPEN,
+                category=risk_data['category'],
+                likelihood=risk_data['likelihood'],
+                impact=risk_data['impact'],
+                severity=risk_data['severity'],
+                source_table=source_table,
+                source_id=source_id,
+                business_impact=risk_data.get('business_impact'),
+                regulatory_impact=risk_data.get('regulatory_impact')
+            )
+
+            # Calculate risk score and set initial status
+            risk.calculate_score()
+
+            # Set initial risk score status (can be "Pending" or calculated baseline)
+            # For now, we'll use the calculated score, but this could be set to "Pending" for manual review
+            risk.score = risk.score  # This is already calculated above
+
+            # Add to database
+            db.add(risk)
+            db.commit()
+            db.refresh(risk)
+
+            # Log the action
+            log_audit_event(user, "RISK_CREATED_FROM_SOURCE", "RISK",
+                          f"Created risk assessment from {source_table}:{source_id}", "/api/create_risk_from_source", True)
+
+            # Return created risk details
+            risk_response = {
+                "id": risk.id,
+                "asset": risk.asset,
+                "threat": risk.threat,
+                "vulnerability": risk.vulnerability,
+                "score": risk.score,
+                "severity": risk.severity.value,
+                "source_table": risk.source_table,
+                "source_id": risk.source_id,
+                "created_at": risk.created_at.isoformat()
+            }
+
+            close_session(db)
+            return risk_response
+
+        except Exception as e:
+            db.rollback()
+            logging.error(f"Error creating risk from source: {e}")
+            close_session(db)
+            return {"error": str(e)}, 500
+
+
+    def map_cvss_to_severity(cvss_score: float) -> RiskSeverity:
+        """Map CVSS score to RiskSeverity enum"""
+        if cvss_score >= 9.0:
+            return RiskSeverity.CRITICAL
+        elif cvss_score >= 7.0:
+            return RiskSeverity.HIGH
+        elif cvss_score >= 4.0:
+            return RiskSeverity.MEDIUM
+        else:
+            return RiskSeverity.LOW
+
+
+    def map_incident_severity(incident_severity: IncidentSeverity) -> RiskSeverity:
+        """Map IncidentSeverity to RiskSeverity"""
+        mapping = {
+            IncidentSeverity.CRITICAL: RiskSeverity.CRITICAL,
+            IncidentSeverity.HIGH: RiskSeverity.HIGH,
+            IncidentSeverity.MEDIUM: RiskSeverity.MEDIUM,
+            IncidentSeverity.LOW: RiskSeverity.LOW
+        }
+        return mapping.get(incident_severity, RiskSeverity.MEDIUM)
+
+
+    def map_incident_severity_to_impact(incident_severity: IncidentSeverity) -> int:
+        """Map IncidentSeverity to impact score (1-5)"""
+        mapping = {
+            IncidentSeverity.CRITICAL: 5,
+            IncidentSeverity.HIGH: 4,
+            IncidentSeverity.MEDIUM: 3,
+            IncidentSeverity.LOW: 2
+        }
+        return mapping.get(incident_severity, 3)
+
+
+    def map_alert_severity(alert_severity: str) -> RiskSeverity:
+        """Map alert severity string to RiskSeverity enum"""
+        severity_map = {
+            'critical': RiskSeverity.CRITICAL,
+            'high': RiskSeverity.HIGH,
+            'medium': RiskSeverity.MEDIUM,
+            'low': RiskSeverity.LOW
+        }
+        return severity_map.get(alert_severity.lower(), RiskSeverity.MEDIUM)
+
+
+    def map_log_severity(log_severity: str) -> RiskSeverity:
+        """Map log severity string to RiskSeverity enum"""
+        severity_map = {
+            'critical': RiskSeverity.CRITICAL,
+            'error': RiskSeverity.HIGH,
+            'warning': RiskSeverity.MEDIUM,
+            'info': RiskSeverity.LOW,
+            'debug': RiskSeverity.LOW
+        }
+        return severity_map.get(log_severity.lower(), RiskSeverity.LOW)
+
     @app.route("/export_alert_docs", methods=["POST"])
     @login_required
     def export_alert_docs():
@@ -8507,6 +9146,18 @@ def create_app():
             return redirect(url_for('alert_documentation'))
         finally:
             close_session(db)
+
+    @app.route("/guide")
+    @login_required
+    def guide():
+        """
+        User guide page providing overview of all GRC Portal facilities and procedures.
+
+        This page serves as a comprehensive reference for users to understand
+        all available features, navigation paths, and access procedures within
+        the GRC Portal system.
+        """
+        return render_template("guide.html")
 
     @app.route("/compliance_incidents", methods=["GET", "POST"])
     @login_required

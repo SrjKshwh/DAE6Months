@@ -1,0 +1,792 @@
+<!-- templates/guide.html -->
+{% extends "base.html" %}
+
+{% block title %}GRC Portal User Guide{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">
+                        <i class="fas fa-book me-2"></i>GRC Portal User Guide
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Welcome to GRC Portal!</strong> This comprehensive guide provides an overview of all facilities and features available in the Governance, Risk, and Compliance portal. Click on any section below to navigate directly to the corresponding page.
+                    </div>
+
+                    <!-- Dashboard & Home Section -->
+                    <div class="mb-5">
+                        <h3 class="text-primary border-bottom pb-2">
+                            <i class="fas fa-tachometer-alt me-2"></i>1. Dashboard & Home
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-primary">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-home me-2"></i>Home
+                                        </h5>
+                                        <p class="card-text small">Main landing page providing system overview, recent activities, key metrics, and quick access to all major features. Includes dashboard widgets for risk status, compliance scores, and security alerts.</p>
+                                        <a href="{{ url_for('home') }}" class="btn btn-primary">
+                                            <i class="fas fa-external-link-alt me-1"></i>Go to Home
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-primary">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-chart-line me-2"></i>Risk Dashboard
+                                        </h5>
+                                        <p class="card-text small">Interactive dashboard displaying risk heat maps, trend charts, critical risk alerts, and key risk indicators (KRIs). Provides executive-level visibility into risk posture with drill-down capabilities.</p>
+                                        <a href="{{ url_for('risk_dashboard') }}" class="btn btn-primary">
+                                            <i class="fas fa-external-link-alt me-1"></i>Go to Risk Dashboard
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Management Section -->
+                    <div class="mb-5">
+                        <h3 class="text-success border-bottom pb-2">
+                            <i class="fas fa-chart-line me-2"></i>2. Risk Management
+                        </h3>
+                        <p class="text-muted">Comprehensive risk assessment, management, and monitoring capabilities.</p>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-list me-2"></i>Risk Register
+                                        </h6>
+                                        <p class="card-text small">Comprehensive risk register displaying all identified risks with filtering, sorting, and search capabilities. View risk details, mitigation status, ownership, and historical changes. Supports bulk operations and export functionality.</p>
+                                        <a href="{{ url_for('risks') }}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-tasks me-2"></i>Risk Programs
+                                        </h6>
+                                        <p class="card-text small">Create and manage structured risk management programs with defined phases, milestones, and objectives. Track program progress, resource allocation, and effectiveness through comprehensive reporting and analytics.</p>
+                                        <a href="{{ url_for('risk_programs') }}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-plus me-2"></i>Create Program
+                                        </h6>
+                                        <p class="card-text small">Design and initiate new risk management programs with customizable frameworks, stakeholder assignments, and automated workflow management. Includes gap analysis and resource planning capabilities.</p>
+                                        <a href="{{ url_for('create_program') }}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-search me-2"></i>Risk Identification
+                                        </h6>
+                                        <p class="card-text small">Systematic risk identification using multiple methodologies including interviews, workshops, historical analysis, and automated scanning. Supports collaborative risk identification with voting and consensus building.</p>
+                                        <a href="{{ url_for('risk_identification') }}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>Critical Risks
+                                        </h6>
+                                        <p class="card-text small">Prioritized view of critical and high-severity risks requiring immediate executive attention. Includes escalation workflows, automated notifications, and executive reporting capabilities.</p>
+                                        <a href="{{ url_for('critical_risks') }}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-chart-bar me-2"></i>Risk Monitoring
+                                        </h6>
+                                        <p class="card-text small">Real-time risk monitoring with automated alerts, trend analysis, and mitigation tracking. Includes risk heat maps, threshold monitoring, and predictive risk modeling capabilities.</p>
+                                        <a href="{{ url_for('risk_monitoring') }}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-chart-area me-2"></i>Risk Indicators
+                                        </h6>
+                                        <p class="card-text small">Define and monitor Key Risk Indicators (KRIs) with automated data collection, threshold alerts, and trend analysis. Supports custom calculations and integration with external data sources.</p>
+                                        <a href="{{ url_for('risk_indicators') }}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-leaf me-2"></i>Environmental Changes
+                                        </h6>
+                                        <p class="card-text small">Monitor and assess how external environmental factors (regulatory changes, market conditions, technological advancements) impact organizational risks with automated impact analysis.</p>
+                                        <a href="{{ url_for('environmental_changes') }}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Threat Intelligence & Analysis Section -->
+                    <div class="mb-5">
+                        <h3 class="text-danger border-bottom pb-2">
+                            <i class="fas fa-shield-alt me-2"></i>3. Threat Intelligence & Analysis
+                        </h3>
+                        <p class="text-muted">Advanced threat detection, analysis, and intelligence gathering capabilities.</p>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-danger">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-chart-line me-2"></i>Threat Analysis
+                                        </h6>
+                                        <p class="card-text small">Comprehensive threat analysis using intelligence feeds, historical data, and predictive modeling to assess threat actors, their capabilities, and potential impact on organizational assets.</p>
+                                        <a href="{{ url_for('threat_analysis') }}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-danger">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-virus me-2"></i>Malware Analysis
+                                        </h6>
+                                        <p class="card-text small">Static and dynamic malware analysis with automated sandboxing, behavioral analysis, and threat intelligence correlation. Includes malware classification, attribution, and mitigation recommendations.</p>
+                                        <a href="{{ url_for('malware_analysis') }}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-danger">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-search-plus me-2"></i>IoC Analysis
+                                        </h6>
+                                        <p class="card-text small">Comprehensive IoC analysis with automated enrichment from multiple threat intelligence sources, historical correlation, and risk scoring. Supports various indicator types including IP addresses, domains, and file hashes.</p>
+                                        <a href="{{ url_for('ioc_analysis') }}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-danger">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-plug me-2"></i>OpenCTI Integration
+                                        </h6>
+                                        <p class="card-text small">Bidirectional integration with OpenCTI platform for automated threat intelligence sharing, indicator synchronization, and collaborative threat analysis across the organization.</p>
+                                        <a href="{{ url_for('opencti_integration') }}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-danger">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-user-secret me-2"></i>APT Campaigns
+                                        </h6>
+                                        <p class="card-text small">Track APT campaigns with detailed analysis of attack patterns, infrastructure mapping, and attribution. Includes campaign timeline visualization and impact assessment across multiple incidents.</p>
+                                        <a href="{{ url_for('apt_campaigns') }}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-danger">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-envelope me-2"></i>Phishing Templates
+                                        </h6>
+                                        <p class="card-text small">Create, manage, and analyze phishing email templates with automated testing capabilities, success rate tracking, and employee awareness training integration.</p>
+                                        <a href="{{ url_for('phishing_templates') }}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-danger">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-brain me-2"></i>Threat Intelligence
+                                        </h6>
+                                        <p class="card-text small">Centralized threat intelligence management with automated feed ingestion, correlation analysis, and dissemination to relevant stakeholders with customizable alerting and reporting.</p>
+                                        <a href="{{ url_for('threat_intelligence') }}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-danger">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-search me-2"></i>Digital Forensics
+                                        </h6>
+                                        <p class="card-text small">Comprehensive digital forensics platform with evidence collection, chain of custody management, timeline analysis, and automated report generation for incident investigations.</p>
+                                        <a href="{{ url_for('forensics') }}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vulnerability & Asset Management Section -->
+                    <div class="mb-5">
+                        <h3 class="text-warning border-bottom pb-2">
+                            <i class="fas fa-search me-2"></i>4. Vulnerability & Asset Management
+                        </h3>
+                        <p class="text-muted">Comprehensive vulnerability scanning, asset discovery, and security monitoring.</p>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-clipboard-list me-2"></i>Vulnerability Assessment
+                                        </h6>
+                                        <p class="card-text small">Systematic vulnerability assessments using automated scanning tools, manual testing methodologies, and risk-based prioritization. Includes vulnerability correlation and remediation tracking.</p>
+                                        <a href="{{ url_for('vulnerability_assessment') }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-search-plus me-2"></i>Vulnerability Scans
+                                        </h6>
+                                        <p class="card-text small">Automated vulnerability scanning with scheduled scans, custom scan profiles, and detailed reporting. Supports multiple scan types including network, web application, and database scanning.</p>
+                                        <a href="{{ url_for('vulnerability_scan') }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-network-wired me-2"></i>Asset Discovery
+                                        </h6>
+                                        <p class="card-text small">Automated network asset discovery using multiple scanning techniques, service enumeration, and vulnerability correlation. Maintains comprehensive asset inventory with change tracking and compliance mapping.</p>
+                                        <a href="{{ url_for('asset_discovery') }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-server me-2"></i>Asset Register
+                                        </h6>
+                                        <p class="card-text small">Centralized asset register with criticality assessment, ownership tracking, compliance mapping, and automated asset lifecycle management. Includes asset classification and risk-based prioritization.</p>
+                                        <a href="{{ url_for('asset_register') }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Monitoring Sub-section -->
+                        <h5 class="text-warning mt-4 mb-3">
+                            <i class="fas fa-eye me-2"></i>Security Monitoring
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-plus me-2"></i>Add Log Data
+                                        </h6>
+                                        <p class="card-text small">Upload and process security log data from various sources with automated parsing, normalization, and correlation. Supports multiple log formats and real-time processing capabilities.</p>
+                                        <a href="{{ url_for('add_log_data') }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-list me-2"></i>Collected Logs
+                                        </h6>
+                                        <p class="card-text small">Advanced log analysis interface with filtering, search, correlation capabilities, and automated anomaly detection. Includes log retention management and compliance reporting features.</p>
+                                        <a href="{{ url_for('collected_logs') }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-eye me-2"></i>Monitoring Dashboard
+                                        </h6>
+                                        <p class="card-text small">Real-time security monitoring dashboard with live alerts, incident correlation, threat hunting capabilities, and automated response orchestration. Includes customizable dashboards and alerting rules.</p>
+                                        <a href="{{ url_for('monitoring') }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-chart-line me-2"></i>Security Event Analysis
+                                        </h6>
+                                        <p class="card-text small">Advanced security event analysis with automated correlation, threat pattern recognition, and incident timeline reconstruction. Includes behavioral analytics and anomaly detection.</p>
+                                        <a href="{{ url_for('security_event_analysis') }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-file-alt me-2"></i>Security Summary Report
+                                        </h6>
+                                        <p class="card-text small">Automated generation of comprehensive security summary reports with executive summaries, trend analysis, compliance status, and actionable recommendations for security improvements.</p>
+                                        <a href="{{ url_for('security_summary_report') }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-book me-2"></i>Alert Documentation
+                                        </h6>
+                                        <p class="card-text small">Comprehensive alert documentation system with incident correlation, evidence collection, automated triage workflows, and integration with incident response procedures.</p>
+                                        <a href="{{ url_for('alert_documentation') }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-cogs me-2"></i>Monitoring Setup
+                                        </h6>
+                                        <p class="card-text small">Configure comprehensive monitoring parameters, custom alert rules, data source integrations, and automated response actions with threshold management and escalation policies.</p>
+                                        <a href="{{ url_for('monitoring_setup') }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Operations & Administration Section -->
+                    <div class="mb-5">
+                        <h3 class="text-secondary border-bottom pb-2">
+                            <i class="fas fa-cog me-2"></i>5. Operations & Administration
+                        </h3>
+                        <p class="text-muted">Operational management, incident response, and administrative functions.</p>
+
+                        <!-- Incident Management Sub-section -->
+                        <h5 class="text-secondary mt-4 mb-3">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Incident Management
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-secondary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-list me-2"></i>View Incidents
+                                        </h6>
+                                        <p class="card-text small">Comprehensive incident management dashboard with filtering, status tracking, priority assignment, and detailed incident timelines. Includes incident classification, impact assessment, and response coordination.</p>
+                                        <a href="{{ url_for('incidents') }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-secondary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-plus me-2"></i>Report Incident
+                                        </h6>
+                                        <p class="card-text small">User-friendly incident reporting interface with guided forms, automatic categorization, priority assessment, and immediate notification to response teams. Supports file attachments and detailed impact descriptions.</p>
+                                        <a href="{{ url_for('report_incident') }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-secondary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-shield-alt me-2"></i>Incident Response
+                                        </h6>
+                                        <p class="card-text small">Structured incident response framework with predefined playbooks, automated escalation procedures, communication templates, and integrated collaboration tools for coordinated response efforts.</p>
+                                        <a href="{{ url_for('incident_response') }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Risk Assessment Tools Sub-section -->
+                        <h5 class="text-secondary mt-4 mb-3">
+                            <i class="fas fa-tools me-2"></i>Risk Assessment Tools
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-secondary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-clipboard-check me-2"></i>Checklists
+                                        </h6>
+                                        <p class="card-text small">Comprehensive library of standardized risk assessment checklists covering various domains including IT security, operational risks, compliance requirements, and business continuity with customizable templates.</p>
+                                        <a href="{{ url_for('checklists') }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-secondary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-chart-line me-2"></i>SWOT Analysis
+                                        </h6>
+                                        <p class="card-text small">Interactive SWOT analysis tool for strategic planning with collaborative input capabilities, automated risk scoring, and integration with risk registers for comprehensive strategic risk assessment.</p>
+                                        <a href="{{ url_for('swot_analysis') }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-secondary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-lightbulb me-2"></i>Brainstorming
+                                        </h6>
+                                        <p class="card-text small">Virtual brainstorming platform with real-time collaboration, idea categorization, voting mechanisms, and automatic integration with risk registers for capturing and prioritizing identified risks.</p>
+                                        <a href="{{ url_for('brainstorming') }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Core Admin Items -->
+                        <h5 class="text-secondary mt-4 mb-3">
+                            <i class="fas fa-cogs me-2"></i>Core Administration
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-secondary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-file-contract me-2"></i>Policies
+                                        </h6>
+                                        <p class="card-text small">Comprehensive policy management system with version control, approval workflows, distribution tracking, and automated compliance monitoring against organizational security policies and procedures.</p>
+                                        <a href="{{ url_for('policies') }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-secondary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-book me-2"></i>Knowledge Base
+                                        </h6>
+                                        <p class="card-text small">Centralized knowledge repository with searchable documentation, best practices, procedures, training materials, and collaborative content creation with version control and approval workflows.</p>
+                                        <a href="{{ url_for('kb') }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-secondary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-clipboard-check me-2"></i>Compliance
+                                        </h6>
+                                        <p class="card-text small">Integrated compliance management platform with automated assessments, requirement mapping, evidence collection, audit preparation, and regulatory reporting across multiple frameworks and standards.</p>
+                                        <a href="{{ url_for('compliance') }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-secondary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-sitemap me-2"></i>Framework Mapping
+                                        </h6>
+                                        <p class="card-text small">Visual framework mapping tool for aligning organizational controls with multiple compliance frameworks, automated gap analysis, and requirement traceability across standards like NIST, ISO, and GDPR.</p>
+                                        <a href="{{ url_for('framework_mapping') }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-secondary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-cogs me-2"></i>Dependencies
+                                        </h6>
+                                        <p class="card-text small">System dependency mapping and management with impact analysis, change tracking, and automated risk assessment for interconnected systems, applications, and infrastructure components.</p>
+                                        <a href="{{ url_for('dependencies') }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-secondary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-bell me-2"></i>Detection Rules
+                                        </h6>
+                                        <p class="card-text small">Advanced detection rule engine with customizable correlation rules, threshold-based alerting, pattern matching, and automated rule testing with performance monitoring and false positive reduction.</p>
+                                        <a href="{{ url_for('detection_rules') }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Admin Only Items -->
+                        {% if current_user.role in ['admin', 'auditor'] %}
+                        <h5 class="text-danger mt-4 mb-3">
+                            <i class="fas fa-user-shield me-2"></i>Administrative Functions (Admin/Auditor Only)
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-danger">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-history me-2"></i>Audit Logs
+                                        </h6>
+                                        <p class="card-text small">Comprehensive audit trail system with detailed logging of all user activities, system events, and security-relevant actions with advanced search, filtering, and compliance reporting capabilities.</p>
+                                        <a href="{{ url_for('audit_logs') }}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if current_user.role == 'admin' %}
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-danger">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-users me-2"></i>User Management
+                                        </h6>
+                                        <p class="card-text small">Complete user lifecycle management with role-based access control, permission assignment, account provisioning, deactivation, and audit trail tracking for all administrative user management activities.</p>
+                                        <a href="{{ url_for('admin_users') }}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Additional Features -->
+                        <h5 class="text-info mt-4 mb-3">
+                            <i class="fas fa-star me-2"></i>Additional Features
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-info">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-chart-bar me-2"></i>Security Metrics
+                                        </h6>
+                                        <p class="card-text small">Real-time security metrics dashboard with automated KPI calculations, trend analysis, benchmarking against industry standards, and customizable reporting for operational and executive security visibility.</p>
+                                        <a href="{{ url_for('security_metrics') }}" class="btn btn-info btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-info">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-balance-scale me-2"></i>Ethical Decision Support
+                                        </h6>
+                                        <p class="card-text small">Interactive ethical decision support system with scenario-based guidance, compliance frameworks, stakeholder impact analysis, and documentation of ethical decision-making processes for governance and compliance.</p>
+                                        <a href="{{ url_for('ethical_decision_support') }}" class="btn btn-info btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-info">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-clipboard-list me-2"></i>Compliance Obligations
+                                        </h6>
+                                        <p class="card-text small">Comprehensive compliance obligation tracking with automated deadline monitoring, regulatory requirement mapping, evidence collection workflows, and compliance status reporting across multiple regulatory frameworks.</p>
+                                        <a href="{{ url_for('compliance_obligations') }}" class="btn btn-info btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-info">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-chart-pie me-2"></i>Compliance Risk Assessment
+                                        </h6>
+                                        <p class="card-text small">Specialized compliance risk assessment framework with regulatory requirement analysis, control effectiveness evaluation, gap identification, and remediation planning integrated with overall risk management.</p>
+                                        <a href="{{ url_for('compliance_risk_assessment') }}" class="btn btn-info btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-info">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-exclamation-circle me-2"></i>Compliance Incidents
+                                        </h6>
+                                        <p class="card-text small">Dedicated compliance incident management with regulatory violation tracking, notification workflows, remediation planning, and automated reporting to regulatory authorities when required.</p>
+                                        <a href="{{ url_for('compliance_incidents') }}" class="btn btn-info btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100 border-info">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-file-alt me-2"></i>Compliance Status Report
+                                        </h6>
+                                        <p class="card-text small">Automated compliance status reporting with customizable templates, executive summaries, detailed control assessments, and evidence documentation for audit and regulatory submissions.</p>
+                                        <a href="{{ url_for('compliance_status_report') }}" class="btn btn-info btn-sm">
+                                            <i class="fas fa-external-link-alt me-1"></i>Access
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Access Footer -->
+                    <div class="mt-5 p-4 bg-light rounded">
+                        <h4 class="text-center mb-4">
+                            <i class="fas fa-rocket me-2"></i>Quick Start Guide
+                        </h4>
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <a href="{{ url_for('home') }}" class="btn btn-primary btn-lg mb-2">
+                                    <i class="fas fa-home me-2"></i>Start Here
+                                </a>
+                                <p class="small text-muted">Begin with the home page</p>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{{ url_for('risks') }}" class="btn btn-success btn-lg mb-2">
+                                    <i class="fas fa-chart-line me-2"></i>Risk Management
+                                </a>
+                                <p class="small text-muted">Core risk assessment</p>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{{ url_for('monitoring') }}" class="btn btn-warning btn-lg mb-2">
+                                    <i class="fas fa-eye me-2"></i>Security Monitoring
+                                </a>
+                                <p class="small text-muted">Real-time monitoring</p>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{{ url_for('compliance') }}" class="btn btn-secondary btn-lg mb-2">
+                                    <i class="fas fa-clipboard-check me-2"></i>Compliance
+                                </a>
+                                <p class="small text-muted">Compliance management</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

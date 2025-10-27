@@ -45,6 +45,7 @@ from pathlib import Path
 
 import requests
 from PyPDF2 import PdfReader
+from bs4 import BeautifulSoup
 
 # Import database models for risk creation
 
@@ -58,6 +59,9 @@ from db import get_session, close_session
 
 MODEL_NAME = os.getenv("MODEL_NAME", "openai/gpt-oss-20b:free")
 OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY", "")
+
+# REMOVED: _extract_text_from_html function - reverted as part of Content Extraction Adaptation
+
 
 def _extract_text(file_path: str, max_chars: int = 20000) -> str:
     """
@@ -146,6 +150,9 @@ def _call_model(prompt: str) -> str:
     r.raise_for_status()
     content = r.json()["choices"][0]["message"]["content"]
     return content
+
+
+# REMOVED: scan_page_content_for_grc function - reverted as part of Analysis Function Extension
 
 
 def scan_file_for_grc(file_path: str) -> dict:

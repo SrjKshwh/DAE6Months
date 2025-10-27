@@ -7,3 +7,4 @@ requests==2.32.3
 python-dotenv==1.0.1
 psutil==6.0.0
 APScheduler==3.10.4
+beautifulsoup4==4.12.3

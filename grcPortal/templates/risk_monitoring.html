@@ -16,6 +16,23 @@
                 </button>
             </div>
 
+            <!-- Introduction and Functionality Overview -->
+            <div class="alert alert-info mb-4">
+                <h5><i class="fas fa-info-circle"></i> About This Page</h5>
+                <p>The Risk Monitoring page provides continuous oversight of risk indicators and key performance metrics. It enables proactive risk management by tracking trends and alerting when thresholds are breached.</p>
+
+                <h6>How This Page Works:</h6>
+                <ul>
+                    <li><strong>Indicator Cards:</strong> Visual summary of each risk indicator showing current values, targets, and status</li>
+                    <li><strong>Leading vs Lagging:</strong> Monitors both predictive indicators (leading) and outcome measures (lagging)</li>
+                    <li><strong>Status Thresholds:</strong> Color-coded alerts (Normal/Warning/Critical) based on configured thresholds</li>
+                    <li><strong>Detailed Table:</strong> Comprehensive view of all indicators with data sources, thresholds, and last readings</li>
+                    <li><strong>Refresh Data:</strong> Manual refresh capability to update indicator values from data sources</li>
+                    <li><strong>Monitoring Guidelines:</strong> Built-in help explaining indicator types and alert thresholds</li>
+                </ul>
+                <p class="mb-0">Use the refresh button to get the latest data and monitor for any indicators requiring attention.</p>
+            </div>
+
             <!-- Risk Indicators Overview -->
             <div class="row mb-4">
                 {% for indicator in indicators %}

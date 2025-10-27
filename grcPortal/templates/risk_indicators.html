@@ -20,6 +20,22 @@
                 </div>
             </div>
 
+            <!-- Introduction and Functionality Overview -->
+            <div class="alert alert-info mb-4">
+                <h5><i class="fas fa-info-circle"></i> About This Page</h5>
+                <p>The Risk Indicators page displays key metrics and measurements used to monitor risk levels across your organization. It provides real-time visibility into risk trends and triggers alerts when thresholds are exceeded.</p>
+
+                <h6>How This Page Works:</h6>
+                <ul>
+                    <li><strong>Indicator Cards:</strong> Each card shows current value, target, warning/critical thresholds, and status for individual risk indicators</li>
+                    <li><strong>Status Alerts:</strong> Visual indicators (green/yellow/red) show whether each indicator is within acceptable ranges</li>
+                    <li><strong>Configuration Table:</strong> Detailed view of all indicator settings including data sources, thresholds, and monitoring frequency</li>
+                    <li><strong>Threshold Monitoring:</strong> Automatic alerts when indicators exceed warning or critical thresholds</li>
+                    <li><strong>Data Sources:</strong> Indicators pull data from various systems and can be customized for your environment</li>
+                </ul>
+                <p class="mb-0">Use this page to monitor risk trends and identify when preventive actions are needed.</p>
+            </div>
+
             <!-- Indicators Overview -->
             <div class="row mb-4">
                 {% for indicator_data in indicator_data %}

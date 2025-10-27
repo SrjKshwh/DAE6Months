@@ -19,6 +19,20 @@
                 </div>
             </div>
 
+            <!-- Introduction -->
+            <div class="alert alert-info mb-4">
+                <h5><i class="fas fa-info-circle"></i> About Collected Logs</h5>
+                <p>This page displays security logs collected from various sources for monitoring and analysis. Review log entries, analyze patterns, and create risk assessments from log data.</p>
+                <h6>How it works:</h6>
+                <ul>
+                    <li><strong>Log Statistics:</strong> View summary statistics by severity and log type</li>
+                    <li><strong>Log Entries:</strong> Browse paginated log entries with filtering options</li>
+                    <li><strong>View Details:</strong> Examine full log messages and metadata</li>
+                    <li><strong>Create Risks:</strong> Generate risk assessments from suspicious log entries</li>
+                    <li><strong>Security Analysis:</strong> Link to security event analysis tools</li>
+                </ul>
+            </div>
+
             <!-- Statistics Cards -->
             <div class="row mb-4">
                 <div class="col-md-3">
@@ -112,8 +126,11 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-outline-primary" onclick="viewLogDetails({{ log.id }})">
+                                        <button class="btn btn-sm btn-outline-primary me-1" onclick="viewLogDetails({{ log.id }})">
                                             <i class="fas fa-eye"></i> View Details
+                                        </button>
+                                        <button class="btn btn-sm btn-warning" onclick="createRiskFromLog({{ log.id }})">
+                                            <i class="fas fa-exclamation-triangle"></i> Create Risk
                                         </button>
                                     </td>
                                 </tr>
@@ -263,6 +280,43 @@ function getSeverityClass(severity) {
         case 'error': return 'danger';
         case 'warning': return 'warning';
         default: return 'info';
+    }
+}
+
+function createRiskFromLog(logId) {
+    if (confirm('Are you sure you want to create a risk assessment from this log entry? This will automatically generate a risk record linked to this log.')) {
+        // Show loading indicator
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+        button.disabled = true;
+
+        fetch('/api/create_risk_from_source', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                source_table: 'collected_logs',
+                source_id: logId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error creating risk assessment: ' + data.error);
+            } else {
+                alert('Risk assessment created successfully! Risk ID: ' + data.id);
+            }
+        })
+        .catch(error => {
+            alert('Error creating risk assessment: ' + error.message);
+        })
+        .finally(() => {
+            // Restore button
+            button.innerHTML = originalText;
+            button.disabled = false;
+        });
     }
 }
 </script>

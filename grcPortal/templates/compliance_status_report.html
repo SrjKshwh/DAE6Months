@@ -25,7 +25,21 @@
                     <small>Generated on {{ generated_at.strftime('%B %d, %Y at %I:%M %p') }}</small>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                                    <div class="alert alert-info mb-4">
+                                        <h5>Compliance Status Report</h5>
+                                        <p>This page displays a comprehensive compliance status report that provides detailed insights into the organization's compliance posture. The report includes executive summaries, framework compliance scores, critical gaps, risk analysis, and actionable recommendations to support informed decision-making.</p>
+                                        <h6>How it Works</h6>
+                                        <ul>
+                                            <li><strong>Report Header:</strong> Shows report generation date, period, total compliance records, and overall compliance score.</li>
+                                            <li><strong>Executive Summary:</strong> Provides key metrics including compliance rating, frameworks assessed, critical gaps, and total controls.</li>
+                                            <li><strong>Framework Compliance Scores:</strong> Displays detailed compliance scores for each framework with progress bars and status indicators.</li>
+                                            <li><strong>Critical Compliance Gaps:</strong> Highlights areas requiring immediate attention with risk levels and priorities.</li>
+                                            <li><strong>Risk-Based Analysis:</strong> Analyzes compliance requirements based on risk impact and current compliance status.</li>
+                                            <li><strong>Recommendations:</strong> Provides prioritized action items and recommendations for improving compliance.</li>
+                                            <li><strong>Print Functionality:</strong> Use the Print Report button to generate a printable version suitable for distribution.</li>
+                                        </ul>
+                                    </div>
+                                    <div class="row">
                         <div class="col-md-6">
                             <h5>Report Period: {{ report_period.title() }}</h5>
                             <p class="mb-0">Total Compliance Records: {{ total_compliance_records }}</p>

@@ -2,6 +2,17 @@
 
 {% block content %}
 <h2>Critical Asset Register</h2>
+<div class="alert alert-info" role="alert">
+    <h5>Introduction</h5>
+    <p>The Critical Asset Register is a centralized repository for documenting and managing your organization's most valuable assets. It helps prioritize protection efforts by assessing risk exposure based on asset value, criticality, and vulnerability data.</p>
+    <h6>How it Works</h6>
+    <ul>
+        <li><strong>Register Assets:</strong> Add new assets by providing name, type, value, criticality level, threat exposure score, and vulnerability count.</li>
+        <li><strong>Risk Assessment:</strong> The system calculates overall risk exposure (1-5 scale) based on the provided parameters to help prioritize security measures.</li>
+        <li><strong>View Reports:</strong> Generate detailed risk exposure reports for individual assets to understand their security posture.</li>
+        <li><strong>Track Criticality:</strong> Categorize assets as low, medium, or high criticality to focus resources on the most important systems.</li>
+    </ul>
+</div>
 <form method="POST">
     <input type="text" name="asset_name" placeholder="Asset Name" required>
     <input type="text" name="asset_type" placeholder="Asset Type" required>

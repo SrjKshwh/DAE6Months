@@ -459,6 +459,10 @@ class Risk(Base):
     mitigation_plan_json: Mapped[str] = mapped_column(Text, nullable=True)  # Store JSON response
     mitigation_plan_updated: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
+    # Traceability foreign key to source tables
+    source_table: Mapped[str] = mapped_column(String(255), nullable=True)  # e.g., 'vulnerability_findings', 'incidents'
+    source_id: Mapped[int] = mapped_column(Integer, nullable=True)  # Primary key ID of the source record
+
 
     def calculate_score(self, use_multi_criteria=False):
         """
@@ -1163,6 +1167,9 @@ class Incident(Base):
     containment_notes: Mapped[str] = mapped_column(Text, nullable=True)
     eradication_notes: Mapped[str] = mapped_column(Text, nullable=True)
     recovery_notes: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Risk status tracking for workflow optimization
+    risk_status: Mapped[str] = mapped_column(String(50), default="unassessed")  # unassessed, risk_created: R123, mitigated, accepted
 
     # Relationships
     reporter: Mapped["User"] = relationship("User", back_populates="incidents")
@@ -1997,6 +2004,9 @@ class VulnerabilityFinding(Base):
     cvss_score: Mapped[float] = mapped_column(Float, nullable=True)
     remediation: Mapped[str] = mapped_column(Text, nullable=True)
 
+    # Risk status tracking for workflow optimization
+    risk_status: Mapped[str] = mapped_column(String(50), default="unassessed")  # unassessed, risk_created: R123, mitigated, accepted
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
@@ -2146,6 +2156,9 @@ class CollectedLog(Base):
     processed: Mapped[bool] = mapped_column(Boolean, default=False)
     alert_generated: Mapped[bool] = mapped_column(Boolean, default=False)
 
+    # Risk status tracking for workflow optimization
+    risk_status: Mapped[str] = mapped_column(String(50), default="unassessed")  # unassessed, risk_created: R123, mitigated, accepted
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     # Relationships
@@ -2213,6 +2226,9 @@ class Alert(Base):
     assigned_to: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
     resolved_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     resolution_notes: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Risk status tracking for workflow optimization
+    risk_status: Mapped[str] = mapped_column(String(50), default="unassessed")  # unassessed, risk_created: R123, mitigated, accepted
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

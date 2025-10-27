@@ -36,9 +36,7 @@
                         <ul class="dropdown-menu" aria-labelledby="dashboardDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('home') }}"><i class="fas fa-home me-2"></i>Home</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('risk_dashboard') }}"><i class="fas fa-chart-line me-2"></i>Risk Dashboard</a></li>
-                            {% if current_user.role in ['admin', 'auditor'] %}
-                            <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}"><i class="fas fa-cogs me-2"></i>Admin Dashboard</a></li>
-                            {% endif %}
+                            <li><a class="dropdown-item" href="{{ url_for('guide') }}"><i class="fas fa-book me-2"></i>User Guide</a></li>
                         </ul>
                     </li>
 

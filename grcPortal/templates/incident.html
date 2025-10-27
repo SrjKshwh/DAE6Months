@@ -9,9 +9,21 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2><i class="fas fa-exclamation-triangle text-warning"></i> Incident: {{ incident.title }}</h2>
-                <a href="{{ url_for('incidents') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to Incidents
-                </a>
+                <div>
+                    <button class="btn btn-warning me-2" onclick="createRiskFromIncident({{ incident.id }})">
+                        <i class="fas fa-exclamation-triangle"></i> Create Risk Assessment
+                    </button>
+                    <a href="{{ url_for('incidents') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Incidents
+                    </a>
+                </div>
+            </div>
+
+            <!-- Page Introduction -->
+            <div class="alert alert-info mb-4">
+                <h6><i class="fas fa-info-circle"></i> Page Introduction</h6>
+                <p>This page provides detailed management of a specific security incident, allowing users to track and update the incident response process through all phases of the NIST Incident Response Framework.</p>
+                <p><strong>How it works:</strong> The page displays incident details including title, description, severity, status, and reporting information. Users can update response notes for each phase (Preparation, Identification, Containment, Eradication, Recovery) with specific examples relevant to the GRC Portal system. The form allows updating the incident status and provides functionality to automatically create a risk assessment from the incident data.</p>
             </div>
 
             <div class="card mb-4">
@@ -85,4 +97,46 @@
         </div>
     </div>
 </div>
+
+<script>
+function createRiskFromIncident(incidentId) {
+    if (confirm('Are you sure you want to create a risk assessment from this incident? This will automatically generate a risk record linked to this incident.')) {
+        // Show loading indicator
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+        button.disabled = true;
+
+        fetch('/api/create_risk_from_source', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                source_table: 'incidents',
+                source_id: incidentId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error creating risk assessment: ' + data.error);
+            } else {
+                alert('Risk assessment created successfully! Risk ID: ' + data.id);
+                // Optionally redirect to risk detail page
+                // window.location.href = '/risk_detail/' + data.id;
+            }
+        })
+        .catch(error => {
+            alert('Error creating risk assessment: ' + error.message);
+        })
+        .finally(() => {
+            // Restore button
+            button.innerHTML = originalText;
+            button.disabled = false;
+        });
+    }
+}
+</script>
+
 {% endblock %}
