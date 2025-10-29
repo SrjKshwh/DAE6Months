@@ -617,46 +617,55 @@ def calculate_ale(self, asset_value: float = 100000.0):
 graph TB
     subgraph "Presentation Layer"
         UI[Web Interface<br/>Bootstrap 5 + Jinja2]
-        API[REST API<br/>Flask Routes]
+        API[REST API<br/>Flask Routes + JSON]
         WEBHOOKS[Webhook System<br/>Real-time Notifications]
+        REPORTS[Automated Reports<br/>PDF/HTML/JSON Export]
     end
 
     subgraph "Application Layer"
-        AUTH[Authentication<br/>Zero Trust Security]
-        RISK[Risk Management<br/>AI-Powered Engine]
-        COMP[Compliance<br/>Multi-Framework]
-        PROG[Program Management<br/>Framework-Based]
-        INC[Incident Response<br/>IRP Tracking]
-        FORENSICS[Digital Forensics<br/>Evidence Chain]
-        MONITOR[Continuous Monitoring<br/>KPI & Indicators]
-        GOVERNANCE[Governance<br/>Decision Tracking]
+        AUTH[Authentication<br/>Zero Trust + RBAC]
+        RISK[AI Risk Engine<br/>LLM + Pattern Detection]
+        COMP[Compliance Automation<br/>9 Frameworks + AI Scoring]
+        PROG[Program Management<br/>NIST RMF + Gap Analysis]
+        INC[Incident Response<br/>IRP + Evidence Chain]
+        FORENSICS[Digital Forensics<br/>Integrity Hashing + CoC]
+        MONITOR[Continuous Monitoring<br/>KPI + Environmental Changes]
+        GOVERNANCE[Governance<br/>Decision Tracking + Audit]
+        ASSETS[Asset Management<br/>Critical Register + Dependencies]
+        THREAT[Threat Intelligence<br/>IoC Analysis + Malware]
     end
 
     subgraph "Integration Layer"
-        LLM[LLM Analysis<br/>OpenRouter API]
-        SIEM[SIEM Integration<br/>Security Events]
-        LDAP[Identity Management<br/>LDAP/AD]
-        VULN[Vulnerability Scanners<br/>Automated Import]
-        COMPLIANCE[Compliance Tools<br/>External Systems]
+        LLM[OpenRouter API<br/>GPT Models + Fallback]
+        SIEM[SIEM Integration<br/>Event Correlation]
+        LDAP[Identity Management<br/>LDAP/AD Sync]
+        VULN[Vulnerability Scanners<br/>CVSS Mapping]
+        COMPLIANCE[Compliance Tools<br/>Automated Import]
+        OPENCITI[OpenCTI Platform<br/>Threat Intelligence]
+        MALWARE[Malware Analysis<br/>Behavioral Indicators]
+        SCHEDULER[Background Tasks<br/>APScheduler + Health Checks]
     end
 
     subgraph "Data Layer"
         DB[(SQLite/PostgreSQL<br/>SQLAlchemy ORM)]
         CACHE[(Redis Cache<br/>Session & Metrics)]
-        FILES[Secure File Storage<br/>Auto-Cleanup]
-        LOGS[Structured Logging<br/>Audit Trails]
-        METRICS[Metrics Storage<br/>KPI Tracking]
+        FILES[Secure File Storage<br/>Auto-Cleanup + 2min TTL]
+        LOGS[Structured Logging<br/>Audit Trails + JSON]
+        METRICS[Metrics Storage<br/>Security KPIs + History]
+        ARCHIVE[Data Archiving<br/>Retention Policies + Encryption]
     end
 
     subgraph "Infrastructure Layer"
-        CONTAINER[Docker Containers<br/>Microservices Ready]
-        ORCHESTRATION[Kubernetes<br/>Auto-scaling]
-        MONITORING[Prometheus/Grafana<br/>Observability]
-        BACKUP[Automated Backups<br/>DR Ready]
+        CONTAINER[Docker Containers<br/>Security Hardened]
+        ORCHESTRATION[Kubernetes<br/>Auto-scaling + HA]
+        MONITORING[Prometheus/Grafana<br/>Observability + Alerts]
+        BACKUP[Automated Backups<br/>Encrypted + DR Ready]
+        HEALTH[Health Monitoring<br/>System Checks + Metrics]
     end
 
     UI --> API
     API --> WEBHOOKS
+    API --> REPORTS
     WEBHOOKS --> SIEM
 
     API --> AUTH
@@ -667,6 +676,8 @@ graph TB
     API --> FORENSICS
     API --> MONITOR
     API --> GOVERNANCE
+    API --> ASSETS
+    API --> THREAT
 
     AUTH --> DB
     RISK --> DB
@@ -676,25 +687,35 @@ graph TB
     FORENSICS --> DB
     MONITOR --> DB
     GOVERNANCE --> DB
+    ASSETS --> DB
+    THREAT --> DB
 
     RISK --> CACHE
     MONITOR --> METRICS
+    MONITOR --> HEALTH
     INC --> LOGS
     GOVERNANCE --> LOGS
+    SCHEDULER --> ARCHIVE
 
     RISK --> FILES
     FORENSICS --> FILES
     COMP --> FILES
+    THREAT --> FILES
 
     API --> LLM
     RISK --> VULN
     AUTH --> LDAP
     COMP --> COMPLIANCE
+    THREAT --> OPENCITI
+    THREAT --> MALWARE
+    SCHEDULER --> MONITOR
 
     CONTAINER --> ORCHESTRATION
     ORCHESTRATION --> MONITORING
     DB --> BACKUP
     LOGS --> BACKUP
+    ARCHIVE --> BACKUP
+    HEALTH --> MONITORING
 ```
 
 ### Comprehensive Database Schema Architecture
@@ -712,6 +733,9 @@ erDiagram
     User ||--o{ SWOTAnalysis : performs
     User ||--o{ RiskProgramPlan : creates
     User ||--o{ CriticalAssetRegister : assesses
+    User ||--o{ ComplianceIncident : reports
+    User ||--o{ EthicalDecision : makes
+    User ||--o{ Alert : triages
 
     Upload ||--|| ScanResult : produces
     ScanResult ||--o{ Risk : generates
@@ -724,8 +748,11 @@ erDiagram
     Risk ||--o{ SWOTItem : derives_from
     Risk ||--o{ RiskChecklistResponse : generates_from
     Risk ||--o{ CriticalAssetRegister : associates
+    Risk ||--o{ EnvironmentalChange : impacted_by
 
     Incident ||--o{ Evidence : contains
+    Incident ||--o{ LogCorrelation : correlates
+    Incident ||--o{ Alert : triggers
 
     RiskManagementFramework ||--o{ RiskProgramPlan : defines
     RiskProgramPlan ||--o{ ProgramPhase : contains
@@ -743,7 +770,24 @@ erDiagram
 
     RiskIndicator ||--o{ IndicatorReading : measures
 
-    EnvironmentalChange ||--o{ Risk : impacts
+    LogSource ||--o{ CollectedLog : sources
+    CollectedLog ||--o{ LogCorrelation : participates_in
+    CollectedLog ||--o{ LogAnalysis : analyzed_in
+
+    AlertRule ||--o{ Alert : generates
+    Alert ||--o{ AlertTriage : triaged
+
+    IndicatorOfCompromise ||--o{ IoCAnalysis : analyzed
+    IndicatorOfCompromise ||--o{ ATTACKMapping : mapped_to
+
+    VulnerabilityScan ||--o{ VulnerabilityFinding : discovers
+    VulnerabilityFinding ||--o{ Risk : generates
+
+    AssetDiscovery ||--o{ DiscoveredService : finds
+
+    OpenCTIConnector ||--o{ OpenCTIIntegration : connects
+
+    MonitoringConfiguration ||--o{ RetentionConfig : configures
 
     Risk {
         string asset
@@ -763,6 +807,14 @@ erDiagram
         int operational_impact
         int compliance_impact
         int reputation_impact
+        float financial_weight
+        float operational_weight
+        float compliance_weight
+        float reputation_weight
+        string source_table
+        int source_id
+        json business_impact
+        json regulatory_impact
     }
 
     RiskProgramPlan {
@@ -773,6 +825,9 @@ erDiagram
         datetime end_date
         float total_budget
         int created_by
+        boolean planning_phase_complete
+        boolean implementation_phase_complete
+        boolean monitoring_phase_complete
     }
 
     ProgramPhase {
@@ -803,11 +858,15 @@ erDiagram
         string description
         string indicator_type
         string data_source
+        string calculation_method
         float target_value
         float threshold_warning
         float threshold_critical
         string unit
         string frequency
+        boolean is_active
+        datetime created_at
+        datetime updated_at
     }
 
     BrainstormingSession {
@@ -865,6 +924,88 @@ erDiagram
         int assessed_by
         datetime last_assessment
         datetime next_review
+    }
+
+    ComplianceIncident {
+        string incident_id
+        string title
+        string category
+        string severity
+        string description
+        datetime date_occurred
+        string discovery_method
+        int affected_individuals
+        string affected_systems
+        string business_impact
+        float financial_impact
+        string regulatory_impact
+        int reported_by
+        string status
+        datetime created_at
+        datetime updated_at
+        datetime resolved_at
+        string root_cause
+        string contributing_factors
+        string investigation_findings
+        string immediate_actions
+        string containment_actions
+        string remediation_actions
+        string lessons_learned
+        string preventive_measures
+        int assigned_to
+    }
+
+    IndicatorOfCompromise {
+        string indicator_type
+        string indicator_value
+        int confidence
+        string severity
+        string status
+        string threat_actor
+        string campaign
+        string malware_family
+        datetime first_seen
+        datetime last_seen
+        string detection_source
+        string description
+        json tags
+        int created_by
+        datetime created_at
+        datetime updated_at
+    }
+
+    LogSource {
+        string name
+        string source_type
+        string connection_string
+        string status
+        json log_types_enabled
+        datetime last_connection
+        string error_message
+        datetime created_at
+        datetime updated_at
+    }
+
+    AlertRule {
+        string name
+        string description
+        json conditions
+        string severity
+        boolean is_active
+        int created_by
+        datetime created_at
+        datetime updated_at
+    }
+
+    MonitoringConfiguration {
+        string system_name
+        int cpu_threshold
+        int memory_threshold
+        int disk_threshold
+        int log_retention_days
+        boolean auto_cleanup_enabled
+        datetime created_at
+        datetime updated_at
     }
 ```
 
@@ -1243,20 +1384,48 @@ def calculate_multi_criteria_score(self):
 
 #### Business Impact Analysis:
 ```python
-# Comprehensive business impact modeling
-calculate_business_impact_score():
-    - Recovery Time Objective (RTO) analysis
-    - Recovery Point Objective (RPO) evaluation
-    - Maximum Tolerable Downtime (MTD) assessment
-    - Financial impact quantification
-    - Dependency mapping and analysis
+def calculate_business_impact_score(self):
+    """
+    Calculate comprehensive business impact score for risk assessment.
+
+    Evaluates business continuity implications including RTO, RPO, MTD,
+    financial impacts, and dependency relationships. Provides quantitative
+    basis for business impact analysis in risk management.
+
+    Returns:
+        dict: Business impact assessment with multiple metrics
+
+    Assessment Components:
+        - Recovery Time Objective (RTO): Maximum acceptable downtime
+        - Recovery Point Objective (RPO): Maximum data loss tolerance
+        - Maximum Tolerable Downtime (MTD): Critical business function limits
+        - Financial Impact: Quantitative cost assessment
+        - Dependency Mapping: Interconnected system analysis
+
+    Calculation Methodology:
+        - Time-based metrics in hours/days
+        - Financial metrics in monetary units
+        - Dependency scoring based on criticality
+        - Weighted composite scoring
+
+    Note:
+        Supports business continuity planning integration
+        Enables prioritization of critical business functions
+        Provides foundation for incident response planning
+    """
+    # Implementation includes RTO/RPO/MTD calculations
+    # Financial impact quantification
+    # Dependency risk scoring
+    # Business continuity assessment
 ```
 
 #### Automated Report Generation:
-- **Executive Risk Reports**: Financial impact analysis and strategic recommendations
-- **Compliance Reports**: Framework-specific compliance status and gap analysis
-- **Forensic Reports**: Incident analysis with evidence chain of custody
-- **Program Status Reports**: Risk management program progress and effectiveness
+- **Executive Risk Reports**: Financial impact analysis and strategic recommendations with AI-generated communication plans
+- **Compliance Reports**: Framework-specific compliance status and gap analysis with automated scoring
+- **Forensic Reports**: Incident analysis with evidence chain of custody and integrity hashing
+- **Program Status Reports**: Risk management program progress and effectiveness with gap analysis
+- **Risk Communication Plans**: Automated stakeholder communication strategies with tailored messaging
+- **Mitigation Planning Reports**: AI-generated comprehensive mitigation strategies with cost-benefit analysis
 
 ### Integration Capabilities
 
@@ -1267,10 +1436,13 @@ calculate_business_impact_score():
 - **Third-Party Tool Integration**: SIEM, vulnerability scanners, compliance tools
 
 #### External System Integration:
-- **Identity Management**: LDAP/Active Directory integration
-- **SIEM Integration**: Security event correlation and analysis
-- **Vulnerability Management**: Automated vulnerability risk mapping
-- **Compliance Tool Integration**: External compliance monitoring systems
+- **Identity Management**: LDAP/Active Directory integration with role synchronization
+- **SIEM Integration**: Security event correlation and analysis with webhook notifications
+- **Vulnerability Management**: Automated vulnerability risk mapping with CVSS scoring
+- **Compliance Tool Integration**: External compliance monitoring systems with automated data import
+- **Threat Intelligence**: IoC analysis with threat actor correlation and confidence scoring
+- **OpenCTI Integration**: Threat intelligence platform integration with multiple connectors
+- **Malware Analysis**: Automated malware analysis with behavioral indicators and family classification
 
 ## 9. Security Features Summary
 
@@ -1625,11 +1797,12 @@ aws s3 cp backup_$DATE.sql.enc s3://grc-backups/
 - **Phase Management**: Automated progression with milestone tracking
 
 ### ✅ AI-Powered Risk Intelligence
-- **LLM Integration**: Advanced document analysis with OpenRouter API
-- **Automated Mitigation Planning**: AI-generated comprehensive mitigation strategies
-- **Communication Strategy Generation**: Automated stakeholder communication planning
-- **Risk Communication Plans**: Executive reports and dashboard configurations
-- **Intelligent Risk Scoring**: Multi-criteria analysis with AI assistance
+- **LLM Integration**: Advanced document analysis with OpenRouter API and fallback responses
+- **Automated Mitigation Planning**: AI-generated comprehensive mitigation strategies with cost-benefit analysis
+- **Communication Strategy Generation**: Automated stakeholder communication planning with tailored messaging
+- **Risk Communication Plans**: Executive reports and dashboard configurations with escalation procedures
+- **Intelligent Risk Scoring**: Multi-criteria analysis with AI assistance and weighted scoring algorithms
+- **Pattern-based Threat Detection**: Automated detection of plaintext passwords and SQL injection patterns
 
 ### ✅ Continuous Risk Monitoring
 - **Risk Indicators**: Automated KPI calculation and threshold monitoring
@@ -1667,17 +1840,19 @@ aws s3 cp backup_$DATE.sql.enc s3://grc-backups/
 - **Post-Incident Analysis**: Automated lessons learned and improvement recommendations
 
 ### ✅ Advanced Analytics & Reporting
-- **Multi-Criteria Risk Scoring**: Weighted analysis across financial, operational, compliance, and reputation impacts
-- **Business Impact Analysis**: RTO/RPO/MTD calculations with financial modeling
-- **Predictive Analytics**: Trend analysis and risk forecasting
-- **Executive Reporting**: Comprehensive risk reports with actionable insights
-- **Custom Dashboard Creation**: Flexible KPI and metric configuration
+- **Multi-Criteria Risk Scoring**: Weighted analysis across financial, operational, compliance, and reputation impacts with configurable weights
+- **Business Impact Analysis**: RTO/RPO/MTD calculations with financial modeling and dependency mapping
+- **Predictive Analytics**: Trend analysis and risk forecasting with historical tracking
+- **Executive Reporting**: Comprehensive risk reports with actionable insights and AI-generated communication plans
+- **Custom Dashboard Creation**: Flexible KPI and metric configuration with automated alerting
+- **Automated Report Generation**: PDF, HTML, and JSON export formats for various report types
 
 ### ✅ System Architecture Modernization
-- **Microservices Ready**: Modular architecture for scalability
-- **API-First Design**: Comprehensive REST API for integrations
-- **Event-Driven Architecture**: Webhook system for real-time notifications
-- **Containerization**: Docker and Kubernetes deployment support
-- **Cloud-Native Features**: Horizontal scaling and high availability
+- **Microservices Ready**: Modular architecture for scalability with SQLAlchemy ORM
+- **API-First Design**: Comprehensive REST API for integrations with JSON responses
+- **Event-Driven Architecture**: Webhook system for real-time notifications and SIEM integration
+- **Containerization**: Docker and Kubernetes deployment support with security hardening
+- **Cloud-Native Features**: Horizontal scaling and high availability with automated health checks
+- **Background Task Processing**: APScheduler for automated archiving and monitoring tasks
 
 This enterprise-grade GRC Portal represents a comprehensive risk management platform with AI-powered intelligence, continuous monitoring, and extensive compliance automation capabilities.

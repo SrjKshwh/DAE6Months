@@ -30119,3 +30119,62 @@ WHERE collected_logs.timestamp >= ?) AS anon_1]
 [parameters: ('2025-10-27 15:45:00.062326',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 2025-10-27 11:50:00,066 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 11:55:00 EDT)" executed successfully
+2025-10-27 15:37:16,468 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-27 15:37:16,469 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-27 15:37:16,471 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-27 15:37:16,472 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-27 15:37:16,473 [INFO] Scheduler started
+2025-10-27 15:37:16,474 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-10-27 15:37:16,519 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-27 15:37:16,520 [INFO] [33mPress CTRL+C to quit[0m
+2025-10-27 15:37:16,522 [INFO]  * Restarting with stat
+2025-10-27 15:37:18,456 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-27 15:37:18,457 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-27 15:37:18,461 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-10-27 15:37:18,462 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-10-27 15:37:18,463 [INFO] Scheduler started
+2025-10-27 15:37:18,470 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-10-27 15:37:18,482 [WARNING]  * Debugger is active!
+2025-10-27 15:37:18,490 [INFO]  * Debugger PIN: 136-772-789
+2025-10-27 15:37:27,000 [INFO] 127.0.0.1 - - [27/Oct/2025 15:37:27] "GET / HTTP/1.1" 200 -
+2025-10-27 15:37:27,115 [INFO] 127.0.0.1 - - [27/Oct/2025 15:37:27] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-27 15:37:27,179 [INFO] 127.0.0.1 - - [27/Oct/2025 15:37:27] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-27 15:37:35,786 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-10-27 15:37:35,817 [INFO] 127.0.0.1 - - [27/Oct/2025 15:37:35] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-10-27 15:37:35,828 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-27 15:37:35,840 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002356A837D90>
+2025-10-27 15:37:35,840 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-27 15:37:35,840 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-27 15:37:35,842 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002356ADFC050>
+2025-10-27 15:37:35,844 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-27 15:37:35,846 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002356ADFC050> - email: kush786srj@gmail.com
+2025-10-27 15:37:35,848 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-10-27 15:37:35,970 [INFO] DEBUG: current_user() - session user_id: 1
+2025-10-27 15:37:35,971 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002356ADFC050>
+2025-10-27 15:37:35,971 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-10-27 15:37:35,975 [INFO] 127.0.0.1 - - [27/Oct/2025 15:37:35] "GET /home HTTP/1.1" 200 -
+2025-10-27 15:37:36,020 [INFO] 127.0.0.1 - - [27/Oct/2025 15:37:36] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-27 15:38:46,277 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-10-27 15:38:46,493 [INFO] 127.0.0.1 - - [27/Oct/2025 15:38:46] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-10-27 15:38:46,757 [INFO] 127.0.0.1 - - [27/Oct/2025 15:38:46] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-10-27 15:38:46,764 [INFO] 127.0.0.1 - - [27/Oct/2025 15:38:46] "GET /login HTTP/1.1" 200 -
+2025-10-27 15:38:47,013 [INFO] 127.0.0.1 - - [27/Oct/2025 15:38:47] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-10-27 15:38:47,123 [INFO] 127.0.0.1 - - [27/Oct/2025 15:38:47] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-10-27 15:40:00,007 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 15:40:00 EDT)" (scheduled at 2025-10-27 15:40:00-04:00)
+2025-10-27 15:40:00,098 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 19:35:00.079971',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 15:40:00,101 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 15:45:00 EDT)" executed successfully
+2025-10-27 15:40:00,570 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-10-27 19:35:00.558724',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-10-27 15:40:00,571 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-10-27 15:45:00 EDT)" executed successfully
