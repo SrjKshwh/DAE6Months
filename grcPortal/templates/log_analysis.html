@@ -1,0 +1,411 @@
+<!-- templates/log_analysis.html -->
+{% extends "base.html" %}
+
+{% block title %}Log Analysis - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="text-primary"><i class="fas fa-chart-bar"></i> Log Analysis</h1>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="refreshAnalysis()">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                    <a href="{{ url_for('add_log_data') }}" class="btn btn-outline-success me-2">
+                        <i class="fas fa-plus"></i> Add Log Data
+                    </a>
+                    <a href="{{ url_for('collected_logs') }}" class="btn btn-outline-info">
+                        <i class="fas fa-list"></i> View All Logs
+                    </a>
+                </div>
+            </div>
+
+            <!-- Page Introduction -->
+            <div class="card mb-4 border-primary">
+                <div class="card-body">
+                    <h5 class="card-title text-primary"><i class="fas fa-info-circle"></i> About This Page</h5>
+                    <p class="card-text">
+                        The <strong>Log Analysis</strong> page provides comprehensive analysis of security logs and events
+                        from multiple sources. It enables security teams to identify patterns, anomalies, and potential
+                        security incidents through advanced log correlation and analysis techniques.
+                    </p>
+                    <h6>Key Features:</h6>
+                    <ul class="mb-0">
+                        <li><strong>Multi-Source Log Collection:</strong> Aggregates logs from various systems and applications</li>
+                        <li><strong>Pattern Recognition:</strong> Advanced algorithms detect suspicious patterns and anomalies</li>
+                        <li><strong>Correlation Analysis:</strong> Cross-system correlation of related security events</li>
+                        <li><strong>Real-time Processing:</strong> Continuous analysis of incoming log data</li>
+                        <li><strong>Interactive Dashboards:</strong> Visual representation of log analysis results</li>
+                        <li><strong>Alert Generation:</strong> Automated alerts based on configurable rules and thresholds</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Analysis Overview -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center border-primary">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-database"></i> Total Logs</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-4 mb-2 text-primary">{{ total_logs|default(0) }}</div>
+                            <small class="text-muted">Last 24 hours</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-warning">
+                        <div class="card-header bg-warning">
+                            <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Anomalies</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-4 mb-2 text-warning">{{ anomalies_detected|default(0) }}</div>
+                            <small class="text-muted">Detected patterns</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-info">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-clock"></i> Processing Rate</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-4 mb-2 text-info">{{ logs_per_minute|default(0) }}</div>
+                            <small class="text-muted">Logs/minute</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-success">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-shield-alt"></i> Coverage</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-4 mb-2 text-success">{{ coverage_percentage|default(0) }}%</div>
+                            <small class="text-muted">Systems monitored</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Log Analysis Results -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Log Analysis Results</h5>
+                </div>
+                <div class="card-body">
+                    {% if analysis_results %}
+                    <div class="row">
+                        {% for result in analysis_results %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0">{{ result.analysis_type }}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small mb-2"><strong>Log Source:</strong> {{ result.source }}</p>
+                                    <p class="small mb-2"><strong>Time Range:</strong> {{ result.time_range }}</p>
+                                    <p class="small mb-2"><strong>Findings:</strong>
+                                        <span class="badge bg-{{ 'success' if result.findings_count < 10 else 'warning' if result.findings_count < 50 else 'danger' }}">
+                                            {{ result.findings_count }} findings
+                                        </span>
+                                    </p>
+                                    <p class="small mb-2"><strong>Confidence:</strong>
+                                        <span class="badge bg-{{ 'success' if result.confidence > 80 else 'warning' if result.confidence > 60 else 'danger' }}">
+                                            {{ result.confidence }}%
+                                        </span>
+                                    </p>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewAnalysisDetails({{ result.id }})">
+                                            <i class="fas fa-eye"></i> Details
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-warning" onclick="exportAnalysis({{ result.id }})">
+                                            <i class="fas fa-download"></i> Export
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Analysis Results</h5>
+                        <p class="text-muted">Log analysis results will appear here once processing is complete.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Log Sources and Types -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-server"></i> Log Sources</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if log_sources %}
+                            <div class="list-group list-group-flush">
+                                {% for source in log_sources %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">{{ source.name }}</h6>
+                                            <p class="small mb-1">{{ source.description[:60] }}...</p>
+                                            <small class="text-muted">
+                                                Type: {{ source.source_type }}
+                                                | Status: <span class="badge bg-{{ 'success' if source.status == 'active' else 'warning' if source.status == 'warning' else 'danger' }}">{{ source.status }}</span>
+                                            </small>
+                                        </div>
+                                        <div class="d-flex gap-1">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="configureSource({{ source.id }})">
+                                                <i class="fas fa-cog"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-info" onclick="viewSourceLogs({{ source.id }})">
+                                                <i class="fas fa-list"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-server fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0">No log sources configured</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-tags"></i> Log Types & Categories</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if log_types %}
+                            <div class="row">
+                                {% for type in log_types %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-info">
+                                        <div class="card-body text-center">
+                                            <div class="display-6 mb-2 text-info">{{ type.count }}</div>
+                                            <h6 class="mb-1">{{ type.name }}</h6>
+                                            <small class="text-muted">{{ type.description }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-tags fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0">No log types defined</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Configuration -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-cogs"></i> Analysis Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Analysis Rules</h6>
+                            {% if analysis_rules %}
+                            <div class="list-group list-group-flush">
+                                {% for rule in analysis_rules %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ rule.name }}</strong>
+                                            <br><small class="text-muted">{{ rule.description }}</small>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="rule{{ rule.id }}" {{ 'checked' if rule.active else '' }}>
+                                            <label class="form-check-label" for="rule{{ rule.id }}"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p class="text-muted">No analysis rules configured</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Analysis Settings</h6>
+                            <form id="analysisSettings">
+                                <div class="mb-3">
+                                    <label for="timeWindow" class="form-label">Analysis Time Window</label>
+                                    <select class="form-select" id="timeWindow">
+                                        <option value="1h">Last Hour</option>
+                                        <option value="24h" selected>Last 24 Hours</option>
+                                        <option value="7d">Last 7 Days</option>
+                                        <option value="30d">Last 30 Days</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="severityThreshold" class="form-label">Severity Threshold</label>
+                                    <select class="form-select" id="severityThreshold">
+                                        <option value="low">Low and Above</option>
+                                        <option value="medium" selected>Medium and Above</option>
+                                        <option value="high">High and Above</option>
+                                        <option value="critical">Critical Only</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="correlationLevel" class="form-label">Correlation Level</label>
+                                    <select class="form-select" id="correlationLevel">
+                                        <option value="basic">Basic</option>
+                                        <option value="advanced" selected>Advanced</option>
+                                        <option value="comprehensive">Comprehensive</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Alerts from Log Analysis -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bell"></i> Recent Analysis Alerts</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_alerts %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Alert Type</th>
+                                    <th>Severity</th>
+                                    <th>Source</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for alert in recent_alerts %}
+                                <tr>
+                                    <td>{{ alert.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                    <td>{{ alert.alert_type }}</td>
+                                    <td>
+                                        {% if alert.severity == 'critical' %}
+                                            <span class="badge bg-danger">Critical</span>
+                                        {% elif alert.severity == 'high' %}
+                                            <span class="badge bg-warning">High</span>
+                                        {% elif alert.severity == 'medium' %}
+                                            <span class="badge bg-info">Medium</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Low</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ alert.source }}</td>
+                                    <td>{{ alert.description[:50] }}...</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewAlert({{ alert.id }})">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" onclick="acknowledgeAlert({{ alert.id }})">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-bell-slash fa-2x text-muted mb-2"></i>
+                        <p class="text-muted mb-0">No recent analysis alerts</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.display-4 {
+    font-size: 2.5rem;
+    font-weight: 300;
+}
+
+.card:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+
+.display-6 {
+    font-size: 2rem;
+    font-weight: 300;
+}
+</style>
+
+<script>
+function refreshAnalysis() {
+    location.reload();
+}
+
+function viewAnalysisDetails(analysisId) {
+    // Implement analysis details view
+    alert('Viewing analysis details for ID: ' + analysisId);
+}
+
+function exportAnalysis(analysisId) {
+    // Implement analysis export
+    alert('Exporting analysis ID: ' + analysisId);
+}
+
+function configureSource(sourceId) {
+    // Implement source configuration
+    alert('Configuring source ID: ' + sourceId);
+}
+
+function viewSourceLogs(sourceId) {
+    // Implement source logs view
+    alert('Viewing logs for source ID: ' + sourceId);
+}
+
+function viewAlert(alertId) {
+    // Implement alert details view
+    alert('Viewing alert ID: ' + alertId);
+}
+
+function acknowledgeAlert(alertId) {
+    // Implement alert acknowledgment
+    alert('Acknowledging alert ID: ' + alertId);
+}
+
+// Auto-refresh every 60 seconds
+setInterval(refreshAnalysis, 60000);
+
+// Handle analysis settings form
+document.getElementById('analysisSettings').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Implement settings update
+    alert('Analysis settings updated');
+});
+</script>
+{% endblock %}

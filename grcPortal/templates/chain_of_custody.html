@@ -1,0 +1,266 @@
+<!-- templates/chain_of_custody.html -->
+{% extends "base.html" %}
+
+{% block title %}Chain of Custody - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="text-warning"><i class="fas fa-link"></i> Chain of Custody</h1>
+                <div>
+                    <button class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#addEvidenceModal">
+                        <i class="fas fa-plus"></i> Add Evidence
+                    </button>
+                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#generateReportModal">
+                        <i class="fas fa-file-alt"></i> Generate Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page Introduction and Functionality Overview -->
+            <div class="alert alert-warning mb-4">
+                <h5><i class="fas fa-info-circle"></i> Page Introduction</h5>
+                <p>The Chain of Custody module maintains the integrity and traceability of digital evidence throughout the investigation process. It ensures that evidence handling is documented, secure, and legally admissible.</p>
+
+                <h6><i class="fas fa-cogs"></i> How this page works:</h6>
+                <ul class="mb-0">
+                    <li><strong>Evidence Tracking:</strong> Displays all evidence items with their current status and location</li>
+                    <li><strong>Add Evidence Modal:</strong> Form for registering new evidence with initial custody details</li>
+                    <li><strong>Custody Transfers:</strong> Record transfers of evidence between custodians</li>
+                    <li><strong>Integrity Verification:</strong> Hash verification and tamper detection</li>
+                    <li><strong>Report Generation:</strong> Create comprehensive chain of custody reports</li>
+                    <li><strong>Audit Trail:</strong> Complete history of all evidence handling activities</li>
+                </ul>
+            </div>
+
+            <!-- Evidence Overview Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center border-warning">
+                        <div class="card-body">
+                            <h5 class="card-title text-warning">0</h5>
+                            <p class="card-text">Total Evidence Items</p>
+                            <small class="text-muted">Registered</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-success">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">0</h5>
+                            <p class="card-text">Secure Storage</p>
+                            <small class="text-muted">Currently stored</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-info">
+                        <div class="card-body">
+                            <h5 class="card-title text-info">0</h5>
+                            <p class="card-text">Active Transfers</p>
+                            <small class="text-muted">In transit</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-danger">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger">0</h5>
+                            <p class="card-text">Integrity Issues</p>
+                            <small class="text-muted">Hash mismatches</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evidence Table -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-list"></i> Evidence Inventory</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center py-5">
+                        <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Evidence Registered</h5>
+                        <p class="text-muted">No evidence items have been registered yet.</p>
+                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addEvidenceModal">
+                            <i class="fas fa-plus"></i> Register First Evidence
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custody Standards -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card border-warning">
+                        <div class="card-header bg-warning text-white">
+                            <h6 class="mb-0"><i class="fas fa-shield-alt"></i> Custody Standards</h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled small">
+                                <li class="mb-2"><i class="fas fa-user-check text-warning me-2"></i> Authorized personnel only</li>
+                                <li class="mb-2"><i class="fas fa-clock text-warning me-2"></i> Timestamp all transfers</li>
+                                <li class="mb-2"><i class="fas fa-hashtag text-warning me-2"></i> Hash verification</li>
+                                <li class="mb-2"><i class="fas fa-lock text-warning me-2"></i> Secure storage</li>
+                                <li class="mb-0"><i class="fas fa-file-signature text-warning me-2"></i> Digital signatures</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-info">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0"><i class="fas fa-gavel"></i> Legal Requirements</h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled small">
+                                <li class="mb-2"><i class="fas fa-balance-scale text-info me-2"></i> Admissible in court</li>
+                                <li class="mb-2"><i class="fas fa-book text-info me-2"></i> Documentation standards</li>
+                                <li class="mb-2"><i class="fas fa-user-tie text-info me-2"></i> Chain of command</li>
+                                <li class="mb-2"><i class="fas fa-search text-info me-2"></i> Audit trails</li>
+                                <li class="mb-0"><i class="fas fa-exclamation-triangle text-info me-2"></i> Tamper detection</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Evidence Modal -->
+<div class="modal fade" id="addEvidenceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Register New Evidence</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="add_evidence" value="1">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Evidence ID <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="evidence_id" id="evidence_id"
+                                       placeholder="Unique identifier" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Evidence Type <span class="text-danger">*</span></label>
+                                <select class="form-select" name="evidence_type" id="evidence_type" required>
+                                    <option value="">Select type...</option>
+                                    <option value="digital">Digital Files</option>
+                                    <option value="disk">Disk Images</option>
+                                    <option value="memory">Memory Dumps</option>
+                                    <option value="logs">System Logs</option>
+                                    <option value="physical">Physical Items</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Current Custodian <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="custodian" id="custodian"
+                                       placeholder="Name of current custodian" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Storage Location <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="location" id="location"
+                                       placeholder="Secure storage location" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" name="description" id="description" rows="3"
+                                  placeholder="Detailed description of the evidence" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">SHA-256 Hash</label>
+                        <input type="text" class="form-control" name="hash_value" id="hash_value"
+                               placeholder="Integrity hash value">
+                        <div class="form-text">Leave blank if not applicable</div>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Important:</strong> Ensure all information is accurate. This establishes the initial chain of custody.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-plus"></i> Register Evidence
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Generate Report Modal -->
+<div class="modal fade" id="generateReportModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Generate Chain of Custody Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="generate_report" value="1">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Report Type</label>
+                        <select class="form-select" name="report_type" id="report_type">
+                            <option value="full">Full Chain of Custody</option>
+                            <option value="evidence">Evidence Summary</option>
+                            <option value="transfers">Transfer History</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date Range</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="date" class="form-control" name="start_date" id="start_date">
+                                <small class="form-text">Start date</small>
+                            </div>
+                            <div class="col-6">
+                                <input type="date" class="form-control" name="end_date" id="end_date">
+                                <small class="form-text">End date</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        Report will include all evidence transfers, integrity checks, and custodian information.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-info">
+                        <i class="fas fa-file-alt"></i> Generate Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.badge {
+    font-size: 0.75em;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,478 @@
+{% extends "base.html" %}
+
+{% block title %}Incident Playbook - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title mb-0">
+                        <i class="fas fa-book text-primary me-2"></i>
+                        Incident Playbook
+                    </h2>
+                    <small class="text-muted">Comprehensive incident response procedures and playbooks</small>
+                </div>
+                <div class="card-body">
+                    <!-- Playbook Overview -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <h5><i class="fas fa-info-circle me-2"></i>Playbook Overview</h5>
+                                <p class="mb-0">This incident playbook provides structured procedures for handling security incidents from detection through resolution. It includes automated response actions, evidence collection, and recovery procedures.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Incident Response Phases -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title mb-0">
+                                        <i class="fas fa-sitemap text-warning me-2"></i>
+                                        Incident Response Phases
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Phase 1: Preparation -->
+                                    <div class="incident-phase mb-4">
+                                        <h5 class="text-primary">
+                                            <i class="fas fa-tools me-2"></i>
+                                            Phase 1: Preparation
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Team Readiness</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Incident Response Team:</strong> Designated roles and responsibilities
+                                                        <br><small class="text-muted">IR Lead, Technical Lead, Communications Lead</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Tools & Resources:</strong> Pre-configured IR toolkit
+                                                        <br><small class="text-muted">Forensics tools, network monitoring, backup systems</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Communication Plan:</strong> Escalation procedures
+                                                        <br><small class="text-muted">Internal notifications and external communications</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Technical Preparation</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Monitoring Systems:</strong> SIEM, IDS/IPS active
+                                                        <br><small class="text-muted">Real-time threat detection and alerting</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Backup Systems:</strong> Regular backups validated
+                                                        <br><small class="text-muted">Tested recovery procedures in place</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Documentation:</strong> IR plans and procedures
+                                                        <br><small class="text-muted">Updated contact lists and runbooks</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Phase 2: Identification -->
+                                    <div class="incident-phase mb-4">
+                                        <h5 class="text-info">
+                                            <i class="fas fa-search me-2"></i>
+                                            Phase 2: Identification (0-30 minutes)
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Incident Detection</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Alert Triage:</strong> Validate security alerts
+                                                        <br><small class="text-muted">Check for false positives and confirm threats</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Scope Assessment:</strong> Determine affected systems
+                                                        <br><small class="text-muted">Identify compromised assets and data exposure</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Impact Analysis:</strong> Assess business impact
+                                                        <br><small class="text-muted">Evaluate operational and financial consequences</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Initial Investigation</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Log Analysis:</strong> Review security logs
+                                                        <br><small class="text-muted">Correlate events and identify attack vectors</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Indicator Collection:</strong> Gather threat indicators
+                                                        <br><small class="text-muted">IP addresses, domains, file hashes, etc.</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Threat Intelligence:</strong> Check threat feeds
+                                                        <br><small class="text-muted">Validate against known threat patterns</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Phase 3: Containment -->
+                                    <div class="incident-phase mb-4">
+                                        <h5 class="text-warning">
+                                            <i class="fas fa-shield-alt me-2"></i>
+                                            Phase 3: Containment (15-60 minutes)
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Short-term Containment</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Network Isolation:</strong> Segment affected systems
+                                                        <br><small class="text-muted">Prevent lateral movement and data exfiltration</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Account Lockout:</strong> Disable compromised accounts
+                                                        <br><small class="text-muted">Prevent unauthorized access and escalation</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Service Shutdown:</strong> Stop affected services
+                                                        <br><small class="text-muted">Halt malicious activity and prevent spread</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Evidence Preservation</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Memory Capture:</strong> Preserve volatile data
+                                                        <br><small class="text-muted">Live memory forensics for analysis</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Disk Imaging:</strong> Create forensic copies
+                                                        <br><small class="text-muted">Maintain chain of custody for evidence</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Log Preservation:</strong> Secure audit logs
+                                                        <br><small class="text-muted">Prevent log tampering during investigation</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Phase 4: Eradication -->
+                                    <div class="incident-phase mb-4">
+                                        <h5 class="text-danger">
+                                            <i class="fas fa-bug me-2"></i>
+                                            Phase 4: Eradication (1-4 hours)
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Threat Removal</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Malware Removal:</strong> Eliminate malicious code
+                                                        <br><small class="text-muted">Use signature and behavioral detection</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Backdoor Removal:</strong> Close unauthorized access
+                                                        <br><small class="text-muted">Remove persistence mechanisms</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Configuration Reset:</strong> Restore secure state
+                                                        <br><small class="text-muted">Reset to known good configurations</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>System Cleanup</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Registry Cleanup:</strong> Remove malicious entries
+                                                        <br><small class="text-muted">Clean Windows registry and startup items</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>File System Scan:</strong> Remove infected files
+                                                        <br><small class="text-muted">Comprehensive malware scanning</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Verification Scans:</strong> Confirm eradication
+                                                        <br><small class="text-muted">Multiple scan passes to ensure clean state</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Phase 5: Recovery -->
+                                    <div class="incident-phase mb-4">
+                                        <h5 class="text-success">
+                                            <i class="fas fa-redo me-2"></i>
+                                            Phase 5: Recovery (4-24 hours)
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>System Restoration</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Backup Validation:</strong> Verify clean backups
+                                                        <br><small class="text-muted">Ensure restoration from uncompromised sources</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Gradual Restoration:</strong> Restore services incrementally
+                                                        <br><small class="text-muted">Monitor for signs of reinfection</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Functionality Testing:</strong> Validate system operation
+                                                        <br><small class="text-muted">Ensure business processes work correctly</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Monitoring & Validation</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Enhanced Monitoring:</strong> Increased surveillance
+                                                        <br><small class="text-muted">Monitor for similar attack patterns</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Security Testing:</strong> Validate controls
+                                                        <br><small class="text-muted">Penetration testing and vulnerability scans</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Performance Monitoring:</strong> Ensure stability
+                                                        <br><small class="text-muted">Monitor system performance post-recovery</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Phase 6: Lessons Learned -->
+                                    <div class="incident-phase">
+                                        <h5 class="text-secondary">
+                                            <i class="fas fa-graduation-cap me-2"></i>
+                                            Phase 6: Lessons Learned (Post-Incident)
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Incident Analysis</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Root Cause Analysis:</strong> Identify underlying causes
+                                                        <br><small class="text-muted">Determine what enabled the incident</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Timeline Reconstruction:</strong> Document sequence of events
+                                                        <br><small class="text-muted">Create detailed incident timeline</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Impact Assessment:</strong> Quantify total impact
+                                                        <br><small class="text-muted">Financial, operational, and reputational effects</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Process Improvement</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Control Enhancements:</strong> Implement new controls
+                                                        <br><small class="text-muted">Address identified vulnerabilities</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Procedure Updates:</strong> Improve IR processes
+                                                        <br><small class="text-muted">Update playbooks and response procedures</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Training & Awareness:</strong> Enhance team capabilities
+                                                        <br><small class="text-muted">Provide targeted security training</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Incident Response Checklist -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title mb-0">
+                                        <i class="fas fa-checklist text-success me-2"></i>
+                                        Incident Response Checklist
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h6>Preparation Phase</h6>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="ir_team_ready">
+                                                <label class="form-check-label" for="ir_team_ready">
+                                                    IR team assembled and briefed
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="tools_prepared">
+                                                <label class="form-check-label" for="tools_prepared">
+                                                    IR tools and access prepared
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="communication_plan">
+                                                <label class="form-check-label" for="communication_plan">
+                                                    Communication plan activated
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6>Response Phase</h6>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="incident_logged">
+                                                <label class="form-check-label" for="incident_logged">
+                                                    Incident logged and categorized
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="containment_complete">
+                                                <label class="form-check-label" for="containment_complete">
+                                                    Containment measures implemented
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="evidence_collected">
+                                                <label class="form-check-label" for="evidence_collected">
+                                                    Evidence collection initiated
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="eradication_complete">
+                                                <label class="form-check-label" for="eradication_complete">
+                                                    Threat eradication completed
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6>Recovery Phase</h6>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="systems_restored">
+                                                <label class="form-check-label" for="systems_restored">
+                                                    Systems restored to operation
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="monitoring_enhanced">
+                                                <label class="form-check-label" for="monitoring_enhanced">
+                                                    Enhanced monitoring implemented
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="lessons_documented">
+                                                <label class="form-check-label" for="lessons_documented">
+                                                    Lessons learned documented
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Related Playbooks -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title mb-0">
+                                        <i class="fas fa-file-alt text-info me-2"></i>
+                                        Related Playbooks & Procedures
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-shield-alt fa-3x text-warning mb-3"></i>
+                                                    <h6>Containment Playbook</h6>
+                                                    <p class="text-muted small">Automated containment procedures</p>
+                                                    <a href="{{ url_for('containment_playbook') }}" class="btn btn-outline-warning btn-sm">View Playbook</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-save fa-3x text-success mb-3"></i>
+                                                    <h6>Evidence Preservation</h6>
+                                                    <p class="text-muted small">Digital evidence handling procedures</p>
+                                                    <a href="{{ url_for('evidence_preservation') }}" class="btn btn-outline-success btn-sm">View Guide</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-network-wired fa-3x text-primary mb-3"></i>
+                                                    <h6>Network Isolation</h6>
+                                                    <p class="text-muted small">Network segmentation procedures</p>
+                                                    <a href="{{ url_for('network_isolation') }}" class="btn btn-outline-primary btn-sm">View Guide</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-redo fa-3x text-info mb-3"></i>
+                                                    <h6>Post-Incident Recovery</h6>
+                                                    <p class="text-muted small">System recovery and validation</p>
+                                                    <a href="{{ url_for('post_incident_procedures') }}" class="btn btn-outline-info btn-sm">View Procedures</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Interactive checklist functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.form-check-input');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const label = this.nextElementSibling;
+            if (this.checked) {
+                label.style.textDecoration = 'line-through';
+                label.style.color = '#6c757d';
+            } else {
+                label.style.textDecoration = 'none';
+                label.style.color = '';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

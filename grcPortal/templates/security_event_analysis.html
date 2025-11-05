@@ -190,6 +190,348 @@
                                 </table>
                             </div>
                         </div>
+            
+                        <!-- Incident Classification Section -->
+                        {% if incident_classification %}
+                        <div class="card mb-4">
+                            <div class="card-header bg-danger">
+                                <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Security Incident Classification</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <h6 class="text-danger mb-3">Severity Matrix Used</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-bordered">
+                                                <thead class="table-dark">
+                                                    <tr>
+                                                        <th>Severity Level</th>
+                                                        <th>Description</th>
+                                                        <th>Risk Score Range</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for severity, desc in incident_classification.severity_matrix_used.items() %}
+                                                    <tr>
+                                                        <td>
+                                                            <span class="badge bg-{{ 'danger' if severity == 'CRITICAL' else 'warning' if severity == 'HIGH' else 'info' if severity == 'MEDIUM' else 'success' }}">
+                                                                {{ severity }}
+                                                            </span>
+                                                        </td>
+                                                        <td>{{ desc }}</td>
+                                                        <td>
+                                                            {% if severity == 'CRITICAL' %}19-25
+                                                            {% elif severity == 'HIGH' %}13-18
+                                                            {% elif severity == 'MEDIUM' %}7-12
+                                                            {% else %}1-6{% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-primary mb-3">Classification Summary</h6>
+                                        <div class="card border-primary">
+                                            <div class="card-body">
+                                                <div class="row text-center">
+                                                    <div class="col-6">
+                                                        <div class="display-6 text-primary">{{ incident_classification.summary.total_incidents_classified }}</div>
+                                                        <small class="text-muted">Incidents Classified</small>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="display-6 text-danger">{{ "%.1f"|format(incident_classification.summary.average_risk_score) }}</div>
+                                                        <small class="text-muted">Avg Risk Score</small>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="mb-2">
+                                                    <strong>Highest Risk:</strong> {{ incident_classification.summary.highest_risk_incident }}
+                                                </div>
+                                                <div class="mb-2">
+                                                    <strong>Critical Incidents:</strong>
+                                                    <span class="badge bg-danger">{{ incident_classification.summary.severity_distribution.CRITICAL }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% for incident in incident_classification.classified_incidents %}
+                                <div class="card mb-3 border-{{ 'danger' if incident.severity_classification.severity_level == 'CRITICAL' else 'warning' if incident.severity_classification.severity_level == 'HIGH' else 'info' }}">
+                                    <div class="card-header bg-{{ 'danger' if incident.severity_classification.severity_level == 'CRITICAL' else 'warning' if incident.severity_classification.severity_level == 'HIGH' else 'info' }} text-white">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-shield-alt"></i>
+                                            {{ incident.incident_id }}: {{ incident.incident_type }}
+                                            <span class="badge bg-light text-dark ms-2">{{ incident.severity_classification.severity_level }}</span>
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h6 class="text-primary mb-3">Severity Classification</h6>
+                                                <div class="mb-2">
+                                                    <strong>Impact:</strong> {{ incident.severity_classification.impact_assessment }}/5
+                                                    <div class="progress mb-2" style="height: 8px;">
+                                                        <div class="progress-bar bg-warning" style="width: {{ (incident.severity_classification.impact_assessment / 5) * 100 }}%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <strong>Likelihood:</strong> {{ incident.severity_classification.likelihood_assessment }}/5
+                                                    <div class="progress mb-2" style="height: 8px;">
+                                                        <div class="progress-bar bg-info" style="width: {{ (incident.severity_classification.likelihood_assessment / 5) * 100 }}%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <strong>Risk Score:</strong>
+                                                    <span class="badge bg-{{ 'danger' if incident.severity_classification.risk_score > 18 else 'warning' if incident.severity_classification.risk_score > 12 else 'info' }}">
+                                                        {{ incident.severity_classification.risk_score }}/25
+                                                    </span>
+                                                </div>
+                                                <div class="small text-muted">{{ incident.severity_classification.severity_reasoning }}</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6 class="text-success mb-3">Analysis Methodology</h6>
+                                                <div class="mb-2">
+                                                    <strong>Data Sources:</strong>
+                                                    <ul class="small mb-2">
+                                                        {% for source in incident.analysis_methodology.data_sources %}
+                                                        <li>{{ source }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <strong>Detection Techniques:</strong>
+                                                    <ul class="small mb-2">
+                                                        {% for technique in incident.analysis_methodology.detection_techniques %}
+                                                        <li>{{ technique }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6 class="text-danger mb-3">Security Implications</h6>
+                                                <div class="mb-2">
+                                                    <strong>Business Impact:</strong>
+                                                    <div class="small mb-2">{{ incident.security_implications.business_impact }}</div>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <strong>Technical Risks:</strong>
+                                                    <ul class="small mb-2">
+                                                        {% for risk in incident.security_implications.technical_risks[:3] %}
+                                                        <li>{{ risk }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <strong>Recommended Actions:</strong>
+                                                    <ul class="small mb-2">
+                                                        {% for action in incident.security_implications.recommended_mitigations[:3] %}
+                                                        <li>{{ action }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="text-info mb-2">Evidence Collected</h6>
+                                                <ul class="small">
+                                                    {% for evidence in incident.evidence_collected %}
+                                                    <li>{{ evidence }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6 class="text-warning mb-2">Compliance Implications</h6>
+                                                <ul class="small">
+                                                    {% for implication in incident.security_implications.compliance_implications[:3] %}
+                                                    <li>{{ implication }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+                                <div class="mt-4">
+                                    <h6 class="text-secondary mb-3">Overall Classification Methodology</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Framework:</strong> {{ incident_classification.overall_methodology.classification_framework }}<br>
+                                            <strong>Risk Formula:</strong> {{ incident_classification.overall_methodology.risk_score_formula }}<br>
+                                            <strong>Validation:</strong> Multi-source correlation and impact assessment
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Severity Mapping:</strong>
+                                            <ul class="small mb-0">
+                                                {% for range_val, level in incident_classification.overall_methodology.severity_mapping.items() %}
+                                                <li>{{ range_val }}: {{ level }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Suspicious Login Investigation Section -->
+                        {% if suspicious_login_investigation %}
+                        <div class="card mb-4">
+                            <div class="card-header bg-warning">
+                                <h5 class="mb-0"><i class="fas fa-user-secret"></i> Suspicious Login Investigation</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="text-warning mb-3">Investigation Summary</h6>
+                                        <div class="mb-3">
+                                            <strong>Suspicious Events Detected:</strong> {{ suspicious_login_investigation.suspicious_events|length }}
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Log Correlations:</strong> {{ suspicious_login_investigation.log_correlations|length }}
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Alert Validation:</strong>
+                                            <span class="badge bg-{{ 'success' if suspicious_login_investigation.alert_validation.validated else 'danger' }}">
+                                                {{ 'Validated' if suspicious_login_investigation.alert_validation.validated else 'Not Validated' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-danger mb-3">Security Implications</h6>
+                                        <div class="alert alert-{{ 'danger' if suspicious_login_investigation.security_implications.risk_level == 'Critical' else 'warning' if suspicious_login_investigation.security_implications.risk_level == 'High' else 'info' }}">
+                                            <strong>Risk Level:</strong> {{ suspicious_login_investigation.security_implications.risk_level }}<br>
+                                            <strong>Potential Impact:</strong> {{ suspicious_login_investigation.security_implications.potential_impact }}<br>
+                                            <strong>Recommended Actions:</strong>
+                                            <ul class="mb-0 mt-2">
+                                                {% for action in suspicious_login_investigation.security_implications.recommended_actions %}
+                                                <li>{{ action }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                {% if suspicious_login_investigation.suspicious_events %}
+                                <div class="mt-4">
+                                    <h6 class="text-primary mb-3">Suspicious Login Events</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-striped">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Timestamp</th>
+                                                    <th>Source</th>
+                                                    <th>Event Type</th>
+                                                    <th>User</th>
+                                                    <th>IP Address</th>
+                                                    <th>Risk Score</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for event in suspicious_login_investigation.suspicious_events %}
+                                                <tr>
+                                                    <td>{{ event.timestamp.strftime('%Y-%m-%d %H:%M:%S') if event.timestamp else 'N/A' }}</td>
+                                                    <td>{{ event.source }}</td>
+                                                    <td>{{ event.event_type }}</td>
+                                                    <td>{{ event.user }}</td>
+                                                    <td>{{ event.ip_address }}</td>
+                                                    <td>
+                                                        <span class="badge bg-{{ 'danger' if event.risk_score > 80 else 'warning' if event.risk_score > 60 else 'info' }}">
+                                                            {{ event.risk_score }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                {% endif %}
+            
+                                {% if suspicious_login_investigation.log_correlations %}
+                                <div class="mt-4">
+                                    <h6 class="text-success mb-3">Log Correlations (Host vs Parrot OS)</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-striped">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Correlation Type</th>
+                                                    <th>Host Event</th>
+                                                    <th>Parrot OS Event</th>
+                                                    <th>Correlation Strength</th>
+                                                    <th>Time Difference</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for correlation in suspicious_login_investigation.log_correlations %}
+                                                <tr>
+                                                    <td>{{ correlation.correlation_type }}</td>
+                                                    <td>{{ correlation.host_event[:50] }}...</td>
+                                                    <td>{{ correlation.parrot_event[:50] }}...</td>
+                                                    <td>
+                                                        <div class="progress" style="height: 15px;">
+                                                            <div class="progress-bar bg-success" style="width: {{ correlation.strength * 100 }}%">
+                                                                {{ "%.0f"|format(correlation.strength * 100) }}%
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ correlation.time_diff_seconds }}s</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                {% endif %}
+            
+                                {% if suspicious_login_investigation.timeline %}
+                                <div class="mt-4">
+                                    <h6 class="text-info mb-3">Event Timeline</h6>
+                                    <div class="timeline">
+                                        {% for event in suspicious_login_investigation.timeline %}
+                                        <div class="timeline-item">
+                                            <div class="timeline-marker bg-{{ 'danger' if event.severity == 'critical' else 'warning' if event.severity == 'high' else 'info' }}"></div>
+                                            <div class="timeline-content">
+                                                <h6>{{ event.timestamp.strftime('%H:%M:%S') }} - {{ event.description }}</h6>
+                                                <small class="text-muted">{{ event.source }} | Severity: {{ event.severity }}</small>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+            
+                                <div class="mt-4">
+                                    <h6 class="text-secondary mb-3">Investigation Methodology</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Analysis Methods Used:</strong>
+                                            <ul>
+                                                <li>Pattern matching for suspicious login patterns</li>
+                                                <li>Cross-system log correlation (Host vs Parrot OS)</li>
+                                                <li>Behavioral analysis of authentication events</li>
+                                                <li>Risk scoring based on multiple indicators</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Data Sources:</strong>
+                                            <ul>
+                                                <li>Host system authentication logs</li>
+                                                <li>Parrot OS security logs</li>
+                                                <li>Wazuh agent logs</li>
+                                                <li>Network traffic analysis</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -406,6 +748,48 @@
 
 .badge {
     font-size: 0.75em;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border-left: 3px solid #007bff;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    color: #495057;
 }
 </style>
 

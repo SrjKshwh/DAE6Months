@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}Incident Tracking - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title mb-0">
+                        <i class="fas fa-clock text-primary me-2"></i>
+                        Incident Tracking
+                    </h2>
+                    <small class="text-muted">Monitor and track incident response progress</small>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h5><i class="fas fa-info-circle me-2"></i>Incident Tracking Overview</h5>
+                        <p class="mb-0">This page provides real-time tracking of incident response activities, timelines, and progress through the incident response lifecycle.</p>
+                    </div>
+
+                    <!-- Incident Timeline -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title mb-0">
+                                        <i class="fas fa-history text-warning me-2"></i>
+                                        Incident Response Timeline
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="timeline">
+                                        <div class="timeline-item">
+                                            <div class="timeline-marker bg-primary"></div>
+                                            <div class="timeline-content">
+                                                <h6 class="timeline-title">Incident Detected</h6>
+                                                <p class="timeline-text">Initial alert received and incident confirmed</p>
+                                                <small class="text-muted">Time: T+0 minutes</small>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-marker bg-info"></div>
+                                            <div class="timeline-content">
+                                                <h6 class="timeline-title">Investigation Started</h6>
+                                                <p class="timeline-text">IR team assembled, initial assessment begun</p>
+                                                <small class="text-muted">Time: T+15 minutes</small>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-marker bg-warning"></div>
+                                            <div class="timeline-content">
+                                                <h6 class="timeline-title">Containment Initiated</h6>
+                                                <p class="timeline-text">Affected systems isolated, threat contained</p>
+                                                <small class="text-muted">Time: T+30 minutes</small>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-marker bg-danger"></div>
+                                            <div class="timeline-content">
+                                                <h6 class="timeline-title">Eradication in Progress</h6>
+                                                <p class="timeline-text">Malware removal and system cleanup</p>
+                                                <small class="text-muted">Time: T+2 hours</small>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-marker bg-success"></div>
+                                            <div class="timeline-content">
+                                                <h6 class="timeline-title">Recovery Complete</h6>
+                                                <p class="timeline-text">Systems restored, monitoring enhanced</p>
+                                                <small class="text-muted">Time: T+8 hours</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Status Dashboard -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <div class="status-indicator active"></div>
+                                    <h5 class="card-title">Detection</h5>
+                                    <p class="text-success">Complete</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <div class="status-indicator active"></div>
+                                    <h5 class="card-title">Investigation</h5>
+                                    <p class="text-warning">In Progress</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <div class="status-indicator"></div>
+                                    <h5 class="card-title">Containment</h5>
+                                    <p class="text-muted">Pending</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <div class="status-indicator"></div>
+                                    <h5 class="card-title">Recovery</h5>
+                                    <p class="text-muted">Pending</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Items -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title mb-0">
+                                        <i class="fas fa-tasks text-success me-2"></i>
+                                        Current Action Items
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="action-item mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" class="form-check-input me-3" id="action1">
+                                            <div>
+                                                <strong>Assemble IR Team</strong>
+                                                <br><small class="text-muted">Contact incident response team members and establish communication channels</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="action-item mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" class="form-check-input me-3" id="action2">
+                                            <div>
+                                                <strong>Collect Initial Evidence</strong>
+                                                <br><small class="text-muted">Gather logs, screenshots, and system information from affected systems</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="action-item mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" class="form-check-input me-3" id="action3">
+                                            <div>
+                                                <strong>Assess Impact</strong>
+                                                <br><small class="text-muted">Determine scope of compromise and potential business impact</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="action-item">
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" class="form-check-input me-3" id="action4">
+                                            <div>
+                                                <strong>Implement Containment</strong>
+                                                <br><small class="text-muted">Isolate affected systems and prevent further damage</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #dee2e6;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #007bff;
+}
+
+.timeline-title {
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.timeline-text {
+    margin-bottom: 5px;
+    color: #6c757d;
+}
+
+.status-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #6c757d;
+    margin: 0 auto 10px;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px #dee2e6;
+}
+
+.status-indicator.active {
+    background: #28a745;
+    box-shadow: 0 0 0 2px #28a745;
+}
+
+.action-item {
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    background: #fff;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.action-item input[type="checkbox"]');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const actionItem = this.closest('.action-item');
+            if (this.checked) {
+                actionItem.style.backgroundColor = '#d4edda';
+                actionItem.style.borderColor = '#c3e6cb';
+            } else {
+                actionItem.style.backgroundColor = '#fff';
+                actionItem.style.borderColor = '#dee2e6';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Volatility Setup - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-memory me-2"></i>Volatility Memory Analysis Framework Setup</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Volatility is an advanced memory forensics framework for analyzing RAM dumps from Windows, Linux, and macOS systems.
+                    </div>
+
+                    <!-- Installation Section -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-download me-2"></i>Installation</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Git Installation:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>git clone https://github.com/volatilityfoundation/volatility3.git<br>cd volatility3<br>pip install -r requirements.txt</code>
+                            </div>
+
+                            <h5>Alternative Installation:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>pip install volatility3</code>
+                            </div>
+
+                            <h5>Dependencies:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>pip install yara-python pefile capstone</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Basic Usage -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-play me-2"></i>Basic Usage</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Analyze Memory Dump:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>python vol.py -f memory.dmp windows.info</code>
+                            </div>
+
+                            <h5>List Available Plugins:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>python vol.py --help</code>
+                            </div>
+
+                            <h5>Common Plugins:</h5>
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item"><code>windows.pslist</code> - List running processes</li>
+                                <li class="list-group-item"><code>windows.dlllist</code> - List loaded DLLs</li>
+                                <li class="list-group-item"><code>windows.netscan</code> - Network connections</li>
+                                <li class="list-group-item"><code>windows.filescan</code> - File objects</li>
+                                <li class="list-group-item"><code>windows.cmdline</code> - Process command lines</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Memory Acquisition -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-microchip me-2"></i>Memory Acquisition</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Windows Memory Acquisition:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code># Using WinPMEM<br>winpmem.exe -o memory.dmp<br><br># Using DumpIt<br>DumpIt.exe /Q /N /J</code>
+                            </div>
+
+                            <h5>Linux Memory Acquisition:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code># Using LiME<br>insmod lime.ko "path=/tmp/mem.dmp format=lime"<br><br># Using AVML<br>avml /tmp/memory.dmp</code>
+                            </div>
+
+                            <h5>macOS Memory Acquisition:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code># Using Mac Memory Reader<br>sudo macmr memory.dmp</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Forensic Analysis -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-search me-2"></i>Forensic Analysis</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Malware Detection:</h5>
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item">Hidden process detection</li>
+                                <li class="list-group-item">Rootkit identification</li>
+                                <li class="list-group-item">Injected code analysis</li>
+                                <li class="list-group-item">Malicious driver enumeration</li>
+                            </ul>
+
+                            <h5>Timeline Analysis:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>python vol.py -f memory.dmp windows.timeliner</code>
+                            </div>
+
+                            <h5>Registry Analysis:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>python vol.py -f memory.dmp windows.registry.hivelist<br>python vol.py -f memory.dmp windows.registry.userassist</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evidence Handling -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-file-alt me-2"></i>Evidence Handling</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Chain of Custody:</h5>
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item">Generate SHA256 hash of memory dump</li>
+                                <li class="list-group-item">Document acquisition method and tools used</li>
+                                <li class="list-group-item">Record system information and timestamps</li>
+                                <li class="list-group-item">Maintain secure storage of evidence</li>
+                            </ul>
+
+                            <h5>Hash Verification:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>sha256sum memory.dmp > memory.dmp.sha256</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Integration -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-link me-2"></i>Integration with IR Environment</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>Volatility integrates with the incident response environment:</p>
+                            <ul class="list-group">
+                                <li class="list-group-item">Memory analysis during live incident response</li>
+                                <li class="list-group-item">Correlation with network traffic from Wireshark</li>
+                                <li class="list-group-item">Process analysis complementing Wazuh monitoring</li>
+                                <li class="list-group-item">Evidence collection for digital forensics</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

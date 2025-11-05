@@ -1,0 +1,579 @@
+{% extends "base.html" %}
+
+{% block title %}Recovery Validation - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-check-circle"></i> Recovery Validation</h1>
+                    <p class="text-muted">Validate system recovery procedures and ensure operational integrity</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="runValidationTests()">
+                        <i class="fas fa-play"></i> Run Tests
+                    </button>
+                    <button class="btn btn-outline-success" onclick="generateValidationReport()">
+                        <i class="fas fa-file-alt"></i> Validation Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page Introduction -->
+            <div class="alert alert-info mb-4">
+                <h6><i class="fas fa-info-circle"></i> About Recovery Validation</h6>
+                <p>This page provides comprehensive validation procedures for system recovery operations. It includes automated testing, manual verification checklists, and performance validation to ensure recovered systems meet operational requirements.</p>
+                <p><strong>Key Components:</strong> System integrity checks, functionality testing, performance validation, and compliance verification for post-recovery systems.</p>
+            </div>
+
+            <!-- Validation Status Overview -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Systems Validated</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">8/8</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-server fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Tests Passed</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">96%</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-check-circle fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Average Validation Time</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-info">2.3 hrs</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clock fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        RTO/RPO Compliance</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">100%</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-trophy fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Validation Frameworks -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-clipboard-check"></i> Recovery Validation Frameworks
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>System Integrity Validation</h5>
+                            <div class="accordion" id="integrityAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#integrity1">
+                                            Operating System Validation
+                                        </button>
+                                    </h2>
+                                    <div id="integrity1" class="accordion-collapse collapse show" data-bs-parent="#integrityAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Boot Process Checks</h6>
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>System boots without errors</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>All critical services start automatically</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Kernel modules load correctly</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>No unauthorized boot processes detected</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>System logs show clean startup</li>
+                                            </ul>
+
+                                            <h6>Core System Files</h6>
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>System binaries integrity verified</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Configuration files restored correctly</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>File permissions set appropriately</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>No unauthorized modifications</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#integrity2">
+                                            Application Validation
+                                        </button>
+                                    </h2>
+                                    <div id="integrity2" class="accordion-collapse collapse" data-bs-parent="#integrityAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Application Functionality</h6>
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Applications start without errors</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Database connections established</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>User authentication working</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Data integrity verified</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Application logs show normal operation</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Network & Security Validation</h5>
+                            <div class="accordion" id="networkAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#network1">
+                                            Network Configuration
+                                        </button>
+                                    </h2>
+                                    <div id="network1" class="accordion-collapse collapse show" data-bs-parent="#networkAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Connectivity Tests</h6>
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>IP configuration correct</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>DNS resolution working</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Routing table intact</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Network interfaces functional</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Firewall rules applied</li>
+                                            </ul>
+
+                                            <h6>Service Accessibility</h6>
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Internal network access verified</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>External connectivity (controlled)</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Service ports responding</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Load balancer configuration correct</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#network2">
+                                            Security Validation
+                                        </button>
+                                    </h2>
+                                    <div id="network2" class="accordion-collapse collapse" data-bs-parent="#networkAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Security Controls</h6>
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Antivirus/EDR operational</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Firewall rules active</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Access controls functioning</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Encryption enabled where required</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>No security vulnerabilities detected</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Automated Testing Suite -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-info">
+                        <i class="fas fa-robot"></i> Automated Validation Testing Suite
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Test Execution Results</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Test Category</th>
+                                            <th>Test Name</th>
+                                            <th>Status</th>
+                                            <th>Duration</th>
+                                            <th>Last Run</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="badge bg-primary">System</span></td>
+                                            <td>OS Integrity Check</td>
+                                            <td><span class="badge bg-success">PASSED</span></td>
+                                            <td>2.3s</td>
+                                            <td>2024-01-15 16:45</td>
+                                            <td><button class="btn btn-sm btn-outline-primary" onclick="rerunTest('os_integrity')">Re-run</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge bg-info">Network</span></td>
+                                            <td>Connectivity Test</td>
+                                            <td><span class="badge bg-success">PASSED</span></td>
+                                            <td>1.8s</td>
+                                            <td>2024-01-15 16:45</td>
+                                            <td><button class="btn btn-sm btn-outline-primary" onclick="rerunTest('connectivity')">Re-run</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge bg-warning">Security</span></td>
+                                            <td>Malware Scan</td>
+                                            <td><span class="badge bg-success">PASSED</span></td>
+                                            <td>45.2s</td>
+                                            <td>2024-01-15 16:40</td>
+                                            <td><button class="btn btn-sm btn-outline-primary" onclick="rerunTest('malware_scan')">Re-run</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge bg-success">Application</span></td>
+                                            <td>Service Availability</td>
+                                            <td><span class="badge bg-success">PASSED</span></td>
+                                            <td>5.1s</td>
+                                            <td>2024-01-15 16:45</td>
+                                            <td><button class="btn btn-sm btn-outline-primary" onclick="rerunTest('service_check')">Re-run</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge bg-secondary">Performance</span></td>
+                                            <td>Load Testing</td>
+                                            <td><span class="badge bg-warning">WARNING</span></td>
+                                            <td>120.5s</td>
+                                            <td>2024-01-15 16:30</td>
+                                            <td><button class="btn btn-sm btn-outline-primary" onclick="rerunTest('load_test')">Re-run</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Test Statistics</h5>
+                            <div class="card border-info">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Overall Success Rate:</span>
+                                            <span class="badge bg-success">96%</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Total Tests Run:</span>
+                                            <span class="badge bg-info">247</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Tests Passed:</span>
+                                            <span class="badge bg-success">237</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Tests Failed:</span>
+                                            <span class="badge bg-danger">3</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Tests Warning:</span>
+                                            <span class="badge bg-warning">7</span>
+                                        </div>
+                                    </div>
+
+                                    <h6>Performance Metrics</h6>
+                                    <div class="small">
+                                        <strong>Average Test Time:</strong> 15.2 seconds<br>
+                                        <strong>Fastest Test:</strong> 1.2 seconds<br>
+                                        <strong>Slowest Test:</strong> 120.5 seconds<br>
+                                        <strong>Total Suite Time:</strong> 62 minutes
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recovery Validation Checklist -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-warning">
+                        <i class="fas fa-tasks"></i> Recovery Validation Checklist
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Pre-Production Validation</h5>
+                            <div class="checklist-group">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="check1" checked>
+                                    <label class="form-check-label small" for="check1">
+                                        System backup integrity verified
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="check2" checked>
+                                    <label class="form-check-label small" for="check2">
+                                        Configuration files validated
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="check3" checked>
+                                    <label class="form-check-label small" for="check3">
+                                        Security policies applied
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="check4" checked>
+                                    <label class="form-check-label small" for="check4">
+                                        User access controls tested
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="check5" checked>
+                                    <label class="form-check-label small" for="check5">
+                                        Network connectivity confirmed
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Post-Recovery Validation</h5>
+                            <div class="checklist-group">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="check6" checked>
+                                    <label class="form-check-label small" for="check6">
+                                        Application functionality verified
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="check7" checked>
+                                    <label class="form-check-label small" for="check7">
+                                        Data integrity confirmed
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="check8" checked>
+                                    <label class="form-check-label small" for="check8">
+                                        Performance benchmarks met
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="check9" checked>
+                                    <label class="form-check-label small" for="check9">
+                                        Monitoring systems operational
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="check10" checked>
+                                    <label class="form-check-label small" for="check10">
+                                        Business continuity confirmed
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Validation -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">
+                        <i class="fas fa-chart-line"></i> Performance Validation & Benchmarks
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Recovery Time Objectives (RTO) Validation</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card border-primary mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title">System Recovery Time</h6>
+                                            <div class="mb-2">
+                                                <span class="badge bg-success">ACHIEVED</span>
+                                            </div>
+                                            <div class="small">
+                                                <strong>Actual RTO:</strong> 4.5 hours<br>
+                                                <strong>Target RTO:</strong> 6 hours<br>
+                                                <strong>Variance:</strong> -25% (Better than target)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-info mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Data Recovery Point</h6>
+                                            <div class="mb-2">
+                                                <span class="badge bg-success">ACHIEVED</span>
+                                            </div>
+                                            <div class="small">
+                                                <strong>Actual RPO:</strong> 30 minutes<br>
+                                                <strong>Target RPO:</strong> 1 hour<br>
+                                                <strong>Variance:</strong> -50% (Better than target)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6>Performance Benchmarks</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th>Pre-Incident</th>
+                                            <th>Post-Recovery</th>
+                                            <th>Target</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Application Response Time</td>
+                                            <td>250ms</td>
+                                            <td>245ms</td>
+                                            <td><500ms</td>
+                                            <td><span class="badge bg-success">PASS</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Database Query Time</td>
+                                            <td>45ms</td>
+                                            <td>42ms</td>
+                                            <td><100ms</td>
+                                            <td><span class="badge bg-success">PASS</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Network Latency</td>
+                                            <td>2.1ms</td>
+                                            <td>2.3ms</td>
+                                            <td><5ms</td>
+                                            <td><span class="badge bg-success">PASS</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>CPU Utilization</td>
+                                            <td>35%</td>
+                                            <td>38%</td>
+                                            <td><80%</td>
+                                            <td><span class="badge bg-success">PASS</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Memory Usage</td>
+                                            <td>2.1GB</td>
+                                            <td>2.3GB</td>
+                                            <td><4GB</td>
+                                            <td><span class="badge bg-success">PASS</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Validation Summary</h5>
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <h6>Overall Assessment</h6>
+                                    <div class="alert alert-success small mb-3">
+                                        <strong>Recovery validation completed successfully!</strong><br>
+                                        All critical systems validated and operational.
+                                    </div>
+
+                                    <h6>Key Achievements</h6>
+                                    <ul class="small mb-3">
+                                        <li>RTO achieved 25% under target</li>
+                                        <li>RPO achieved 50% under target</li>
+                                        <li>96% test success rate</li>
+                                        <li>All performance benchmarks met</li>
+                                        <li>Zero data loss confirmed</li>
+                                    </ul>
+
+                                    <h6>Recommendations</h6>
+                                    <ul class="small mb-0">
+                                        <li>Monitor system for 72 hours</li>
+                                        <li>Schedule regular validation tests</li>
+                                        <li>Update recovery procedures</li>
+                                        <li>Conduct lessons learned session</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.checklist-group .form-check-label {
+    font-size: 0.85rem;
+}
+
+.table th {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.table td {
+    font-size: 0.85rem;
+}
+</style>
+
+<script>
+function runValidationTests() {
+    if (confirm('Run complete validation test suite? This may take several minutes.')) {
+        alert('Validation tests initiated...');
+        // Implement test execution logic
+    }
+}
+
+function generateValidationReport() {
+    alert('Generating validation report...');
+    // Implement report generation logic
+}
+
+function rerunTest(testId) {
+    alert(`Re-running test: ${testId}`);
+    // Implement individual test re-run logic
+}
+</script>
+{% endblock %}

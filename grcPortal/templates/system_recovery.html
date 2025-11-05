@@ -1,0 +1,582 @@
+{% extends "base.html" %}
+
+{% block title %}System Recovery - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-redo"></i> System Recovery</h1>
+                    <p class="text-muted">Comprehensive system recovery procedures and validation</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="initiateRecovery()">
+                        <i class="fas fa-play"></i> Initiate Recovery
+                    </button>
+                    <button class="btn btn-outline-success" onclick="validateRecovery()">
+                        <i class="fas fa-check-circle"></i> Validate Recovery
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recovery Overview -->
+            <div class="alert alert-info mb-4">
+                <h6><i class="fas fa-info-circle"></i> System Recovery Overview</h6>
+                <p>This page provides comprehensive system recovery procedures following incident response activities. It includes automated recovery workflows, validation checklists, and documentation for business continuity and disaster recovery (BCP/DR) scenarios.</p>
+                <p><strong>Key Features:</strong> Automated recovery scripts, system validation tests, backup restoration procedures, and recovery time tracking.</p>
+            </div>
+
+            <!-- Recovery Status Dashboard -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Recovery Progress</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-warning">In Progress</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-cog fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Systems Restored</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">2/5</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-server fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        RTO Status</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Within Target</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clock fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Data Integrity</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Verified</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-shield-alt fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Automated Recovery Procedures -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-robot"></i> Automated Recovery Procedures
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Recovery Workflow Execution</h5>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 1: System Assessment</h6>
+                                        <p><strong>Automated Actions:</strong> System health checks, backup integrity verification, dependency mapping</p>
+                                        <code>recovery_assess.py --system=all --verify-backups</code><br>
+                                        <small class="text-muted">Duration: 15 minutes | Status: <span class="badge bg-success">Completed</span></small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 2: Clean Environment Setup</h6>
+                                        <p><strong>Automated Actions:</strong> Fresh OS deployment, security baseline configuration, network isolation</p>
+                                        <code>recovery_deploy.py --environment=production --security-baseline</code><br>
+                                        <small class="text-muted">Duration: 45 minutes | Status: <span class="badge bg-warning">In Progress</span></small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 3: Data Restoration</h6>
+                                        <p><strong>Automated Actions:</strong> Incremental backup restoration, data integrity validation, permission restoration</p>
+                                        <code>recovery_restore.py --backup-set=latest --validate-integrity</code><br>
+                                        <small class="text-muted">Duration: 30 minutes | Status: <span class="badge bg-secondary">Pending</span></small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 4: Service Validation</h6>
+                                        <p><strong>Automated Actions:</strong> Application startup, connectivity testing, performance validation</p>
+                                        <code>recovery_validate.py --services=all --performance-test</code><br>
+                                        <small class="text-muted">Duration: 20 minutes | Status: <span class="badge bg-secondary">Pending</span></small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-secondary"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 5: Final Verification</h6>
+                                        <p><strong>Automated Actions:</strong> End-to-end testing, compliance checks, documentation generation</p>
+                                        <code>recovery_verify.py --comprehensive --generate-report</code><br>
+                                        <small class="text-muted">Duration: 10 minutes | Status: <span class="badge bg-secondary">Pending</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Recovery Scripts Status</h5>
+                            <div class="card border-primary">
+                                <div class="card-body">
+                                    <h6>Automated Scripts</h6>
+                                    <ul class="list-group list-group-flush small mb-3">
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>System Assessment</span>
+                                            <span class="badge bg-success">✓</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>Environment Setup</span>
+                                            <span class="badge bg-warning">⟳</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>Data Restoration</span>
+                                            <span class="badge bg-secondary">○</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>Service Validation</span>
+                                            <span class="badge bg-secondary">○</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>Final Verification</span>
+                                            <span class="badge bg-secondary">○</span>
+                                        </li>
+                                    </ul>
+
+                                    <h6>Recovery Metrics</h6>
+                                    <div class="small">
+                                        <strong>Estimated Completion:</strong> 2 hours<br>
+                                        <strong>Data to Restore:</strong> 500 GB<br>
+                                        <strong>Systems Affected:</strong> 5 servers<br>
+                                        <strong>RTO Target:</strong> 4 hours<br>
+                                        <strong>RPO Target:</strong> 1 hour
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backup Restoration Procedures -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">
+                        <i class="fas fa-database"></i> Backup Restoration Procedures
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Backup Sources & Priorities</h5>
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <h6>Critical Systems</h6>
+                                    <ul class="small mb-3">
+                                        <li><strong>Database Server:</strong> Full backup (2 hours ago) - Priority 1</li>
+                                        <li><strong>Application Server:</strong> Incremental backup (30 min ago) - Priority 1</li>
+                                        <li><strong>File Server:</strong> Full backup (4 hours ago) - Priority 2</li>
+                                        <li><strong>Mail Server:</strong> Full backup (6 hours ago) - Priority 2</li>
+                                        <li><strong>Web Server:</strong> Incremental backup (15 min ago) - Priority 3</li>
+                                    </ul>
+
+                                    <h6>Restoration Commands</h6>
+                                    <div class="bg-light p-2 rounded mb-3">
+                                        <code class="small">
+# Database restoration<br>
+pg_restore -h db-server -U admin -d production_db /backups/db_full_20241104.bak<br><br>
+# File system restoration<br>
+rsync -avz --delete /backups/files/ /mnt/data/<br><br>
+# Configuration restoration<br>
+cp -r /backups/configs/* /etc/
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Data Integrity Verification</h5>
+                            <div class="card border-info">
+                                <div class="card-body">
+                                    <h6>Verification Methods</h6>
+                                    <ul class="small mb-3">
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>MD5/SHA256 checksum validation</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>File count and size verification</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Database consistency checks</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Application functionality testing</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Cross-reference with backup logs</li>
+                                    </ul>
+
+                                    <h6>Integrity Test Results</h6>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Database Checksum:</span>
+                                            <span class="badge bg-success">PASSED</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>File Integrity:</span>
+                                            <span class="badge bg-success">PASSED</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Configuration Sync:</span>
+                                            <span class="badge bg-warning">VERIFYING</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Application Data:</span>
+                                            <span class="badge bg-secondary">PENDING</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Validation Checklist -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-warning">
+                        <i class="fas fa-clipboard-check"></i> System Validation Checklist
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Technical Validation</h5>
+                            <div class="accordion" id="validationAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#techValidation1">
+                                            Operating System
+                                        </button>
+                                    </h2>
+                                    <div id="techValidation1" class="accordion-collapse collapse show" data-bs-parent="#validationAccordion">
+                                        <div class="accordion-body">
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>System boots successfully</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>All system services running</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>System logs clean</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Resource utilization normal</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Security patches applied</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#techValidation2">
+                                            Network Configuration
+                                        </button>
+                                    </h2>
+                                    <div id="techValidation2" class="accordion-collapse collapse" data-bs-parent="#validationAccordion">
+                                        <div class="accordion-body">
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>IP configuration correct</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>DNS resolution working</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Firewall rules active</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Network connectivity established</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>VPN tunnels operational</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#techValidation3">
+                                            Applications & Services
+                                        </button>
+                                    </h2>
+                                    <div id="techValidation3" class="accordion-collapse collapse" data-bs-parent="#validationAccordion">
+                                        <div class="accordion-body">
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Application services started</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Database connections established</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>User authentication working</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>API endpoints responding</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Scheduled jobs running</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Business Validation</h5>
+                            <div class="card border-warning">
+                                <div class="card-body">
+                                    <h6>Functional Testing</h6>
+                                    <ul class="small mb-3">
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>User login and authentication</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Data entry and retrieval</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Report generation</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Email functionality</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Integration with external systems</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Performance meets SLAs</li>
+                                    </ul>
+
+                                    <h6>Compliance & Security</h6>
+                                    <ul class="small mb-3">
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Security controls active</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Audit logging enabled</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Compliance requirements met</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Access controls verified</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Encryption enabled</li>
+                                    </ul>
+
+                                    <h6>Recovery Metrics</h6>
+                                    <div class="small">
+                                        <strong>Recovery Time Actual:</strong> 2.5 hours<br>
+                                        <strong>Recovery Time Objective:</strong> 4 hours<br>
+                                        <strong>Data Loss:</strong> 15 minutes<br>
+                                        <strong>Recovery Point Objective:</strong> 1 hour<br>
+                                        <strong>System Availability:</strong> 99.8%<br>
+                                        <strong>Business Impact:</strong> Minimal
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BCP/DR Integration -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-info">
+                        <i class="fas fa-building"></i> BCP/DR Integration
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Business Continuity Procedures</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Communication Plan</h6>
+                                    <ul class="small">
+                                        <li><strong>Internal Notifications:</strong> Automated alerts to IT team and management</li>
+                                        <li><strong>Customer Communications:</strong> Status page updates and email notifications</li>
+                                        <li><strong>Stakeholder Updates:</strong> Regular progress reports every 30 minutes</li>
+                                        <li><strong>Escalation Procedures:</strong> Defined triggers for executive notification</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Alternative Procedures</h6>
+                                    <ul class="small">
+                                        <li><strong>Manual Workarounds:</strong> Documented procedures for critical functions</li>
+                                        <li><strong>Backup Systems:</strong> Secondary data centers and cloud failover</li>
+                                        <li><strong>Resource Allocation:</strong> Emergency staffing and equipment deployment</li>
+                                        <li><strong>Vendor Coordination:</strong> Third-party service restoration protocols</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <h6>Recovery Timeline</h6>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-danger"></div>
+                                    <div class="timeline-content">
+                                        <h6>T+0: Incident Declaration</h6>
+                                        <p>Recovery team assembled, communication channels activated</p>
+                                        <small class="text-muted">Duration: 15 minutes | Status: <span class="badge bg-success">Completed</span></small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>T+30min: Assessment Complete</h6>
+                                        <p>Impact assessment finished, recovery strategy defined</p>
+                                        <small class="text-muted">Duration: 30 minutes | Status: <span class="badge bg-success">Completed</span></small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>T+1hr: Recovery Initiated</h6>
+                                        <p>Automated recovery procedures started, progress monitoring active</p>
+                                        <small class="text-muted">Duration: 60 minutes | Status: <span class="badge bg-warning">In Progress</span></small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>T+2.5hr: Core Services Restored</h6>
+                                        <p>Critical business functions operational, user access restored</p>
+                                        <small class="text-muted">Duration: 90 minutes | Status: <span class="badge bg-secondary">Pending</span></small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>T+4hr: Full Recovery Complete</h6>
+                                        <p>All systems validated, normal operations resumed</p>
+                                        <small class="text-muted">Duration: 90 minutes | Status: <span class="badge bg-secondary">Pending</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Recovery Dashboard</h5>
+                            <div class="card border-info">
+                                <div class="card-body">
+                                    <h6>Current Status</h6>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Phase:</span>
+                                            <span class="badge bg-warning">Recovery</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Elapsed Time:</span>
+                                            <span>1.5 hours</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Estimated Completion:</span>
+                                            <span>2.5 hours</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Success Probability:</span>
+                                            <span class="badge bg-success">95%</span>
+                                        </div>
+                                    </div>
+
+                                    <h6>Critical Dependencies</h6>
+                                    <ul class="small mb-3">
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Power systems</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Network infrastructure</li>
+                                        <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Database cluster</li>
+                                        <li><i class="fas fa-times-circle text-danger me-2"></i>Application servers</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Backup systems</li>
+                                    </ul>
+
+                                    <h6>Next Critical Actions</h6>
+                                    <ul class="small mb-0">
+                                        <li>Complete database restoration</li>
+                                        <li>Validate application connectivity</li>
+                                        <li>Perform user acceptance testing</li>
+                                        <li>Update incident documentation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #e9ecef;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.timeline-content p {
+    margin-bottom: 5px;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.timeline-content code {
+    background: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+</style>
+
+<script>
+function initiateRecovery() {
+    if (confirm('Are you sure you want to initiate the system recovery process? This will start automated recovery procedures.')) {
+        alert('System recovery initiated. Monitor progress in the dashboard above.');
+        // Implement recovery initiation logic
+    }
+}
+
+function validateRecovery() {
+    alert('Running comprehensive recovery validation tests...');
+    // Implement validation logic
+}
+</script>
+{% endblock %}

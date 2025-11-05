@@ -1,0 +1,583 @@
+{% extends "base.html" %}
+
+{% block title %}Network Isolation - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">
+                        <i class="fas fa-network-wired me-2"></i>Network Isolation
+                    </h1>
+                    <p class="text-muted">Isolate compromised systems and prevent lateral movement</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" onclick="refreshStatus()">
+                        <i class="fas fa-sync-alt me-1"></i>Refresh Status
+                    </button>
+                    <button class="btn btn-primary" onclick="showIsolationWizard()">
+                        <i class="fas fa-shield-alt me-1"></i>Start Isolation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Network Status Overview -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Isolated Systems</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="isolated-count">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Pending Isolation</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="pending-count">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Active Connections</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="active-connections">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-link fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Blocked Threats</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="blocked-threats">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-ban fa-2x text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Network Isolation Tools -->
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Current Isolation Status -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-network-wired me-2"></i>Current Isolation Status
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="isolation-table" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>System</th>
+                                    <th>IP Address</th>
+                                    <th>Isolation Status</th>
+                                    <th>Isolation Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="isolation-table-body">
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">
+                                        <i class="fas fa-spinner fa-spin me-2"></i>Loading isolation status...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Network Traffic Analysis -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-chart-line me-2"></i>Network Traffic Analysis
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <canvas id="trafficChart" width="100%" height="200"></canvas>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="list-group" id="traffic-alerts">
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Suspicious Connection Attempt</h6>
+                                        <small class="text-muted">2 min ago</small>
+                                    </div>
+                                    <p class="mb-1">Blocked outbound connection to known malicious IP</p>
+                                    <small class="text-danger">High Risk</small>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Large Data Transfer</h6>
+                                        <small class="text-muted">5 min ago</small>
+                                    </div>
+                                    <p class="mb-1">Unusual outbound data transfer detected</p>
+                                    <small class="text-warning">Medium Risk</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Quick Actions -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-danger" onclick="emergencyIsolation()">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Emergency Isolation
+                        </button>
+                        <button class="btn btn-warning" onclick="quarantineSystem()">
+                            <i class="fas fa-shield-alt me-2"></i>Quarantine System
+                        </button>
+                        <button class="btn btn-info" onclick="blockIP()">
+                            <i class="fas fa-ban me-2"></i>Block IP Address
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetIsolation()">
+                            <i class="fas fa-undo me-2"></i>Reset Isolation
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Isolation Rules -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-cogs me-2"></i>Isolation Rules
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="auto-isolate" checked>
+                        <label class="form-check-label" for="auto-isolate">
+                            Auto-isolate on critical alerts
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="block-external" checked>
+                        <label class="form-check-label" for="block-external">
+                            Block all external connections
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="allow-monitoring">
+                        <label class="form-check-label" for="allow-monitoring">
+                            Allow monitoring traffic only
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="log-isolation">
+                        <label class="form-check-label" for="log-isolation">
+                            Log all isolation actions
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-history me-2"></i>Recent Activity
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="timeline" id="activity-timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success"></div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">System Isolated</h6>
+                                <p class="timeline-text">192.168.1.100 isolated due to malware detection</p>
+                                <small class="text-muted">10 minutes ago</small>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-warning"></div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">Suspicious Traffic</h6>
+                                <p class="timeline-text">Blocked connection attempt from malicious IP</p>
+                                <small class="text-muted">15 minutes ago</small>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-info"></div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">Isolation Rules Updated</h6>
+                                <p class="timeline-text">Auto-isolation enabled for critical alerts</p>
+                                <small class="text-muted">1 hour ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Isolation Wizard Modal -->
+<div class="modal fade" id="isolationWizardModal" tabindex="-1" aria-labelledby="isolationWizardLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="isolationWizardLabel">
+                    <i class="fas fa-shield-alt me-2"></i>Network Isolation Wizard
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="wizard-steps">
+                    <!-- Step 1: Select System -->
+                    <div class="wizard-step" id="step-1">
+                        <h6>Step 1: Select System to Isolate</h6>
+                        <div class="mb-3">
+                            <label for="system-select" class="form-label">Target System</label>
+                            <select class="form-select" id="system-select">
+                                <option value="">Choose a system...</option>
+                                <option value="192.168.1.100">192.168.1.100 - Web Server</option>
+                                <option value="192.168.1.101">192.168.1.101 - Database Server</option>
+                                <option value="192.168.1.102">192.168.1.102 - File Server</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="isolation-reason" class="form-label">Reason for Isolation</label>
+                            <textarea class="form-control" id="isolation-reason" rows="3" placeholder="Describe why this system needs to be isolated..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Configure Isolation -->
+                    <div class="wizard-step d-none" id="step-2">
+                        <h6>Step 2: Configure Isolation Parameters</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Network Rules</h6>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="block-inbound" checked>
+                                    <label class="form-check-label" for="block-inbound">
+                                        Block all inbound connections
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="block-outbound" checked>
+                                    <label class="form-check-label" for="block-outbound">
+                                        Block all outbound connections
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="allow-dns">
+                                    <label class="form-check-label" for="allow-dns">
+                                        Allow DNS resolution only
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Monitoring</h6>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="enable-logging" checked>
+                                    <label class="form-check-label" for="enable-logging">
+                                        Enable isolation logging
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="alert-on-attempts" checked>
+                                    <label class="form-check-label" for="alert-on-attempts">
+                                        Alert on connection attempts
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Confirm -->
+                    <div class="wizard-step d-none" id="step-3">
+                        <h6>Step 3: Confirm Isolation</h6>
+                        <div class="alert alert-warning">
+                            <strong>Warning:</strong> This action will isolate the selected system from the network.
+                            Make sure you have alternative access methods (console, etc.) before proceeding.
+                        </div>
+                        <div id="isolation-summary">
+                            <!-- Summary will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-secondary" id="prev-btn" disabled>Previous</button>
+                    <div class="step-indicator">
+                        <span class="badge bg-primary me-1" id="step-indicator">Step 1 of 3</span>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="next-btn">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Network Isolation JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize charts and data
+    initializeCharts();
+    loadIsolationStatus();
+    updateMetrics();
+});
+
+function initializeCharts() {
+    const ctx = document.getElementById('trafficChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+            datasets: [{
+                label: 'Network Traffic (Mbps)',
+                data: [2.3, 1.8, 3.2, 4.1, 2.9, 1.5],
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+}
+
+function loadIsolationStatus() {
+    // Simulate loading isolation status
+    const tbody = document.getElementById('isolation-table-body');
+    tbody.innerHTML = `
+        <tr>
+            <td>192.168.1.100</td>
+            <td>192.168.1.100</td>
+            <td><span class="badge bg-danger">Isolated</span></td>
+            <td>2024-01-15 10:30:00</td>
+            <td>
+                <button class="btn btn-sm btn-success" onclick="reconnectSystem('192.168.1.100')">
+                    <i class="fas fa-plug"></i> Reconnect
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>192.168.1.101</td>
+            <td>192.168.1.101</td>
+            <td><span class="badge bg-success">Connected</span></td>
+            <td>-</td>
+            <td>
+                <button class="btn btn-sm btn-warning" onclick="isolateSystem('192.168.1.101')">
+                    <i class="fas fa-shield-alt"></i> Isolate
+                </button>
+            </td>
+        </tr>
+    `;
+}
+
+function updateMetrics() {
+    // Update dashboard metrics
+    document.getElementById('isolated-count').textContent = '1';
+    document.getElementById('pending-count').textContent = '0';
+    document.getElementById('active-connections').textContent = '45';
+    document.getElementById('blocked-threats').textContent = '12';
+}
+
+function showIsolationWizard() {
+    const modal = new bootstrap.Modal(document.getElementById('isolationWizardModal'));
+    modal.show();
+}
+
+function refreshStatus() {
+    // Refresh all status displays
+    loadIsolationStatus();
+    updateMetrics();
+    showToast('Status refreshed successfully', 'success');
+}
+
+function emergencyIsolation() {
+    if (confirm('This will immediately isolate all systems flagged as compromised. Continue?')) {
+        showToast('Emergency isolation initiated', 'warning');
+        // Implement emergency isolation logic
+    }
+}
+
+function quarantineSystem() {
+    showToast('System quarantine initiated', 'info');
+    // Implement quarantine logic
+}
+
+function blockIP() {
+    const ip = prompt('Enter IP address to block:');
+    if (ip) {
+        showToast(`IP ${ip} blocked successfully`, 'success');
+        // Implement IP blocking logic
+    }
+}
+
+function resetIsolation() {
+    if (confirm('This will reset all isolation rules. Continue?')) {
+        showToast('Isolation rules reset', 'info');
+        // Implement reset logic
+    }
+}
+
+function isolateSystem(ip) {
+    showToast(`Isolating system ${ip}...`, 'warning');
+    // Implement isolation logic
+    setTimeout(() => {
+        showToast(`System ${ip} isolated successfully`, 'success');
+        loadIsolationStatus();
+    }, 2000);
+}
+
+function reconnectSystem(ip) {
+    showToast(`Reconnecting system ${ip}...`, 'info');
+    // Implement reconnection logic
+    setTimeout(() => {
+        showToast(`System ${ip} reconnected successfully`, 'success');
+        loadIsolationStatus();
+    }, 2000);
+}
+
+function showToast(message, type) {
+    // Simple toast notification
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 5000);
+}
+
+// Wizard navigation
+let currentStep = 1;
+const totalSteps = 3;
+
+document.getElementById('next-btn').addEventListener('click', function() {
+    if (currentStep < totalSteps) {
+        document.getElementById(`step-${currentStep}`).classList.add('d-none');
+        currentStep++;
+        document.getElementById(`step-${currentStep}`).classList.remove('d-none');
+        updateWizardButtons();
+    }
+});
+
+document.getElementById('prev-btn').addEventListener('click', function() {
+    if (currentStep > 1) {
+        document.getElementById(`step-${currentStep}`).classList.add('d-none');
+        currentStep--;
+        document.getElementById(`step-${currentStep}`).classList.remove('d-none');
+        updateWizardButtons();
+    }
+});
+
+function updateWizardButtons() {
+    document.getElementById('step-indicator').textContent = `Step ${currentStep} of ${totalSteps}`;
+    document.getElementById('prev-btn').disabled = currentStep === 1;
+    document.getElementById('next-btn').textContent = currentStep === totalSteps ? 'Isolate System' : 'Next';
+}
+</script>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+.timeline-title {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.timeline-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 2px;
+}
+
+.wizard-step {
+    min-height: 300px;
+}
+</style>
+{% endblock %}

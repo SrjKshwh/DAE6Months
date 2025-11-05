@@ -1,0 +1,534 @@
+{% extends "base.html" %}
+
+{% block title %}Incident Response & Containment - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-shield-alt"></i> Incident Response & Containment</h1>
+                    <p class="text-muted">Network isolation, evidence preservation, and containment procedures</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-danger me-2" onclick="initiateContainment()">
+                        <i class="fas fa-lock"></i> Initiate Containment
+                    </button>
+                    <button class="btn btn-outline-warning" onclick="generateContainmentReport()">
+                        <i class="fas fa-file-alt"></i> Containment Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page Introduction -->
+            <div class="alert alert-warning mb-4">
+                <h6><i class="fas fa-exclamation-triangle"></i> About Incident Response & Containment</h6>
+                <p>This page demonstrates comprehensive incident response and containment procedures in Parrot OS environment. It covers network isolation techniques, evidence preservation using forensic tools, and systematic containment playbooks for VirtualBox-based incident response scenarios.</p>
+                <p><strong>Key Capabilities:</strong> Network interface configuration, firewall rules implementation, network segmentation, evidence collection, memory dumps, and host isolation procedures.</p>
+            </div>
+
+            <!-- Containment Status Overview -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-danger shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                        Network Isolation</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-warning">Active</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-network-wired fa-2x text-danger"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Evidence Collection</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Complete</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-search fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Host Isolation</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Isolated</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-server fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Containment Status</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Contained</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-check-circle fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Network Isolation Procedures -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-danger">
+                        <i class="fas fa-network-wired"></i> Network Isolation Procedures
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Interface Configuration</h5>
+                            <div class="alert alert-danger">
+                                <strong>⚠️ Network Isolation Active</strong><br>
+                                <strong>Interface eth0:</strong> DOWN (Isolated)<br>
+                                <strong>Interface wlan0:</strong> DOWN (Isolated)<br>
+                                <strong>VirtualBox Network:</strong> Host-only mode<br>
+                                <strong>Isolation Time:</strong> 2024-01-15 11:00:00 UTC
+                            </div>
+
+                            <h6>Network Interface Status</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Interface</th>
+                                            <th>Status</th>
+                                            <th>IP Address</th>
+                                            <th>Isolation Method</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>eth0</td>
+                                            <td><span class="badge bg-danger">DOWN</span></td>
+                                            <td>192.168.56.101</td>
+                                            <td>ifconfig down</td>
+                                        </tr>
+                                        <tr>
+                                            <td>wlan0</td>
+                                            <td><span class="badge bg-danger">DOWN</span></td>
+                                            <td>192.168.1.100</td>
+                                            <td>iwconfig down</td>
+                                        </tr>
+                                        <tr>
+                                            <td>lo</td>
+                                            <td><span class="badge bg-success">UP</span></td>
+                                            <td>127.0.0.1</td>
+                                            <td>Local only</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Firewall Rules Implementation</h5>
+                            <div class="card border-danger">
+                                <div class="card-header bg-danger text-white">
+                                    <h6 class="mb-0">Active Containment Rules</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <strong>Default Policy:</strong> DROP<br>
+                                        <code>iptables -P INPUT DROP</code>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Allow Loopback:</strong><br>
+                                        <code>iptables -A INPUT -i lo -j ACCEPT</code>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Block All Inbound:</strong><br>
+                                        <code>iptables -A INPUT -j DROP</code>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Block All Outbound (except DNS):</strong><br>
+                                        <code>iptables -A OUTPUT -p udp --dport 53 -j ACCEPT</code><br>
+                                        <code>iptables -A OUTPUT -j DROP</code>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6>Network Segmentation</h6>
+                            <div class="alert alert-info">
+                                <strong>VirtualBox Network Configuration:</strong><br>
+                                • Host-only adapter: vboxnet0<br>
+                                • DHCP disabled for isolation<br>
+                                • No NAT or bridged connections<br>
+                                • Internal network: incident-response-net
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evidence Preservation -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-warning">
+                        <i class="fas fa-search"></i> Evidence Preservation with Parrot OS Forensic Tools
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>File System Artifacts</h5>
+                            <div class="accordion" id="evidenceAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#evidence1">
+                                            Disk Imaging with dc3dd
+                                        </button>
+                                    </h2>
+                                    <div id="evidence1" class="accordion-collapse collapse show" data-bs-parent="#evidenceAccordion">
+                                        <div class="accordion-body">
+                                            <strong>Command:</strong><br>
+                                            <code>dc3dd if=/dev/sda of=evidence_disk.img hash=sha256 log=dc3dd.log</code><br><br>
+                                            <strong>Evidence Collected:</strong>
+                                            <ul class="mb-0">
+                                                <li>Complete disk image: evidence_disk.img (50GB)</li>
+                                                <li>SHA256 hash: a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3</li>
+                                                <li>Verification log: dc3dd.log</li>
+                                                <li>Timestamp: 2024-01-15 11:15:00 UTC</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#evidence2">
+                                            File Metadata Analysis
+                                        </button>
+                                    </h2>
+                                    <div id="evidence2" class="accordion-collapse collapse" data-bs-parent="#evidenceAccordion">
+                                        <div class="accordion-body">
+                                            <strong>Tools Used:</strong> exiftool, stat, ls -la<br><br>
+                                            <strong>Key Files Analyzed:</strong>
+                                            <ul class="mb-0">
+                                                <li><code>/var/log/auth.log</code> - Modified: 2024-01-15 10:45:00</li>
+                                                <li><code>/home/user/.bash_history</code> - Accessed: 2024-01-15 10:30:00</li>
+                                                <li><code>/tmp/suspicious_file</code> - Created: 2024-01-15 10:20:00</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Network Traffic Captures</h5>
+                            <div class="card border-warning">
+                                <div class="card-header bg-warning">
+                                    <h6 class="mb-0">Wireshark Capture Sessions</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <strong>Capture: incident_traffic.pcapng</strong><br>
+                                        <small>Duration: 15 min | Packets: 8,921 | Size: 45MB</small><br>
+                                        <code>tshark -i eth0 -w incident_traffic.pcapng -a duration:900</code><br>
+                                        <span class="badge bg-warning">Preserved</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Capture: baseline_traffic.pcapng</strong><br>
+                                        <small>Duration: 30 min | Packets: 15,234 | Size: 78MB</small><br>
+                                        <code>tshark -i wlan0 -w baseline_traffic.pcapng -a duration:1800</code><br>
+                                        <span class="badge bg-success">Analyzed</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6>Memory Dump Collection</h6>
+                            <div class="alert alert-warning">
+                                <strong>LiME (Linux Memory Extractor):</strong><br>
+                                <code>insmod lime.ko "path=/evidence/memory_dump.lime format=lime"</code><br><br>
+                                <strong>Evidence Details:</strong>
+                                <ul class="mb-0">
+                                    <li>Memory dump: memory_dump.lime (8GB)</li>
+                                    <li>SHA256: 47e3b8c8f5c2d9a1b6e4f7a9d3c8b5e2f1a4c7e9b6d8a2f5c3e7b9a1d4f6c8</li>
+                                    <li>Timestamp: 2024-01-15 11:30:00 UTC</li>
+                                    <li>System state: Running processes captured</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Containment Playbook -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-info">
+                        <i class="fas fa-book"></i> Containment Playbook - VirtualBox Environment
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Host Isolation Steps</h5>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-danger"></div>
+                                    <div class="timeline-content">
+                                        <h6>Step 1: Immediate Network Isolation</h6>
+                                        <p><strong>Action:</strong> Disconnect all network interfaces</p>
+                                        <code>sudo ifconfig eth0 down && sudo ifconfig wlan0 down</code><br>
+                                        <small class="text-muted">Prevents lateral movement and data exfiltration</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>Step 2: VirtualBox Network Configuration</h6>
+                                        <p><strong>Action:</strong> Switch to host-only network mode</p>
+                                        <code>VBoxManage modifyvm "Parrot-IR" --nic1 hostonly --hostonlyadapter1 vboxnet0</code><br>
+                                        <small class="text-muted">Isolates VM from external networks while maintaining host access</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>Step 3: Firewall Containment Rules</h6>
+                                        <p><strong>Action:</strong> Implement strict firewall policies</p>
+                                        <code>sudo ufw --force enable && sudo ufw default deny incoming && sudo ufw default deny outgoing</code><br>
+                                        <small class="text-muted">Blocks all network communication except essential services</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>Step 4: Process Isolation</h6>
+                                        <p><strong>Action:</strong> Identify and isolate suspicious processes</p>
+                                        <code>sudo ps aux | grep suspicious && sudo kill -STOP <PID></code><br>
+                                        <small class="text-muted">Stops malicious processes without terminating them</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>Step 5: Evidence Collection</h6>
+                                        <p><strong>Action:</strong> Preserve volatile evidence</p>
+                                        <code>sudo volatility -f /dev/mem --profile=LinuxUbuntu16045x64 pslist > process_list.txt</code><br>
+                                        <small class="text-muted">Captures running processes and memory state</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Network Traffic Blocking</h5>
+                            <div class="card border-info">
+                                <div class="card-body">
+                                    <h6>Blocked Connections</h6>
+                                    <div class="mb-2">
+                                        <strong>C2 Server:</strong> 203.0.113.195:443<br>
+                                        <small class="text-muted">Blocked via iptables</small>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Malicious Domain:</strong> malicious.example.com<br>
+                                        <small class="text-muted">Blocked via hosts file</small>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Suspicious IPs:</strong> 192.168.1.100-110<br>
+                                        <small class="text-muted">Blocked via firewall rules</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6>Service Shutdown Procedures</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Apache Web Server:</strong><br>
+                                    <code>sudo systemctl stop apache2</code>
+                                    <span class="badge bg-danger ms-2">Stopped</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>SSH Service:</strong><br>
+                                    <code>sudo systemctl stop ssh</code>
+                                    <span class="badge bg-danger ms-2">Stopped</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Database Services:</strong><br>
+                                    <code>sudo systemctl stop mysql</code>
+                                    <span class="badge bg-danger ms-2">Stopped</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Containment Validation -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">
+                        <i class="fas fa-check-circle"></i> Containment Validation & Monitoring
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Isolation Verification</h5>
+                            <div class="alert alert-success">
+                                <strong>✓ Network Isolation Confirmed</strong><br>
+                                <strong>Ping Test:</strong> External hosts unreachable<br>
+                                <strong>Port Scan:</strong> No open ports detected<br>
+                                <strong>Traffic Analysis:</strong> Zero outbound connections<br>
+                                <strong>Validation Time:</strong> 2024-01-15 11:45:00 UTC
+                            </div>
+
+                            <h6>Containment Checklist</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Network interfaces disabled
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Firewall rules implemented
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Suspicious processes isolated
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Evidence collection completed
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    VirtualBox network configured
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Containment Monitoring</h5>
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <h6>Real-time Status</h6>
+                                    <div class="mb-3">
+                                        <strong>Containment Duration:</strong> 45 minutes<br>
+                                        <strong>Isolation Status:</strong> <span class="badge bg-success">Maintained</span><br>
+                                        <strong>Evidence Integrity:</strong> <span class="badge bg-success">Verified</span>
+                                    </div>
+
+                                    <h6>Automated Monitoring</h6>
+                                    <div class="mb-2">
+                                        <strong>Network Traffic:</strong> Monitoring active<br>
+                                        <small class="text-muted">Zero unauthorized connections detected</small>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Process Activity:</strong> Suspicious processes contained<br>
+                                        <small class="text-muted">No new malicious processes spawned</small>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>File System:</strong> Changes blocked<br>
+                                        <small class="text-muted">File integrity monitoring active</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #e9ecef;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.timeline-content p {
+    margin-bottom: 5px;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.timeline-content code {
+    background: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+</style>
+
+<script>
+function initiateContainment() {
+    if (confirm('Are you sure you want to initiate containment procedures? This will isolate the system.')) {
+        alert('Containment procedures initiated...');
+        // Implement containment logic
+    }
+}
+
+function generateContainmentReport() {
+    alert('Generating containment report...');
+    // Implement report generation logic
+}
+</script>
+{% endblock %}

@@ -1,0 +1,699 @@
+{% extends "base.html" %}
+
+{% block title %}IR Documentation & Reporting - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-book"></i> IR Documentation & Reporting</h1>
+                    <p class="text-muted">Playbooks, incident tracking, and comprehensive reporting</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="generatePlaybook()">
+                        <i class="fas fa-plus"></i> New Playbook
+                    </button>
+                    <button class="btn btn-outline-success" onclick="exportReports()">
+                        <i class="fas fa-download"></i> Export Reports
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page Introduction -->
+            <div class="alert alert-info mb-4">
+                <h6><i class="fas fa-info-circle"></i> About IR Documentation & Reporting</h6>
+                <p>This page provides comprehensive incident response documentation and reporting capabilities. It includes detailed playbooks for common incidents, systematic incident tracking with timeline management, and standardized incident reports following industry best practices.</p>
+                <p><strong>Key Features:</strong> Automated playbook generation, incident timeline tracking, evidence correlation, compliance reporting, and executive summaries for stakeholder communication.</p>
+            </div>
+
+            <!-- Documentation Status Overview -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Active Playbooks</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">12</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-book fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Incident Reports</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">8</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-file-alt fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Tracking Systems</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">3</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clock fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Compliance Docs</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">15</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clipboard-check fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Incident Response Playbook -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-book"></i> Incident Response Playbook
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Response Procedures for Common Incidents</h5>
+                            <div class="accordion" id="playbookAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#playbook1">
+                                            Malware Infection Response
+                                        </button>
+                                    </h2>
+                                    <div id="playbook1" class="accordion-collapse collapse show" data-bs-parent="#playbookAccordion">
+                                        <div class="accordion-body">
+                                            <h6>1. Detection & Identification</h6>
+                                            <ul>
+                                                <li>Monitor for unusual system behavior (high CPU, network activity)</li>
+                                                <li>Check Wazuh alerts for malware signatures</li>
+                                                <li>Run Volatility memory analysis: <code>vol.py -f memory.dmp windows.malfind</code></li>
+                                                <li>Isolate affected system immediately</li>
+                                            </ul>
+
+                                            <h6>2. Containment</h6>
+                                            <ul>
+                                                <li>Disconnect network interfaces: <code>ifconfig eth0 down</code></li>
+                                                <li>Implement firewall rules: <code>iptables -P INPUT DROP</code></li>
+                                                <li>Stop suspicious processes: <code>kill -9 <PID></code></li>
+                                                <li>Disable affected user accounts</li>
+                                            </ul>
+
+                                            <h6>3. Eradication</h6>
+                                            <ul>
+                                                <li>Remove malware files and registry entries</li>
+                                                <li>Clean temporary files: <code>rm -rf /tmp/*</code></li>
+                                                <li>Update antivirus signatures</li>
+                                                <li>Patch known vulnerabilities</li>
+                                            </ul>
+
+                                            <h6>4. Recovery & Lessons Learned</h6>
+                                            <ul>
+                                                <li>Restore from clean backups</li>
+                                                <li>Monitor for 72 hours post-recovery</li>
+                                                <li>Document incident details and response actions</li>
+                                                <li>Update playbooks based on lessons learned</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#playbook2">
+                                            Unauthorized Access Response
+                                        </button>
+                                    </h2>
+                                    <div id="playbook2" class="accordion-collapse collapse" data-bs-parent="#playbookAccordion">
+                                        <div class="accordion-body">
+                                            <h6>1. Detection & Assessment</h6>
+                                            <ul>
+                                                <li>Review authentication logs: <code>grep "Failed password" /var/log/auth.log</code></li>
+                                                <li>Check for suspicious login patterns</li>
+                                                <li>Correlate with network traffic analysis</li>
+                                                <li>Assess potential data exposure</li>
+                                            </ul>
+
+                                            <h6>2. Containment Actions</h6>
+                                            <ul>
+                                                <li>Change compromised passwords immediately</li>
+                                                <li>Revoke active sessions: <code>pkill -u username</code></li>
+                                                <li>Implement account lockout policies</li>
+                                                <li>Enable multi-factor authentication</li>
+                                            </ul>
+
+                                            <h6>3. Investigation</h6>
+                                            <ul>
+                                                <li>Analyze login source IPs and geolocation</li>
+                                                <li>Review command history: <code>cat ~/.bash_history</code></li>
+                                                <li>Check file access timestamps</li>
+                                                <li>Document evidence collection procedures</li>
+                                            </ul>
+
+                                            <h6>4. Prevention & Monitoring</h6>
+                                            <ul>
+                                                <li>Implement intrusion detection rules</li>
+                                                <li>Enable audit logging for sensitive files</li>
+                                                <li>Regular security awareness training</li>
+                                                <li>Deploy endpoint detection tools</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#playbook3">
+                                            Data Breach Response
+                                        </button>
+                                    </h2>
+                                    <div id="playbook3" class="accordion-collapse collapse" data-bs-parent="#playbookAccordion">
+                                        <div class="accordion-body">
+                                            <h6>1. Immediate Response</h6>
+                                            <ul>
+                                                <li>Stop data exfiltration: <code>iptables -A OUTPUT -d malicious_ip -j DROP</code></li>
+                                                <li>Isolate affected systems</li>
+                                                <li>Notify incident response team</li>
+                                                <li>Preserve evidence: <code>dc3dd if=/dev/sda of=breach_evidence.img</code></li>
+                                            </ul>
+
+                                            <h6>2. Assessment & Notification</h6>
+                                            <ul>
+                                                <li>Determine scope of data exposure</li>
+                                                <li>Identify affected individuals/systems</li>
+                                                <li>Notify legal counsel and compliance officer</li>
+                                                <li>Prepare regulatory notifications (if required)</li>
+                                            </ul>
+
+                                            <h6>3. Containment & Recovery</h6>
+                                            <ul>
+                                                <li>Change all credentials and encryption keys</li>
+                                                <li>Implement network segmentation</li>
+                                                <li>Restore from clean backups</li>
+                                                <li>Monitor for additional compromise indicators</li>
+                                            </ul>
+
+                                            <h6>4. Post-Incident Activities</h6>
+                                            <ul>
+                                                <li>Conduct thorough security assessment</li>
+                                                <li>Update incident response procedures</li>
+                                                <li>Provide affected parties with support</li>
+                                                <li>Review insurance coverage and claims</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Tool-Specific Commands</h5>
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0">Parrot OS IR Tools</h6>
+                                </div>
+                                <div class="card-body">
+                                    <h6>Wazuh Agent Management</h6>
+                                    <ul class="small mb-3">
+                                        <li><code>wazuh-control start</code> - Start agent</li>
+                                        <li><code>wazuh-control status</code> - Check status</li>
+                                        <li><code>tail -f /var/ossec/logs/ossec.log</code> - View logs</li>
+                                    </ul>
+
+                                    <h6>Volatility Memory Analysis</h6>
+                                    <ul class="small mb-3">
+                                        <li><code>vol.py -f mem.dmp imageinfo</code> - Profile detection</li>
+                                        <li><code>vol.py -f mem.dmp pslist</code> - Process list</li>
+                                        <code>vol.py -f mem.dmp netscan</code> - Network connections</li>
+                                    </ul>
+
+                                    <h6>Wireshark CLI (tshark)</h6>
+                                    <ul class="small mb-3">
+                                        <li><code>tshark -i eth0 -w capture.pcap</code> - Start capture</li>
+                                        <li><code>tshark -r capture.pcap -Y "http"</code> - Filter HTTP</li>
+                                        <li><code>tshark -r capture.pcap -T fields -e ip.src -e ip.dst</code> - Extract IPs</li>
+                                    </ul>
+
+                                    <h6>Evidence Collection</h6>
+                                    <ul class="small mb-0">
+                                        <li><code>dc3dd if=/dev/sda of=image.img hash=sha256</code> - Disk imaging</li>
+                                        <li><code>insmod lime.ko "path=mem.lime format=lime"</code> - Memory dump</li>
+                                        <li><code>ps aux --forest > processes.txt</code> - Process snapshot</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Incident Tracking System -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-info">
+                        <i class="fas fa-clock"></i> Incident Tracking System
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Incident IR-2024-001: Ransomware Infection</h5>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-danger"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 09:15:00 - Incident Detection</h6>
+                                        <p><strong>Action:</strong> Wazuh alert triggered for suspicious file encryption</p>
+                                        <small class="text-muted">Detection Method: File integrity monitoring | Severity: Critical</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 09:20:00 - Initial Assessment</h6>
+                                        <p><strong>Action:</strong> Confirmed ransomware infection via Volatility analysis</p>
+                                        <small class="text-muted">Evidence: Memory injection detected | Affected: 3 systems</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 09:30:00 - Containment Initiated</h6>
+                                        <p><strong>Action:</strong> Network isolation and process termination</p>
+                                        <small class="text-muted">Tools: iptables, kill commands | Status: Systems isolated</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 10:00:00 - Evidence Collection</h6>
+                                        <p><strong>Action:</strong> Memory dump and disk imaging completed</p>
+                                        <small class="text-muted">Tools: LiME, dc3dd | Evidence: Secured in locker B-12</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 14:00:00 - Eradication Complete</h6>
+                                        <p><strong>Action:</strong> Malware removed, systems disinfected</p>
+                                        <small class="text-muted">Method: Clean restore from backups | Verification: Multiple scans passed</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-secondary"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 16:00:00 - Recovery Validation</h6>
+                                        <p><strong>Action:</strong> 72-hour monitoring period completed</p>
+                                        <small class="text-muted">Status: No re-infection detected | Next: Lessons learned review</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Incident Details</h5>
+                            <div class="card border-info">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <strong>Incident ID:</strong> IR-2024-001<br>
+                                        <strong>Classification:</strong> <span class="badge bg-danger">Ransomware</span><br>
+                                        <strong>Status:</strong> <span class="badge bg-success">Resolved</span><br>
+                                        <strong>Priority:</strong> <span class="badge bg-danger">Critical</span>
+                                    </div>
+
+                                    <h6>Response Actions Taken</h6>
+                                    <ul class="small mb-3">
+                                        <li>✓ Network isolation implemented</li>
+                                        <li>✓ Affected systems quarantined</li>
+                                        <li>✓ Evidence preserved</li>
+                                        <li>✓ Clean backups restored</li>
+                                        <li>✓ Security patches applied</li>
+                                        <li>✓ Monitoring enhanced</li>
+                                    </ul>
+
+                                    <h6>Timeline Summary</h6>
+                                    <div class="small">
+                                        <strong>Detection to Containment:</strong> 15 minutes<br>
+                                        <strong>Containment to Eradication:</strong> 4.5 hours<br>
+                                        <strong>Eradication to Recovery:</strong> 2 hours<br>
+                                        <strong>Total Resolution Time:</strong> 6.75 hours
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Incident Report Template -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-warning">
+                        <i class="fas fa-file-alt"></i> Incident Report: IR-2024-001
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Report Sections</h5>
+                            <div class="accordion" id="reportAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#report1">
+                                            Executive Summary
+                                        </button>
+                                    </h2>
+                                    <div id="report1" class="accordion-collapse collapse show" data-bs-parent="#reportAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Incident Overview</h6>
+                                            <p>On January 15, 2024, at approximately 09:15 UTC, the security monitoring system detected suspicious file encryption activity on three critical systems running Parrot OS. The incident was classified as a ransomware infection with data exfiltration capabilities.</p>
+
+                                            <h6>Impact Assessment</h6>
+                                            <ul>
+                                                <li><strong>Business Impact:</strong> High - Operations disrupted for 6.75 hours</li>
+                                                <li><strong>Data Exposure:</strong> Minimal - Contained before significant exfiltration</li>
+                                                <li><strong>Financial Impact:</strong> $45,000 in recovery costs and lost productivity</li>
+                                                <li><strong>Reputation Impact:</strong> Low - Internal incident, no external disclosure required</li>
+                                            </ul>
+
+                                            <h6>Root Cause</h6>
+                                            <p>The incident originated from a phishing email that delivered a malicious macro-enabled document. The user executed the macro, which downloaded and installed ransomware payload. The malware used advanced evasion techniques to avoid detection initially.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#report2">
+                                            Technical Details
+                                        </button>
+                                    </h2>
+                                    <div id="report2" class="accordion-collapse collapse" data-bs-parent="#reportAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Malware Analysis</h6>
+                                            <ul>
+                                                <li><strong>Malware Family:</strong> Ryuk Ransomware</li>
+                                                <li><strong>Delivery Method:</strong> Phishing email with malicious attachment</li>
+                                                <li><strong>Execution:</strong> PowerShell script with obfuscation</li>
+                                                <li><strong>Encryption:</strong> AES-256 + RSA-4096 hybrid</li>
+                                                <li><strong>C2 Communication:</strong> HTTPS to compromised domains</li>
+                                            </ul>
+
+                                            <h6>Indicators of Compromise</h6>
+                                            <div class="table-responsive">
+                                                <table class="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Type</th>
+                                                            <th>Indicator</th>
+                                                            <th>Confidence</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Domain</td>
+                                                            <td>malicious-payload.example.com</td>
+                                                            <td>High</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>IP</td>
+                                                            <td>203.0.113.195</td>
+                                                            <td>High</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Hash</td>
+                                                            <td>a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3</td>
+                                                            <td>Critical</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Response Metrics & Compliance</h5>
+                            <div class="card border-warning">
+                                <div class="card-body">
+                                    <h6>Key Performance Indicators</h6>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Detection Time:</span>
+                                            <span class="badge bg-success">2 minutes</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Response Time:</span>
+                                            <span class="badge bg-warning">15 minutes</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Containment Time:</span>
+                                            <span class="badge bg-info">10 minutes</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Recovery Time:</span>
+                                            <span class="badge bg-primary">6 hours</span>
+                                        </div>
+                                    </div>
+
+                                    <h6>Compliance Alignment</h6>
+                                    <ul class="small mb-3">
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>NIST SP 800-61: Incident Handling</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>ISO 27001: Information Security</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>GDPR: Data Breach Notification</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>HIPAA: Security Rule Compliance</li>
+                                    </ul>
+
+                                    <h6>Lessons Learned</h6>
+                                    <ul class="small mb-0">
+                                        <li>Enhanced email filtering implemented</li>
+                                        <li>User training program expanded</li>
+                                        <li>Automated backup verification added</li>
+                                        <li>Endpoint detection rules updated</li>
+                                        <li>Incident response playbooks refined</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h6>Recommendations</h6>
+                            <div class="alert alert-info">
+                                <ol class="small mb-0">
+                                    <li>Implement advanced email gateway with sandboxing</li>
+                                    <li>Deploy application whitelisting on endpoints</li>
+                                    <li>Enhance network segmentation and micro-segmentation</li>
+                                    <li>Regular security awareness training for all users</li>
+                                    <li>Automated incident response orchestration</li>
+                                    <li>Regular backup integrity testing and validation</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IR Tools Documentation -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">
+                        <i class="fas fa-tools"></i> IR Tools Documentation in Parrot OS
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Tool Categories & Usage</h5>
+                            <div class="accordion" id="toolsAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#tools1">
+                                            Monitoring & Detection Tools
+                                        </button>
+                                    </h2>
+                                    <div id="tools1" class="accordion-collapse collapse show" data-bs-parent="#toolsAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Wazuh SIEM</h6>
+                                            <ul class="small">
+                                                <li><strong>Purpose:</strong> Real-time security monitoring and alerting</li>
+                                                <li><strong>Installation:</strong> <code>curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | apt-key add - && apt install wazuh-agent</code></li>
+                                                <li><strong>Configuration:</strong> /var/ossec/etc/ossec.conf</li>
+                                                <li><strong>Usage:</strong> <code>wazuh-control start</code> to start agent</li>
+                                                <li><strong>Logs:</strong> /var/ossec/logs/</li>
+                                            </ul>
+
+                                            <h6>Wireshark/tshark</h6>
+                                            <ul class="small">
+                                                <li><strong>Purpose:</strong> Network traffic analysis and capture</li>
+                                                <li><strong>Installation:</strong> <code>apt install wireshark tshark</code></li>
+                                                <li><strong>Capture:</strong> <code>tshark -i eth0 -w capture.pcap</code></li>
+                                                <li><strong>Analysis:</strong> <code>tshark -r capture.pcap -Y "http"</code></li>
+                                                <li><strong>Filters:</strong> Display filters for protocol-specific analysis</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tools2">
+                                            Memory & Disk Forensics
+                                        </button>
+                                    </h2>
+                                    <div id="tools2" class="accordion-collapse collapse" data-bs-parent="#toolsAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Volatility Framework</h6>
+                                            <ul class="small">
+                                                <li><strong>Purpose:</strong> Memory analysis and malware detection</li>
+                                                <li><strong>Installation:</strong> <code>apt install volatility</code></li>
+                                                <li><strong>Profile Detection:</strong> <code>vol.py -f memory.dmp imageinfo</code></li>
+                                                <li><strong>Process Analysis:</strong> <code>vol.py -f memory.dmp --profile=Linux pslist</code></li>
+                                                <li><strong>Malware Hunting:</strong> <code>vol.py -f memory.dmp malfind</code></li>
+                                            </ul>
+
+                                            <h6>dc3dd (Disk Imaging)</h6>
+                                            <ul class="small">
+                                                <li><strong>Purpose:</strong> Forensic disk imaging with hashing</li>
+                                                <li><strong>Installation:</strong> <code>apt install dc3dd</code></li>
+                                                <li><strong>Basic Imaging:</strong> <code>dc3dd if=/dev/sda of=image.img</code></li>
+                                                <li><strong>With Hashing:</strong> <code>dc3dd if=/dev/sda of=image.img hash=sha256 log=dc3dd.log</code></li>
+                                                <li><strong>Verification:</strong> Automatic hash verification during acquisition</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Tool Maintenance & Updates</h5>
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <h6>Regular Maintenance Tasks</h6>
+                                    <ul class="small mb-3">
+                                        <li><strong>Signature Updates:</strong> <code>wazuh-control update</code> (Daily)</li>
+                                        <li><strong>Tool Updates:</strong> <code>apt update && apt upgrade</code> (Weekly)</li>
+                                        <li><strong>Log Rotation:</strong> Configure logrotate for evidence logs</li>
+                                        <li><strong>Storage Management:</strong> Monitor disk space for evidence storage</li>
+                                        <li><strong>Backup Validation:</strong> Test backup integrity regularly</li>
+                                    </ul>
+
+                                    <h6>Tool Validation Procedures</h6>
+                                    <div class="mb-3">
+                                        <strong>Wazuh Agent Health Check:</strong><br>
+                                        <code>wazuh-control status && tail -f /var/ossec/logs/ossec.log</code>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Volatility Installation Test:</strong><br>
+                                        <code>vol.py --info | grep Linux</code>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Disk Imaging Test:</strong><br>
+                                        <code>dc3dd --version && dd if=/dev/zero of=test.img bs=1M count=10</code>
+                                    </div>
+
+                                    <h6>Common Issues & Solutions</h6>
+                                    <ul class="small mb-0">
+                                        <li><strong>Wazuh connection issues:</strong> Check firewall and manager IP</li>
+                                        <li><strong>Volatility profile errors:</strong> Ensure correct profile selection</li>
+                                        <li><strong>Disk imaging failures:</strong> Verify disk permissions and space</li>
+                                        <li><strong>Memory dump issues:</strong> Check kernel module compatibility</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #e9ecef;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.timeline-content p {
+    margin-bottom: 5px;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.timeline-content code {
+    background: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+</style>
+
+<script>
+function generatePlaybook() {
+    alert('Generating new incident response playbook...');
+    // Implement playbook generation logic
+}
+
+function exportReports() {
+    alert('Exporting IR documentation and reports...');
+    // Implement report export logic
+}
+</script>
+{% endblock %}

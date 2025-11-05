@@ -1,0 +1,607 @@
+{% extends "base.html" %}
+
+{% block title %}Evidence Preservation - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">
+                        <i class="fas fa-save me-2"></i>Evidence Preservation
+                    </h1>
+                    <p class="text-muted">Collect, preserve, and manage digital evidence for incident response</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" onclick="refreshEvidenceStatus()">
+                        <i class="fas fa-sync-alt me-1"></i>Refresh Status
+                    </button>
+                    <button class="btn btn-primary" onclick="startEvidenceCollection()">
+                        <i class="fas fa-plus me-1"></i>Start Collection
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evidence Overview -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Evidence</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-evidence">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-archive fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Preserved</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="preserved-count">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-shield-alt fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Integrity Checks</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="integrity-checks">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Chain of Custody</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="custody-breaches">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-link fa-2x text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evidence Management Tools -->
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Current Evidence Status -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-file-archive me-2"></i>Current Evidence Status
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="evidence-table" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Evidence ID</th>
+                                    <th>Type</th>
+                                    <th>Source</th>
+                                    <th>Status</th>
+                                    <th>Collection Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="evidence-table-body">
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">
+                                        <i class="fas fa-spinner fa-spin me-2"></i>Loading evidence status...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evidence Integrity Monitoring -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-shield-alt me-2"></i>Evidence Integrity Monitoring
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <canvas id="integrityChart" width="100%" height="200"></canvas>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="list-group" id="integrity-alerts">
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Hash Verification Passed</h6>
+                                        <small class="text-muted">2 min ago</small>
+                                    </div>
+                                    <p class="mb-1">Evidence file integrity verified successfully</p>
+                                    <small class="text-success">Integrity OK</small>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Chain of Custody Updated</h6>
+                                        <small class="text-muted">5 min ago</small>
+                                    </div>
+                                    <p class="mb-1">Evidence transferred to forensic team</p>
+                                    <small class="text-info">Custody Updated</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Quick Actions -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-danger" onclick="emergencyCollection()">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Emergency Collection
+                        </button>
+                        <button class="btn btn-warning" onclick="verifyIntegrity()">
+                            <i class="fas fa-check-circle me-2"></i>Verify Integrity
+                        </button>
+                        <button class="btn btn-info" onclick="exportEvidence()">
+                            <i class="fas fa-download me-2"></i>Export Evidence
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearEvidence()">
+                            <i class="fas fa-trash me-2"></i>Clear Evidence
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evidence Types -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-folder me-2"></i>Evidence Types
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="collect-logs" checked>
+                        <label class="form-check-label" for="collect-logs">
+                            System Logs
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="collect-memory" checked>
+                        <label class="form-check-label" for="collect-memory">
+                            Memory Dumps
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="collect-files">
+                        <label class="form-check-label" for="collect-files">
+                            File System Evidence
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="collect-network" checked>
+                        <label class="form-check-label" for="collect-network">
+                            Network Traffic
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-history me-2"></i>Recent Activity
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="timeline" id="evidence-timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success"></div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">Evidence Collected</h6>
+                                <p class="timeline-text">Memory dump from compromised system preserved</p>
+                                <small class="text-muted">10 minutes ago</small>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-warning"></div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">Integrity Check</h6>
+                                <p class="timeline-text">Hash verification completed for evidence files</p>
+                                <small class="text-muted">15 minutes ago</small>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-info"></div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">Evidence Exported</h6>
+                                <p class="timeline-text">Evidence package delivered to investigation team</p>
+                                <small class="text-muted">1 hour ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Evidence Collection Modal -->
+<div class="modal fade" id="evidenceCollectionModal" tabindex="-1" aria-labelledby="evidenceCollectionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="evidenceCollectionLabel">
+                    <i class="fas fa-save me-2"></i>Evidence Collection Wizard
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="collection-wizard-steps">
+                    <!-- Step 1: Select Evidence Type -->
+                    <div class="wizard-step" id="collection-step-1">
+                        <h6>Step 1: Select Evidence Type and Source</h6>
+                        <div class="mb-3">
+                            <label for="evidence-type-select" class="form-label">Evidence Type</label>
+                            <select class="form-select" id="evidence-type-select">
+                                <option value="">Choose evidence type...</option>
+                                <option value="memory">Memory Dump</option>
+                                <option value="logs">System Logs</option>
+                                <option value="filesystem">File System</option>
+                                <option value="network">Network Traffic</option>
+                                <option value="registry">Registry Data</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="source-system" class="form-label">Source System</label>
+                            <select class="form-select" id="source-system">
+                                <option value="">Choose source system...</option>
+                                <option value="192.168.1.100">192.168.1.100 - Web Server</option>
+                                <option value="192.168.1.101">192.168.1.101 - Database Server</option>
+                                <option value="192.168.1.102">192.168.1.102 - File Server</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="collection-reason" class="form-label">Reason for Collection</label>
+                            <textarea class="form-control" id="collection-reason" rows="3" placeholder="Describe the incident and why evidence needs to be collected..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Configure Collection -->
+                    <div class="wizard-step d-none" id="collection-step-2">
+                        <h6>Step 2: Configure Collection Parameters</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Collection Options</h6>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="preserve-timestamps" checked>
+                                    <label class="form-check-label" for="preserve-timestamps">
+                                        Preserve file timestamps
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="calculate-hashes" checked>
+                                    <label class="form-check-label" for="calculate-hashes">
+                                        Calculate cryptographic hashes
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="compress-evidence" checked>
+                                    <label class="form-check-label" for="compress-evidence">
+                                        Compress evidence files
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Chain of Custody</h6>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="log-collection" checked>
+                                    <label class="form-check-label" for="log-collection">
+                                        Log collection activity
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="document-custody" checked>
+                                    <label class="form-check-label" for="document-custody">
+                                        Document chain of custody
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="notify-stakeholders">
+                                    <label class="form-check-label" for="notify-stakeholders">
+                                        Notify relevant stakeholders
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Confirm -->
+                    <div class="wizard-step d-none" id="collection-step-3">
+                        <h6>Step 3: Confirm Evidence Collection</h6>
+                        <div class="alert alert-warning">
+                            <strong>Warning:</strong> This action will collect and preserve evidence from the selected system.
+                            Ensure you have proper authorization and follow legal requirements for evidence collection.
+                        </div>
+                        <div id="collection-summary">
+                            <!-- Summary will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-secondary" id="collection-prev-btn" disabled>Previous</button>
+                    <div class="step-indicator">
+                        <span class="badge bg-primary me-1" id="collection-step-indicator">Step 1 of 3</span>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="collection-next-btn">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Evidence Preservation JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize charts and data
+    initializeEvidenceCharts();
+    loadEvidenceStatus();
+    updateEvidenceMetrics();
+});
+
+function initializeEvidenceCharts() {
+    const ctx = document.getElementById('integrityChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Verified', 'Pending', 'Failed'],
+            datasets: [{
+                data: [85, 10, 5],
+                backgroundColor: [
+                    'rgb(40, 167, 69)',
+                    'rgb(255, 193, 7)',
+                    'rgb(220, 53, 69)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+}
+
+function loadEvidenceStatus() {
+    // Simulate loading evidence status
+    const tbody = document.getElementById('evidence-table-body');
+    tbody.innerHTML = `
+        <tr>
+            <td>EVD-2024-001</td>
+            <td>Memory Dump</td>
+            <td>192.168.1.100</td>
+            <td><span class="badge bg-success">Preserved</span></td>
+            <td>2024-01-15 10:30:00</td>
+            <td>
+                <button class="btn btn-sm btn-info" onclick="viewEvidence('EVD-2024-001')">
+                    <i class="fas fa-eye"></i> View
+                </button>
+                <button class="btn btn-sm btn-warning" onclick="verifyEvidence('EVD-2024-001')">
+                    <i class="fas fa-check"></i> Verify
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>EVD-2024-002</td>
+            <td>System Logs</td>
+            <td>192.168.1.101</td>
+            <td><span class="badge bg-warning">Collecting</span></td>
+            <td>2024-01-15 10:35:00</td>
+            <td>
+                <button class="btn btn-sm btn-secondary" onclick="cancelCollection('EVD-2024-002')">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </td>
+        </tr>
+    `;
+}
+
+function updateEvidenceMetrics() {
+    // Update dashboard metrics
+    document.getElementById('total-evidence').textContent = '24';
+    document.getElementById('preserved-count').textContent = '22';
+    document.getElementById('integrity-checks').textContent = '18';
+    document.getElementById('custody-breaches').textContent = '0';
+}
+
+function startEvidenceCollection() {
+    const modal = new bootstrap.Modal(document.getElementById('evidenceCollectionModal'));
+    modal.show();
+}
+
+function refreshEvidenceStatus() {
+    // Refresh all status displays
+    loadEvidenceStatus();
+    updateEvidenceMetrics();
+    showToast('Evidence status refreshed successfully', 'success');
+}
+
+function emergencyCollection() {
+    if (confirm('This will immediately start emergency evidence collection from all compromised systems. Continue?')) {
+        showToast('Emergency evidence collection initiated', 'warning');
+        // Implement emergency collection logic
+    }
+}
+
+function verifyIntegrity() {
+    showToast('Evidence integrity verification started', 'info');
+    // Implement integrity verification logic
+}
+
+function exportEvidence() {
+    showToast('Evidence export initiated', 'info');
+    // Implement evidence export logic
+}
+
+function clearEvidence() {
+    if (confirm('This will permanently delete all collected evidence. This action cannot be undone. Continue?')) {
+        showToast('Evidence cleared successfully', 'danger');
+        // Implement evidence clearing logic
+    }
+}
+
+function viewEvidence(evidenceId) {
+    showToast(`Viewing evidence ${evidenceId}`, 'info');
+    // Implement evidence viewing logic
+}
+
+function verifyEvidence(evidenceId) {
+    showToast(`Verifying evidence ${evidenceId}...`, 'warning');
+    // Implement evidence verification logic
+    setTimeout(() => {
+        showToast(`Evidence ${evidenceId} verified successfully`, 'success');
+    }, 2000);
+}
+
+function cancelCollection(evidenceId) {
+    if (confirm(`Cancel evidence collection for ${evidenceId}?`)) {
+        showToast(`Collection ${evidenceId} cancelled`, 'info');
+        loadEvidenceStatus();
+    }
+}
+
+function showToast(message, type) {
+    // Simple toast notification
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 5000);
+}
+
+// Collection Wizard navigation
+let currentCollectionStep = 1;
+const totalCollectionSteps = 3;
+
+document.getElementById('collection-next-btn').addEventListener('click', function() {
+    if (currentCollectionStep < totalCollectionSteps) {
+        document.getElementById(`collection-step-${currentCollectionStep}`).classList.add('d-none');
+        currentCollectionStep++;
+        document.getElementById(`collection-step-${currentCollectionStep}`).classList.remove('d-none');
+        updateCollectionWizardButtons();
+    }
+});
+
+document.getElementById('collection-prev-btn').addEventListener('click', function() {
+    if (currentCollectionStep > 1) {
+        document.getElementById(`collection-step-${currentCollectionStep}`).classList.add('d-none');
+        currentCollectionStep--;
+        document.getElementById(`collection-step-${currentCollectionStep}`).classList.remove('d-none');
+        updateCollectionWizardButtons();
+    }
+});
+
+function updateCollectionWizardButtons() {
+    document.getElementById('collection-step-indicator').textContent = `Step ${currentCollectionStep} of ${totalCollectionSteps}`;
+    document.getElementById('collection-prev-btn').disabled = currentCollectionStep === 1;
+    document.getElementById('collection-next-btn').textContent = currentCollectionStep === totalCollectionSteps ? 'Start Collection' : 'Next';
+}
+</script>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+.timeline-title {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.timeline-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 2px;
+}
+
+.wizard-step {
+    min-height: 300px;
+}
+</style>
+{% endblock %}

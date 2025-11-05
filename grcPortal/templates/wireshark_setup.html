@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Wireshark Setup - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-network-wired me-2"></i>Wireshark Network Protocol Analyzer Setup</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Wireshark is a powerful network protocol analyzer used for network troubleshooting, analysis, and security auditing.
+                    </div>
+
+                    <!-- Installation Section -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-download me-2"></i>Installation</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Ubuntu/Debian Installation:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>sudo apt update<br>sudo apt install wireshark</code>
+                            </div>
+
+                            <h5>Parrot OS Installation:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>sudo apt update<br>sudo apt install wireshark</code>
+                            </div>
+
+                            <h5>Windows Installation:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>Download from: https://www.wireshark.org/download.html<br>Run installer as Administrator</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Configuration Section -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-cogs me-2"></i>Configuration</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Grant Permissions (Linux):</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>sudo usermod -a -G wireshark $USER<br>sudo chmod +x /usr/bin/dumpcap</code>
+                            </div>
+
+                            <h5>Basic Configuration:</h5>
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item">Enable promiscuous mode for network interfaces</li>
+                                <li class="list-group-item">Configure capture filters for specific traffic</li>
+                                <li class="list-group-item">Set up display filters for analysis</li>
+                                <li class="list-group-item">Enable protocol dissection preferences</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Usage Examples -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-play me-2"></i>Usage Examples</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Capture Network Traffic:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>wireshark<br># or<br>wireshark -i eth0 -k</code>
+                            </div>
+
+                            <h5>Command Line Capture:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>tshark -i eth0 -w capture.pcap</code>
+                            </div>
+
+                            <h5>Filter Examples:</h5>
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item"><code>http</code> - HTTP traffic only</li>
+                                <li class="list-group-item"><code>tcp.port == 443</code> - HTTPS traffic</li>
+                                <li class="list-group-item"><code>ip.src == 192.168.1.1</code> - Traffic from specific IP</li>
+                                <li class="list-group-item"><code>dns</code> - DNS queries and responses</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Security Features -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-shield-alt me-2"></i>Security Features</h4>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <strong>Protocol Analysis:</strong> Deep inspection of network protocols for anomalies
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Traffic Pattern Recognition:</strong> Identify suspicious network behavior
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Encryption Detection:</strong> Monitor SSL/TLS handshake and certificate validation
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Malware Traffic Analysis:</strong> Detect command and control communications
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Evidence Collection -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-file-alt me-2"></i>Evidence Collection</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Capture File Formats:</h5>
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item">PCAP - Standard packet capture format</li>
+                                <li class="list-group-item">PCAPNG - Next generation PCAP format</li>
+                                <li class="list-group-item">Hash verification for chain of custody</li>
+                            </ul>
+
+                            <h5>Documentation Requirements:</h5>
+                            <div class="alert alert-warning">
+                                <strong>Important:</strong> Document capture parameters, timestamps, and system information for legal admissibility.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Integration with IR Environment -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-link me-2"></i>Integration</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>Wireshark integrates with the IR environment through:</p>
+                            <ul class="list-group">
+                                <li class="list-group-item">Network traffic correlation with Wazuh alerts</li>
+                                <li class="list-group-item">Packet capture during incident response</li>
+                                <li class="list-group-item">Protocol analysis for threat hunting</li>
+                                <li class="list-group-item">Evidence preservation for forensic analysis</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

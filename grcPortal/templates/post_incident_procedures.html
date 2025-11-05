@@ -1,0 +1,675 @@
+{% extends "base.html" %}
+
+{% block title %}Post-Incident Procedures - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-redo"></i> Post-Incident Procedures</h1>
+                    <p class="text-muted">System recovery, root cause analysis, and process improvement</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="startRecovery()">
+                        <i class="fas fa-play"></i> Start Recovery
+                    </button>
+                    <button class="btn btn-outline-success" onclick="generateRCAReport()">
+                        <i class="fas fa-file-alt"></i> RCA Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page Introduction -->
+            <div class="alert alert-info mb-4">
+                <h6><i class="fas fa-info-circle"></i> About Post-Incident Procedures</h6>
+                <p>This page covers comprehensive post-incident activities including system recovery procedures, root cause analysis methodologies, recovery validation checklists, and incident response process improvements. It follows NIST SP 800-61 guidelines for post-incident activities.</p>
+                <p><strong>Key Components:</strong> Recovery procedures for VirtualBox environments, root cause analysis frameworks, validation testing, and lessons learned documentation for continuous improvement.</p>
+            </div>
+
+            <!-- Recovery Status Overview -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Systems Recovered</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">3/3</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-server fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        RCA Completed</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Complete</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-search fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Validation Tests</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Passed</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-check-circle fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Improvements</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-info">8</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-chart-line fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Recovery Procedures -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-redo"></i> System Recovery Procedures for VirtualBox Environment
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Recovery Steps for Incident IR-2024-001</h5>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-danger"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 14:00:00 - Recovery Initiation</h6>
+                                        <p><strong>Action:</strong> Confirmed eradication complete, beginning recovery phase</p>
+                                        <small class="text-muted">Verification: All malware signatures removed | Next: Backup restoration</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 14:15:00 - VirtualBox Environment Reset</h6>
+                                        <p><strong>Action:</strong> Power off affected VMs and create snapshots</p>
+                                        <code>VBoxManage snapshot "Parrot-IR" take "pre_recovery_snapshot"</code><br>
+                                        <small class="text-muted">Purpose: Preserve evidence state before recovery | Method: VirtualBox snapshots</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 14:30:00 - Clean OS Installation</h6>
+                                        <p><strong>Action:</strong> Fresh Parrot OS installation from verified ISO</p>
+                                        <small class="text-muted">ISO Hash: Verified against official checksums | Version: Parrot OS 5.3</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 15:00:00 - Security Tools Reinstallation</h6>
+                                        <p><strong>Action:</strong> Reinstall and configure Wazuh, Volatility, Wireshark</p>
+                                        <code>apt install wazuh-agent volatility wireshark tshark dc3dd</code><br>
+                                        <small class="text-muted">Configuration: Restored from backup configurations | Testing: All tools functional</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 15:30:00 - Network Configuration Recovery</h6>
+                                        <p><strong>Action:</strong> Restore network settings and connectivity</p>
+                                        <code>ifconfig eth0 up && dhclient eth0</code><br>
+                                        <small class="text-muted">Configuration: Host-only adapter restored | Security: Firewall rules reapplied</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-secondary"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 16:00:00 - Data Restoration</h6>
+                                        <p><strong>Action:</strong> Restore configuration files and test data</p>
+                                        <small class="text-muted">Source: Encrypted backups | Verification: Integrity checks passed</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Recovery Validation Checklist</h5>
+                            <div class="card border-primary">
+                                <div class="card-body">
+                                    <h6>System Recovery Tests</h6>
+                                    <ul class="list-group list-group-flush small mb-3">
+                                        <li class="list-group-item">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            OS boot successful
+                                        </li>
+                                        <li class="list-group-item">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            Network connectivity restored
+                                        </li>
+                                        <li class="list-group-item">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            Security tools functional
+                                        </li>
+                                        <li class="list-group-item">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            Wazuh agent connected
+                                        </li>
+                                        <li class="list-group-item">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            Backup integrity verified
+                                        </li>
+                                        <li class="list-group-item">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            No malware signatures detected
+                                        </li>
+                                    </ul>
+
+                                    <h6>Performance Benchmarks</h6>
+                                    <div class="small">
+                                        <strong>Boot Time:</strong> 45 seconds (Target: <60s)<br>
+                                        <strong>Memory Usage:</strong> 1.2GB / 8GB (Target: <2GB)<br>
+                                        <strong>Network Speed:</strong> 950 Mbps (Target: >500 Mbps)<br>
+                                        <strong>Disk I/O:</strong> 150 MB/s (Target: >100 MB/s)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Root Cause Analysis -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-info">
+                        <i class="fas fa-search"></i> Root Cause Analysis - Incident IR-2024-001
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Analysis Methodology</h5>
+                            <div class="alert alert-info">
+                                <strong>Framework Used:</strong> NIST SP 800-61 Incident Handling<br>
+                                <strong>Analysis Method:</strong> 5-Whys + Fishbone Diagram<br>
+                                <strong>Evidence Sources:</strong> Logs, memory dumps, network captures<br>
+                                <strong>Analysis Team:</strong> IR Lead, Security Engineer, Forensic Analyst
+                            </div>
+
+                            <h6>Event Timeline Reconstruction</h6>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-danger"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 08:45:00 - Initial Compromise</h6>
+                                        <p><strong>Event:</strong> Phishing email opened and malicious macro executed</p>
+                                        <small class="text-muted">Evidence: Email logs, browser history, command execution traces</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 08:47:00 - Payload Delivery</h6>
+                                        <p><strong>Event:</strong> Ransomware binary downloaded and executed</p>
+                                        <small class="text-muted">Evidence: Network capture, file system artifacts, memory injection</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 08:50:00 - Lateral Movement</h6>
+                                        <p><strong>Event:</strong> Malware spreads to network shares</p>
+                                        <small class="text-muted">Evidence: SMB traffic analysis, file access logs</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 09:00:00 - Encryption Begins</h6>
+                                        <p><strong>Event:</strong> File encryption process starts</p>
+                                        <small class="text-muted">Evidence: File modification timestamps, encryption patterns</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>2024-01-15 09:15:00 - Detection</h6>
+                                        <p><strong>Event:</strong> Wazuh alert triggers on file integrity changes</p>
+                                        <small class="text-muted">Evidence: Wazuh logs, alert correlation data</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Contributing Factors & Findings</h5>
+                            <div class="card border-info">
+                                <div class="card-body">
+                                    <h6>Primary Root Cause</h6>
+                                    <div class="alert alert-danger mb-3">
+                                        <strong>Human Factor:</strong> User executed malicious macro in phishing email<br>
+                                        <strong>Technical Factor:</strong> Insufficient email attachment scanning<br>
+                                        <strong>Process Factor:</strong> Lack of security awareness training reinforcement
+                                    </div>
+
+                                    <h6>Contributing Factors (Fishbone Analysis)</h6>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <strong>People:</strong>
+                                            <ul class="small mb-2">
+                                                <li>Insufficient training</li>
+                                                <li>Fatigue (end of week)</li>
+                                                <li>Trust in known sender</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-6">
+                                            <strong>Process:</strong>
+                                            <ul class="small mb-2">
+                                                <li>Weak email filtering</li>
+                                                <li>No macro blocking</li>
+                                                <li>Delayed patch management</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <strong>Technology:</strong>
+                                            <ul class="small mb-2">
+                                                <li>Outdated AV signatures</li>
+                                                <li>No sandboxing</li>
+                                                <li>Macro execution allowed</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-6">
+                                            <strong>Environment:</strong>
+                                            <ul class="small mb-2">
+                                                <li>Remote work setup</li>
+                                                <li>Personal device usage</li>
+                                                <li>Weak network segmentation</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <h6>Technical Findings</h6>
+                                    <ul class="small mb-0">
+                                        <li><strong>Malware Type:</strong> Ryuk Ransomware variant</li>
+                                        <li><strong>Infection Vector:</strong> Malicious Excel macro</li>
+                                        <li><strong>Encryption Method:</strong> AES-256 + RSA hybrid</li>
+                                        <li><strong>Network Activity:</strong> C2 communication to 3 domains</li>
+                                        <li><strong>Data Exfiltration:</strong> 2.3GB transferred before containment</li>
+                                        <li><strong>Persistence Mechanism:</strong> Scheduled task + registry key</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recovery Validation Checklist -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-warning">
+                        <i class="fas fa-clipboard-check"></i> Recovery Validation Checklist
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>System Validation Tests</h5>
+                            <div class="accordion" id="validationAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#validation1">
+                                            Operating System Integrity
+                                        </button>
+                                    </h2>
+                                    <div id="validation1" class="accordion-collapse collapse show" data-bs-parent="#validationAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Boot Process Validation</h6>
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>System boots without errors</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>All services start automatically</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Kernel modules load correctly</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>No unauthorized boot processes</li>
+                                            </ul>
+
+                                            <h6>File System Integrity</h6>
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Disk space utilization normal</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>File permissions correct</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>No unauthorized file modifications</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>System binaries intact</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#validation2">
+                                            Network Configuration
+                                        </button>
+                                    </h2>
+                                    <div id="validation2" class="accordion-collapse collapse" data-bs-parent="#validationAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Network Interface Validation</h6>
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>IP configuration correct</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>DNS resolution working</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Routing table intact</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Firewall rules applied</li>
+                                            </ul>
+
+                                            <h6>Connectivity Tests</h6>
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Internal network access</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Internet connectivity (controlled)</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Service ports accessible</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>No unauthorized connections</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#validation3">
+                                            Security Tools Validation
+                                        </button>
+                                    </h2>
+                                    <div id="validation3" class="accordion-collapse collapse" data-bs-parent="#validationAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Wazuh Agent Validation</h6>
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Agent service running</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Manager connection active</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Rule updates received</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Alert generation functional</li>
+                                            </ul>
+
+                                            <h6>Forensic Tools Check</h6>
+                                            <ul class="small">
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Volatility framework operational</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>Wireshark capture capability</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>dc3dd imaging functional</li>
+                                                <li><i class="fas fa-check-circle text-success me-2"></i>All tools version verified</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Testing Procedures & Results</h5>
+                            <div class="card border-warning">
+                                <div class="card-body">
+                                    <h6>Automated Testing Results</h6>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>System Health Check:</span>
+                                            <span class="badge bg-success">PASSED</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Security Configuration:</span>
+                                            <span class="badge bg-success">PASSED</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Network Connectivity:</span>
+                                            <span class="badge bg-success">PASSED</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Application Functionality:</span>
+                                            <span class="badge bg-success">PASSED</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Malware Scan:</span>
+                                            <span class="badge bg-success">PASSED</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Performance Benchmark:</span>
+                                            <span class="badge bg-success">PASSED</span>
+                                        </div>
+                                    </div>
+
+                                    <h6>Manual Testing Checklist</h6>
+                                    <ul class="small mb-3">
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>User authentication working</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Administrative access verified</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Data integrity confirmed</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Backup restoration tested</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Log collection active</li>
+                                        <li><i class="fas fa-check-circle text-success me-2"></i>Monitoring alerts functional</li>
+                                    </ul>
+
+                                    <h6>Performance Validation</h6>
+                                    <div class="small">
+                                        <strong>Recovery Time Objective (RTO):</strong> 6 hours (Target: 8 hours)<br>
+                                        <strong>Recovery Point Objective (RPO):</strong> 1 hour (Target: 4 hours)<br>
+                                        <strong>System Uptime:</strong> 99.9% (Target: 99.5%)<br>
+                                        <strong>Mean Time Between Failures:</strong> 30 days (Target: 15 days)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IR Process Improvement Recommendations -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">
+                        <i class="fas fa-chart-line"></i> IR Process Improvement Recommendations
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Lessons Learned from Incident IR-2024-001</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Immediate Improvements</h6>
+                                    <ul class="small">
+                                        <li><strong>Email Security:</strong> Implement advanced email gateway with sandboxing</li>
+                                        <li><strong>Endpoint Protection:</strong> Deploy application whitelisting and macro blocking</li>
+                                        <li><strong>Network Security:</strong> Enhance segmentation and traffic monitoring</li>
+                                        <li><strong>Backup Strategy:</strong> Implement immutable backups with regular testing</li>
+                                        <li><strong>Alert Tuning:</strong> Reduce false positives and improve detection accuracy</li>
+                                        <li><strong>Training Program:</strong> Mandatory security awareness training for all users</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Long-term Enhancements</h6>
+                                    <ul class="small">
+                                        <li><strong>Automation:</strong> Implement SOAR platform for automated response</li>
+                                        <li><strong>Threat Intelligence:</strong> Integrate threat feeds and IOC sharing</li>
+                                        <li><strong>Forensic Capabilities:</strong> Establish dedicated digital forensics lab</li>
+                                        <li><strong>Incident Simulation:</strong> Regular red team exercises and tabletop drills</li>
+                                        <li><strong>Compliance Integration:</strong> Align IR processes with regulatory requirements</li>
+                                        <li><strong>Metrics & KPIs:</strong> Comprehensive IR performance measurement framework</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <h6>Implementation Roadmap</h6>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 1 (Weeks 1-4): Immediate Actions</h6>
+                                        <p>Deploy email sandboxing, update endpoint protection, enhance backups</p>
+                                        <small class="text-muted">Priority: Critical | Owner: Security Team | Budget: $50K</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 2 (Months 1-3): Process Improvements</h6>
+                                        <p>Implement SOAR, update playbooks, enhance monitoring</p>
+                                        <small class="text-muted">Priority: High | Owner: IR Team | Budget: $150K</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 3 (Months 3-6): Technology Upgrades</h6>
+                                        <p>Deploy advanced threat detection, forensics lab, training program</p>
+                                        <small class="text-muted">Priority: Medium | Owner: IT Security | Budget: $300K</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 4 (Months 6-12): Maturity Assessment</h6>
+                                        <p>Conduct comprehensive IR capability assessment and optimization</p>
+                                        <small class="text-muted">Priority: Low | Owner: Audit Team | Budget: $50K</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Success Metrics & KPIs</h5>
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <h6>Detection & Response</h6>
+                                    <ul class="small mb-3">
+                                        <li><strong>MTTD:</strong> < 5 minutes (Current: 2 min)</li>
+                                        <li><strong>MTTR:</strong> < 2 hours (Current: 6.75 hours)</li>
+                                        <li><strong>Detection Rate:</strong> > 95% (Current: 100%)</li>
+                                        <li><strong>False Positive Rate:</strong> < 5% (Current: 2%)</li>
+                                    </ul>
+
+                                    <h6>Process Efficiency</h6>
+                                    <ul class="small mb-3">
+                                        <li><strong>Playbook Coverage:</strong> 100% incidents</li>
+                                        <li><strong>Automation Level:</strong> 70% response actions</li>
+                                        <li><strong>Training Completion:</strong> 100% staff</li>
+                                        <li><strong>Tool Utilization:</strong> > 80% uptime</li>
+                                    </ul>
+
+                                    <h6>Business Impact</h6>
+                                    <ul class="small mb-0">
+                                        <li><strong>RTO Achievement:</strong> 100% success rate</li>
+                                        <li><strong>RPO Achievement:</strong> 100% success rate</li>
+                                        <li><strong>Cost Reduction:</strong> 30% YoY target</li>
+                                        <li><strong>Stakeholder Satisfaction:</strong> > 4.5/5 rating</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h6>Risk Reduction Impact</h6>
+                            <div class="mt-3">
+                                <div class="progress mb-2" style="height: 20px;">
+                                    <div class="progress-bar bg-success" style="width: 75%">75% Risk Reduction</div>
+                                </div>
+                                <small class="text-muted">Estimated reduction in security incident likelihood and impact</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #e9ecef;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.timeline-content p {
+    margin-bottom: 5px;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.timeline-content code {
+    background: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+</style>
+
+<script>
+function startRecovery() {
+    if (confirm('Are you sure you want to start the recovery process? This will begin system restoration.')) {
+        alert('Recovery process initiated...');
+        // Implement recovery logic
+    }
+}
+
+function generateRCAReport() {
+    alert('Generating Root Cause Analysis report...');
+    // Implement RCA report generation logic
+}
+</script>
+{% endblock %}

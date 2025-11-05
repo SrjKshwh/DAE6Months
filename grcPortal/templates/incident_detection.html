@@ -1,0 +1,420 @@
+<!-- templates/incident_detection.html -->
+{% extends "base.html" %}
+
+{% block title %}Incident Detection - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="text-danger"><i class="fas fa-bolt"></i> Incident Detection</h1>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="refreshDetection()">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                    <a href="{{ url_for('add_log_data') }}" class="btn btn-outline-success me-2">
+                        <i class="fas fa-plus"></i> Add Log Data
+                    </a>
+                    <a href="{{ url_for('monitoring') }}" class="btn btn-outline-info">
+                        <i class="fas fa-desktop"></i> SOC Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Page Introduction -->
+            <div class="card mb-4 border-danger">
+                <div class="card-body">
+                    <h5 class="card-title text-danger"><i class="fas fa-info-circle"></i> About This Page</h5>
+                    <p class="card-text">
+                        The <strong>Incident Detection</strong> page provides automated detection and analysis of security incidents
+                        using advanced correlation algorithms and threat intelligence. It enables security teams to identify,
+                        classify, and respond to potential security incidents in real-time.
+                    </p>
+                    <h6>How It Works:</h6>
+                    <ul class="mb-0">
+                        <li><strong>Real-time Monitoring:</strong> Continuous analysis of security logs and events from multiple sources</li>
+                        <li><strong>Pattern Recognition:</strong> Advanced algorithms detect suspicious patterns and anomalous behavior</li>
+                        <li><strong>Threat Correlation:</strong> Cross-system correlation of security events and indicators</li>
+                        <li><strong>Automated Classification:</strong> Intelligent incident classification using severity matrices and risk scoring</li>
+                        <li><strong>Alert Generation:</strong> Automated alert creation with confidence scoring and false positive detection</li>
+                        <li><strong>Response Orchestration:</strong> Coordinated incident response with automated containment actions</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Detection Overview -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center border-danger">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0"><i class="fas fa-bolt"></i> Active Detections</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-4 mb-2 text-danger">{{ active_detections|length }}</div>
+                            <small class="text-muted">Ongoing incidents</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-warning">
+                        <div class="card-header bg-warning">
+                            <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Critical Alerts</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-4 mb-2 text-warning">{{ critical_alerts|length }}</div>
+                            <small class="text-muted">High-priority alerts</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-info">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-clock"></i> Response Time</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-4 mb-2 text-info">{{ avg_response_time }}</div>
+                            <small class="text-muted">Avg. detection time</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-success">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-shield-alt"></i> Containment Rate</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="display-4 mb-2 text-success">{{ containment_rate }}%</div>
+                            <small class="text-muted">Automated containment</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Incident Detections -->
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Active Incident Detections</h5>
+                </div>
+                <div class="card-body">
+                    {% if active_detections %}
+                    <div class="row">
+                        {% for detection in active_detections %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-danger">
+                                <div class="card-header bg-danger text-white">
+                                    <h6 class="mb-0">{{ detection.incident_title }}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small mb-2"><strong>Detection Method:</strong> {{ detection.detection_method }}</p>
+                                    <p class="small mb-2"><strong>Confidence:</strong>
+                                        <span class="badge bg-{{ 'success' if detection.confidence > 80 else 'warning' if detection.confidence > 60 else 'danger' }}">
+                                            {{ detection.confidence }}%
+                                        </span>
+                                    </p>
+                                    <p class="small mb-2"><strong>Severity:</strong>
+                                        {% if detection.severity == 'critical' %}
+                                            <span class="badge bg-danger">Critical</span>
+                                        {% elif detection.severity == 'high' %}
+                                            <span class="badge bg-warning">High</span>
+                                        {% elif detection.severity == 'medium' %}
+                                            <span class="badge bg-info">Medium</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Low</span>
+                                        {% endif %}
+                                    </p>
+                                    <p class="small mb-2"><strong>Status:</strong>
+                                        {% if detection.status == 'detected' %}
+                                            <span class="badge bg-warning">Detected</span>
+                                        {% elif detection.status == 'investigating' %}
+                                            <span class="badge bg-info">Investigating</span>
+                                        {% elif detection.status == 'contained' %}
+                                            <span class="badge bg-warning">Contained</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Resolved</span>
+                                        {% endif %}
+                                    </p>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-sm btn-outline-danger" onclick="viewDetectionDetails({{ detection.id }})">
+                                            <i class="fas fa-eye"></i> Details
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="initiateResponse({{ detection.id }})">
+                                            <i class="fas fa-shield-alt"></i> Respond
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                        <h5 class="text-muted">No Active Incident Detections</h5>
+                        <p class="text-muted">All systems are operating normally. Incident detection is actively monitoring for threats.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Detection Rules and Scenarios -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-cogs"></i> Detection Rules</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if detection_rules %}
+                            <div class="list-group list-group-flush">
+                                {% for rule in detection_rules %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">{{ rule.name }}</h6>
+                                            <p class="small mb-1">{{ rule.description[:60] }}...</p>
+                                            <small class="text-muted">
+                                                Type: {{ rule.rule_type }}
+                                                | Status: <span class="badge bg-{{ 'success' if rule.active else 'secondary' }}">{{ 'Active' if rule.active else 'Inactive' }}</span>
+                                            </small>
+                                        </div>
+                                        <div class="d-flex gap-1">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="editRule({{ rule.id }})">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="toggleRule({{ rule.id }})">
+                                                <i class="fas fa-{{ 'pause' if rule.active else 'play' }}"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-cogs fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0">No detection rules configured</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-scenario"></i> Detection Scenarios</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if detection_scenarios %}
+                            <div class="list-group list-group-flush">
+                                {% for scenario in detection_scenarios %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">{{ scenario.name }}</h6>
+                                            <p class="small mb-1">{{ scenario.description[:60] }}...</p>
+                                            <small class="text-muted">
+                                                Triggers: {{ scenario.trigger_count }}
+                                                | Last Match: {{ scenario.last_triggered|strftime('%Y-%m-%d %H:%M') if scenario.last_triggered else 'Never' }}
+                                            </small>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-info" onclick="viewScenario({{ scenario.id }})">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-scenario fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0">No detection scenarios defined</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Threat Intelligence Integration -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-brain"></i> Threat Intelligence Integration</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card text-center border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0">IoC Matches</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="display-6 mb-2 text-primary">{{ ioc_matches|length }}</div>
+                                    <small class="text-muted">Indicators matched</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center border-warning">
+                                <div class="card-header bg-warning">
+                                    <h6 class="mb-0">Threat Feeds</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="display-6 mb-2 text-warning">{{ active_feeds|length }}</div>
+                                    <small class="text-muted">Active feeds</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0">Correlation Score</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="display-6 mb-2 text-info">{{ avg_correlation }}%</div>
+                                    <small class="text-muted">Avg. confidence</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if recent_ioc_matches %}
+                    <div class="mt-4">
+                        <h6 class="text-primary mb-3">Recent IoC Matches</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Indicator</th>
+                                        <th>Type</th>
+                                        <th>Confidence</th>
+                                        <th>Threat Actor</th>
+                                        <th>Matched At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for match in recent_ioc_matches %}
+                                    <tr>
+                                        <td>{{ match.indicator_value[:30] }}...</td>
+                                        <td>{{ match.indicator_type }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if match.confidence > 80 else 'warning' if match.confidence > 60 else 'danger' }}">
+                                                {{ match.confidence }}%
+                                            </span>
+                                        </td>
+                                        <td>{{ match.threat_actor or 'Unknown' }}</td>
+                                        <td>{{ match.matched_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Automated Response Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-robot"></i> Automated Response Actions</h5>
+                </div>
+                <div class="card-body">
+                    {% if automated_responses %}
+                    <div class="row">
+                        {% for response in automated_responses %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-{{ 'success' if response.status == 'completed' else 'warning' if response.status == 'running' else 'danger' }}">
+                                <div class="card-header bg-{{ 'success' if response.status == 'completed' else 'warning' if response.status == 'running' else 'danger' }} text-white">
+                                    <h6 class="mb-0">{{ response.action_name }}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small mb-2"><strong>Trigger:</strong> {{ response.trigger_event }}</p>
+                                    <p class="small mb-2"><strong>Status:</strong>
+                                        {% if response.status == 'completed' %}
+                                            <span class="badge bg-success">Completed</span>
+                                        {% elif response.status == 'running' %}
+                                            <span class="badge bg-warning">Running</span>
+                                        {% elif response.status == 'failed' %}
+                                            <span class="badge bg-danger">Failed</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Pending</span>
+                                        {% endif %}
+                                    </p>
+                                    <p class="small mb-2"><strong>Executed:</strong> {{ response.executed_at.strftime('%Y-%m-%d %H:%M') if response.executed_at else 'N/A' }}</p>
+                                    <button class="btn btn-sm btn-outline-info" onclick="viewResponseLog({{ response.id }})">
+                                        <i class="fas fa-file-alt"></i> View Log
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-robot fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Automated Responses</h5>
+                        <p class="text-muted">Automated response actions will appear here when incidents are detected and contained.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.display-4 {
+    font-size: 2.5rem;
+    font-weight: 300;
+}
+
+.card:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+</style>
+
+<script>
+function refreshDetection() {
+    location.reload();
+}
+
+function viewDetectionDetails(detectionId) {
+    // Implement detection details view
+    alert('Viewing detection details for ID: ' + detectionId);
+}
+
+function initiateResponse(detectionId) {
+    // Implement response initiation
+    alert('Initiating response for detection ID: ' + detectionId);
+}
+
+function editRule(ruleId) {
+    // Implement rule editing
+    alert('Editing rule ID: ' + ruleId);
+}
+
+function toggleRule(ruleId) {
+    // Implement rule toggle
+    alert('Toggling rule ID: ' + ruleId);
+}
+
+function viewScenario(scenarioId) {
+    // Implement scenario view
+    alert('Viewing scenario ID: ' + scenarioId);
+}
+
+function viewResponseLog(responseId) {
+    // Implement response log view
+    alert('Viewing response log for ID: ' + responseId);
+}
+
+// Auto-refresh every 30 seconds
+setInterval(refreshDetection, 30000);
+</script>
+{% endblock %}

@@ -1,0 +1,833 @@
+{% extends "base.html" %}
+
+{% block title %}Live Data Collection - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">
+                        <i class="fas fa-play-circle me-2"></i>Live Data Collection
+                    </h1>
+                    <p class="text-muted mt-1">Real-time forensic data capture and network activity monitoring</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" onclick="refreshData()">
+                        <i class="fas fa-sync-alt me-1"></i>Refresh
+                    </button>
+                    <button class="btn btn-outline-success" onclick="startCollection()">
+                        <i class="fas fa-play me-1"></i>Start Collection
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Overview -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Collection Status
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="collection-status">Inactive</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-circle text-secondary fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Data Sources
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="data-sources">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-server fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Active Sessions
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="active-sessions">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Data Rate
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="data-rate">0 KB/s</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-tachometer-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collection Controls -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-cogs me-2"></i>Collection Configuration
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="collection-type">Collection Type</label>
+                                <select class="form-control" id="collection-type">
+                                    <option value="forensic">Forensic Data Capture</option>
+                                    <option value="network">Network Activity Monitor</option>
+                                    <option value="system">System State Monitoring</option>
+                                    <option value="memory">Memory Analysis</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="target-system">Target System</label>
+                                <select class="form-control" id="target-system">
+                                    <option value="">Select System...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="duration">Duration (minutes)</label>
+                                <input type="number" class="form-control" id="duration" value="30" min="1" max="480">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="include-network" checked>
+                                <label class="form-check-label" for="include-network">
+                                    Network Traffic
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="include-processes" checked>
+                                <label class="form-check-label" for="include-processes">
+                                    Process Information
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="include-files" checked>
+                                <label class="form-check-label" for="include-files">
+                                    File System Changes
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="include-memory">
+                                <label class="form-check-label" for="include-memory">
+                                    Memory Capture
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Data Display -->
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-stream me-2"></i>Live Data Stream
+                    </h6>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-secondary active" onclick="showTab('processes')">Processes</button>
+                        <button class="btn btn-outline-secondary" onclick="showTab('network')">Network</button>
+                        <button class="btn btn-outline-secondary" onclick="showTab('files')">Files</button>
+                        <button class="btn btn-outline-secondary" onclick="showTab('system')">System</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Process Information Tab -->
+                    <div id="processes-tab" class="data-tab">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover" id="processes-table">
+                                <thead>
+                                    <tr>
+                                        <th>PID</th>
+                                        <th>Name</th>
+                                        <th>User</th>
+                                        <th>CPU %</th>
+                                        <th>Memory %</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="processes-tbody">
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted">
+                                            <i class="fas fa-spinner fa-spin me-2"></i>Loading process data...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Network Connections Tab -->
+                    <div id="network-tab" class="data-tab" style="display: none;">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover" id="network-table">
+                                <thead>
+                                    <tr>
+                                        <th>Local Address</th>
+                                        <th>Remote Address</th>
+                                        <th>Protocol</th>
+                                        <th>Status</th>
+                                        <th>PID</th>
+                                        <th>Process</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="network-tbody">
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted">
+                                            <i class="fas fa-spinner fa-spin me-2"></i>Loading network data...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- File System Tab -->
+                    <div id="files-tab" class="data-tab" style="display: none;">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover" id="files-table">
+                                <thead>
+                                    <tr>
+                                        <th>File Path</th>
+                                        <th>Size</th>
+                                        <th>Permissions</th>
+                                        <th>Modified</th>
+                                        <th>Owner</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="files-tbody">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">
+                                            <i class="fas fa-spinner fa-spin me-2"></i>Loading file data...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- System State Tab -->
+                    <div id="system-tab" class="data-tab" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>System Resources</h6>
+                                <div class="mb-3">
+                                    <label>CPU Usage</label>
+                                    <div class="progress">
+                                        <div class="progress-bar" id="cpu-progress" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <small class="text-muted" id="cpu-text">0%</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Memory Usage</label>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" id="memory-progress" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <small class="text-muted" id="memory-text">0%</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Disk Usage</label>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-warning" id="disk-progress" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <small class="text-muted" id="disk-text">0%</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>System Information</h6>
+                                <div id="system-info">
+                                    <p class="text-muted">Loading system information...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collection Log -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-list-alt me-2"></i>Collection Log
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div id="collection-log" class="collection-log" style="height: 400px; overflow-y: auto;">
+                        <div class="log-entry">
+                            <small class="text-muted">System initialized</small>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-sm btn-outline-secondary w-100" onclick="clearLog()">
+                            <i class="fas fa-trash me-1"></i>Clear Log
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evidence Preservation -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-shield-alt me-2"></i>Evidence Preservation
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="evidence-name">Evidence Name</label>
+                                <input type="text" class="form-control" id="evidence-name" placeholder="Enter evidence name">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="evidence-description">Description</label>
+                                <textarea class="form-control" id="evidence-description" rows="2" placeholder="Describe the evidence being collected"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="btn btn-success" onclick="preserveEvidence()">
+                                <i class="fas fa-save me-1"></i>Preserve Evidence
+                            </button>
+                            <button class="btn btn-outline-primary ms-2" onclick="exportData()">
+                                <i class="fas fa-download me-1"></i>Export Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.collection-log {
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+    background-color: #f8f9fc;
+    border: 1px solid #e3e6f0;
+    border-radius: 0.35rem;
+    padding: 0.75rem;
+}
+
+.log-entry {
+    margin-bottom: 0.25rem;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #eaecf4;
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+.data-tab {
+    min-height: 300px;
+}
+
+.table th {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table td {
+    font-size: 0.85rem;
+}
+
+.btn-group-sm .btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+</style>
+
+<script>
+// Global variables
+let collectionInterval = null;
+let currentSystem = null;
+let collectionActive = false;
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    loadSystems();
+    updateStatus();
+});
+
+// Load available systems
+function loadSystems() {
+    fetch('/api/live_parrot_systems')
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById('target-system');
+            select.innerHTML = '<option value="">Select System...</option>';
+
+            if (data.systems) {
+                data.systems.forEach(system => {
+                    const option = document.createElement('option');
+                    option.value = system.system_name;
+                    option.textContent = `${system.system_name} (${system.status})`;
+                    select.appendChild(option);
+                });
+            }
+
+            document.getElementById('data-sources').textContent = data.total_systems || 0;
+        })
+        .catch(error => {
+            console.error('Error loading systems:', error);
+            addLogEntry('Error loading systems: ' + error.message, 'error');
+        });
+}
+
+// Update status indicators
+function updateStatus() {
+    const statusElement = document.getElementById('collection-status');
+    const statusIcon = statusElement.parentElement.querySelector('i');
+
+    if (collectionActive) {
+        statusElement.textContent = 'Active';
+        statusElement.className = 'h5 mb-0 font-weight-bold text-success';
+        statusIcon.className = 'fas fa-circle text-success fa-2x';
+    } else {
+        statusElement.textContent = 'Inactive';
+        statusElement.className = 'h5 mb-0 font-weight-bold text-gray-800';
+        statusIcon.className = 'fas fa-circle text-secondary fa-2x';
+    }
+}
+
+// Start data collection
+function startCollection() {
+    const systemSelect = document.getElementById('target-system');
+    const selectedSystem = systemSelect.value;
+
+    if (!selectedSystem) {
+        alert('Please select a target system first.');
+        return;
+    }
+
+    currentSystem = selectedSystem;
+    collectionActive = true;
+    updateStatus();
+
+    addLogEntry(`Started live data collection for system: ${selectedSystem}`, 'success');
+
+    // Start periodic data updates
+    collectionInterval = setInterval(() => {
+        if (collectionActive) {
+            updateLiveData();
+        }
+    }, 5000); // Update every 5 seconds
+
+    // Initial data load
+    updateLiveData();
+}
+
+// Stop data collection
+function stopCollection() {
+    collectionActive = false;
+    updateStatus();
+
+    if (collectionInterval) {
+        clearInterval(collectionInterval);
+        collectionInterval = null;
+    }
+
+    addLogEntry('Stopped live data collection', 'warning');
+}
+
+// Refresh data manually
+function refreshData() {
+    if (currentSystem) {
+        updateLiveData();
+        addLogEntry('Manual data refresh completed', 'info');
+    } else {
+        addLogEntry('No active collection to refresh', 'warning');
+    }
+}
+
+// Update live data from APIs
+function updateLiveData() {
+    if (!currentSystem) return;
+
+    // Update processes
+    fetch(`/api/live_parrot_processes/${currentSystem}`)
+        .then(response => response.json())
+        .then(data => {
+            updateProcessesTable(data.processes || []);
+        })
+        .catch(error => {
+            console.error('Error fetching processes:', error);
+        });
+
+    // Update network connections
+    fetch(`/api/live_parrot_network/${currentSystem}`)
+        .then(response => response.json())
+        .then(data => {
+            updateNetworkTable(data.connections || []);
+        })
+        .catch(error => {
+            console.error('Error fetching network data:', error);
+        });
+
+    // Update file evidence
+    fetch(`/api/live_parrot_file_evidence/${currentSystem}`)
+        .then(response => response.json())
+        .then(data => {
+            updateFilesTable(data.files || []);
+        })
+        .catch(error => {
+            console.error('Error fetching file data:', error);
+        });
+
+    // Update system state
+    fetch(`/api/live_parrot_system_state/${currentSystem}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.system_state) {
+                updateSystemState(data.system_state);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching system state:', error);
+        });
+}
+
+// Update processes table
+function updateProcessesTable(processes) {
+    const tbody = document.getElementById('processes-tbody');
+    tbody.innerHTML = '';
+
+    if (processes.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No process data available</td></tr>';
+        return;
+    }
+
+    processes.slice(0, 50).forEach(process => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${process.pid || 'N/A'}</td>
+            <td>${process.name || 'N/A'}</td>
+            <td>${process.username || 'N/A'}</td>
+            <td>${process.cpu_percent ? process.cpu_percent.toFixed(1) : '0.0'}%</td>
+            <td>${process.memory_percent ? process.memory_percent.toFixed(1) : '0.0'}%</td>
+            <td><span class="badge bg-${getStatusBadge(process.status)}">${process.status || 'Unknown'}</span></td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary" onclick="viewProcessDetails(${process.pid})">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Update network table
+function updateNetworkTable(connections) {
+    const tbody = document.getElementById('network-tbody');
+    tbody.innerHTML = '';
+
+    if (connections.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No network data available</td></tr>';
+        return;
+    }
+
+    connections.slice(0, 50).forEach(conn => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${conn.local_address || 'N/A'}:${conn.local_port || 'N/A'}</td>
+            <td>${conn.remote_address || 'N/A'}:${conn.remote_port || 'N/A'}</td>
+            <td>${conn.protocol || 'N/A'}</td>
+            <td><span class="badge bg-${getStatusBadge(conn.status)}">${conn.status || 'Unknown'}</span></td>
+            <td>${conn.pid || 'N/A'}</td>
+            <td>${conn.process_name || 'N/A'}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary" onclick="viewConnectionDetails('${conn.id}')">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Update files table
+function updateFilesTable(files) {
+    const tbody = document.getElementById('files-tbody');
+    tbody.innerHTML = '';
+
+    if (files.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No file data available</td></tr>';
+        return;
+    }
+
+    files.slice(0, 50).forEach(file => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${file.file_path || 'N/A'}</td>
+            <td>${file.file_size ? formatBytes(file.file_size) : 'N/A'}</td>
+            <td>${file.permissions || 'N/A'}</td>
+            <td>${file.modified_time ? new Date(file.modified_time).toLocaleString() : 'N/A'}</td>
+            <td>${file.owner || 'N/A'}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary" onclick="viewFileDetails('${file.id}')">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Update system state display
+function updateSystemState(systemState) {
+    if (!systemState) return;
+
+    // Update progress bars
+    const cpuProgress = document.getElementById('cpu-progress');
+    const memoryProgress = document.getElementById('memory-progress');
+    const diskProgress = document.getElementById('disk-progress');
+
+    const cpuPercent = systemState.cpu_percent || 0;
+    const memoryPercent = systemState.memory_percent || 0;
+    const diskPercent = systemState.disk_percent || 0;
+
+    cpuProgress.style.width = `${cpuPercent}%`;
+    memoryProgress.style.width = `${memoryPercent}%`;
+    diskProgress.style.width = `${diskPercent}%`;
+
+    document.getElementById('cpu-text').textContent = `${cpuPercent.toFixed(1)}%`;
+    document.getElementById('memory-text').textContent = `${memoryPercent.toFixed(1)}%`;
+    document.getElementById('disk-text').textContent = `${diskPercent.toFixed(1)}%`;
+
+    // Update system info
+    const systemInfo = document.getElementById('system-info');
+    systemInfo.innerHTML = `
+        <p><strong>Hostname:</strong> ${systemState.hostname || 'N/A'}</p>
+        <p><strong>OS:</strong> ${systemState.os || 'N/A'}</p>
+        <p><strong>Kernel:</strong> ${systemState.kernel_version || 'N/A'}</p>
+        <p><strong>Uptime:</strong> ${systemState.uptime_seconds ? formatUptime(systemState.uptime_seconds) : 'N/A'}</p>
+        <p><strong>Last Update:</strong> ${new Date().toLocaleTimeString()}</p>
+    `;
+}
+
+// Show specific tab
+function showTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.data-tab').forEach(tab => {
+        tab.style.display = 'none';
+    });
+
+    // Show selected tab
+    document.getElementById(tabName + '-tab').style.display = 'block';
+
+    // Update button states
+    document.querySelectorAll('.btn-group .btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+}
+
+// Add log entry
+function addLogEntry(message, type = 'info') {
+    const logContainer = document.getElementById('collection-log');
+    const logEntry = document.createElement('div');
+    logEntry.className = 'log-entry';
+
+    const timestamp = new Date().toLocaleTimeString();
+    const iconClass = getLogIcon(type);
+
+    logEntry.innerHTML = `
+        <small class="text-muted">
+            <i class="${iconClass} me-1"></i>
+            [${timestamp}] ${message}
+        </small>
+    `;
+
+    logContainer.appendChild(logEntry);
+    logContainer.scrollTop = logContainer.scrollHeight;
+}
+
+// Clear log
+function clearLog() {
+    document.getElementById('collection-log').innerHTML = '';
+    addLogEntry('Log cleared', 'info');
+}
+
+// Preserve evidence
+function preserveEvidence() {
+    const name = document.getElementById('evidence-name').value;
+    const description = document.getElementById('evidence-description').value;
+
+    if (!name.trim()) {
+        alert('Please enter an evidence name.');
+        return;
+    }
+
+    addLogEntry(`Evidence preserved: ${name}`, 'success');
+
+    // Reset form
+    document.getElementById('evidence-name').value = '';
+    document.getElementById('evidence-description').value = '';
+}
+
+// Export data
+function exportData() {
+    if (!currentSystem) {
+        alert('No active collection to export.');
+        return;
+    }
+
+    addLogEntry('Data export initiated', 'info');
+
+    // Create download link (placeholder - would implement actual export)
+    const data = {
+        system: currentSystem,
+        timestamp: new Date().toISOString(),
+        processes: [],
+        network: [],
+        files: []
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `live_data_collection_${currentSystem}_${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    addLogEntry('Data export completed', 'success');
+}
+
+// View process details (placeholder)
+function viewProcessDetails(pid) {
+    alert(`Process details for PID ${pid} would be shown here.`);
+}
+
+// View connection details (placeholder)
+function viewConnectionDetails(id) {
+    alert(`Connection details for ID ${id} would be shown here.`);
+}
+
+// View file details (placeholder)
+function viewFileDetails(id) {
+    alert(`File details for ID ${id} would be shown here.`);
+}
+
+// Utility functions
+function getStatusBadge(status) {
+    const statusMap = {
+        'running': 'success',
+        'sleeping': 'secondary',
+        'stopped': 'danger',
+        'zombie': 'warning',
+        'established': 'success',
+        'listening': 'info',
+        'close_wait': 'warning',
+        'time_wait': 'secondary'
+    };
+    return statusMap[status] || 'secondary';
+}
+
+function getLogIcon(type) {
+    const iconMap = {
+        'info': 'fas fa-info-circle text-info',
+        'success': 'fas fa-check-circle text-success',
+        'warning': 'fas fa-exclamation-triangle text-warning',
+        'error': 'fas fa-times-circle text-danger'
+    };
+    return iconMap[type] || 'fas fa-info-circle text-info';
+}
+
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function formatUptime(seconds) {
+    const days = Math.floor(seconds / 86400);
+    const hours = Math.floor((seconds % 86400) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+
+    return `${days}d ${hours}h ${minutes}m`;
+}
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+    if (collectionInterval) {
+        clearInterval(collectionInterval);
+    }
+});
+</script>
+{% endblock %}

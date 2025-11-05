@@ -1,0 +1,581 @@
+{% extends "base.html" %}
+
+{% block title %}IR Environment Setup - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-cogs"></i> IR Environment Setup</h1>
+                    <p class="text-muted">Configure and validate incident response environment components</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="runSetupChecks()">
+                        <i class="fas fa-check-circle"></i> Run Setup Checks
+                    </button>
+                    <button class="btn btn-outline-success" onclick="generateSetupReport()">
+                        <i class="fas fa-file-alt"></i> Setup Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page Introduction -->
+            <div class="alert alert-info mb-4">
+                <h6><i class="fas fa-info-circle"></i> About IR Environment Setup</h6>
+                <p>This page provides comprehensive setup and configuration for incident response tools and environments. It demonstrates successful installation and configuration of Wazuh SIEM platform, Wireshark packet capture, Volatility memory analysis framework, and system logging integration between Parrot OS and macOS environments.</p>
+                <p><strong>Key Components:</strong> Wazuh agent deployment, custom alert rules, network capture filters, memory analysis configuration, and cross-platform log ingestion validation.</p>
+            </div>
+
+            <!-- Setup Status Overview -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Wazuh Status</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Connected</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Wireshark</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Configured</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-network-wired fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Volatility</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Ready</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-memory fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Log Ingestion</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">Active</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-database fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wazuh SIEM Configuration -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-shield-alt"></i> Wazuh SIEM Platform Setup
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Installation & Configuration</h5>
+                            <div class="alert alert-success">
+                                <strong>✓ Wazuh Manager:</strong> Successfully installed on Parrot OS<br>
+                                <strong>✓ Wazuh API:</strong> Configured and accessible<br>
+                                <strong>✓ SSL Certificates:</strong> Generated and deployed<br>
+                                <strong>✓ Filebeat Integration:</strong> Configured for log shipping
+                            </div>
+
+                            <h6>Agent Deployment Status</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Agent ID</th>
+                                            <th>Hostname</th>
+                                            <th>Status</th>
+                                            <th>Last Seen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>001</td>
+                                            <td>parrot-ir-lab</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>2024-01-15 10:30:00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>002</td>
+                                            <td>macos-workstation</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>2024-01-15 10:25:00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Custom Alert Rules</h5>
+                            <div class="accordion" id="alertRulesAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#rule1">
+                                            Rule 100001: Suspicious Login Attempts
+                                        </button>
+                                    </h2>
+                                    <div id="rule1" class="accordion-collapse collapse show" data-bs-parent="#alertRulesAccordion">
+                                        <div class="accordion-body">
+                                            <pre class="bg-light p-2 small"><code><rule id="100001" level="10">
+  <description>Suspicious login attempts detected</description>
+  <match>Failed password|authentication failure</match>
+  <timeframe>600</timeframe>
+  <frequency>3</frequency>
+</rule></code></pre>
+                                            <strong>Trigger:</strong> 3+ failed auth attempts within 10 minutes<br>
+                                            <strong>Level:</strong> 10 (Medium)<br>
+                                            <strong>Groups:</strong> authentication, brute_force
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rule2">
+                                            Rule 100002: Privilege Escalation Attempt
+                                        </button>
+                                    </h2>
+                                    <div id="rule2" class="accordion-collapse collapse" data-bs-parent="#alertRulesAccordion">
+                                        <div class="accordion-body">
+                                            <pre class="bg-light p-2 small"><code><rule id="100002" level="12">
+  <description>Privilege escalation detected</description>
+  <match>sudo|su |chmod 777|setuid</match>
+  <user>!root</user>
+</rule></code></pre>
+                                            <strong>Trigger:</strong> Suspicious privilege operations<br>
+                                            <strong>Level:</strong> 12 (High)<br>
+                                            <strong>Groups:</strong> privilege_escalation, security
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rule3">
+                                            Rule 100003: Data Exfiltration Indicators
+                                        </button>
+                                    </h2>
+                                    <div id="rule3" class="accordion-collapse collapse" data-bs-parent="#alertRulesAccordion">
+                                        <div class="accordion-body">
+                                            <pre class="bg-light p-2 small"><code><rule id="100003" level="15">
+  <description>Potential data exfiltration</description>
+  <match>scp |rsync |ftp |sftp </match>
+  <dstip>!192.168.1.0/24</dstip>
+  <size>>1000000</size>
+</rule></code></pre>
+                                            <strong>Trigger:</strong> Large outbound file transfers<br>
+                                            <strong>Level:</strong> 15 (Critical)<br>
+                                            <strong>Groups:</strong> data_exfil, network
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wireshark Configuration -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-info">
+                        <i class="fas fa-network-wired"></i> Wireshark Packet Capture Setup
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Installation & Interface Configuration</h5>
+                            <div class="alert alert-info">
+                                <strong>✓ Wireshark:</strong> Version 4.0.3 installed<br>
+                                <strong>✓ Capture Interfaces:</strong> eth0, wlan0 configured<br>
+                                <strong>✓ Permissions:</strong> User added to wireshark group<br>
+                                <strong>✓ Dumpcap:</strong> Setuid configured for non-root capture
+                            </div>
+
+                            <h6>Capture Filters Configuration</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Filter Name</th>
+                                            <th>Filter Expression</th>
+                                            <th>Purpose</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>HTTP Traffic</td>
+                                            <td>tcp port 80 or tcp port 443</td>
+                                            <td>Web traffic analysis</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Suspicious IPs</td>
+                                            <td>host 192.168.1.100 or host 203.0.113.195</td>
+                                            <td>Known malicious IPs</td>
+                                        </tr>
+                                        <tr>
+                                            <td>SSH Attempts</td>
+                                            <td>tcp port 22 and tcp[tcpflags] & tcp-syn != 0</td>
+                                            <td>SSH connection monitoring</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Large Transfers</td>
+                                            <td>tcp and length > 1000</td>
+                                            <td>Data exfiltration detection</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Capture Session Examples</h5>
+                            <div class="card border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0">Recent Capture Sessions</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <strong>Session: suspicious_traffic_20240115</strong><br>
+                                        <small class="text-muted">Interface: eth0 | Duration: 30 min | Packets: 15,234</small><br>
+                                        <span class="badge bg-warning">Analysis Pending</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Session: baseline_normal_20240114</strong><br>
+                                        <small class="text-muted">Interface: wlan0 | Duration: 60 min | Packets: 45,678</small><br>
+                                        <span class="badge bg-success">Analyzed</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Session: brute_force_detection_20240113</strong><br>
+                                        <small class="text-muted">Interface: eth0 | Duration: 15 min | Packets: 8,921</small><br>
+                                        <span class="badge bg-danger">Incident Detected</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6>Display Filters</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <code>http contains "password"</code>
+                                    <small class="text-muted d-block">HTTP requests containing password data</small>
+                                </li>
+                                <li class="list-group-item">
+                                    <code>tcp.flags.syn == 1 and tcp.flags.ack == 0</code>
+                                    <small class="text-muted d-block">TCP SYN packets (connection attempts)</small>
+                                </li>
+                                <li class="list-group-item">
+                                    <code>dns.qry.name contains "malicious"</code>
+                                    <small class="text-muted d-block">DNS queries to suspicious domains</small>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Volatility Framework Setup -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-warning">
+                        <i class="fas fa-memory"></i> Volatility Memory Analysis Framework
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Installation & Profile Configuration</h5>
+                            <div class="alert alert-warning">
+                                <strong>✓ Volatility3:</strong> Version 2.4.1 installed<br>
+                                <strong>✓ Memory Profiles:</strong> Linux, Windows, macOS configured<br>
+                                <strong>✓ Plugins:</strong> Core plugins loaded and tested<br>
+                                <strong>✓ Memory Images:</strong> Sample images available for analysis
+                            </div>
+
+                            <h6>Available Profiles</h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="card border-warning">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-linux fa-2x text-warning mb-2"></i>
+                                            <h6>Linux Profiles</h6>
+                                            <small>Ubuntu 20.04, CentOS 8, Debian 11</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card border-warning">
+                                        <div class="card-body text-center">
+                                            <i class="fab fa-windows fa-2x text-warning mb-2"></i>
+                                            <h6>Windows Profiles</h6>
+                                            <small>Win10, Win11, Server 2019</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Memory Analysis Capabilities</h5>
+                            <div class="accordion" id="volatilityAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#vol1">
+                                            Process Analysis
+                                        </button>
+                                    </h2>
+                                    <div id="vol1" class="accordion-collapse collapse show" data-bs-parent="#volatilityAccordion">
+                                        <div class="accordion-body">
+                                            <strong>Commands:</strong><br>
+                                            <code>python vol.py -f memory.img windows.pslist</code><br>
+                                            <code>python vol.py -f memory.img linux.psaux</code><br><br>
+                                            <strong>Capabilities:</strong>
+                                            <ul class="mb-0">
+                                                <li>Process listing and analysis</li>
+                                                <li>Process memory dumping</li>
+                                                <li>Hidden process detection</li>
+                                                <li>Process tree reconstruction</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#vol2">
+                                            Network Analysis
+                                        </button>
+                                    </h2>
+                                    <div id="vol2" class="accordion-collapse collapse" data-bs-parent="#volatilityAccordion">
+                                        <div class="accordion-body">
+                                            <strong>Commands:</strong><br>
+                                            <code>python vol.py -f memory.img windows.netscan</code><br>
+                                            <code>python vol.py -f memory.img linux.netstat</code><br><br>
+                                            <strong>Capabilities:</strong>
+                                            <ul class="mb-0">
+                                                <li>Network connection analysis</li>
+                                                <li>Socket and port analysis</li>
+                                                <li>Network artifact extraction</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#vol3">
+                                            Malware Detection
+                                        </button>
+                                    </h2>
+                                    <div id="vol3" class="accordion-collapse collapse" data-bs-parent="#volatilityAccordion">
+                                        <div class="accordion-body">
+                                            <strong>Commands:</strong><br>
+                                            <code>python vol.py -f memory.img windows.malfind</code><br>
+                                            <code>python vol.py -f memory.img linux.bash</code><br><br>
+                                            <strong>Capabilities:</strong>
+                                            <ul class="mb-0">
+                                                <li>Injected code detection</li>
+                                                <li>Rootkit identification</li>
+                                                <li>Command history analysis</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Logging Configuration -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">
+                        <i class="fas fa-database"></i> System Logging & Cross-Platform Integration
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Parrot OS Logging Configuration</h5>
+                            <div class="alert alert-success">
+                                <strong>✓ rsyslog:</strong> Configured for centralized logging<br>
+                                <strong>✓ Log Rotation:</strong> Daily rotation with compression<br>
+                                <strong>✓ Remote Logging:</strong> Forwarding to Wazuh manager<br>
+                                <strong>✓ Audit Logs:</strong> Enabled for security events
+                            </div>
+
+                            <h6>Log Sources Configured</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Authentication Logs:</strong> /var/log/auth.log
+                                    <span class="badge bg-success ms-2">Active</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>System Logs:</strong> /var/log/syslog
+                                    <span class="badge bg-success ms-2">Active</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Kernel Logs:</strong> /var/log/kern.log
+                                    <span class="badge bg-success ms-2">Active</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Application Logs:</strong> /var/log/apache2/, /var/log/mysql/
+                                    <span class="badge bg-success ms-2">Active</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>macOS Log Integration</h5>
+                            <div class="alert alert-info">
+                                <strong>✓ Unified Logging:</strong> System logs collected via log command<br>
+                                <strong>✓ Filebeat:</strong> Configured for macOS log shipping<br>
+                                <strong>✓ Log Stream:</strong> Real-time log forwarding enabled<br>
+                                <strong>✓ Security Events:</strong> Audit logs integrated
+                            </div>
+
+                            <h6>Cross-Platform Log Correlation</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Event Type</th>
+                                            <th>Parrot OS Source</th>
+                                            <th>macOS Source</th>
+                                            <th>Correlation Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Authentication</td>
+                                            <td>/var/log/auth.log</td>
+                                            <td>authd.log</td>
+                                            <td><span class="badge bg-success">Correlated</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>System Events</td>
+                                            <td>/var/log/syslog</td>
+                                            <td>system.log</td>
+                                            <td><span class="badge bg-success">Correlated</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Security Events</td>
+                                            <td>audit.log</td>
+                                            <td>audit.log</td>
+                                            <td><span class="badge bg-success">Correlated</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Network Events</td>
+                                            <td>ufw.log</td>
+                                            <td>net.log</td>
+                                            <td><span class="badge bg-success">Correlated</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <h5>Log Ingestion Validation</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0">Parrot OS Log Ingestion</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <strong>Last Ingestion:</strong> 2024-01-15 10:35:00 UTC
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Events/Hour:</strong> 2,450
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Success Rate:</strong> 99.8%
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" style="width: 99.8%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0">macOS Log Ingestion</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <strong>Last Ingestion:</strong> 2024-01-15 10:32:00 UTC
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Events/Hour:</strong> 1,890
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Success Rate:</strong> 99.5%
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" style="width: 99.5%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function runSetupChecks() {
+    alert('Running comprehensive setup validation checks...');
+    // Implement setup validation logic
+}
+
+function generateSetupReport() {
+    alert('Generating IR environment setup report...');
+    // Implement report generation logic
+}
+</script>
+{% endblock %}

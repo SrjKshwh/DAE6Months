@@ -1,0 +1,698 @@
+{% extends "base.html" %}
+
+{% block title %}Incident Classification - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">
+                        <i class="fas fa-tags me-2"></i>Incident Classification
+                    </h1>
+                    <p class="text-muted mt-1">Comprehensive security incident classification and severity assessment</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" onclick="refreshClassification()">
+                        <i class="fas fa-sync-alt me-1"></i>Refresh Analysis
+                    </button>
+                    <button class="btn btn-outline-info" onclick="exportClassification()">
+                        <i class="fas fa-download me-1"></i>Export Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Classification Overview Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Critical Incidents
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="critical-count">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                High Severity
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="high-count">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-circle fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Medium Severity
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="medium-count">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-info-circle fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Low Severity
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="low-count">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Severity Matrix -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-table me-2"></i>Security Incident Severity Matrix
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th rowspan="2" class="align-middle">Impact</th>
+                                    <th colspan="5">Likelihood</th>
+                                </tr>
+                                <tr>
+                                    <th>1 (Very Low)</th>
+                                    <th>2 (Low)</th>
+                                    <th>3 (Medium)</th>
+                                    <th>4 (High)</th>
+                                    <th>5 (Very High)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="table-success font-weight-bold">1 (Minimal)</td>
+                                    <td class="table-success">2</td>
+                                    <td class="table-success">3</td>
+                                    <td class="table-warning">4</td>
+                                    <td class="table-warning">5</td>
+                                    <td class="table-warning">6</td>
+                                </tr>
+                                <tr>
+                                    <td class="table-success font-weight-bold">2 (Minor)</td>
+                                    <td class="table-success">3</td>
+                                    <td class="table-success">4</td>
+                                    <td class="table-warning">5</td>
+                                    <td class="table-warning">6</td>
+                                    <td class="table-warning">7</td>
+                                </tr>
+                                <tr>
+                                    <td class="table-warning font-weight-bold">3 (Moderate)</td>
+                                    <td class="table-success">4</td>
+                                    <td class="table-warning">5</td>
+                                    <td class="table-warning">6</td>
+                                    <td class="table-danger">7</td>
+                                    <td class="table-danger">8</td>
+                                </tr>
+                                <tr>
+                                    <td class="table-warning font-weight-bold">4 (Major)</td>
+                                    <td class="table-warning">5</td>
+                                    <td class="table-warning">6</td>
+                                    <td class="table-danger">7</td>
+                                    <td class="table-danger">8</td>
+                                    <td class="table-danger">9</td>
+                                </tr>
+                                <tr>
+                                    <td class="table-danger font-weight-bold">5 (Severe)</td>
+                                    <td class="table-warning">6</td>
+                                    <td class="table-danger">7</td>
+                                    <td class="table-danger">8</td>
+                                    <td class="table-danger">9</td>
+                                    <td class="table-danger">10</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-success mr-2" style="width: 20px; height: 20px;"></div>
+                                    <span class="small">LOW (1-6)</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning mr-2" style="width: 20px; height: 20px;"></div>
+                                    <span class="small">MEDIUM (7-12)</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-danger mr-2" style="width: 20px; height: 20px;"></div>
+                                    <span class="small">HIGH (13-18)</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-dark mr-2" style="width: 20px; height: 20px;"></div>
+                                    <span class="small">CRITICAL (19-25)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Classified Incidents -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-list me-2"></i>Classified Security Incidents
+                    </h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                            aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">Filter by Severity:</div>
+                            <a class="dropdown-item" href="#" onclick="filterIncidents('all')">
+                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>All Incidents
+                            </a>
+                            <a class="dropdown-item" href="#" onclick="filterIncidents('critical')">
+                                <i class="fas fa-exclamation-triangle fa-sm fa-fw mr-2 text-danger"></i>Critical Only
+                            </a>
+                            <a class="dropdown-item" href="#" onclick="filterIncidents('high')">
+                                <i class="fas fa-exclamation-circle fa-sm fa-fw mr-2 text-warning"></i>High Only
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" onclick="exportIncidents()">
+                                <i class="fas fa-download fa-sm fa-fw mr-2 text-gray-400"></i>Export Incidents
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="incidents-container">
+                        <!-- Incidents will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Methodology and Analysis -->
+    <div class="row">
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-cogs me-2"></i>Classification Methodology
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="font-weight-bold">Framework Used</h6>
+                        <p class="small text-muted">NIST SP 800-61 Incident Handling Guide</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="font-weight-bold">Severity Calculation</h6>
+                        <p class="small text-muted">Risk Score = (Impact × Likelihood) × 2.5</p>
+                        <p class="small text-muted">Scaled to 1-25 range for consistency</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="font-weight-bold">Impact Assessment Scale</h6>
+                        <ul class="small text-muted pl-3">
+                            <li>1 = Minimal impact on operations</li>
+                            <li>2 = Minor disruption, easily contained</li>
+                            <li>3 = Moderate impact, some business disruption</li>
+                            <li>4 = Major impact, significant business disruption</li>
+                            <li>5 = Severe impact, critical business functions affected</li>
+                        </ul>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="font-weight-bold">Likelihood Assessment Scale</h6>
+                        <ul class="small text-muted pl-3">
+                            <li>1 = Very unlikely to occur</li>
+                            <li>2 = Unlikely but possible</li>
+                            <li>3 = Moderate likelihood</li>
+                            <li>4 = Likely to occur</li>
+                            <li>5 = Very likely, almost certain</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-chart-pie me-2"></i>Analysis Summary
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="font-weight-bold">Total Incidents Classified</h6>
+                        <h4 class="text-primary" id="total-incidents">0</h4>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="font-weight-bold">Average Risk Score</h6>
+                        <h4 class="text-info" id="avg-risk-score">0.0</h4>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="font-weight-bold">Severity Distribution</h6>
+                        <div class="chart-container" style="position: relative; height: 200px;">
+                            <canvas id="severityChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="font-weight-bold">Highest Risk Incident</h6>
+                        <p class="text-danger font-weight-bold" id="highest-risk">None</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incident Details Modal -->
+    <div class="modal fade" id="incidentDetailsModal" tabindex="-1" role="dialog" aria-labelledby="incidentDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="incidentDetailsModalLabel">Incident Classification Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="incident-details-content">
+                    <!-- Incident details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="createResponsePlan()">Create Response Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Initialize page when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    loadClassificationData();
+    initializeCharts();
+});
+
+// Load classification data from the backend
+function loadClassificationData() {
+    // Simulate loading data - in production, this would fetch from the incident_classification endpoint
+    const mockData = {
+        "classified_incidents": [
+            {
+                "incident_id": "SEC-INC-001",
+                "incident_type": "Brute Force Authentication Attack",
+                "description": "Multiple failed login attempts detected from single IP address targeting administrative accounts",
+                "severity_classification": {
+                    "impact_assessment": 4,
+                    "likelihood_assessment": 4,
+                    "risk_score": 20,
+                    "severity_level": "CRITICAL",
+                    "severity_reasoning": "High impact on account security combined with high likelihood of success indicates critical severity"
+                },
+                "analysis_methodology": {
+                    "data_sources": ["Authentication logs from target systems", "Wazuh agent logs from Parrot OS monitoring"],
+                    "detection_techniques": ["Pattern recognition for repeated failed attempts", "IP-based frequency analysis"],
+                    "classification_criteria": ["5+ failed attempts from same IP within 10 minutes", "Targeting of privileged accounts"]
+                },
+                "security_implications": {
+                    "business_impact": "Potential unauthorized access to sensitive systems and data",
+                    "technical_risks": ["Account compromise leading to lateral movement", "Data theft or manipulation"],
+                    "recommended_mitigations": ["Implement account lockout policies", "Enable multi-factor authentication"]
+                }
+            },
+            {
+                "incident_id": "SEC-INC-002",
+                "incident_type": "Unauthorized Access Attempt",
+                "description": "Attempted access to restricted system resources by unauthorized user",
+                "severity_classification": {
+                    "impact_assessment": 3,
+                    "likelihood_assessment": 3,
+                    "risk_score": 11,
+                    "severity_level": "MEDIUM",
+                    "severity_reasoning": "Medium impact from attempted access with moderate likelihood indicates medium severity"
+                },
+                "analysis_methodology": {
+                    "data_sources": ["System access logs", "File system audit logs"],
+                    "detection_techniques": ["Access control violation detection", "Permission escalation monitoring"]
+                },
+                "security_implications": {
+                    "business_impact": "Potential for unauthorized data access or system compromise",
+                    "technical_risks": ["Data confidentiality breaches", "Potential for privilege escalation"],
+                    "recommended_mitigations": ["Implement role-based access control", "Regular access rights reviews"]
+                }
+            },
+            {
+                "incident_id": "SEC-INC-003",
+                "incident_type": "Data Exfiltration Attempt",
+                "description": "Suspicious outbound data transfer detected indicating potential data theft",
+                "severity_classification": {
+                    "impact_assessment": 5,
+                    "likelihood_assessment": 3,
+                    "risk_score": 19,
+                    "severity_level": "CRITICAL",
+                    "severity_reasoning": "Critical impact from potential data loss combined with moderate likelihood indicates critical severity"
+                },
+                "analysis_methodology": {
+                    "data_sources": ["Network traffic logs", "Data Loss Prevention (DLP) alerts"],
+                    "detection_techniques": ["Network traffic analysis for unusual patterns", "File transfer monitoring"]
+                },
+                "security_implications": {
+                    "business_impact": "Potential loss of sensitive business data and intellectual property",
+                    "technical_risks": ["Data theft and exposure", "Financial loss from data breach"],
+                    "recommended_mitigations": ["Implement Data Loss Prevention (DLP) solutions", "Encrypt sensitive data"]
+                }
+            }
+        ],
+        "summary": {
+            "total_incidents_classified": 3,
+            "severity_distribution": {
+                "CRITICAL": 2,
+                "HIGH": 0,
+                "MEDIUM": 1,
+                "LOW": 0
+            },
+            "average_risk_score": 16.67,
+            "highest_risk_incident": "Brute Force Authentication Attack"
+        }
+    };
+
+    updateDashboard(mockData);
+    renderIncidents(mockData.classified_incidents);
+}
+
+// Update dashboard counters and summary
+function updateDashboard(data) {
+    document.getElementById('critical-count').textContent = data.summary.severity_distribution.CRITICAL || 0;
+    document.getElementById('high-count').textContent = data.summary.severity_distribution.HIGH || 0;
+    document.getElementById('medium-count').textContent = data.summary.severity_distribution.MEDIUM || 0;
+    document.getElementById('low-count').textContent = data.summary.severity_distribution.LOW || 0;
+
+    document.getElementById('total-incidents').textContent = data.summary.total_incidents_classified;
+    document.getElementById('avg-risk-score').textContent = data.summary.average_risk_score.toFixed(1);
+    document.getElementById('highest-risk').textContent = data.summary.highest_risk_incident;
+}
+
+// Render incidents in the container
+function renderIncidents(incidents) {
+    const container = document.getElementById('incidents-container');
+
+    if (incidents.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted py-5"><i class="fas fa-info-circle fa-3x mb-3"></i><p>No incidents classified yet.</p></div>';
+        return;
+    }
+
+    const incidentsHtml = incidents.map(incident => `
+        <div class="card mb-3 border-left-${getSeverityColor(incident.severity_classification.severity_level)}">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        <span class="badge badge-${getSeverityColor(incident.severity_classification.severity_level)} mr-2">
+                            ${incident.severity_classification.severity_level}
+                        </span>
+                        ${incident.incident_type}
+                    </h6>
+                    <small class="text-muted">Risk Score: ${incident.severity_classification.risk_score}/25</small>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">${incident.description}</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <small class="text-muted">
+                            <strong>Impact:</strong> ${incident.severity_classification.impact_assessment}/5<br>
+                            <strong>Likelihood:</strong> ${incident.severity_classification.likelihood_assessment}/5
+                        </small>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewIncidentDetails('${incident.incident_id}')">
+                            <i class="fas fa-eye mr-1"></i>View Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    container.innerHTML = incidentsHtml;
+}
+
+// Initialize charts
+function initializeCharts() {
+    const ctx = document.getElementById('severityChart').getContext('2d');
+
+    const chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Critical', 'High', 'Medium', 'Low'],
+            datasets: [{
+                data: [2, 0, 1, 0],
+                backgroundColor: [
+                    '#dc3545', // Critical - red
+                    '#ffc107', // High - yellow
+                    '#17a2b8', // Medium - blue
+                    '#28a745'  // Low - green
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+// Utility functions
+function getSeverityColor(severity) {
+    const colors = {
+        'CRITICAL': 'danger',
+        'HIGH': 'warning',
+        'MEDIUM': 'info',
+        'LOW': 'success'
+    };
+    return colors[severity] || 'secondary';
+}
+
+function viewIncidentDetails(incidentId) {
+    // Find the incident data
+    const mockData = {
+        "SEC-INC-001": {
+            "incident_id": "SEC-INC-001",
+            "incident_type": "Brute Force Authentication Attack",
+            "description": "Multiple failed login attempts detected from single IP address targeting administrative accounts",
+            "severity_classification": {
+                "impact_assessment": 4,
+                "likelihood_assessment": 4,
+                "risk_score": 20,
+                "severity_level": "CRITICAL"
+            },
+            "analysis_methodology": {
+                "data_sources": ["Authentication logs from target systems", "Wazuh agent logs from Parrot OS monitoring"],
+                "detection_techniques": ["Pattern recognition for repeated failed attempts", "IP-based frequency analysis"],
+                "classification_criteria": ["5+ failed attempts from same IP within 10 minutes", "Targeting of privileged accounts"]
+            },
+            "security_implications": {
+                "business_impact": "Potential unauthorized access to sensitive systems and data",
+                "technical_risks": ["Account compromise leading to lateral movement", "Data theft or manipulation"],
+                "recommended_mitigations": ["Implement account lockout policies", "Enable multi-factor authentication"]
+            }
+        }
+    };
+
+    const incident = mockData[incidentId];
+    if (!incident) return;
+
+    const modal = new bootstrap.Modal(document.getElementById('incidentDetailsModal'));
+    const content = document.getElementById('incident-details-content');
+
+    content.innerHTML = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Incident Information</h6>
+                <p><strong>ID:</strong> ${incident.incident_id}</p>
+                <p><strong>Type:</strong> ${incident.incident_type}</p>
+                <p><strong>Description:</strong> ${incident.description}</p>
+                <p><strong>Severity:</strong> <span class="badge badge-${getSeverityColor(incident.severity_classification.severity_level)}">${incident.severity_classification.severity_level}</span></p>
+                <p><strong>Risk Score:</strong> ${incident.severity_classification.risk_score}/25</p>
+            </div>
+            <div class="col-md-6">
+                <h6>Assessment Details</h6>
+                <p><strong>Impact Assessment:</strong> ${incident.severity_classification.impact_assessment}/5</p>
+                <p><strong>Likelihood Assessment:</strong> ${incident.severity_classification.likelihood_assessment}/5</p>
+                <h6>Data Sources</h6>
+                <ul>
+                    ${incident.analysis_methodology.data_sources.map(source => `<li>${source}</li>`).join('')}
+                </ul>
+            </div>
+        </div>
+        <div class="mt-3">
+            <h6>Security Implications</h6>
+            <p><strong>Business Impact:</strong> ${incident.security_implications.business_impact}</p>
+            <p><strong>Technical Risks:</strong></p>
+            <ul>
+                ${incident.security_implications.technical_risks.map(risk => `<li>${risk}</li>`).join('')}
+            </ul>
+            <p><strong>Recommended Mitigations:</strong></p>
+            <ul>
+                ${incident.security_implications.recommended_mitigations.map(mitigation => `<li>${mitigation}</li>`).join('')}
+            </ul>
+        </div>
+    `;
+
+    modal.show();
+}
+
+function filterIncidents(severity) {
+    // Implementation for filtering incidents by severity
+    showAlert(`Filtering incidents by ${severity} severity`, 'info');
+}
+
+function exportIncidents() {
+    showAlert('Exporting classified incidents...', 'info');
+    setTimeout(() => showAlert('Incidents exported successfully', 'success'), 2000);
+}
+
+function refreshClassification() {
+    showAlert('Refreshing classification analysis...', 'info');
+    loadClassificationData();
+    setTimeout(() => showAlert('Classification refreshed successfully', 'success'), 1000);
+}
+
+function exportClassification() {
+    showAlert('Exporting classification report...', 'info');
+    setTimeout(() => showAlert('Report exported successfully', 'success'), 2000);
+}
+
+function createResponsePlan() {
+    showAlert('Creating incident response plan...', 'info');
+    setTimeout(() => showAlert('Response plan created successfully', 'success'), 1500);
+}
+
+// Utility function to show alerts
+function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span>
+        </button>
+    `;
+
+    document.body.appendChild(alertDiv);
+
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+</script>
+
+<style>
+.border-left-danger {
+    border-left: 4px solid #e74a3b !important;
+}
+
+.border-left-warning {
+    border-left: 4px solid #f39c12 !important;
+}
+
+.border-left-info {
+    border-left: 4px solid #17a2b8 !important;
+}
+
+.border-left-success {
+    border-left: 4px solid #1cc88a !important;
+}
+
+.badge-danger {
+    background-color: #e74a3b;
+}
+
+.badge-warning {
+    background-color: #f39c12;
+}
+
+.badge-info {
+    background-color: #17a2b8;
+}
+
+.badge-success {
+    background-color: #1cc88a;
+}
+
+.table-success {
+    background-color: #d4edda;
+}
+
+.table-warning {
+    background-color: #fff3cd;
+}
+
+.table-danger {
+    background-color: #f8d7da;
+}
+</style>
+
+{% endblock %}

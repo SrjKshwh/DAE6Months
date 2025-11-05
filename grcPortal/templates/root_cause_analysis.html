@@ -1,0 +1,448 @@
+{% extends "base.html" %}
+
+{% block title %}Root Cause Analysis - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-search"></i> Root Cause Analysis</h1>
+                    <p class="text-muted">Identify and analyze the underlying causes of security incidents</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="startRCAAnalysis()">
+                        <i class="fas fa-play"></i> Start RCA
+                    </button>
+                    <button class="btn btn-outline-success" onclick="generateRCAReport()">
+                        <i class="fas fa-file-alt"></i> Generate Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page Introduction -->
+            <div class="alert alert-info mb-4">
+                <h6><i class="fas fa-info-circle"></i> About Root Cause Analysis</h6>
+                <p>This page provides comprehensive root cause analysis methodologies for security incidents. It follows NIST SP 800-61 guidelines and includes multiple analysis frameworks including 5-Whys, Fishbone Diagrams, and technical analysis procedures.</p>
+                <p><strong>Key Components:</strong> Analysis methodologies, evidence collection, contributing factor identification, and documentation templates for thorough incident investigation.</p>
+            </div>
+
+            <!-- RCA Status Overview -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Active Analyses</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-warning">2</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-search fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Completed This Month</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">5</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-check-circle fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Average Completion Time</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-info">4.2 hrs</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clock fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Root Causes Identified</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">23</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-bullseye fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Methodologies -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-tools"></i> Root Cause Analysis Methodologies
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>5-Whys Analysis</h5>
+                            <div class="card border-primary mb-3">
+                                <div class="card-body">
+                                    <p class="small">A simple but effective method for uncovering the root cause of a problem by asking "why" five times.</p>
+                                    <h6>Example: Ransomware Incident</h6>
+                                    <ol class="small">
+                                        <li><strong>Why:</strong> Files were encrypted by ransomware</li>
+                                        <li><strong>Why:</strong> Malicious software executed on the system</li>
+                                        <li><strong>Why:</strong> User opened a malicious email attachment</li>
+                                        <li><strong>Why:</strong> Email bypassed security filters</li>
+                                        <li><strong>Why:</strong> Security policies not properly configured</li>
+                                    </ol>
+                                    <div class="alert alert-success small">
+                                        <strong>Root Cause:</strong> Insufficient email security policy configuration
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Fishbone Diagram (Ishikawa)</h5>
+                            <div class="card border-info mb-3">
+                                <div class="card-body">
+                                    <p class="small">A cause-and-effect diagram that categorizes potential causes of a problem.</p>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <strong>People:</strong>
+                                            <ul class="small mb-2">
+                                                <li>Lack of training</li>
+                                                <li>Human error</li>
+                                                <li>Insufficient staffing</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-6">
+                                            <strong>Process:</strong>
+                                            <ul class="small mb-2">
+                                                <li>Weak procedures</li>
+                                                <li>No oversight</li>
+                                                <li>Poor documentation</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <strong>Technology:</strong>
+                                            <ul class="small mb-2">
+                                                <li>Outdated software</li>
+                                                <li>Configuration errors</li>
+                                                <li>Hardware failures</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-6">
+                                            <strong>Environment:</strong>
+                                            <ul class="small mb-2">
+                                                <li>Physical security</li>
+                                                <li>Network issues</li>
+                                                <li>External factors</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Technical Analysis Framework</h5>
+                            <div class="accordion" id="technicalAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#tech1">
+                                            Evidence Collection
+                                        </button>
+                                    </h2>
+                                    <div id="tech1" class="accordion-collapse collapse show" data-bs-parent="#technicalAccordion">
+                                        <div class="accordion-body small">
+                                            <ul>
+                                                <li>Log analysis (system, application, security)</li>
+                                                <li>Memory forensics (Volatility analysis)</li>
+                                                <li>Network traffic analysis (Wireshark)</li>
+                                                <li>File system analysis (timeline, artifacts)</li>
+                                                <li>Registry analysis (Windows systems)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tech2">
+                                            Malware Analysis
+                                        </button>
+                                    </h2>
+                                    <div id="tech2" class="accordion-collapse collapse" data-bs-parent="#technicalAccordion">
+                                        <div class="accordion-body small">
+                                            <ul>
+                                                <li>Static analysis (signatures, strings, disassembly)</li>
+                                                <li>Dynamic analysis (sandbox execution)</li>
+                                                <li>Behavioral analysis (API calls, network activity)</li>
+                                                <li>Code analysis (decompilation, reverse engineering)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Analysis Best Practices</h5>
+                            <div class="card border-warning">
+                                <div class="card-body">
+                                    <h6>Do's</h6>
+                                    <ul class="small mb-3">
+                                        <li>Preserve evidence chain of custody</li>
+                                        <li>Use multiple analysis methods</li>
+                                        <li>Document all findings thoroughly</li>
+                                        <li>Involve cross-functional team</li>
+                                        <li>Consider both technical and human factors</li>
+                                    </ul>
+                                    <h6>Don'ts</h6>
+                                    <ul class="small mb-0">
+                                        <li>Jump to conclusions without evidence</li>
+                                        <li>Focus only on technical causes</li>
+                                        <li>Ignore contributing factors</li>
+                                        <li>Delay analysis for too long</li>
+                                        <li>Work in isolation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active RCA Cases -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-info">
+                        <i class="fas fa-list"></i> Active Root Cause Analysis Cases
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="rcaTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Incident ID</th>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Methodology</th>
+                                    <th>Assigned To</th>
+                                    <th>Start Date</th>
+                                    <th>Progress</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>IR-2024-001</td>
+                                    <td>Ransomware Infection</td>
+                                    <td><span class="badge bg-warning">In Progress</span></td>
+                                    <td>5-Whys + Technical</td>
+                                    <td>John Smith</td>
+                                    <td>2024-01-15</td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-success" style="width: 75%">75%</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary me-1" onclick="viewRCACase('IR-2024-001')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" onclick="updateRCAProgress('IR-2024-001')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>IR-2024-002</td>
+                                    <td>Unauthorized Access</td>
+                                    <td><span class="badge bg-warning">In Progress</span></td>
+                                    <td>Fishbone + Log Analysis</td>
+                                    <td>Sarah Johnson</td>
+                                    <td>2024-01-20</td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-info" style="width: 45%">45%</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary me-1" onclick="viewRCACase('IR-2024-002')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" onclick="updateRCAProgress('IR-2024-002')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>IR-2024-003</td>
+                                    <td>Data Breach</td>
+                                    <td><span class="badge bg-success">Completed</span></td>
+                                    <td>Technical Analysis</td>
+                                    <td>Mike Davis</td>
+                                    <td>2024-01-10</td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-success" style="width: 100%">100%</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary me-1" onclick="viewRCACase('IR-2024-003')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" onclick="downloadRCAReport('IR-2024-003')">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RCA Templates and Tools -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">
+                        <i class="fas fa-file-alt"></i> RCA Templates and Documentation Tools
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Analysis Templates</h5>
+                            <div class="list-group mb-3">
+                                <a href="#" class="list-group-item list-group-item-action" onclick="loadTemplate('5-whys')">
+                                    <i class="fas fa-question-circle me-2"></i>5-Whys Analysis Template
+                                    <small class="text-muted d-block">Structured template for iterative why analysis</small>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action" onclick="loadTemplate('fishbone')">
+                                    <i class="fas fa-project-diagram me-2"></i>Fishbone Diagram Template
+                                    <small class="text-muted d-block">Cause-and-effect analysis framework</small>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action" onclick="loadTemplate('technical')">
+                                    <i class="fas fa-cogs me-2"></i>Technical Analysis Template
+                                    <small class="text-muted d-block">Detailed technical investigation framework</small>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action" onclick="loadTemplate('timeline')">
+                                    <i class="fas fa-clock me-2"></i>Event Timeline Template
+                                    <small class="text-muted d-block">Chronological event reconstruction</small>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Analysis Tools</h5>
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <h6>Automated Analysis Tools</h6>
+                                    <ul class="small mb-3">
+                                        <li><strong>Log Analyzer:</strong> Automated log correlation and anomaly detection</li>
+                                        <li><strong>Timeline Generator:</strong> Create chronological event timelines from logs</li>
+                                        <li><strong>Evidence Correlator:</strong> Link related events across multiple data sources</li>
+                                        <li><strong>Report Generator:</strong> Automated RCA report creation with findings</li>
+                                    </ul>
+
+                                    <h6>Integration Points</h6>
+                                    <ul class="small mb-0">
+                                        <li><strong>Wazuh:</strong> Security event correlation</li>
+                                        <li><strong>Volatility:</strong> Memory analysis integration</li>
+                                        <li><strong>Wireshark:</strong> Network traffic analysis</li>
+                                        <li><strong>SIEM:</strong> Centralized log analysis</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.table th {
+    border-top: none;
+    font-weight: 600;
+}
+
+.progress {
+    background-color: #e9ecef;
+}
+
+.list-group-item small {
+    font-size: 0.8rem;
+}
+</style>
+
+<script>
+function startRCAAnalysis() {
+    if (confirm('Start a new Root Cause Analysis?')) {
+        // Implement RCA initiation logic
+        alert('RCA analysis initiated...');
+    }
+}
+
+function generateRCAReport() {
+    alert('Generating comprehensive RCA report...');
+    // Implement report generation logic
+}
+
+function viewRCACase(incidentId) {
+    // Implement case viewing logic
+    alert(`Viewing RCA case: ${incidentId}`);
+}
+
+function updateRCAProgress(incidentId) {
+    // Implement progress update logic
+    alert(`Updating progress for: ${incidentId}`);
+}
+
+function downloadRCAReport(incidentId) {
+    // Implement report download logic
+    alert(`Downloading RCA report for: ${incidentId}`);
+}
+
+function loadTemplate(templateType) {
+    // Implement template loading logic
+    alert(`Loading ${templateType} template...`);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}System Logging Setup - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-database me-2"></i>System Logging Configuration</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Comprehensive logging setup for security monitoring, audit trails, and incident response across multiple platforms.
+                    </div>
+
+                    <!-- Linux Logging Setup -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fab fa-linux me-2"></i>Linux System Logging (rsyslog)</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Installation:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>sudo apt update<br>sudo apt install rsyslog</code>
+                            </div>
+
+                            <h5>Configuration:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>sudo nano /etc/rsyslog.conf</code>
+                            </div>
+
+                            <h5>Security Logging Configuration:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <pre># Security events
+auth,authpriv.*                 /var/log/auth.log
+*.*;auth,authpriv.none          -/var/log/syslog
+kern.*                          -/var/log/kern.log
+
+# Remote logging
+*.* @@logserver.example.com:514</pre>
+                            </div>
+
+                            <h5>Log Rotation:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>sudo nano /etc/logrotate.d/rsyslog</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Windows Logging Setup -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fab fa-windows me-2"></i>Windows Event Logging</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Enable Advanced Audit Policies:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>gpedit.msc<br>Computer Configuration → Windows Settings → Security Settings → Advanced Audit Policy Configuration</code>
+                            </div>
+
+                            <h5>PowerShell Logging:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code># Enable PowerShell transcription
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription"
+New-ItemProperty -Path $regPath -Name "EnableTranscripting" -Value 1 -PropertyType DWORD
+
+# Enable PowerShell module logging
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging"
+New-ItemProperty -Path $regPath -Name "EnableModuleLogging" -Value 1 -PropertyType DWORD</code>
+                            </div>
+
+                            <h5>Event Log Sizes:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>wevtutil sl Security /ms:104857600  # 100MB<br>wevtutil sl System /ms:104857600<br>wevtutil sl Application /ms:104857600</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- macOS Logging Setup -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fab fa-apple me-2"></i>macOS Unified Logging</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>View System Logs:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>log show --last 1h<br>log stream --level debug</code>
+                            </div>
+
+                            <h5>Security Event Logging:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code># Enable security logging
+sudo log config --mode "level:debug,persist:debug" --subsystem com.apple.security</code>
+                            </div>
+
+                            <h5>Export Logs:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code>log collect --output ~/Desktop/logs.logarchive</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Log Aggregation -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-server me-2"></i>Log Aggregation & SIEM Integration</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>ELK Stack Setup:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code># Install Elasticsearch<br>wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -<br>sudo apt install elasticsearch<br><br># Install Logstash<br>sudo apt install logstash<br><br># Install Kibana<br>sudo apt install kibana</code>
+                            </div>
+
+                            <h5>Wazuh Integration:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code># Configure Wazuh agent for log collection<br>sudo /var/ossec/bin/agent-auth -m 192.168.1.100<br>sudo systemctl restart wazuh-agent</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Log Analysis -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-chart-line me-2"></i>Log Analysis & Monitoring</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Common Log Analysis Commands:</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code># Failed login attempts<br>grep "Failed password" /var/log/auth.log<br><br># System errors<br>grep "ERROR" /var/log/syslog<br><br># Network connections<br>netstat -tuln | grep LISTEN</code>
+                            </div>
+
+                            <h5>Automated Monitoring:</h5>
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item">Logwatch for daily reports</li>
+                                <li class="list-group-item">Fail2ban for intrusion prevention</li>
+                                <li class="list-group-item">OSSEC/Wazuh for real-time monitoring</li>
+                                <li class="list-group-item">Custom scripts for anomaly detection</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Compliance & Retention -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-gavel me-2"></i>Compliance & Log Retention</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Retention Policies:</h5>
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item">Security logs: 1-7 years (depending on compliance requirements)</li>
+                                <li class="list-group-item">System logs: 90-365 days</li>
+                                <li class="list-group-item">Audit logs: 3-7 years</li>
+                                <li class="list-group-item">Application logs: 30-90 days</li>
+                            </ul>
+
+                            <h5>Compliance Standards:</h5>
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item">PCI DSS: 1 year minimum for audit logs</li>
+                                <li class="list-group-item">SOX: 7 years for financial transaction logs</li>
+                                <li class="list-group-item">HIPAA: 6 years for health information logs</li>
+                                <li class="list-group-item">GDPR: Variable based on data sensitivity</li>
+                            </ul>
+
+                            <h5>Secure Log Storage:</h5>
+                            <div class="alert alert-warning">
+                                <strong>Important:</strong> Implement write-once-read-many (WORM) storage and regular integrity checks for compliance logs.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -102,7 +102,91 @@
                         </ul>
                     </li>
 
-                    <!-- 5. OPERATIONS & ADMINISTRATION -->
+                    <!-- 5. INCIDENT RESPONSE -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-end" href="#" id="incidentResponseDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-shield-alt me-1"></i> Incident Response
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="incidentResponseDropdown">
+                            <!-- IR Environment Setup Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-cogs me-2"></i>IR Environment Setup
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <li><a class="dropdown-item" href="{{ url_for('ir_environment_setup') }}"><i class="fas fa-server me-2"></i>Environment Setup</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('wazuh_setup') }}"><i class="fas fa-shield-alt me-2"></i>Wazuh SIEM</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('wireshark_setup') }}"><i class="fas fa-network-wired me-2"></i>Wireshark</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('volatility_setup') }}"><i class="fas fa-memory me-2"></i>Volatility</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('logging_setup') }}"><i class="fas fa-database me-2"></i>System Logging</a></li>
+                                </ul>
+                            </li>
+                            <!-- Incident Detection & Analysis Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-search me-2"></i>Incident Detection & Analysis
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <li><a class="dropdown-item" href="{{ url_for('incident_detection') }}"><i class="fas fa-bolt me-2"></i>Incident Detection</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('log_analysis') }}"><i class="fas fa-chart-bar me-2"></i>Log Analysis</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('suspicious_login_analysis') }}"><i class="fas fa-user-secret me-2"></i>Suspicious Login Analysis</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('incident_classification') }}"><i class="fas fa-tags me-2"></i>Incident Classification</a></li>
+                                </ul>
+                            </li>
+                            <!-- Incident Response & Containment Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-lock me-2"></i>Incident Response & Containment
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <li><a class="dropdown-item" href="{{ url_for('incident_response_containment') }}"><i class="fas fa-shield-alt me-2"></i>Response & Containment</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('network_isolation') }}"><i class="fas fa-network-wired me-2"></i>Network Isolation</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('evidence_preservation') }}"><i class="fas fa-save me-2"></i>Evidence Preservation</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('containment_playbook') }}"><i class="fas fa-book me-2"></i>Containment Playbook</a></li>
+                                </ul>
+                            </li>
+                            <!-- Digital Evidence Management Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-search me-2"></i>Digital Evidence Management
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <li><a class="dropdown-item" href="{{ url_for('digital_evidence_management') }}"><i class="fas fa-folder-open me-2"></i>Evidence Management</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('live_data_collection') }}"><i class="fas fa-play me-2"></i>Live Data Collection</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('memory_analysis') }}"><i class="fas fa-memory me-2"></i>Memory Analysis</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('disk_acquisition') }}"><i class="fas fa-hdd me-2"></i>Disk Acquisition</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('chain_of_custody') }}"><i class="fas fa-link me-2"></i>Chain of Custody</a></li>
+                                </ul>
+                            </li>
+                            <!-- IR Documentation & Reporting Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-book me-2"></i>IR Documentation & Reporting
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <li><a class="dropdown-item" href="{{ url_for('ir_documentation_reporting') }}"><i class="fas fa-file-alt me-2"></i>Documentation & Reporting</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('incident_playbook') }}"><i class="fas fa-book-open me-2"></i>Incident Playbook</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('incident_tracking') }}"><i class="fas fa-clock me-2"></i>Incident Tracking</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('incident_report') }}"><i class="fas fa-file-contract me-2"></i>Incident Report</a></li>
+                                </ul>
+                            </li>
+                            <!-- Post-Incident Procedures Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-redo me-2"></i>Post-Incident Procedures
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <li><a class="dropdown-item" href="{{ url_for('post_incident_procedures') }}"><i class="fas fa-undo me-2"></i>Post-Incident Procedures</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('system_recovery') }}"><i class="fas fa-server me-2"></i>System Recovery</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('root_cause_analysis') }}"><i class="fas fa-search me-2"></i>Root Cause Analysis</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('recovery_validation') }}"><i class="fas fa-check-circle me-2"></i>Recovery Validation</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('process_improvement') }}"><i class="fas fa-chart-line me-2"></i>Process Improvement</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- 6. OPERATIONS & ADMINISTRATION -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-end" href="#" id="operationsAdminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-cog me-1"></i> Operations & Admin

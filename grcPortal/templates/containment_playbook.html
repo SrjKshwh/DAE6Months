@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+
+{% block title %}Containment Playbook - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title mb-0">
+                        <i class="fas fa-book text-primary me-2"></i>
+                        Containment Playbook
+                    </h2>
+                    <small class="text-muted">Automated containment procedures for incident response</small>
+                </div>
+                <div class="card-body">
+                    <!-- Playbook Overview -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <h5><i class="fas fa-info-circle me-2"></i>Playbook Overview</h5>
+                                <p class="mb-0">This containment playbook provides automated procedures for isolating affected systems, preventing threat spread, and securing the environment during incident response operations.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Containment Phases -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title mb-0">
+                                        <i class="fas fa-shield-alt text-warning me-2"></i>
+                                        Containment Phases
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Phase 1: Immediate Containment -->
+                                    <div class="containment-phase mb-4">
+                                        <h5 class="text-danger">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            Phase 1: Immediate Containment (0-15 minutes)
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Network Isolation</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Firewall Rules:</strong> Block all inbound/outbound traffic from affected systems
+                                                        <br><small class="text-muted">Execute: <code>iptables -A INPUT -s [IP] -j DROP</code></small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Network Segmentation:</strong> Move affected systems to quarantine VLAN
+                                                        <br><small class="text-muted">Isolate from production network segments</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Service Disruption:</strong> Disable compromised services
+                                                        <br><small class="text-muted">Stop affected applications and services</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>System Isolation</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Account Lockout:</strong> Disable compromised user accounts
+                                                        <br><small class="text-muted">Prevent lateral movement within the environment</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Process Termination:</strong> Kill suspicious processes
+                                                        <br><small class="text-muted">Stop malware execution and persistence mechanisms</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Backup Isolation:</strong> Quarantine system backups
+                                                        <br><small class="text-muted">Prevent reinfection from backup sources</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Phase 2: Evidence Preservation -->
+                                    <div class="containment-phase mb-4">
+                                        <h5 class="text-warning">
+                                            <i class="fas fa-save me-2"></i>
+                                            Phase 2: Evidence Preservation (15-60 minutes)
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Memory Acquisition</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Live Memory Dump:</strong> Capture volatile memory
+                                                        <br><small class="text-muted">Use Volatility or LiME for memory forensics</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Process Memory:</strong> Dump suspicious process memory
+                                                        <br><small class="text-muted">Capture running malware in memory</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>System State Capture</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Network Connections:</strong> Log all active connections
+                                                        <br><small class="text-muted">Document C2 communications and data exfiltration</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>File System Snapshot:</strong> Create disk image
+                                                        <br><small class="text-muted">Preserve file system state for analysis</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Phase 3: Threat Eradication -->
+                                    <div class="containment-phase mb-4">
+                                        <h5 class="text-info">
+                                            <i class="fas fa-bug me-2"></i>
+                                            Phase 3: Threat Eradication (1-4 hours)
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Malware Removal</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Signature-based Scan:</strong> Run antivirus/malware scanners
+                                                        <br><small class="text-muted">Remove known malicious files and registry entries</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Rootkit Detection:</strong> Scan for hidden malware
+                                                        <br><small class="text-muted">Use specialized tools to detect kernel-level threats</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>System Cleanup</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Registry Cleanup:</strong> Remove persistence mechanisms
+                                                        <br><small class="text-muted">Clean startup entries and scheduled tasks</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Configuration Reset:</strong> Restore system configurations
+                                                        <br><small class="text-muted">Reset to known good state where possible</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Phase 4: Recovery and Monitoring -->
+                                    <div class="containment-phase">
+                                        <h5 class="text-success">
+                                            <i class="fas fa-redo me-2"></i>
+                                            Phase 4: Recovery and Monitoring (4+ hours)
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>System Recovery</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>Service Restoration:</strong> Gradually restore services
+                                                        <br><small class="text-muted">Monitor for signs of reinfection</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Network Reconnection:</strong> Reintegrate into production
+                                                        <br><small class="text-muted">Verify security controls are active</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Enhanced Monitoring</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <strong>IDS/IPS Activation:</strong> Enable advanced threat detection
+                                                        <br><small class="text-muted">Monitor for similar attack patterns</small>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <strong>Log Analysis:</strong> Continuous security monitoring
+                                                        <br><small class="text-muted">Establish baseline and detect anomalies</small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Automated Scripts -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title mb-0">
+                                        <i class="fas fa-terminal text-secondary me-2"></i>
+                                        Automated Containment Scripts
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-warning">
+                                        <strong>⚠️ Warning:</strong> These scripts should be tested in a non-production environment before use. Always backup systems before automated containment.
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Network Isolation Script</h6>
+                                            <pre class="bg-light p-3 rounded"><code>#!/bin/bash
+# Automated Network Containment
+# Usage: ./network_isolate.sh [target_ip] [case_number]
+
+TARGET_IP=$1
+CASE_NUMBER=$2
+
+echo "[$(date)] Starting network isolation for $TARGET_IP"
+
+# Block all traffic to/from target
+iptables -A INPUT -s $TARGET_IP -j DROP
+iptables -A OUTPUT -d $TARGET_IP -j DROP
+
+# Log the action
+echo "[$(date)] Network isolation complete for case $CASE_NUMBER" >> /var/log/containment.log</code></pre>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Process Termination Script</h6>
+                                            <pre class="bg-light p-3 rounded"><code>#!/bin/bash
+# Automated Process Containment
+# Usage: ./process_kill.sh [process_name] [case_number]
+
+PROCESS_NAME=$1
+CASE_NUMBER=$2
+
+echo "[$(date)] Starting process termination for $PROCESS_NAME"
+
+# Find and kill suspicious processes
+pkill -f "$PROCESS_NAME"
+
+# Log the action
+echo "[$(date)] Process termination complete for case $CASE_NUMBER" >> /var/log/containment.log</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Containment Checklist -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title mb-0">
+                                        <i class="fas fa-checklist text-success me-2"></i>
+                                        Containment Checklist
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Immediate Actions</h6>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="network_isolated">
+                                                <label class="form-check-label" for="network_isolated">
+                                                    Network isolation implemented
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="accounts_locked">
+                                                <label class="form-check-label" for="accounts_locked">
+                                                    Compromised accounts locked
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="processes_killed">
+                                                <label class="form-check-label" for="processes_killed">
+                                                    Suspicious processes terminated
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="evidence_preserved">
+                                                <label class="form-check-label" for="evidence_preserved">
+                                                    Evidence preservation initiated
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Verification Steps</h6>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="isolation_verified">
+                                                <label class="form-check-label" for="isolation_verified">
+                                                    Isolation effectiveness verified
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="backups_secured">
+                                                <label class="form-check-label" for="backups_secured">
+                                                    System backups secured
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="monitoring_active">
+                                                <label class="form-check-label" for="monitoring_active">
+                                                    Enhanced monitoring activated
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="team_notified">
+                                                <label class="form-check-label" for="team_notified">
+                                                    Incident response team notified
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Related Documentation -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title mb-0">
+                                        <i class="fas fa-file-alt text-info me-2"></i>
+                                        Related Documentation
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-network-wired fa-3x text-primary mb-3"></i>
+                                                    <h6>Network Isolation</h6>
+                                                    <p class="text-muted small">Detailed procedures for network segmentation and firewall configuration</p>
+                                                    <a href="{{ url_for('network_isolation') }}" class="btn btn-outline-primary btn-sm">View Guide</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-save fa-3x text-success mb-3"></i>
+                                                    <h6>Evidence Preservation</h6>
+                                                    <p class="text-muted small">Chain of custody and evidence collection procedures</p>
+                                                    <a href="{{ url_for('evidence_preservation') }}" class="btn btn-outline-success btn-sm">View Guide</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-chart-line fa-3x text-warning mb-3"></i>
+                                                    <h6>Incident Response</h6>
+                                                    <p class="text-muted small">Complete IR process from detection to recovery</p>
+                                                    <a href="{{ url_for('incident_response') }}" class="btn btn-outline-warning btn-sm">View Process</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Interactive checklist functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.form-check-input');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const label = this.nextElementSibling;
+            if (this.checked) {
+                label.style.textDecoration = 'line-through';
+                label.style.color = '#6c757d';
+            } else {
+                label.style.textDecoration = 'none';
+                label.style.color = '';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1193,12 +1193,66 @@ class Evidence(Base):
     hash_value: Mapped[str] = mapped_column(String(128), nullable=True)  # SHA-256 hash for integrity
     incident_id: Mapped[int] = mapped_column(ForeignKey("incidents.id"), nullable=True)
 
+    # Chain of custody fields
+    chain_of_custody: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string of custody history
+    custody_status: Mapped[str] = mapped_column(String(50), default="collected")  # collected, transferred, analyzed, archived
+    last_custody_update: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    custody_location: Mapped[str] = mapped_column(String(255), nullable=True)  # Current physical/digital location
+
     # Relationships
     collector: Mapped["User"] = relationship("User", back_populates="evidence")
     incident: Mapped["Incident"] = relationship("Incident", back_populates="evidence")
 
     def __repr__(self):
         return f"<Evidence(id={self.id}, type={self.type.value}, collected_at={self.collected_at})>"
+
+    def update_chain_of_custody(self, action: str, user_id: int, location: str = None, notes: str = None):
+        """
+        Update the chain of custody for this evidence.
+
+        Args:
+            action: Action performed (collected, transferred, analyzed, archived)
+            user_id: User performing the action
+            location: New location of evidence
+            notes: Additional notes about the action
+        """
+        import json
+        from datetime import datetime, timezone
+
+        current_time = datetime.now(timezone.utc)
+        custody_entry = {
+            "timestamp": current_time.isoformat(),
+            "action": action,
+            "user_id": user_id,
+            "location": location or self.custody_location,
+            "notes": notes
+        }
+
+        # Load existing chain or create new one
+        if self.chain_of_custody:
+            try:
+                chain = json.loads(self.chain_of_custody)
+            except json.JSONDecodeError:
+                chain = []
+        else:
+            chain = []
+
+        chain.append(custody_entry)
+        self.chain_of_custody = json.dumps(chain, indent=2)
+        self.custody_status = action
+        self.last_custody_update = current_time
+        if location:
+            self.custody_location = location
+
+    def get_chain_of_custody_history(self):
+        """Get the complete chain of custody history."""
+        import json
+        if self.chain_of_custody:
+            try:
+                return json.loads(self.chain_of_custody)
+            except json.JSONDecodeError:
+                return []
+        return []
 
 
 class AuditLog(Base):
@@ -2869,3 +2923,246 @@ class AnalysisDocumentation(Base):
     documenter = relationship("User", foreign_keys=[documented_by])
     reviewer = relationship("User", foreign_keys=[reviewed_by])
     approver = relationship("User", foreign_keys=[approved_by])
+
+
+class TimelineEvent(Base):
+    """Represents individual events in a security timeline analysis."""
+
+    __tablename__ = "timeline_events"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    timeline_id: Mapped[int] = mapped_column(ForeignKey("security_timelines.id"), nullable=False)
+
+    # Event details
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    event_type: Mapped[str] = mapped_column(String(50), nullable=False)  # log_entry, alert, system_event, user_action
+    source_system: Mapped[str] = mapped_column(String(100), nullable=False)  # macOS, Parrot OS, Windows, etc.
+    source_component: Mapped[str] = mapped_column(String(100), nullable=True)  # auth.log, syslog, wazuh, etc.
+
+    # Event content
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    raw_data: Mapped[str] = mapped_column(Text, nullable=True)  # Original log entry or event data
+
+    # Analysis and classification
+    severity: Mapped[str] = mapped_column(String(20), default="info")  # critical, high, medium, low, info
+    category: Mapped[str] = mapped_column(String(50), nullable=True)  # authentication, file_access, network, system, etc.
+    tags: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of tags
+
+    # Relationships and correlations
+    related_events: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of related event IDs
+    correlation_id: Mapped[str] = mapped_column(String(100), nullable=True)  # Group related events
+
+    # Analysis notes
+    analysis_notes: Mapped[str] = mapped_column(Text, nullable=True)
+    investigator_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    timeline = relationship("SecurityTimeline", back_populates="events")
+    investigator = relationship("User", backref="timeline_events")
+
+
+class SecurityTimeline(Base):
+    """Represents a comprehensive security timeline analysis incorporating multiple log sources."""
+
+    __tablename__ = "security_timelines"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Timeline scope
+    analysis_period_start: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    analysis_period_end: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    incident_id: Mapped[int] = mapped_column(ForeignKey("incidents.id"), nullable=True)
+
+    # Source systems included
+    source_systems: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of systems (macOS, Parrot OS, etc.)
+    log_sources: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of specific log sources
+
+    # Timeline analysis
+    total_events: Mapped[int] = mapped_column(Integer, default=0)
+    critical_events: Mapped[int] = mapped_column(Integer, default=0)
+    high_events: Mapped[int] = mapped_column(Integer, default=0)
+    medium_events: Mapped[int] = mapped_column(Integer, default=0)
+    low_events: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Analysis results
+    key_findings: Mapped[str] = mapped_column(Text, nullable=True)
+    attack_sequence: Mapped[str] = mapped_column(Text, nullable=True)  # JSON timeline of attack progression
+    security_implications: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Timeline visualization
+    timeline_data: Mapped[str] = mapped_column(Text, nullable=True)  # JSON data for timeline visualization
+
+    # Status and governance
+    status: Mapped[str] = mapped_column(String(50), default="draft")  # draft, analyzing, completed, reviewed
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    reviewed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    completed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Relationships
+    events = relationship("TimelineEvent", back_populates="timeline", cascade="all, delete-orphan")
+    incident = relationship("Incident", backref="security_timelines")
+    creator = relationship("User", foreign_keys=[created_by])
+    reviewer = relationship("User", foreign_keys=[reviewed_by])
+
+    def add_event(self, timestamp: datetime, event_type: str, source_system: str, title: str,
+                  description: str, severity: str = "info", category: str = None,
+                  source_component: str = None, raw_data: str = None, tags: list = None,
+                  investigator_id: int = None):
+        """Add an event to the timeline."""
+        import json
+
+        event = TimelineEvent(
+            timeline_id=self.id,
+            timestamp=timestamp,
+            event_type=event_type,
+            source_system=source_system,
+            source_component=source_component,
+            title=title,
+            description=description,
+            raw_data=raw_data,
+            severity=severity,
+            category=category,
+            tags=json.dumps(tags) if tags else None,
+            investigator_id=investigator_id
+        )
+
+        self.events.append(event)
+        self.total_events += 1
+
+        # Update severity counts
+        if severity == "critical":
+            self.critical_events += 1
+        elif severity == "high":
+            self.high_events += 1
+        elif severity == "medium":
+            self.medium_events += 1
+        elif severity == "low":
+            self.low_events += 1
+
+    def generate_attack_sequence(self):
+        """Generate a chronological sequence of attack events."""
+        import json
+
+        # Sort events by timestamp
+        sorted_events = sorted(self.events, key=lambda e: e.timestamp)
+
+        attack_sequence = []
+        for event in sorted_events:
+            attack_sequence.append({
+                "timestamp": event.timestamp.isoformat(),
+                "event_type": event.event_type,
+                "source_system": event.source_system,
+                "title": event.title,
+                "severity": event.severity,
+                "description": event.description
+            })
+
+        self.attack_sequence = json.dumps(attack_sequence, indent=2)
+        return attack_sequence
+
+    def get_timeline_visualization_data(self):
+        """Generate data for timeline visualization."""
+        import json
+
+        visualization_data = {
+            "title": self.title,
+            "period": {
+                "start": self.analysis_period_start.isoformat(),
+                "end": self.analysis_period_end.isoformat()
+            },
+            "events": []
+        }
+
+        for event in sorted(self.events, key=lambda e: e.timestamp):
+            event_data = {
+                "id": event.id,
+                "timestamp": event.timestamp.isoformat(),
+                "type": event.event_type,
+                "system": event.source_system,
+                "title": event.title,
+                "description": event.description,
+                "severity": event.severity,
+                "category": event.category
+            }
+            visualization_data["events"].append(event_data)
+
+        self.timeline_data = json.dumps(visualization_data, indent=2)
+        return visualization_data
+
+class LiveFileEvidence(Base):
+    """File system evidence collected from Parrot OS systems"""
+    __tablename__ = "live_file_evidence"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    system_name: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    # File details
+    file_path: Mapped[str] = mapped_column(String(512), nullable=False)
+    permissions: Mapped[str] = mapped_column(String(10), nullable=True)
+    owner: Mapped[str] = mapped_column(String(100), nullable=True)
+    group: Mapped[str] = mapped_column(String(100), nullable=True)
+    size: Mapped[int] = mapped_column(Integer, nullable=True)
+    mtime: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    exists: Mapped[bool] = mapped_column(Boolean, default=True)
+    error_message: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Collection metadata
+    collected_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+
+class MemoryAnalysis(Base):
+    """Memory analysis results from Volatility"""
+    __tablename__ = "memory_analyses"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    system_name: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    # Analysis details
+    analysis_type: Mapped[str] = mapped_column(String(50), nullable=False)  # volatility_basic, volatility_full, etc.
+    profile: Mapped[str] = mapped_column(String(100), nullable=True)  # Linux, Win7SP1x64, etc.
+
+    # Analysis results
+    total_processes: Mapped[int] = mapped_column(Integer, default=0)
+    suspicious_processes: Mapped[int] = mapped_column(Integer, default=0)
+    network_connections: Mapped[int] = mapped_column(Integer, default=0)
+    registry_hives: Mapped[int] = mapped_column(Integer, default=0)  # Windows only
+
+    # Detailed analysis output (JSON)
+    analysis_output: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Metadata
+    analyzed_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+
+class DiskImage(Base):
+    """Forensic disk images created from Parrot OS systems"""
+    __tablename__ = "disk_images"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    system_name: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    # Imaging details
+    source_device: Mapped[str] = mapped_column(String(255), nullable=False)  # /dev/sda, /dev/sdb, etc.
+    image_path: Mapped[str] = mapped_column(String(512), nullable=False)  # Path to the created image
+    image_size: Mapped[int] = mapped_column(Integer, nullable=True)  # Size in bytes
+    hash_value: Mapped[str] = mapped_column(String(128), nullable=True)  # SHA256 hash
+    imaging_tool: Mapped[str] = mapped_column(String(50), nullable=True)  # dc3dd, dd, etc.
+
+    # Case information
+    case_number: Mapped[str] = mapped_column(String(100), nullable=True)
+
+    # Metadata
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))    

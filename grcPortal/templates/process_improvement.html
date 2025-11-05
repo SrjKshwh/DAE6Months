@@ -1,0 +1,552 @@
+{% extends "base.html" %}
+
+{% block title %}Process Improvement - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-chart-line"></i> Process Improvement</h1>
+                    <p class="text-muted">Analyze incidents and implement continuous improvement initiatives</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="startImprovementAnalysis()">
+                        <i class="fas fa-play"></i> Start Analysis
+                    </button>
+                    <button class="btn btn-outline-success" onclick="generateImprovementPlan()">
+                        <i class="fas fa-file-alt"></i> Improvement Plan
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page Introduction -->
+            <div class="alert alert-info mb-4">
+                <h6><i class="fas fa-info-circle"></i> About Process Improvement</h6>
+                <p>This page provides comprehensive process improvement methodologies for incident response and security operations. It includes lessons learned analysis, process optimization, and implementation tracking for continuous improvement initiatives.</p>
+                <p><strong>Key Components:</strong> Incident analysis, improvement identification, implementation planning, and success measurement for IR process enhancement.</p>
+            </div>
+
+            <!-- Improvement Metrics Overview -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Improvements Implemented</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">12</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-tools fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        MTTR Reduction</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">35%</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clock fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Process Efficiency</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-info">78%</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-cogs fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Stakeholder Satisfaction</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-success">4.6/5</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-star fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lessons Learned Analysis -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-book"></i> Lessons Learned from Recent Incidents
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Incident IR-2024-001: Ransomware Attack</h5>
+                            <div class="card border-danger mb-3">
+                                <div class="card-body">
+                                    <h6>What Went Well</h6>
+                                    <ul class="small mb-3">
+                                        <li>Early detection through Wazuh alerts</li>
+                                        <li>Quick isolation of affected systems</li>
+                                        <li>Effective communication with stakeholders</li>
+                                        <li>Successful data recovery from backups</li>
+                                        <li>Comprehensive documentation maintained</li>
+                                    </ul>
+
+                                    <h6>What Could Be Improved</h6>
+                                    <ul class="small mb-3">
+                                        <li>Email security controls were insufficient</li>
+                                        <li>Response team coordination could be faster</li>
+                                        <li>Automated response actions were limited</li>
+                                        <li>Stakeholder notification process was manual</li>
+                                        <li>Post-incident testing was not comprehensive</li>
+                                    </ul>
+
+                                    <h6>Root Causes Identified</h6>
+                                    <div class="alert alert-warning small">
+                                        <strong>Primary:</strong> Weak email attachment filtering<br>
+                                        <strong>Contributing:</strong> Lack of user training reinforcement<br>
+                                        <strong>Systemic:</strong> Insufficient automated detection capabilities
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6>Improvement Opportunities</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card border-info mb-3">
+                                        <div class="card-body">
+                                            <h6>Immediate Actions (0-30 days)</h6>
+                                            <ul class="small">
+                                                <li>Deploy advanced email gateway</li>
+                                                <li>Implement macro blocking</li>
+                                                <li>Update endpoint protection</li>
+                                                <li>Enhance backup procedures</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-success mb-3">
+                                        <div class="card-body">
+                                            <h6>Long-term Improvements (30-90 days)</h6>
+                                            <ul class="small">
+                                                <li>Implement SOAR platform</li>
+                                                <li>Develop automated playbooks</li>
+                                                <li>Enhance monitoring capabilities</li>
+                                                <li>Conduct security awareness training</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Impact Assessment</h5>
+                            <div class="card border-warning">
+                                <div class="card-body">
+                                    <h6>Incident Metrics</h6>
+                                    <ul class="small mb-3">
+                                        <li><strong>Detection Time:</strong> 2 minutes</li>
+                                        <li><strong>Containment Time:</strong> 15 minutes</li>
+                                        <li><strong>Recovery Time:</strong> 4.5 hours</li>
+                                        <li><strong>Data Loss:</strong> None</li>
+                                        <li><strong>Financial Impact:</strong> $25,000</li>
+                                    </ul>
+
+                                    <h6>Process Performance</h6>
+                                    <div class="mb-2">
+                                        <small>Detection & Response</small>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-success" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <small>Communication</small>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-info" style="width: 75%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <small>Recovery</small>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" style="width: 90%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <small>Documentation</small>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-primary" style="width: 80%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Process Improvement Framework -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-info">
+                        <i class="fas fa-sitemap"></i> Process Improvement Framework
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>PDCA Cycle Implementation</h5>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>Plan</h6>
+                                        <p>Identify improvement opportunities from incident analysis</p>
+                                        <small class="text-muted">Define objectives, analyze current state, identify gaps</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>Do</h6>
+                                        <p>Implement changes on a small scale for testing</p>
+                                        <small class="text-muted">Develop solutions, test in controlled environment</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>Check</h6>
+                                        <p>Measure results and compare against objectives</p>
+                                        <small class="text-muted">Evaluate effectiveness, collect metrics, analyze outcomes</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>Act</h6>
+                                        <p>Standardize successful changes and plan next cycle</p>
+                                        <small class="text-muted">Implement improvements, document changes, continuous monitoring</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Improvement Categories</h5>
+                            <div class="accordion" id="improvementAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#improve1">
+                                            Technology Improvements
+                                        </button>
+                                    </h2>
+                                    <div id="improve1" class="accordion-collapse collapse show" data-bs-parent="#improvementAccordion">
+                                        <div class="accordion-body small">
+                                            <ul>
+                                                <li>Enhanced detection capabilities</li>
+                                                <li>Automated response systems</li>
+                                                <li>Improved logging and monitoring</li>
+                                                <li>Better backup and recovery tools</li>
+                                                <li>Advanced threat intelligence integration</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#improve2">
+                                            Process Improvements
+                                        </button>
+                                    </h2>
+                                    <div id="improve2" class="accordion-collapse collapse" data-bs-parent="#improvementAccordion">
+                                        <div class="accordion-body small">
+                                            <ul>
+                                                <li>Streamlined incident response procedures</li>
+                                                <li>Enhanced communication protocols</li>
+                                                <li>Improved coordination mechanisms</li>
+                                                <li>Better documentation practices</li>
+                                                <li>Regular training and drills</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#improve3">
+                                            People Improvements
+                                        </button>
+                                    </h2>
+                                    <div id="improve3" class="accordion-collapse collapse" data-bs-parent="#improvementAccordion">
+                                        <div class="accordion-body small">
+                                            <ul>
+                                                <li>Enhanced security awareness training</li>
+                                                <li>Cross-functional team development</li>
+                                                <li>Knowledge sharing initiatives</li>
+                                                <li>Skills development programs</li>
+                                                <li>Recognition and reward systems</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Implementation Roadmap -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-warning">
+                        <i class="fas fa-road"></i> Implementation Roadmap
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Improvement Initiatives Timeline</h5>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 1: Immediate Actions (Completed)</h6>
+                                        <p>Email security enhancement and endpoint protection updates</p>
+                                        <small class="text-muted">Completed: Jan 2024 | Impact: High | Cost: $50K</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 2: Process Automation (In Progress)</h6>
+                                        <p>SOAR platform implementation and automated playbook development</p>
+                                        <small class="text-muted">Target: Mar 2024 | Impact: High | Cost: $150K</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 3: Advanced Analytics (Planned)</h6>
+                                        <p>AI-powered threat detection and predictive analytics</p>
+                                        <small class="text-muted">Target: Jun 2024 | Impact: Medium | Cost: $200K</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>Phase 4: Organizational Maturity (Future)</h6>
+                                        <p>Comprehensive IR capability assessment and optimization</p>
+                                        <small class="text-muted">Target: Dec 2024 | Impact: Medium | Cost: $100K</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Success Metrics Tracking</h5>
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <h6>KPI Dashboard</h6>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>MTTR Reduction:</span>
+                                            <span class="badge bg-success">35%</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>False Positive Rate:</span>
+                                            <span class="badge bg-success">2%</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Detection Accuracy:</span>
+                                            <span class="badge bg-success">96%</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Response Automation:</span>
+                                            <span class="badge bg-info">70%</span>
+                                        </div>
+                                    </div>
+
+                                    <h6>Target vs Actual</h6>
+                                    <div class="small">
+                                        <div class="progress mb-2" style="height: 6px;">
+                                            <div class="progress-bar bg-success" style="width: 88%"></div>
+                                        </div>
+                                        <small>88% of Q1 targets achieved</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Continuous Improvement Tools -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">
+                        <i class="fas fa-tools"></i> Continuous Improvement Tools & Resources
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Analysis Tools</h5>
+                            <div class="list-group mb-3">
+                                <a href="#" class="list-group-item list-group-item-action" onclick="openTool('retrospective')">
+                                    <i class="fas fa-users me-2"></i>Incident Retrospective Template
+                                    <small class="text-muted d-block">Structured framework for post-incident reviews</small>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action" onclick="openTool('metrics')">
+                                    <i class="fas fa-chart-bar me-2"></i>Performance Metrics Dashboard
+                                    <small class="text-muted d-block">Real-time KPI tracking and reporting</small>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action" onclick="openTool('benchmark')">
+                                    <i class="fas fa-balance-scale me-2"></i>Industry Benchmarking Tool
+                                    <small class="text-muted d-block">Compare performance against industry standards</small>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action" onclick="openTool('automation')">
+                                    <i class="fas fa-robot me-2"></i>Process Automation Assessment
+                                    <small class="text-muted d-block">Identify automation opportunities</small>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Training & Resources</h5>
+                            <div class="card border-info">
+                                <div class="card-body">
+                                    <h6>Recommended Training</h6>
+                                    <ul class="small mb-3">
+                                        <li><strong>Root Cause Analysis:</strong> Advanced RCA methodologies</li>
+                                        <li><strong>Process Improvement:</strong> Lean Six Sigma for security</li>
+                                        <li><strong>Automation:</strong> SOAR platform implementation</li>
+                                        <li><strong>Metrics & KPIs:</strong> IR performance measurement</li>
+                                    </ul>
+
+                                    <h6>Resource Library</h6>
+                                    <ul class="small mb-3">
+                                        <li>NIST SP 800-61 Incident Handling Guide</li>
+                                        <li>SANS Incident Response Process</li>
+                                        <li>MITRE ATT&CK Framework</li>
+                                        <li>Industry Best Practice Guides</li>
+                                    </ul>
+
+                                    <h6>Community Resources</h6>
+                                    <ul class="small mb-0">
+                                        <li>Incident Response Forums</li>
+                                        <li>Security Conference Proceedings</li>
+                                        <li>Peer Learning Groups</li>
+                                        <li>Expert Consultation Services</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #e9ecef;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.timeline-content p {
+    margin-bottom: 5px;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.list-group-item small {
+    font-size: 0.8rem;
+}
+
+.progress {
+    background-color: #e9ecef;
+}
+</style>
+
+<script>
+function startImprovementAnalysis() {
+    if (confirm('Start process improvement analysis? This will analyze recent incidents for improvement opportunities.')) {
+        alert('Improvement analysis initiated...');
+        // Implement analysis logic
+    }
+}
+
+function generateImprovementPlan() {
+    alert('Generating comprehensive improvement plan...');
+    // Implement plan generation logic
+}
+
+function openTool(toolName) {
+    alert(`Opening ${toolName} tool...`);
+    // Implement tool opening logic
+}
+</script>
+{% endblock %}
