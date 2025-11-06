@@ -49,6 +49,7 @@ import threading
 import time
 import hashlib
 import psutil
+import logging
 from datetime import timedelta, datetime, timezone
 from pathlib import Path
 from functools import wraps
@@ -10660,15 +10661,6 @@ def create_app():
             for rule in app.url_map.iter_rules():
                 logging.info(f"  {rule.endpoint}: {rule.rule} -> {rule.methods}")
 
-    # Call route logging after app creation
-    log_registered_routes()
-    # Log all registered routes for debugging
-    def log_registered_routes():
-        """Log all registered Flask routes for debugging purposes"""
-        with app.app_context():
-            logging.info("Registered Flask Routes:")
-            for rule in app.url_map.iter_rules():
-                logging.info(f"  {rule.endpoint}: {rule.rule} -> {rule.methods}")
 
     # Call route logging after app creation
     log_registered_routes()
@@ -11122,6 +11114,9 @@ if __name__ == "__main__":
                         })
 
     ##########
+    #logging.getLogger('werkzeug').setLevel(logging.WARNING)  # hide Flask request logs
+    #logging.getLogger('apscheduler').setLevel(logging.WARNING)  # hide scheduler info
+    #logging.getLogger().setLevel(logging.WARNING)  # hide all INFO logs globally
 
     # Enable debug mode for development (shows detailed error messages)
     app.run(debug=True, host="127.0.0.1", port=5000)
