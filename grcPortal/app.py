@@ -10663,7 +10663,7 @@ def create_app():
 
 
     # Call route logging after app creation
-    log_registered_routes()
+    #log_registered_routes()
 
     # Start scheduler in a separate thread to avoid blocking
     import threading
@@ -11113,12 +11113,11 @@ if __name__ == "__main__":
                         "updated_at": datetime.now(timezone.utc)
                         })
 
-    ##########
     #logging.getLogger('werkzeug').setLevel(logging.WARNING)  # hide Flask request logs
     #logging.getLogger('apscheduler').setLevel(logging.WARNING)  # hide scheduler info
     #logging.getLogger().setLevel(logging.WARNING)  # hide all INFO logs globally
 
     # Enable debug mode for development (shows detailed error messages)
-    app.run(debug=True, host="127.0.0.1", port=5000)
+    app.run(debug=True, use_reloader=False, host="127.0.0.1", port=5000)
 
 
