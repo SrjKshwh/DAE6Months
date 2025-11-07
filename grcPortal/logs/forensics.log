@@ -50143,3 +50143,218 @@ WHERE collected_logs.timestamp >= ?) AS anon_1]
 2025-11-07 12:09:29,466 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
 2025-11-07 12:09:29,466 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-07 13:02:45,346 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-07 13:02:45,347 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-07 13:02:45,349 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-07 13:02:45,349 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-07 13:02:45,350 [INFO] Scheduler started
+2025-11-07 13:02:45,350 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-07 13:02:45,365 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-07 13:02:45,365 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-07 13:02:49,298 [INFO] 127.0.0.1 - - [07/Nov/2025 13:02:49] "GET / HTTP/1.1" 200 -
+2025-11-07 13:02:49,448 [INFO] 127.0.0.1 - - [07/Nov/2025 13:02:49] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-07 13:02:49,504 [INFO] 127.0.0.1 - - [07/Nov/2025 13:02:49] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-07 13:02:57,328 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-07 13:03:02,905 [ERROR] Failed to log audit event: (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO audit_logs (user_id, action, category, description, resource, ip_address, user_agent, success, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: (1, 'LOGIN', 'AUTHENTICATION', 'Successful login from IP 127.0.0.1', '/login', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 1, '2025-11-07 18:02:57.331054')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:03:02,910 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:02] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-07 13:03:02,916 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:03:02,931 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC699596D0>
+2025-11-07 13:03:02,932 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:03:02,933 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:03:02,935 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC69959810>
+2025-11-07 13:03:02,935 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:03:02,936 [INFO] DEBUG: current_user() returned: <models.User object at 0x000001CC69959810> - email: kush786srj@gmail.com
+2025-11-07 13:03:02,937 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-07 13:03:03,116 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:03:03,116 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC69959810>
+2025-11-07 13:03:03,117 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:03:03,120 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:03] "GET /home HTTP/1.1" 200 -
+2025-11-07 13:03:03,157 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:03] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-07 13:03:15,313 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:15] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-07 13:03:15,623 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-07 13:03:15,624 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-07 13:03:15,626 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:15] "[32mGET /ir_environment_setup HTTP/1.1[0m" 302 -
+2025-11-07 13:03:15,632 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:15] "GET /login HTTP/1.1" 200 -
+2025-11-07 13:03:15,876 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:15] "GET /static/main.css HTTP/1.1" 200 -
+2025-11-07 13:03:16,207 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:16] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-07 13:03:16,473 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-07 13:03:16,473 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-07 13:03:16,473 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:16] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-07 13:03:22,094 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-07 13:03:24,400 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-07 13:03:27,639 [ERROR] Failed to log audit event: (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO audit_logs (user_id, action, category, description, resource, ip_address, user_agent, success, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: (1, 'LOGIN', 'AUTHENTICATION', 'Successful login from IP 127.0.0.1', '/login', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 1, '2025-11-07 18:03:22.096094')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:03:27,641 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:27] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-07 13:03:30,071 [ERROR] Failed to log audit event: (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO audit_logs (user_id, action, category, description, resource, ip_address, user_agent, success, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: (1, 'LOGIN', 'AUTHENTICATION', 'Successful login from IP 127.0.0.1', '/login', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 1, '2025-11-07 18:03:24.402784')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:03:30,072 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:30] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-07 13:03:30,078 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:03:30,088 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC6982C170>
+2025-11-07 13:03:30,088 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:03:30,088 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:03:30,091 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC69F85040>
+2025-11-07 13:03:30,091 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:03:30,093 [INFO] DEBUG: current_user() returned: <models.User object at 0x000001CC69F85040> - email: kush786srj@gmail.com
+2025-11-07 13:03:30,095 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-07 13:03:30,122 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:03:30,123 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC69F85040>
+2025-11-07 13:03:30,123 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:03:30,126 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:30] "GET /home HTTP/1.1" 200 -
+2025-11-07 13:03:30,494 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:30] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-07 13:03:41,734 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:41] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-07 13:03:42,041 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:03:42,049 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC69F857B0>
+2025-11-07 13:03:42,056 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:03:42,126 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:03:42,127 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC69FF8950>
+2025-11-07 13:03:42,128 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:03:42,130 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:42] "GET /ir_environment_setup HTTP/1.1" 200 -
+2025-11-07 13:03:42,477 [INFO] 127.0.0.1 - - [07/Nov/2025 13:03:42] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-07 13:05:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-07 13:05:00 EST)" (scheduled at 2025-11-07 13:05:00-05:00)
+2025-11-07 13:05:00,032 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-11-07 18:00:00.024205',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:05:00,034 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-07 13:10:00 EST)" executed successfully
+2025-11-07 13:05:56,198 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-11-07 13:06:01,789 [ERROR] Failed to log audit event: (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO audit_logs (user_id, action, category, description, resource, ip_address, user_agent, success, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: (1, 'LOGOUT', 'AUTHENTICATION', 'User logged out from IP 127.0.0.1', '/logout', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 1, '2025-11-07 18:05:56.201356')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:06:01,791 [INFO] 127.0.0.1 - - [07/Nov/2025 13:06:01] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-11-07 13:06:01,801 [INFO] 127.0.0.1 - - [07/Nov/2025 13:06:01] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-07 13:06:02,109 [INFO] 127.0.0.1 - - [07/Nov/2025 13:06:02] "GET /login HTTP/1.1" 200 -
+2025-11-07 13:06:02,443 [INFO] 127.0.0.1 - - [07/Nov/2025 13:06:02] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-07 13:06:02,451 [INFO] 127.0.0.1 - - [07/Nov/2025 13:06:02] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-07 13:06:12,443 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-07 13:06:18,108 [ERROR] Failed to log audit event: (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO audit_logs (user_id, action, category, description, resource, ip_address, user_agent, success, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: (1, 'LOGIN', 'AUTHENTICATION', 'Successful login from IP 127.0.0.1', '/login', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 1, '2025-11-07 18:06:12.445387')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:06:18,110 [INFO] 127.0.0.1 - - [07/Nov/2025 13:06:18] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-07 13:06:18,117 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:06:18,127 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC6A094410>
+2025-11-07 13:06:18,128 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:06:18,129 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:06:18,131 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC6A07D010>
+2025-11-07 13:06:18,132 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:06:18,132 [INFO] DEBUG: current_user() returned: <models.User object at 0x000001CC6A07D010> - email: kush786srj@gmail.com
+2025-11-07 13:06:18,134 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-07 13:06:18,161 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:06:18,162 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC6A07D010>
+2025-11-07 13:06:18,162 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:06:18,164 [INFO] 127.0.0.1 - - [07/Nov/2025 13:06:18] "GET /home HTTP/1.1" 200 -
+2025-11-07 13:06:18,493 [INFO] 127.0.0.1 - - [07/Nov/2025 13:06:18] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-07 13:06:26,194 [INFO] 127.0.0.1 - - [07/Nov/2025 13:06:26] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-07 13:06:26,509 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:06:26,514 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC6A0D1E10>
+2025-11-07 13:06:26,518 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:06:26,519 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:06:26,521 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC6A0F21A0>
+2025-11-07 13:06:26,522 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:06:26,525 [INFO] 127.0.0.1 - - [07/Nov/2025 13:06:26] "GET /ir_environment_setup HTTP/1.1" 200 -
+2025-11-07 13:06:26,858 [INFO] 127.0.0.1 - - [07/Nov/2025 13:06:26] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-07 13:09:13,190 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-11-07 13:09:18,707 [ERROR] Failed to log audit event: (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO audit_logs (user_id, action, category, description, resource, ip_address, user_agent, success, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: (1, 'LOGOUT', 'AUTHENTICATION', 'User logged out from IP 127.0.0.1', '/logout', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 1, '2025-11-07 18:09:13.191875')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:09:18,710 [INFO] 127.0.0.1 - - [07/Nov/2025 13:09:18] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-11-07 13:09:18,719 [INFO] 127.0.0.1 - - [07/Nov/2025 13:09:18] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-07 13:09:19,026 [INFO] 127.0.0.1 - - [07/Nov/2025 13:09:19] "GET /login HTTP/1.1" 200 -
+2025-11-07 13:09:19,362 [INFO] 127.0.0.1 - - [07/Nov/2025 13:09:19] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-07 13:09:19,365 [INFO] 127.0.0.1 - - [07/Nov/2025 13:09:19] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-07 13:10:00,002 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-07 13:15:00 EST)" (scheduled at 2025-11-07 13:10:00-05:00)
+2025-11-07 13:10:00,008 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-11-07 18:05:00.006390',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:10:00,008 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-07 13:15:00 EST)" executed successfully
+2025-11-07 13:12:52,195 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-07 13:12:57,824 [ERROR] Failed to log audit event: (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO audit_logs (user_id, action, category, description, resource, ip_address, user_agent, success, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: (1, 'LOGIN', 'AUTHENTICATION', 'Successful login from IP 127.0.0.1', '/login', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 1, '2025-11-07 18:12:52.197389')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:12:57,830 [INFO] 127.0.0.1 - - [07/Nov/2025 13:12:57] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-07 13:12:57,836 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:12:57,848 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC69F8B290>
+2025-11-07 13:12:57,850 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:12:57,850 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:12:57,853 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC69F8BF50>
+2025-11-07 13:12:57,854 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:12:57,855 [INFO] DEBUG: current_user() returned: <models.User object at 0x000001CC69F8BF50> - email: kush786srj@gmail.com
+2025-11-07 13:12:57,857 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-07 13:12:57,880 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:12:57,880 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC69F8BF50>
+2025-11-07 13:12:57,880 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:12:57,882 [INFO] 127.0.0.1 - - [07/Nov/2025 13:12:57] "GET /home HTTP/1.1" 200 -
+2025-11-07 13:12:57,911 [INFO] 127.0.0.1 - - [07/Nov/2025 13:12:57] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-07 13:13:21,227 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:13:21,235 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC6A150950>
+2025-11-07 13:13:21,236 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:13:21,281 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-07 13:13:21,283 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001CC6A150290>
+2025-11-07 13:13:21,283 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-07 13:13:21,286 [INFO] 127.0.0.1 - - [07/Nov/2025 13:13:21] "GET /wireshark_setup HTTP/1.1" 200 -
+2025-11-07 13:13:21,464 [INFO] 127.0.0.1 - - [07/Nov/2025 13:13:21] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-07 13:13:21,480 [INFO] 127.0.0.1 - - [07/Nov/2025 13:13:21] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-07 13:15:00,007 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-07 13:20:00 EST)" (scheduled at 2025-11-07 13:15:00-05:00)
+2025-11-07 13:15:00,039 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-11-07 18:10:00.034113',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:15:00,040 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-07 13:20:00 EST)" executed successfully
+2025-11-07 13:15:26,174 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-11-07 13:15:31,868 [ERROR] Failed to log audit event: (sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO audit_logs (user_id, action, category, description, resource, ip_address, user_agent, success, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: (1, 'LOGOUT', 'AUTHENTICATION', 'User logged out from IP 127.0.0.1', '/logout', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 1, '2025-11-07 18:15:26.175843')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:15:31,870 [INFO] 127.0.0.1 - - [07/Nov/2025 13:15:31] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-11-07 13:15:31,892 [INFO] 127.0.0.1 - - [07/Nov/2025 13:15:31] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-07 13:15:32,208 [INFO] 127.0.0.1 - - [07/Nov/2025 13:15:32] "GET /login HTTP/1.1" 200 -
+2025-11-07 13:15:32,535 [INFO] 127.0.0.1 - - [07/Nov/2025 13:15:32] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-07 13:15:32,793 [INFO] 127.0.0.1 - - [07/Nov/2025 13:15:32] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-07 13:20:00,011 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-07 13:25:00 EST)" (scheduled at 2025-11-07 13:20:00-05:00)
+2025-11-07 13:20:00,022 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-11-07 18:15:00.019579',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:20:00,023 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-07 13:25:00 EST)" executed successfully
+2025-11-07 13:25:00,012 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-07 13:30:00 EST)" (scheduled at 2025-11-07 13:25:00-05:00)
+2025-11-07 13:25:00,022 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-11-07 18:20:00.019754',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:25:00,022 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-07 13:30:00 EST)" executed successfully
+2025-11-07 13:30:00,011 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-07 13:35:00 EST)" (scheduled at 2025-11-07 13:30:00-05:00)
+2025-11-07 13:30:00,022 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: collected_logs.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT collected_logs.id AS collected_logs_id, collected_logs.source_id AS collected_logs_source_id, collected_logs.timestamp AS collected_logs_timestamp, collected_logs.log_type AS collected_logs_log_type, collected_logs.severity AS collected_logs_severity, collected_logs.event_id AS collected_logs_event_id, collected_logs.message AS collected_logs_message, collected_logs.raw_log AS collected_logs_raw_log, collected_logs.category AS collected_logs_category, collected_logs.risk_score AS collected_logs_risk_score, collected_logs.processed AS collected_logs_processed, collected_logs.alert_generated AS collected_logs_alert_generated, collected_logs.risk_status AS collected_logs_risk_status, collected_logs.created_at AS collected_logs_created_at 
+FROM collected_logs 
+WHERE collected_logs.timestamp >= ?) AS anon_1]
+[parameters: ('2025-11-07 18:25:00.019489',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-07 13:30:00,023 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-07 13:35:00 EST)" executed successfully
