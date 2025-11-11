@@ -773,11 +773,15 @@ def analyze_suspicious_logins(db):
             CollectedLog.category == "authentication"
         ).order_by(CollectedLog.timestamp.desc()).all()
 
-        # 2. Query failed login alerts
-        failed_login_alerts = db.query(Alert).filter(
-            Alert.created_at >= analysis_window,
-            Alert.title.contains("Failed") | Alert.title.contains("login")
-        ).all()
+        # 2. Query failed login alerts (handle missing risk_status column)
+        try:
+            failed_login_alerts = db.query(Alert).filter(
+                Alert.created_at >= analysis_window,
+                Alert.title.contains("Failed") | Alert.title.contains("login")
+            ).all()
+        except Exception as e:
+            logging.warning(f"Could not query alerts due to schema issue: {e}")
+            failed_login_alerts = []
 
         # 3. Identify suspicious login patterns
         suspicious_events = []
@@ -881,47 +885,6 @@ def analyze_suspicious_logins(db):
 
         # 6. Define investigation methodology
         investigation_methodology = {
-            "analysis_methodology": {
-                "data_sources": [
-                    "Wazuh agent logs from Parrot OS monitoring environment",
-                    "Windows Event Logs from target systems",
-                    "macOS system logs (simulated)",
-                    "Alert correlation engine"
-                ],
-                "analysis_techniques": [
-                    "Pattern recognition for brute force attempts",
-                    "IP-based correlation analysis",
-                    "Temporal event correlation",
-                    "Cross-system log validation"
-                ],
-                "detection_rules": [
-                    "3+ failed login attempts from same IP within 10 minutes",
-                    "5+ failed attempts targeting same user account",
-                    "Correlation between host and monitoring system detections"
-                ],
-                "validation_process": [
-                    "Cross-reference alerts with raw log data",
-                    "Verify alert accuracy against known false positive patterns",
-                    "Assess impact and determine response priority",
-                    "Document findings for incident response team"
-                ]
-            },
-            "findings_summary": {
-                "total_suspicious_events": len(suspicious_events),
-                "total_correlations": len(log_correlations),
-                "time_window_analyzed": "24 hours",
-                "primary_threats_identified": [
-                    "Brute force authentication attempts",
-                    "Suspicious IP activity patterns",
-                    "Cross-system attack indicators"
-                ],
-                "recommendations": [
-                    "Implement account lockout policies",
-                    "Enable multi-factor authentication",
-                    "Configure Wazuh active response for automated blocking",
-                    "Regular log analysis and correlation review"
-                ]
-            },
             "alert_validation": {
                 "validation_method": "Multi-source correlation and pattern analysis",
                 "false_positive_rate": "< 5% based on current detection rules",
@@ -10343,10 +10306,14 @@ def create_app():
         try:
             # Perform suspicious login analysis
             investigation_data = analyze_suspicious_logins(db)
-
+    
             # Perform incident classification analysis
             incidents_classification = classify_security_incidents(db)
-
+    
+            # Get log sources and total logs for template
+            log_sources = db.query(LogSource).all()
+            total_logs = db.query(CollectedLog).count()
+    
             # Restructure data for template compatibility
             template_data = {
                 "suspicious_login_investigation": {
@@ -10356,9 +10323,13 @@ def create_app():
                     "alert_validation": investigation_data["investigation_methodology"]["alert_validation"],
                     "security_implications": "Analysis reveals potential brute force authentication attacks with cross-system log correlation between host systems and Parrot OS monitoring environment. Multiple failed login attempts detected from suspicious IP addresses targeting user accounts. Immediate security response recommended including account lockout policies, multi-factor authentication implementation, and Wazuh active response configuration."
                 },
-                "incident_classification": incidents_classification
+                "incident_classification": incidents_classification,
+                "log_sources": log_sources,
+                "total_logs": total_logs,
+                "alerts": [],  # Placeholder for alerts
+                "correlations": []  # Placeholder for correlations
             }
-
+    
             return render_template("security_event_analysis.html", **template_data)
 
         except Exception as e:
@@ -10378,7 +10349,32 @@ def create_app():
     @app.route('/suspicious_login_analysis')
     @login_required
     def suspicious_login_analysis():
-        return render_template('suspicious_login_analysis.html')
+        db = get_session()
+        try:
+            # Get suspicious login analysis data
+            investigation_data = analyze_suspicious_logins(db)
+
+            # Get additional data for the page
+            log_sources = db.query(LogSource).all()
+            total_logs = db.query(CollectedLog).count()
+
+            # Prepare template data
+            template_data = {
+                "suspicious_events": investigation_data["suspicious_events"],
+                "log_correlations": investigation_data["log_correlations"],
+                "timeline": investigation_data["event_timeline"],
+                "log_sources": log_sources,
+                "total_logs": total_logs
+            }
+
+            return render_template('suspicious_login_analysis.html', **template_data)
+
+        except Exception as e:
+            logging.error(f"Error in suspicious_login_analysis: {e}")
+            return render_template('suspicious_login_analysis.html',
+                                  error=f"Analysis failed: {str(e)}")
+        finally:
+            close_session(db)
 
     @app.route('/incident_classification')
     @login_required

@@ -25,6 +25,31 @@
         </div>
     </div>
 
+    <!-- Pass data to JavaScript -->
+    <script type="text/javascript">
+        // Initialize variables with fallback values
+        var suspicious_events = [];
+        var log_correlations = [];
+        var timeline = [];
+    </script>
+    <script type="application/json" id="data-container">
+        {
+            "suspicious_events": {{ suspicious_events|default([])|tojson|safe }},
+            "log_correlations": {{ log_correlations|default([])|tojson|safe }},
+            "timeline": {{ timeline|default([])|tojson|safe }}
+        }
+    </script>
+    <script type="text/javascript">
+        // Load data from JSON script tag
+        var dataContainer = document.getElementById('data-container');
+        if (dataContainer) {
+            var data = JSON.parse(dataContainer.textContent);
+            suspicious_events = data.suspicious_events;
+            log_correlations = data.log_correlations;
+            timeline = data.timeline;
+        }
+    </script>
+
     <!-- Analysis Overview Cards -->
     <div class="row mb-4">
         <div class="col-xl-3 col-md-6 mb-4">
@@ -366,109 +391,205 @@ function updateCounters() {
 // Load suspicious events table
 function loadSuspiciousEvents() {
     const tbody = document.getElementById('suspicious-events-body');
-    const events = [
-        {
-            timestamp: '2025-11-04 10:30:15',
-            ip: '192.168.1.100',
-            username: 'admin',
-            type: 'Brute Force Attempt',
-            severity: 'high',
-            source: 'Windows Server',
-            actions: '<button class="btn btn-sm btn-info" onclick="viewEventDetails(1)">View</button>'
-        },
-        {
-            timestamp: '2025-11-04 10:25:42',
-            ip: '203.0.113.195',
-            username: 'user1',
-            type: 'Multiple Failed Logins',
-            severity: 'medium',
-            source: 'Linux Server',
-            actions: '<button class="btn btn-sm btn-info" onclick="viewEventDetails(2)">View</button>'
-        },
-        {
-            timestamp: '2025-11-04 10:20:33',
-            ip: '192.168.1.100',
-            username: 'root',
-            type: 'Suspicious Pattern',
-            severity: 'high',
-            source: 'Parrot OS Monitor',
-            actions: '<button class="btn btn-sm btn-info" onclick="viewEventDetails(3)">View</button>'
-        }
-    ];
 
-    tbody.innerHTML = events.map(event => `
-        <tr>
-            <td>${event.timestamp}</td>
-            <td>${event.ip}</td>
-            <td>${event.username}</td>
-            <td>${event.type}</td>
-            <td><span class="badge badge-${event.severity === 'high' ? 'danger' : 'warning'}">${event.severity}</span></td>
-            <td>${event.source}</td>
-            <td>${event.actions}</td>
-        </tr>
-    `).join('');
+    // Check if suspicious_events is available from the backend
+    if (typeof suspicious_events !== 'undefined' && suspicious_events.length > 0) {
+        tbody.innerHTML = suspicious_events.map((event, index) => `
+            <tr>
+                <td>${event.timestamp}</td>
+                <td>${event.ip_address}</td>
+                <td>${event.username || 'N/A'}</td>
+                <td>${event.event_type}</td>
+                <td><span class="badge badge-${event.severity === 'high' ? 'danger' : 'warning'}">${event.severity}</span></td>
+                <td>${event.source}</td>
+                <td><button class="btn btn-sm btn-info" onclick="viewEventDetails(${index + 1})">View</button></td>
+            </tr>
+        `).join('');
+    } else {
+        // Fallback to sample data if no backend data
+        const events = [
+            {
+                timestamp: '2025-11-04 10:30:15',
+                ip_address: '192.168.1.100',
+                username: 'admin',
+                event_type: 'Brute Force Attempt',
+                severity: 'high',
+                source: 'Windows Server'
+            },
+            {
+                timestamp: '2025-11-04 10:25:42',
+                ip_address: '203.0.113.195',
+                username: 'user1',
+                event_type: 'Multiple Failed Logins',
+                severity: 'medium',
+                source: 'Linux Server'
+            },
+            {
+                timestamp: '2025-11-04 10:20:33',
+                ip_address: '192.168.1.100',
+                username: 'root',
+                event_type: 'Suspicious Pattern',
+                severity: 'high',
+                source: 'Parrot OS Monitor'
+            }
+        ];
+
+        tbody.innerHTML = events.map((event, index) => `
+            <tr>
+                <td>${event.timestamp}</td>
+                <td>${event.ip_address}</td>
+                <td>${event.username}</td>
+                <td>${event.event_type}</td>
+                <td><span class="badge badge-${event.severity === 'high' ? 'danger' : 'warning'}">${event.severity}</span></td>
+                <td>${event.source}</td>
+                <td><button class="btn btn-sm btn-info" onclick="viewEventDetails(${index + 1})">View</button></td>
+            </tr>
+        `).join('');
+    }
 }
 
 // Load correlations table
 function loadCorrelations() {
     const tbody = document.getElementById('correlations-body');
-    const correlations = [
-        {
-            id: 'CORR-001',
-            hostEvent: 'Failed login from 192.168.1.100',
-            parrotEvent: 'Wazuh auth failure alert',
-            timeDiff: '2.5s',
-            strength: 'high',
-            analysis: 'Strong correlation between host and monitoring system'
-        },
-        {
-            id: 'CORR-002',
-            hostEvent: 'Multiple auth failures',
-            parrotEvent: 'Brute force pattern detected',
-            timeDiff: '1.8s',
-            strength: 'high',
-            analysis: 'Coordinated attack pattern identified'
-        }
-    ];
 
-    tbody.innerHTML = correlations.map(corr => `
-        <tr>
-            <td>${corr.id}</td>
-            <td class="small">${corr.hostEvent}</td>
-            <td class="small">${corr.parrotEvent}</td>
-            <td>${corr.timeDiff}</td>
-            <td><span class="badge badge-success">${corr.strength}</span></td>
-            <td class="small">${corr.analysis}</td>
-        </tr>
-    `).join('');
+    // Check if log_correlations is available from the backend
+    if (typeof log_correlations !== 'undefined' && log_correlations.length > 0) {
+        tbody.innerHTML = log_correlations.map(corr => `
+            <tr>
+                <td>${corr.correlation_id}</td>
+                <td class="small">${corr.host_event ? corr.host_event.message : 'N/A'}</td>
+                <td class="small">${corr.parrot_os_event ? corr.parrot_os_event.detection : 'N/A'}</td>
+                <td>${corr.time_difference_seconds ? corr.time_difference_seconds.toFixed(1) + 's' : 'N/A'}</td>
+                <td><span class="badge badge-success">${corr.correlation_strength}</span></td>
+                <td class="small">${corr.analysis}</td>
+            </tr>
+        `).join('');
+    } else {
+        // Fallback to sample data if no backend data
+        const correlations = [
+            {
+                correlation_id: 'CORR-001',
+                host_event: { message: 'Failed login from 192.168.1.100' },
+                parrot_os_event: { detection: 'Wazuh auth failure alert' },
+                time_difference_seconds: 2.5,
+                correlation_strength: 'high',
+                analysis: 'Strong correlation between host and monitoring system'
+            },
+            {
+                correlation_id: 'CORR-002',
+                host_event: { message: 'Multiple auth failures' },
+                parrot_os_event: { detection: 'Brute force pattern detected' },
+                time_difference_seconds: 1.8,
+                correlation_strength: 'high',
+                analysis: 'Coordinated attack pattern identified'
+            }
+        ];
+
+        tbody.innerHTML = correlations.map(corr => `
+            <tr>
+                <td>${corr.correlation_id}</td>
+                <td class="small">${corr.host_event.message}</td>
+                <td class="small">${corr.parrot_os_event.detection}</td>
+                <td>${corr.time_difference_seconds}s</td>
+                <td><span class="badge badge-success">${corr.correlation_strength}</span></td>
+                <td class="small">${corr.analysis}</td>
+            </tr>
+        `).join('');
+    }
 }
 
 // Initialize timeline visualization
 function initializeTimeline() {
     const container = document.getElementById('timeline-container');
 
-    // Simple timeline implementation
-    const events = [
-        { time: '10:00', event: 'Normal login activity', type: 'normal' },
-        { time: '10:15', event: 'First failed attempt detected', type: 'warning' },
-        { time: '10:20', event: 'Multiple failures from same IP', type: 'danger' },
-        { time: '10:25', event: 'Brute force pattern identified', type: 'danger' },
-        { time: '10:30', event: 'Account temporarily locked', type: 'info' }
-    ];
+    // Check if timeline data is available from the backend
+    if (typeof timeline !== 'undefined' && timeline.length > 0) {
+        // Group events by category for filtering
+        const categorizedEvents = {
+            suspicious: timeline.filter(event => event.category === 'suspicious' || event.event_type === 'failed_login_attempt'),
+            failed: timeline.filter(event => event.category === 'authentication' && event.description.toLowerCase().includes('failed')),
+            successful: timeline.filter(event => event.category === 'authentication' && !event.description.toLowerCase().includes('failed'))
+        };
 
-    container.innerHTML = `
-        <div class="timeline">
-            ${events.map(event => `
-                <div class="timeline-item">
-                    <div class="timeline-marker bg-${event.type === 'danger' ? 'danger' : event.type === 'warning' ? 'warning' : 'info'}"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-time">${event.time}</div>
-                        <div class="timeline-text">${event.event}</div>
+        // Get current filter
+        const filterSelect = document.getElementById('timeline-filter');
+        const currentFilter = filterSelect ? filterSelect.value : 'all';
+
+        let eventsToShow = timeline;
+        if (currentFilter === 'suspicious') {
+            eventsToShow = categorizedEvents.suspicious;
+        } else if (currentFilter === 'failed') {
+            eventsToShow = categorizedEvents.failed;
+        } else if (currentFilter === 'successful') {
+            eventsToShow = categorizedEvents.successful;
+        }
+
+        // Sort events by timestamp
+        eventsToShow.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+        container.innerHTML = `
+            <div class="timeline">
+                ${eventsToShow.map(event => {
+                    let eventType = 'info'; // default
+                    if (event.category === 'suspicious' || event.event_type === 'failed_login_attempt') {
+                        eventType = 'danger';
+                    } else if (event.category === 'authentication' && event.description.toLowerCase().includes('failed')) {
+                        eventType = 'warning';
+                    } else if (event.category === 'authentication') {
+                        eventType = 'success';
+                    }
+
+                    const timestamp = new Date(event.timestamp);
+                    const timeString = timestamp.toLocaleTimeString('en-US', {
+                        hour12: false,
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+
+                    return `
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-${eventType}"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-time">${timeString}</div>
+                                <div class="timeline-text">${event.description}</div>
+                                <div class="timeline-category">${event.category} - ${event.source}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+
+        // Add filter change listener
+        if (filterSelect) {
+            filterSelect.addEventListener('change', initializeTimeline);
+        }
+    } else {
+        // Fallback to sample data if no backend data
+        const events = [
+            { time: '10:00', event: 'Normal login activity', type: 'success', category: 'successful' },
+            { time: '10:15', event: 'First failed attempt detected', type: 'warning', category: 'failed' },
+            { time: '10:20', event: 'Multiple failures from same IP', type: 'danger', category: 'suspicious' },
+            { time: '10:25', event: 'Brute force pattern identified', type: 'danger', category: 'suspicious' },
+            { time: '10:30', event: 'Account temporarily locked', type: 'info', category: 'successful' }
+        ];
+
+        container.innerHTML = `
+            <div class="timeline">
+                ${events.map(event => `
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-${event.type}"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-time">${event.time}</div>
+                            <div class="timeline-text">${event.event}</div>
+                            <div class="timeline-category">${event.category}</div>
+                        </div>
                     </div>
-                </div>
-            `).join('')}
-        </div>
-    `;
+                `).join('')}
+            </div>
+        `;
+    }
 }
 
 // Action functions
@@ -593,6 +714,12 @@ function showAlert(message, type) {
 .timeline-text {
     font-size: 0.9em;
     margin: 0;
+}
+
+.timeline-category {
+    font-size: 0.75em;
+    color: #6c757d;
+    margin-top: 2px;
 }
 
 .badge-danger {
