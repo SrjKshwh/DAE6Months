@@ -52025,3 +52025,11 @@ WHERE alerts.created_at >= ?) AS anon_1]
 [parameters: ('2025-11-10 23:20:00.070784',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 2025-11-10 19:20:00,081 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:25:00 EST)" executed successfully
+2025-11-10 19:20:00,098 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:20:00.064178',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:20:00,099 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:25:00 EST)" executed successfully
