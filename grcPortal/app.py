@@ -66,8 +66,7 @@ load_dotenv()
 from db import get_engine, get_session, close_session
 
 
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService, IndicatorOfCompromise, IoCAnalysis, DetectionRule, OpenCTIConnector, OpenCTIIntegration, MonitoringConfiguration, RetentionConfig, RiskArchive, AuditArchive, IncidentArchive, EthicalDecision, ComplianceObligation, ComplianceRiskAssessment, ComplianceIncident, ComplianceFramework, LogSource, CollectedLog, AlertRule, Alert, LogAnalysis, LogCorrelation, IncidentDetection, AlertTriage, AnalysisDocumentation
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService, IndicatorOfCompromise, IoCAnalysis, DetectionRule, OpenCTIConnector, OpenCTIIntegration, MonitoringConfiguration, RetentionConfig, RiskArchive, AuditArchive, IncidentArchive, EthicalDecision, ComplianceObligation, ComplianceRiskAssessment, ComplianceIncident, ComplianceFramework, LogSource, CollectedLog, AlertRule, Alert, LogAnalysis, LogCorrelation, IncidentDetection, AlertTriage, AnalysisDocumentation, TimelineEvent, SecurityTimeline
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService, IndicatorOfCompromise, IoCAnalysis, DetectionRule, OpenCTIConnector, OpenCTIIntegration, MonitoringConfiguration, RetentionConfig, RiskArchive, AuditArchive, IncidentArchive, EthicalDecision, ComplianceObligation, ComplianceRiskAssessment, ComplianceIncident, ComplianceFramework, LogSource, CollectedLog, AlertRule, Alert, LogAnalysis, LogCorrelation, IncidentDetection, AlertTriage, AnalysisDocumentation, TimelineEvent, SecurityTimeline, ComplianceStrategy, ComplianceRoadmap, ControlMapping
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -10131,6 +10130,479 @@ def create_app():
         the GRC Portal system.
         """
         return render_template("guide.html")
+
+    # --- Advanced Compliance Strategy Routes ---
+
+    @app.route("/compliance_strategy", methods=["GET", "POST"])
+    @login_required
+    def compliance_strategy():
+        """
+        Advanced Compliance Strategy Management Interface.
+
+        Provides comprehensive strategic compliance planning for multinational organizations,
+        including regulatory conflict resolution, enterprise architecture design, and
+        3-year strategic roadmaps with resource allocation and milestones.
+        """
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            action = request.form.get('action')
+
+            if action == "create_strategy":
+                try:
+                    # Create new compliance strategy
+                    title = request.form.get('title')
+                    organization_name = request.form.get('organization_name')
+                    description = request.form.get('description')
+
+                    # Strategic scope
+                    geographic_scope = request.form.get('geographic_scope')
+                    industry_sector = request.form.get('industry_sector')
+                    employee_count = int(request.form.get('employee_count', 0))
+                    annual_revenue = float(request.form.get('annual_revenue', 0))
+
+                    # Regulatory landscape
+                    primary_frameworks = request.form.get('primary_frameworks')
+                    secondary_frameworks = request.form.get('secondary_frameworks')
+                    regulatory_bodies = request.form.get('regulatory_bodies')
+
+                    # Strategic objectives
+                    strategic_objectives = request.form.get('strategic_objectives')
+                    risk_appetite_statement = request.form.get('risk_appetite_statement')
+                    compliance_maturity_target = request.form.get('compliance_maturity_target', 'advanced')
+
+                    # Conflict resolution
+                    conflict_resolution_methodology = request.form.get('conflict_resolution_methodology', 'risk_based')
+                    conflict_prioritization_criteria = request.form.get('conflict_prioritization_criteria')
+
+                    # Resource allocation
+                    total_budget = float(request.form.get('total_budget', 0))
+                    fte_allocation = int(request.form.get('fte_allocation', 0))
+                    technology_budget = float(request.form.get('technology_budget', 0))
+
+                    strategy = ComplianceStrategy(
+                        title=title,
+                        organization_name=organization_name,
+                        description=description,
+                        geographic_scope=geographic_scope,
+                        industry_sector=industry_sector,
+                        employee_count=employee_count,
+                        annual_revenue=annual_revenue,
+                        primary_frameworks=primary_frameworks,
+                        secondary_frameworks=secondary_frameworks,
+                        regulatory_bodies=regulatory_bodies,
+                        strategic_objectives=strategic_objectives,
+                        risk_appetite_statement=risk_appetite_statement,
+                        compliance_maturity_target=compliance_maturity_target,
+                        conflict_resolution_methodology=conflict_resolution_methodology,
+                        conflict_prioritization_criteria=conflict_prioritization_criteria,
+                        total_budget=total_budget,
+                        fte_allocation=fte_allocation,
+                        technology_budget=technology_budget,
+                        strategy_owner=user.id
+                    )
+
+                    db.add(strategy)
+                    db.commit()
+
+                    log_audit_event(user, "COMPLIANCE_STRATEGY_CREATED", "COMPLIANCE",
+                                  f"Created strategy: {title}", "/compliance_strategy", True)
+
+                    flash(f"Compliance strategy '{title}' created successfully!", "success")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error creating compliance strategy: {str(e)}", "error")
+
+            elif action == "create_roadmap":
+                try:
+                    strategy_id = int(request.form.get('strategy_id'))
+                    title = request.form.get('roadmap_title')
+                    timeframe_years = int(request.form.get('timeframe_years', 3))
+                    start_date_str = request.form.get('start_date')
+
+                    start_date = datetime.fromisoformat(start_date_str) if start_date_str else datetime.now(timezone.utc)
+
+                    roadmap = ComplianceRoadmap(
+                        strategy_id=strategy_id,
+                        title=title,
+                        timeframe_years=timeframe_years,
+                        start_date=start_date,
+                        roadmap_owner=user.id
+                    )
+
+                    db.add(roadmap)
+                    db.commit()
+
+                    log_audit_event(user, "COMPLIANCE_ROADMAP_CREATED", "COMPLIANCE",
+                                  f"Created roadmap: {title}", "/compliance_strategy", True)
+
+                    flash(f"Compliance roadmap '{title}' created successfully!", "success")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error creating compliance roadmap: {str(e)}", "error")
+
+            return redirect(url_for('compliance_strategy'))
+
+        # GET request - show compliance strategy dashboard
+        try:
+            # Get all strategies with related data
+            strategies = db.query(ComplianceStrategy).options(
+                joinedload(ComplianceStrategy.owner),
+                joinedload(ComplianceStrategy.roadmaps)
+            ).order_by(ComplianceStrategy.created_at.desc()).all()
+
+            # Get control mappings for framework integration
+            control_mappings = {}
+            for mapping in db.query(ControlMapping).all():
+                framework = mapping.control_family or 'Unknown'
+                control_mappings[framework] = control_mappings.get(framework, 0) + 1
+
+            # Calculate strategy statistics
+            total_strategies = len(strategies)
+            active_strategies = sum(1 for s in strategies if s.status == 'active')
+            total_roadmaps = sum(len(s.roadmaps) for s in strategies)
+
+            close_session(db)
+
+            return render_template("compliance_strategy.html",
+                                  strategies=strategies,
+                                  control_mappings=control_mappings,
+                                  total_strategies=total_strategies,
+                                  active_strategies=active_strategies,
+                                  total_roadmaps=total_roadmaps)
+
+        except Exception as e:
+            close_session(db)
+            flash(f"Error loading compliance strategy: {str(e)}", "error")
+            return redirect(url_for('admin_dashboard'))
+
+    @app.route("/regulatory_conflicts", methods=["GET", "POST"])
+    @login_required
+    def regulatory_conflicts():
+        """
+        Regulatory Conflict Resolution Interface.
+
+        Manages identification, analysis, and resolution of regulatory conflicts
+        between different compliance frameworks and requirements.
+        """
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            action = request.form.get('action')
+
+            if action == "create_conflict":
+                try:
+                    strategy_id = int(request.form.get('strategy_id'))
+                    conflict_title = request.form.get('conflict_title')
+                    description = request.form.get('description')
+
+                    framework_a = request.form.get('framework_a')
+                    requirement_a = request.form.get('requirement_a')
+                    framework_b = request.form.get('framework_b')
+                    requirement_b = request.form.get('requirement_b')
+
+                    conflict_severity = request.form.get('conflict_severity', 'medium')
+                    resolution_strategy = request.form.get('resolution_strategy')
+                    resolution_details = request.form.get('resolution_details')
+
+                    conflict = RegulatoryConflict(
+                        strategy_id=strategy_id,
+                        conflict_title=conflict_title,
+                        description=description,
+                        framework_a=ComplianceFramework(framework_a),
+                        requirement_a=requirement_a,
+                        framework_b=ComplianceFramework(framework_b),
+                        requirement_b=requirement_b,
+                        conflict_severity=conflict_severity,
+                        resolution_strategy=resolution_strategy,
+                        resolution_details=resolution_details,
+                        identified_by=user.id
+                    )
+
+                    db.add(conflict)
+                    db.commit()
+
+                    log_audit_event(user, "REGULATORY_CONFLICT_CREATED", "COMPLIANCE",
+                                  f"Created conflict: {conflict_title}", "/regulatory_conflicts", True)
+
+                    flash(f"Regulatory conflict '{conflict_title}' documented successfully!", "success")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error creating regulatory conflict: {str(e)}", "error")
+
+            elif action == "resolve_conflict":
+                try:
+                    conflict_id = int(request.form.get('conflict_id'))
+                    conflict = db.query(RegulatoryConflict).filter_by(id=conflict_id).first()
+
+                    if conflict:
+                        conflict.resolution_status = 'resolved'
+                        conflict.resolution_date = datetime.now(timezone.utc)
+                        conflict.resolved_by = user.id
+                        conflict.effectiveness_rating = int(request.form.get('effectiveness_rating', 3))
+
+                        db.commit()
+
+                        log_audit_event(user, "REGULATORY_CONFLICT_RESOLVED", "COMPLIANCE",
+                                      f"Resolved conflict: {conflict.conflict_title}", "/regulatory_conflicts", True)
+
+                        flash(f"Conflict '{conflict.conflict_title}' marked as resolved!", "success")
+                    else:
+                        flash("Conflict not found.", "error")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error resolving conflict: {str(e)}", "error")
+
+            return redirect(url_for('regulatory_conflicts'))
+
+        # GET request - show regulatory conflicts dashboard
+        try:
+            # Get all conflicts with related strategy data
+            conflicts = db.query(RegulatoryConflict).options(
+                joinedload(RegulatoryConflict.strategy),
+                joinedload(RegulatoryConflict.identifier)
+            ).order_by(RegulatoryConflict.created_at.desc()).all()
+
+            # Get strategies for dropdown
+            strategies = db.query(ComplianceStrategy).filter(ComplianceStrategy.status.in_(['active', 'approved'])).all()
+
+            # Calculate conflict statistics
+            total_conflicts = len(conflicts)
+            resolved_conflicts = sum(1 for c in conflicts if c.resolution_status == 'resolved')
+            critical_conflicts = sum(1 for c in conflicts if c.conflict_severity == 'critical')
+
+            # Framework conflict analysis
+            framework_conflicts = {}
+            for conflict in conflicts:
+                key = f"{conflict.framework_a.value} vs {conflict.framework_b.value}"
+                if key not in framework_conflicts:
+                    framework_conflicts[key] = 0
+                framework_conflicts[key] += 1
+
+            close_session(db)
+
+            return render_template("regulatory_conflicts.html",
+                                  conflicts=conflicts,
+                                  strategies=strategies,
+                                  total_conflicts=total_conflicts,
+                                  resolved_conflicts=resolved_conflicts,
+                                  critical_conflicts=critical_conflicts,
+                                  framework_conflicts=framework_conflicts)
+
+        except Exception as e:
+            close_session(db)
+            flash(f"Error loading regulatory conflicts: {str(e)}", "error")
+            return redirect(url_for('admin_dashboard'))
+
+    @app.route("/compliance_roadmap/<int:roadmap_id>", methods=["GET", "POST"])
+    @login_required
+    def compliance_roadmap_detail(roadmap_id):
+        """
+        Detailed Compliance Roadmap Management.
+
+        Provides comprehensive roadmap management including milestones,
+        resource allocation, progress tracking, and strategic alignment.
+        """
+        user = current_user()
+        db = get_session()
+
+        roadmap = db.query(ComplianceRoadmap).options(
+            joinedload(ComplianceRoadmap.strategy),
+            joinedload(ComplianceRoadmap.owner),
+            joinedload(ComplianceRoadmap.milestones_list)
+        ).filter_by(id=roadmap_id).first()
+
+        if not roadmap:
+            flash("Roadmap not found.", "error")
+            return redirect(url_for('compliance_strategy'))
+
+        if request.method == "POST":
+            action = request.form.get('action')
+
+            if action == "update_roadmap":
+                try:
+                    roadmap.phase_1_objectives = request.form.get('phase_1_objectives')
+                    roadmap.phase_2_objectives = request.form.get('phase_2_objectives')
+                    roadmap.phase_3_objectives = request.form.get('phase_3_objectives')
+
+                    roadmap.total_budget = float(request.form.get('total_budget', 0))
+                    roadmap.kpis = request.form.get('kpis')
+                    roadmap.success_criteria = request.form.get('success_criteria')
+
+                    roadmap.progress_percentage = float(request.form.get('progress_percentage', 0))
+
+                    db.commit()
+
+                    log_audit_event(user, "COMPLIANCE_ROADMAP_UPDATED", "COMPLIANCE",
+                                  f"Updated roadmap: {roadmap.title}", f"/compliance_roadmap/{roadmap_id}", True)
+
+                    flash(f"Roadmap '{roadmap.title}' updated successfully!", "success")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error updating roadmap: {str(e)}", "error")
+
+            elif action == "add_milestone":
+                try:
+                    title = request.form.get('milestone_title')
+                    description = request.form.get('milestone_description')
+                    milestone_type = request.form.get('milestone_type')
+                    planned_date_str = request.form.get('planned_date')
+
+                    planned_date = datetime.fromisoformat(planned_date_str) if planned_date_str else None
+
+                    budget_allocated = float(request.form.get('budget_allocated', 0))
+                    fte_allocated = float(request.form.get('fte_allocated', 0))
+
+                    milestone = RoadmapMilestone(
+                        roadmap_id=roadmap_id,
+                        title=title,
+                        description=description,
+                        milestone_type=milestone_type,
+                        planned_date=planned_date,
+                        budget_allocated=budget_allocated,
+                        fte_allocated=fte_allocated,
+                        responsible_party=user.id
+                    )
+
+                    db.add(milestone)
+                    db.commit()
+
+                    log_audit_event(user, "ROADMAP_MILESTONE_ADDED", "COMPLIANCE",
+                                  f"Added milestone: {title}", f"/compliance_roadmap/{roadmap_id}", True)
+
+                    flash(f"Milestone '{title}' added successfully!", "success")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error adding milestone: {str(e)}", "error")
+
+            return redirect(url_for('compliance_roadmap_detail', roadmap_id=roadmap_id))
+
+        # GET request - show roadmap detail
+        try:
+            # Calculate roadmap metrics
+            total_milestones = len(roadmap.milestones_list)
+            completed_milestones = sum(1 for m in roadmap.milestones_list if m.status == 'completed')
+            delayed_milestones = sum(1 for m in roadmap.milestones_list if m.status == 'delayed')
+
+            # Budget tracking
+            total_budget_allocated = sum(m.budget_allocated for m in roadmap.milestones_list)
+            budget_utilization = (total_budget_allocated / roadmap.total_budget * 100) if roadmap.total_budget > 0 else 0
+
+            close_session(db)
+
+            return render_template("compliance_roadmap_detail.html",
+                                  roadmap=roadmap,
+                                  total_milestones=total_milestones,
+                                  completed_milestones=completed_milestones,
+                                  delayed_milestones=delayed_milestones,
+                                  total_budget_allocated=total_budget_allocated,
+                                  budget_utilization=budget_utilization)
+
+        except Exception as e:
+            close_session(db)
+            flash(f"Error loading roadmap detail: {str(e)}", "error")
+            return redirect(url_for('compliance_strategy'))
+
+    @app.route("/control_mappings", methods=["GET", "POST"])
+    @login_required
+    def control_mappings():
+        """
+        Multi-Framework Control Mapping Management.
+
+        Provides comprehensive control mapping across different compliance frameworks,
+        enabling integrated compliance management and gap analysis.
+        """
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            action = request.form.get('action')
+
+            if action == "create_mapping":
+                try:
+                    control_id = request.form.get('control_id')
+                    control_name = request.form.get('control_name')
+                    control_description = request.form.get('control_description')
+
+                    framework_mappings = request.form.get('framework_mappings')
+                    control_family = request.form.get('control_family')
+                    automation_potential = request.form.get('automation_potential', 'manual')
+
+                    risk_reduction_potential = int(request.form.get('risk_reduction_potential', 3))
+                    implementation_complexity = request.form.get('implementation_complexity', 'medium')
+
+                    mapping = ControlMapping(
+                        control_id=control_id,
+                        control_name=control_name,
+                        control_description=control_description,
+                        framework_mappings=framework_mappings,
+                        control_family=control_family,
+                        automation_potential=automation_potential,
+                        risk_reduction_potential=risk_reduction_potential,
+                        implementation_complexity=implementation_complexity,
+                        created_by=user.id
+                    )
+
+                    db.add(mapping)
+                    db.commit()
+
+                    log_audit_event(user, "CONTROL_MAPPING_CREATED", "COMPLIANCE",
+                                  f"Created mapping: {control_name}", "/control_mappings", True)
+
+                    flash(f"Control mapping '{control_name}' created successfully!", "success")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error creating control mapping: {str(e)}", "error")
+
+            return redirect(url_for('control_mappings'))
+
+        # GET request - show control mappings dashboard
+        try:
+            # Get all control mappings
+            mappings = db.query(ControlMapping).options(
+                joinedload(ControlMapping.creator)
+            ).order_by(ControlMapping.created_at.desc()).all()
+
+            # Calculate mapping statistics
+            total_mappings = len(mappings)
+            automated_mappings = sum(1 for m in mappings if m.automation_potential == 'automated')
+            high_risk_reduction = sum(1 for m in mappings if m.risk_reduction_potential >= 4)
+
+            # Framework coverage analysis
+            framework_coverage = {}
+            for mapping in mappings:
+                if mapping.framework_mappings:
+                    try:
+                        frameworks = json.loads(mapping.framework_mappings)
+                        for framework in frameworks.keys():
+                            if framework not in framework_coverage:
+                                framework_coverage[framework] = 0
+                            framework_coverage[framework] += 1
+                    except json.JSONDecodeError:
+                        pass
+
+            close_session(db)
+
+            return render_template("control_mappings.html",
+                                  mappings=mappings,
+                                  total_mappings=total_mappings,
+                                  automated_mappings=automated_mappings,
+                                  high_risk_reduction=high_risk_reduction,
+                                  framework_coverage=framework_coverage)
+
+        except Exception as e:
+            close_session(db)
+            flash(f"Error loading control mappings: {str(e)}", "error")
+            return redirect(url_for('admin_dashboard'))
 
     @app.route("/compliance_incidents", methods=["GET", "POST"])
     @login_required

@@ -2694,6 +2694,335 @@ class ComplianceIncident(Base):
         return timelines.get(self.severity, "Within 1 week")
 
 
+# Advanced Compliance Strategy Models
+
+class ComplianceStrategy(Base):
+    """Strategic compliance planning for multinational organizations with regulatory conflict resolution."""
+
+    __tablename__ = "compliance_strategies"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    organization_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Strategic scope
+    geographic_scope: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of countries/regions
+    industry_sector: Mapped[str] = mapped_column(String(100), nullable=True)
+    employee_count: Mapped[int] = mapped_column(Integer, nullable=True)
+    annual_revenue: Mapped[float] = mapped_column(Float, nullable=True)
+
+    # Regulatory landscape
+    primary_frameworks: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of primary compliance frameworks
+    secondary_frameworks: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of secondary frameworks
+    regulatory_bodies: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of regulatory bodies
+
+    # Strategic objectives
+    strategic_objectives: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of objectives
+    risk_appetite_statement: Mapped[str] = mapped_column(Text, nullable=True)
+    compliance_maturity_target: Mapped[str] = mapped_column(String(50), default="advanced")  # basic, intermediate, advanced, leading
+
+    # Conflict resolution approach
+    conflict_resolution_methodology: Mapped[str] = mapped_column(String(100), default="risk_based")  # risk_based, prescriptive, hybrid
+    conflict_prioritization_criteria: Mapped[str] = mapped_column(Text, nullable=True)  # JSON criteria for prioritizing conflicts
+
+    # Resource allocation
+    total_budget: Mapped[float] = mapped_column(Float, default=0.0)
+    fte_allocation: Mapped[int] = mapped_column(Integer, default=0)  # Full-time equivalent staff
+    technology_budget: Mapped[float] = mapped_column(Float, default=0.0)
+
+    # Governance
+    strategy_owner: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    approval_authority: Mapped[str] = mapped_column(String(100), nullable=True)  # Board, Executive Committee, etc.
+    review_frequency: Mapped[str] = mapped_column(String(50), default="annual")  # annual, semi-annual, quarterly
+
+    # Status and tracking
+    status: Mapped[str] = mapped_column(String(50), default="draft")  # draft, approved, active, under_review, retired
+    version: Mapped[str] = mapped_column(String(20), default="1.0")
+    effective_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    next_review_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    owner = relationship("User", backref="compliance_strategies")
+    roadmaps = relationship("ComplianceRoadmap", back_populates="strategy", cascade="all, delete-orphan")
+    conflicts = relationship("RegulatoryConflict", back_populates="strategy", cascade="all, delete-orphan")
+    architectures = relationship("ComplianceArchitecture", back_populates="strategy", cascade="all, delete-orphan")
+
+
+class RegulatoryConflict(Base):
+    """Regulatory conflicts and resolution strategies for multinational compliance."""
+
+    __tablename__ = "regulatory_conflicts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    strategy_id: Mapped[int] = mapped_column(ForeignKey("compliance_strategies.id"), nullable=False)
+
+    # Conflict details
+    conflict_title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+
+    # Conflicting requirements
+    framework_a: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=False)
+    requirement_a: Mapped[str] = mapped_column(String(255), nullable=False)
+    framework_b: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=False)
+    requirement_b: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    # Geographic/business context
+    applicable_regions: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of affected regions
+    business_processes_affected: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of affected processes
+
+    # Impact assessment
+    conflict_severity: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+    business_impact: Mapped[str] = mapped_column(Text, nullable=True)
+    compliance_risk: Mapped[str] = mapped_column(Text, nullable=True)
+    operational_complexity: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high
+
+    # Resolution approach
+    resolution_strategy: Mapped[str] = mapped_column(String(100), nullable=False)  # harmonization, localization, exemption, technology_solution
+    resolution_details: Mapped[str] = mapped_column(Text, nullable=True)
+    implementation_plan: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Resolution status
+    resolution_status: Mapped[str] = mapped_column(String(50), default="identified")  # identified, analyzing, resolved, implemented, monitored
+    resolution_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    effectiveness_rating: Mapped[int] = mapped_column(Integer, nullable=True)  # 1-5 effectiveness rating
+
+    # Governance
+    identified_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    resolved_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    approved_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    strategy = relationship("ComplianceStrategy", back_populates="conflicts")
+    identifier = relationship("User", foreign_keys=[identified_by])
+    resolver = relationship("User", foreign_keys=[resolved_by])
+    approver = relationship("User", foreign_keys=[approved_by])
+
+
+class ComplianceRoadmap(Base):
+    """3-year strategic compliance roadmap with milestones and resource allocation."""
+
+    __tablename__ = "compliance_roadmaps"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    strategy_id: Mapped[int] = mapped_column(ForeignKey("compliance_strategies.id"), nullable=False)
+
+    # Roadmap details
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    timeframe_years: Mapped[int] = mapped_column(Integer, default=3)
+    start_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    end_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Strategic phases
+    phase_1_objectives: Mapped[str] = mapped_column(Text, nullable=True)  # Year 1 objectives
+    phase_2_objectives: Mapped[str] = mapped_column(Text, nullable=True)  # Year 2 objectives
+    phase_3_objectives: Mapped[str] = mapped_column(Text, nullable=True)  # Year 3 objectives
+
+    # Resource allocation
+    total_budget: Mapped[float] = mapped_column(Float, default=0.0)
+    budget_breakdown: Mapped[str] = mapped_column(Text, nullable=True)  # JSON breakdown by category/year
+    fte_requirements: Mapped[str] = mapped_column(Text, nullable=True)  # JSON FTE requirements by phase
+    technology_investments: Mapped[str] = mapped_column(Text, nullable=True)  # JSON technology roadmap
+
+    # Key milestones
+    milestones: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of major milestones
+
+    # Success metrics
+    kpis: Mapped[str] = mapped_column(Text, nullable=True)  # JSON key performance indicators
+    success_criteria: Mapped[str] = mapped_column(Text, nullable=True)  # JSON success measurement criteria
+
+    # Risk considerations
+    roadmap_risks: Mapped[str] = mapped_column(Text, nullable=True)  # JSON potential risks to roadmap execution
+    mitigation_strategies: Mapped[str] = mapped_column(Text, nullable=True)  # JSON risk mitigation approaches
+
+    # Status and tracking
+    status: Mapped[str] = mapped_column(String(50), default="planning")  # planning, active, completed, cancelled
+    progress_percentage: Mapped[float] = mapped_column(Float, default=0.0)
+    last_progress_update: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Governance
+    roadmap_owner: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    steering_committee: Mapped[str] = mapped_column(Text, nullable=True)  # JSON committee members
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    strategy = relationship("ComplianceStrategy", back_populates="roadmaps")
+    owner = relationship("User", backref="compliance_roadmaps")
+    milestones_list = relationship("RoadmapMilestone", back_populates="roadmap", cascade="all, delete-orphan")
+
+
+class RoadmapMilestone(Base):
+    """Individual milestones within a compliance roadmap."""
+
+    __tablename__ = "roadmap_milestones"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    roadmap_id: Mapped[int] = mapped_column(ForeignKey("compliance_roadmaps.id"), nullable=False)
+
+    # Milestone details
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    milestone_type: Mapped[str] = mapped_column(String(50), nullable=False)  # implementation, assessment, certification, training, etc.
+
+    # Timeline
+    planned_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    actual_completion_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Dependencies and prerequisites
+    prerequisites: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of prerequisite milestones
+    dependencies: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of dependent milestones
+
+    # Resource requirements
+    budget_allocated: Mapped[float] = mapped_column(Float, default=0.0)
+    fte_allocated: Mapped[float] = mapped_column(Float, default=0.0)  # FTE months
+    resources_required: Mapped[str] = mapped_column(Text, nullable=True)  # JSON resource requirements
+
+    # Success criteria
+    success_criteria: Mapped[str] = mapped_column(Text, nullable=True)  # JSON success measurement criteria
+    deliverables: Mapped[str] = mapped_column(Text, nullable=True)  # JSON expected deliverables
+
+    # Status and tracking
+    status: Mapped[str] = mapped_column(String(50), default="planned")  # planned, in_progress, completed, delayed, cancelled
+    progress_percentage: Mapped[float] = mapped_column(Float, default=0.0)
+    delay_reason: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Governance
+    responsible_party: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    approval_required: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    roadmap = relationship("ComplianceRoadmap", back_populates="milestones_list")
+    responsible_user = relationship("User", backref="roadmap_milestones")
+
+
+class ComplianceArchitecture(Base):
+    """Enterprise compliance architecture supporting 10,000+ employees across multiple locations."""
+
+    __tablename__ = "compliance_architectures"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    strategy_id: Mapped[int] = mapped_column(ForeignKey("compliance_strategies.id"), nullable=False)
+
+    # Architecture overview
+    architecture_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Scale and scope
+    total_employees: Mapped[int] = mapped_column(Integer, nullable=True)
+    number_of_locations: Mapped[int] = mapped_column(Integer, default=1)
+    geographic_distribution: Mapped[str] = mapped_column(Text, nullable=True)  # JSON geographic breakdown
+
+    # Technology stack
+    core_platform: Mapped[str] = mapped_column(String(100), nullable=True)  # Primary GRC platform
+    integration_platforms: Mapped[str] = mapped_column(Text, nullable=True)  # JSON integrated systems
+    automation_tools: Mapped[str] = mapped_column(Text, nullable=True)  # JSON automation technologies
+
+    # Organizational structure
+    compliance_team_structure: Mapped[str] = mapped_column(Text, nullable=True)  # JSON team organization
+    governance_committees: Mapped[str] = mapped_column(Text, nullable=True)  # JSON governance bodies
+    reporting_hierarchy: Mapped[str] = mapped_column(Text, nullable=True)  # JSON reporting structure
+
+    # Control framework
+    control_families: Mapped[str] = mapped_column(Text, nullable=True)  # JSON control family definitions
+    control_mappings: Mapped[str] = mapped_column(Text, nullable=True)  # JSON framework to control mappings
+    automation_coverage: Mapped[str] = mapped_column(Text, nullable=True)  # JSON automation coverage by control
+
+    # Data architecture
+    data_collection_methods: Mapped[str] = mapped_column(Text, nullable=True)  # JSON data collection approaches
+    data_storage_strategy: Mapped[str] = mapped_column(String(100), nullable=True)
+    reporting_capabilities: Mapped[str] = mapped_column(Text, nullable=True)  # JSON reporting features
+
+    # Scalability considerations
+    performance_requirements: Mapped[str] = mapped_column(Text, nullable=True)  # JSON performance metrics
+    high_availability_requirements: Mapped[str] = mapped_column(Text, nullable=True)  # JSON HA requirements
+    disaster_recovery_plan: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Security architecture
+    access_control_model: Mapped[str] = mapped_column(String(100), default="role_based")
+    encryption_standards: Mapped[str] = mapped_column(Text, nullable=True)  # JSON encryption requirements
+    audit_trail_requirements: Mapped[str] = mapped_column(Text, nullable=True)  # JSON audit capabilities
+
+    # Implementation roadmap
+    implementation_phases: Mapped[str] = mapped_column(Text, nullable=True)  # JSON implementation phases
+    migration_strategy: Mapped[str] = mapped_column(Text, nullable=True)
+    change_management_approach: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Cost and ROI
+    total_cost_estimate: Mapped[float] = mapped_column(Float, default=0.0)
+    cost_breakdown: Mapped[str] = mapped_column(Text, nullable=True)  # JSON cost categories
+    roi_projections: Mapped[str] = mapped_column(Text, nullable=True)  # JSON ROI analysis
+
+    # Status and governance
+    status: Mapped[str] = mapped_column(String(50), default="design")  # design, development, testing, production, retired
+    version: Mapped[str] = mapped_column(String(20), default="1.0")
+    architecture_owner: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    strategy = relationship("ComplianceStrategy", back_populates="architectures")
+    owner = relationship("User", backref="compliance_architectures")
+
+
+class ControlMapping(Base):
+    """Multi-framework control mapping system for integrated compliance management."""
+
+    __tablename__ = "control_mappings"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+
+    # Control definition
+    control_id: Mapped[str] = mapped_column(String(100), nullable=False)  # Unique control identifier
+    control_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    control_description: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Framework mappings
+    framework_mappings: Mapped[str] = mapped_column(Text, nullable=True)  # JSON mapping to different frameworks
+
+    # Control attributes
+    control_family: Mapped[str] = mapped_column(String(100), nullable=True)
+    control_type: Mapped[str] = mapped_column(String(50), nullable=True)  # preventive, detective, corrective
+    automation_potential: Mapped[str] = mapped_column(String(20), default="manual")  # manual, semi-automated, automated
+
+    # Implementation details
+    implementation_guidance: Mapped[str] = mapped_column(Text, nullable=True)
+    testing_procedures: Mapped[str] = mapped_column(Text, nullable=True)
+    evidence_requirements: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Risk and impact
+    risk_reduction_potential: Mapped[int] = mapped_column(Integer, default=3)  # 1-5 scale
+    implementation_complexity: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high
+    resource_requirements: Mapped[str] = mapped_column(Text, nullable=True)  # JSON resource needs
+
+    # Status and governance
+    status: Mapped[str] = mapped_column(String(50), default="active")  # active, deprecated, retired
+    version: Mapped[str] = mapped_column(String(20), default="1.0")
+    last_reviewed: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Relationships and ownership
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    approved_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    creator = relationship("User", foreign_keys=[created_by])
+    approver = relationship("User", foreign_keys=[approved_by])
+
+
 # Security Event Analysis Models
 
 class LogAnalysis(Base):

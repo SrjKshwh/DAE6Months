@@ -52033,3 +52033,776 @@ WHERE alerts.created_at >= ?) AS anon_1]
 [parameters: ('2025-11-10 23:20:00.064178',)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 2025-11-10 19:20:00,099 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:25:00 EST)" executed successfully
+2025-11-10 19:25:00,009 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:30:00 EST)" (scheduled at 2025-11-10 19:25:00-05:00)
+2025-11-10 19:25:00,012 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:30:00 EST)" (scheduled at 2025-11-10 19:25:00-05:00)
+2025-11-10 19:25:00,104 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:25:00.092437',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:25:00,106 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:30:00 EST)" executed successfully
+2025-11-10 19:25:00,108 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:25:00.100633',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:25:00,110 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:30:00 EST)" executed successfully
+2025-11-10 19:30:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:35:00 EST)" (scheduled at 2025-11-10 19:30:00-05:00)
+2025-11-10 19:30:00,019 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:35:00 EST)" (scheduled at 2025-11-10 19:30:00-05:00)
+2025-11-10 19:30:00,076 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:30:00.069134',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:30:00,077 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:35:00 EST)" executed successfully
+ount_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:30:00.072149',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:30:00,080 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:35:00 EST)" executed successfully
+2025-11-10 19:35:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:40:00 EST)" (scheduled at 2025-11-10 19:35:00-05:00)
+2025-11-10 19:35:00,020 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:40:00 EST)" (scheduled at 2025-11-10 19:35:00-05:00)
+2025-11-10 19:35:00,095 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:35:00.088537',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:35:00,096 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:40:00 EST)" executed successfully
+2025-11-10 19:35:00,100 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:35:00.095002',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:35:00,100 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:40:00 EST)" executed successfully
+2025-11-10 19:40:00,009 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:45:00 EST)" (scheduled at 2025-11-10 19:40:00-05:00)
+2025-11-10 19:40:00,009 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:45:00 EST)" (scheduled at 2025-11-10 19:40:00-05:00)
+2025-11-10 19:40:00,062 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:40:00.054995',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:40:00,064 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:45:00 EST)" executed successfully
+2025-11-10 19:40:00,066 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:40:00.059130',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:40:00,067 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:45:00 EST)" executed successfully
+2025-11-10 19:45:00,009 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:50:00 EST)" (scheduled at 2025-11-10 19:45:00-05:00)
+2025-11-10 19:45:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:50:00 EST)" (scheduled at 2025-11-10 19:45:00-05:00)
+2025-11-10 19:45:00,060 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:45:00.053674',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:45:00,061 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:50:00 EST)" executed successfully
+2025-11-10 19:45:00,066 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:45:00.058880',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:45:00,067 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:50:00 EST)" executed successfully
+2025-11-10 19:50:00,012 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:55:00 EST)" (scheduled at 2025-11-10 19:50:00-05:00)
+2025-11-10 19:50:00,060 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:50:00.051479',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:50:00,060 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:50:00.051137',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:50:00,062 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:55:00 EST)" executed successfully
+2025-11-10 19:50:00,064 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 19:55:00 EST)" executed successfully
+2025-11-10 19:55:00,005 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:00:00 EST)" (scheduled at 2025-11-10 19:55:00-05:00)
+2025-11-10 19:55:00,081 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-10 23:55:00.072595',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 19:55:00,083 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:00:00 EST)" executed successfully
+2025-11-10 19:55:00,084 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:00:00 EST)" executed successfully
+2025-11-10 20:00:00,004 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:05:00 EST)" (scheduled at 2025-11-10 20:00:00-05:00)
+2025-11-10 20:00:00,056 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:00:00.049502',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:00:00,057 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:00:00.049141',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:00:00,058 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:05:00 EST)" executed successfully
+2025-11-10 20:00:00,059 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:05:00 EST)" executed successfully
+2025-11-10 20:05:00,008 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:10:00 EST)" (scheduled at 2025-11-10 20:05:00-05:00)
+2025-11-10 20:05:00,021 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:05:00.017401',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:05:00,021 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:10:00 EST)" executed successfully
+2025-11-10 20:10:00,020 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:15:00 EST)" (scheduled at 2025-11-10 20:10:00-05:00)
+2025-11-10 20:10:00,046 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:10:00.043683',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:10:00,047 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:15:00 EST)" executed successfully
+2025-11-10 20:15:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:20:00 EST)" (scheduled at 2025-11-10 20:15:00-05:00)
+2025-11-10 20:15:00,042 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:15:00.036295',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:15:00,044 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:20:00 EST)" executed successfully
+2025-11-10 20:20:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:25:00 EST)" (scheduled at 2025-11-10 20:20:00-05:00)
+2025-11-10 20:20:00,076 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:20:00.065365',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:20:00,077 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:25:00 EST)" executed successfully
+2025-11-10 20:21:14,329 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:21:14,348 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002DA0DBFB650>
+2025-11-10 20:21:14,348 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:21:14,354 [INFO] 127.0.0.1 - - [10/Nov/2025 20:21:14] "[33mGET /compliance_strategy HTTP/1.1[0m" 404 -
+2025-11-10 20:21:14,392 [INFO] 127.0.0.1 - - [10/Nov/2025 20:21:14] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:21:47,574 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-10 20:21:47,575 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-10 20:21:47,576 [INFO] 127.0.0.1 - - [10/Nov/2025 20:21:47] "[33mGET /compliance_strategy HTTP/1.1[0m" 404 -
+2025-11-10 20:21:47,613 [INFO] 127.0.0.1 - - [10/Nov/2025 20:21:47] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:21:47,837 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-10 20:21:47,838 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-10 20:21:47,839 [INFO] 127.0.0.1 - - [10/Nov/2025 20:21:47] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-10 20:22:29,911 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 20:22:29,913 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 20:22:29,914 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-10 20:22:29,915 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-10 20:22:29,915 [INFO] Scheduler started
+2025-11-10 20:22:29,915 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-10 20:22:29,936 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-10 20:22:29,936 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-10 20:22:33,737 [INFO] 127.0.0.1 - - [10/Nov/2025 20:22:33] "GET / HTTP/1.1" 200 -
+2025-11-10 20:22:33,788 [INFO] 127.0.0.1 - - [10/Nov/2025 20:22:33] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:22:33,844 [INFO] 127.0.0.1 - - [10/Nov/2025 20:22:33] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-10 20:22:49,198 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-10 20:22:49,280 [INFO] 127.0.0.1 - - [10/Nov/2025 20:22:49] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-10 20:22:49,288 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:22:49,302 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002DA0DBFB950>
+2025-11-10 20:22:49,302 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:22:49,302 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:22:49,304 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002DA0DBFBD10>
+2025-11-10 20:22:49,304 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:22:49,304 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002DA0DBFBD10> - email: kush786srj@gmail.com
+2025-11-10 20:22:49,306 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-10 20:22:49,349 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:22:49,350 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002DA0DBFBD10>
+2025-11-10 20:22:49,350 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:22:49,355 [INFO] 127.0.0.1 - - [10/Nov/2025 20:22:49] "GET /home HTTP/1.1" 200 -
+2025-11-10 20:22:49,395 [INFO] 127.0.0.1 - - [10/Nov/2025 20:22:49] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:22:56,303 [INFO] 127.0.0.1 - - [10/Nov/2025 20:22:56] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:22:56,594 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-10 20:22:56,595 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-10 20:22:56,595 [INFO] 127.0.0.1 - - [10/Nov/2025 20:22:56] "[33mGET /compliance_strategy HTTP/1.1[0m" 404 -
+2025-11-10 20:22:56,633 [INFO] 127.0.0.1 - - [10/Nov/2025 20:22:56] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:23:00,474 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-10 20:23:00,474 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-10 20:23:00,476 [INFO] 127.0.0.1 - - [10/Nov/2025 20:23:00] "[33mGET /compliance_strategy HTTP/1.1[0m" 404 -
+2025-11-10 20:23:00,796 [INFO] 127.0.0.1 - - [10/Nov/2025 20:23:00] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:25:00,018 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:25:00 EST)" (scheduled at 2025-11-10 20:25:00-05:00)
+2025-11-10 20:25:00,038 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:25:00.035456',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:25:00,039 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:30:00 EST)" executed successfully
+2025-11-10 20:25:00,231 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:25:00.229701',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:25:00,232 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:30:00 EST)" executed successfully
+2025-11-10 20:27:01,029 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 20:27:01,030 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 20:27:01,046 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-10 20:27:01,104 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-10 20:27:01,105 [INFO] Scheduler started
+2025-11-10 20:27:01,112 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-10 20:27:01,137 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-10 20:27:01,137 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-10 20:30:00,012 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:30:00 EST)" (scheduled at 2025-11-10 20:30:00-05:00)
+2025-11-10 20:30:00,265 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:30:00.262242',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:30:00,265 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:35:00 EST)" executed successfully
+2025-11-10 20:30:41,330 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-10 20:30:41,332 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-10 20:30:41,334 [INFO] 127.0.0.1 - - [10/Nov/2025 20:30:41] "[32mGET /compliance_strategy HTTP/1.1[0m" 302 -
+2025-11-10 20:30:41,461 [INFO] 127.0.0.1 - - [10/Nov/2025 20:30:41] "GET /login HTTP/1.1" 200 -
+2025-11-10 20:30:41,700 [INFO] 127.0.0.1 - - [10/Nov/2025 20:30:41] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:30:42,050 [INFO] 127.0.0.1 - - [10/Nov/2025 20:30:42] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-10 20:30:54,358 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 20:30:54,359 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 20:30:54,361 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-10 20:30:54,362 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-10 20:30:54,362 [INFO] Scheduler started
+2025-11-10 20:30:54,363 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-10 20:30:54,411 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-10 20:30:54,412 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-10 20:31:01,379 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:01] "GET / HTTP/1.1" 200 -
+2025-11-10 20:31:01,417 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:01] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:31:01,462 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:01] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-10 20:31:20,231 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-10 20:31:20,244 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:20] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-10 20:31:20,249 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:20,262 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4D96FC50>
+2025-11-10 20:31:20,263 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:20,263 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:20,263 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4D96CA50>
+2025-11-10 20:31:20,264 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:20,264 [INFO] DEBUG: current_user() returned: <models.User object at 0x0000024D4D96CA50> - email: kush786srj@gmail.com
+2025-11-10 20:31:20,264 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-10 20:31:20,342 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:20,342 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4D96CA50>
+2025-11-10 20:31:20,342 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:20,345 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:20] "GET /home HTTP/1.1" 200 -
+2025-11-10 20:31:20,396 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:20] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:31:42,441 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:42] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:31:42,743 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-10 20:31:42,743 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-10 20:31:42,745 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:42] "[32mGET /compliance_strategy HTTP/1.1[0m" 302 -
+2025-11-10 20:31:42,751 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:42] "GET /login HTTP/1.1" 200 -
+2025-11-10 20:31:42,999 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:42] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:31:43,329 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:43] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-10 20:31:48,901 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-10 20:31:48,922 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:48] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-10 20:31:48,961 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:48,972 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4E06AFD0>
+2025-11-10 20:31:48,972 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:48,972 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:48,974 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4D883890>
+2025-11-10 20:31:48,974 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:48,974 [INFO] DEBUG: current_user() returned: <models.User object at 0x0000024D4D883890> - email: kush786srj@gmail.com
+2025-11-10 20:31:48,975 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-10 20:31:49,003 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:49,003 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4D883890>
+2025-11-10 20:31:49,003 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:49,007 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:49] "GET /home HTTP/1.1" 200 -
+2025-11-10 20:31:49,363 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:49] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:31:52,440 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:52,451 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F1480>
+2025-11-10 20:31:52,452 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:52,452 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:52,453 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F18C0>
+2025-11-10 20:31:52,453 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:52,573 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:52,574 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F131450>
+2025-11-10 20:31:52,574 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:52,580 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:52] "[32mGET /compliance_strategy HTTP/1.1[0m" 302 -
+2025-11-10 20:31:52,900 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:52,909 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F131550>
+2025-11-10 20:31:52,910 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:52,910 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:52,912 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4E048F50>
+2025-11-10 20:31:52,912 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:52,912 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-10 20:31:52,948 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:52,949 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0FC500>
+2025-11-10 20:31:52,950 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:52,950 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-10 20:31:52,961 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:31:52,963 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F1BF770>
+2025-11-10 20:31:52,963 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:31:52,966 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:52] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-10 20:31:53,161 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:53] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:31:53,462 [INFO] 127.0.0.1 - - [10/Nov/2025 20:31:53] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:33:22,328 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:33:22,330 [INFO] 127.0.0.1 - - [10/Nov/2025 20:33:22] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:33:22,350 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F1D9A90>
+2025-11-10 20:33:22,352 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:33:22,354 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:33:22,361 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F159A50>
+2025-11-10 20:33:22,361 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:33:22,361 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-10 20:33:22,428 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:33:22,431 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F96D0>
+2025-11-10 20:33:22,432 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:33:22,433 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-10 20:33:22,434 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:33:22,437 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F9550>
+2025-11-10 20:33:22,438 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:33:22,444 [INFO] 127.0.0.1 - - [10/Nov/2025 20:33:22] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-10 20:33:22,580 [INFO] 127.0.0.1 - - [10/Nov/2025 20:33:22] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:33:45,877 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:33:45,884 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F9610>
+2025-11-10 20:33:45,884 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:33:45,884 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:33:45,885 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F96D0>
+2025-11-10 20:33:45,885 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:33:45,895 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:33:45,896 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F9E50>
+2025-11-10 20:33:45,896 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:33:45,901 [INFO] 127.0.0.1 - - [10/Nov/2025 20:33:45] "[32mGET /compliance_strategy HTTP/1.1[0m" 302 -
+2025-11-10 20:33:46,221 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:33:46,227 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F9FD0>
+2025-11-10 20:33:46,227 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:33:46,227 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:33:46,228 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F9C10>
+2025-11-10 20:33:46,228 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:33:46,229 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-10 20:33:46,250 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:33:46,252 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0FA2D0>
+2025-11-10 20:33:46,252 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:33:46,253 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-10 20:33:46,253 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:33:46,254 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0FA450>
+2025-11-10 20:33:46,254 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:33:46,256 [INFO] 127.0.0.1 - - [10/Nov/2025 20:33:46] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-10 20:33:46,476 [INFO] 127.0.0.1 - - [10/Nov/2025 20:33:46] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:33:47,284 [INFO] 127.0.0.1 - - [10/Nov/2025 20:33:47] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:33:54,048 [INFO] 127.0.0.1 - - [10/Nov/2025 20:33:54] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:34:10,341 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 20:34:10,342 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 20:34:10,344 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-10 20:34:10,345 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-10 20:34:10,345 [INFO] Scheduler started
+2025-11-10 20:34:10,346 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-10 20:34:10,355 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-10 20:34:10,355 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-10 20:34:13,935 [INFO] 127.0.0.1 - - [10/Nov/2025 20:34:13] "GET / HTTP/1.1" 200 -
+2025-11-10 20:34:13,971 [INFO] 127.0.0.1 - - [10/Nov/2025 20:34:13] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:34:13,983 [INFO] 127.0.0.1 - - [10/Nov/2025 20:34:13] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-10 20:34:39,673 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-10 20:34:39,684 [INFO] 127.0.0.1 - - [10/Nov/2025 20:34:39] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-10 20:34:39,688 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:34:39,706 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0FAB10>
+2025-11-10 20:34:39,706 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:34:39,706 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:34:39,707 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0FAB10>
+2025-11-10 20:34:39,707 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:34:39,707 [INFO] DEBUG: current_user() returned: <models.User object at 0x0000024D4F0FAB10> - email: kush786srj@gmail.com
+2025-11-10 20:34:39,707 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-10 20:34:39,721 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:34:39,721 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0FAB10>
+2025-11-10 20:34:39,721 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:34:39,722 [INFO] 127.0.0.1 - - [10/Nov/2025 20:34:39] "GET /home HTTP/1.1" 200 -
+2025-11-10 20:34:39,755 [INFO] 127.0.0.1 - - [10/Nov/2025 20:34:39] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:34:43,767 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:34:43,774 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0FA2D0>
+2025-11-10 20:34:43,774 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:34:43,774 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:34:43,775 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0FA2D0>
+2025-11-10 20:34:43,775 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:34:43,791 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:34:43,793 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F9850>
+2025-11-10 20:34:43,793 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:34:43,796 [INFO] 127.0.0.1 - - [10/Nov/2025 20:34:43] "[32mGET /compliance_strategy HTTP/1.1[0m" 302 -
+2025-11-10 20:34:44,117 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:34:44,123 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F9A90>
+2025-11-10 20:34:44,123 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:34:44,124 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:34:44,124 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F8DD0>
+2025-11-10 20:34:44,124 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:34:44,124 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-10 20:34:44,150 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:34:44,151 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F8110>
+2025-11-10 20:34:44,151 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:34:44,152 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-10 20:34:44,152 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:34:44,152 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024D4F0F8D10>
+2025-11-10 20:34:44,153 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:34:44,154 [INFO] 127.0.0.1 - - [10/Nov/2025 20:34:44] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-10 20:34:44,380 [INFO] 127.0.0.1 - - [10/Nov/2025 20:34:44] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:34:44,881 [INFO] 127.0.0.1 - - [10/Nov/2025 20:34:44] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:35:00,003 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:40:00 EST)" (scheduled at 2025-11-10 20:35:00-05:00)
+2025-11-10 20:35:00,006 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:35:00 EST)" (scheduled at 2025-11-10 20:35:00-05:00)
+2025-11-10 20:35:00,015 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:35:00.012830',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:35:00,015 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:40:00 EST)" executed successfully
+2025-11-10 20:35:00,177 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:35:00.174626',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:35:00,177 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:40:00 EST)" executed successfully
+2025-11-10 20:36:23,278 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 20:36:23,285 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 20:36:23,289 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-10 20:36:23,290 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-10 20:36:23,290 [INFO] Scheduler started
+2025-11-10 20:36:23,292 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-10 20:36:23,299 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-10 20:36:23,300 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-10 20:39:19,335 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 20:39:19,336 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 20:39:19,337 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-10 20:39:19,338 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-10 20:39:19,339 [INFO] Scheduler started
+2025-11-10 20:39:19,339 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-10 20:39:19,354 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-10 20:39:19,355 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-10 20:39:30,362 [INFO] 127.0.0.1 - - [10/Nov/2025 20:39:30] "GET / HTTP/1.1" 200 -
+2025-11-10 20:39:30,574 [INFO] 127.0.0.1 - - [10/Nov/2025 20:39:30] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:39:30,585 [INFO] 127.0.0.1 - - [10/Nov/2025 20:39:30] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-10 20:39:33,204 [INFO] 127.0.0.1 - - [10/Nov/2025 20:39:33] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:39:46,046 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-10 20:39:46,064 [INFO] 127.0.0.1 - - [10/Nov/2025 20:39:46] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-10 20:39:46,069 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:39:46,080 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023122AF9950>
+2025-11-10 20:39:46,081 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:39:46,081 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:39:46,082 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023122AFAAD0>
+2025-11-10 20:39:46,083 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:39:46,083 [INFO] DEBUG: current_user() returned: <models.User object at 0x0000023122AFAAD0> - email: kush786srj@gmail.com
+2025-11-10 20:39:46,084 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-10 20:39:46,123 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:39:46,124 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023122AFAAD0>
+2025-11-10 20:39:46,124 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:39:46,128 [INFO] 127.0.0.1 - - [10/Nov/2025 20:39:46] "GET /home HTTP/1.1" 200 -
+2025-11-10 20:39:46,173 [INFO] 127.0.0.1 - - [10/Nov/2025 20:39:46] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:39:50,021 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:39:50,028 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000231231E22C0>
+2025-11-10 20:39:50,029 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:39:50,030 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:39:50,031 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000231231E22C0>
+2025-11-10 20:39:50,031 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:39:50,055 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:39:50,056 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023122A028D0>
+2025-11-10 20:39:50,057 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:39:50,058 [INFO] 127.0.0.1 - - [10/Nov/2025 20:39:50] "GET /compliance_strategy HTTP/1.1" 200 -
+2025-11-10 20:39:50,371 [INFO] 127.0.0.1 - - [10/Nov/2025 20:39:50] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:39:51,139 [INFO] 127.0.0.1 - - [10/Nov/2025 20:39:51] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:40:00,012 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:40:00 EST)" (scheduled at 2025-11-10 20:40:00-05:00)
+2025-11-10 20:40:00,034 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:40:00.028207',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:40:00,034 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:45:00 EST)" executed successfully
+2025-11-10 20:40:00,446 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:40:00.440547',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:40:00,447 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:45:00 EST)" executed successfully
+2025-11-10 20:43:04,932 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:43:04,934 [INFO] 127.0.0.1 - - [10/Nov/2025 20:43:04] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:43:04,944 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023122DAF9B0>
+2025-11-10 20:43:04,944 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:43:04,945 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:43:04,946 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023122DAF9B0>
+2025-11-10 20:43:04,947 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:43:04,981 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:43:04,982 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000231232AC550>
+2025-11-10 20:43:04,983 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:43:04,985 [INFO] 127.0.0.1 - - [10/Nov/2025 20:43:04] "GET /compliance_strategy HTTP/1.1" 200 -
+2025-11-10 20:43:05,184 [INFO] 127.0.0.1 - - [10/Nov/2025 20:43:05] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:45:00,002 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:50:00 EST)" (scheduled at 2025-11-10 20:45:00-05:00)
+2025-11-10 20:45:00,002 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:50:00 EST)" (scheduled at 2025-11-10 20:45:00-05:00)
+2025-11-10 20:45:00,019 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:45:00.014765',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:45:00,019 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:50:00 EST)" executed successfully
+2025-11-10 20:45:00,020 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:45:00.015511',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:45:00,021 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:50:00 EST)" executed successfully
+2025-11-10 20:50:00,002 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:55:00 EST)" (scheduled at 2025-11-10 20:50:00-05:00)
+2025-11-10 20:50:00,002 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:55:00 EST)" (scheduled at 2025-11-10 20:50:00-05:00)
+2025-11-10 20:50:00,021 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:50:00.015182',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:50:00,022 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:55:00 EST)" executed successfully
+2025-11-10 20:50:00,023 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:50:00.017694',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:50:00,024 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 20:55:00 EST)" executed successfully
+2025-11-10 20:51:42,047 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:51:42,049 [INFO] 127.0.0.1 - - [10/Nov/2025 20:51:42] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:51:42,056 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023123212250>
+2025-11-10 20:51:42,057 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:51:42,057 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:51:42,058 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000231232D77A0>
+2025-11-10 20:51:42,058 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:51:42,088 [INFO] 127.0.0.1 - - [10/Nov/2025 20:51:42] "[32mPOST /compliance_strategy HTTP/1.1[0m" 302 -
+2025-11-10 20:51:42,310 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:51:42,319 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000231231F58B0>
+2025-11-10 20:51:42,320 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:51:42,321 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:51:42,322 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000231231CC910>
+2025-11-10 20:51:42,323 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:51:42,352 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:51:42,354 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000231231EA970>
+2025-11-10 20:51:42,354 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:51:42,357 [INFO] 127.0.0.1 - - [10/Nov/2025 20:51:42] "GET /compliance_strategy HTTP/1.1" 200 -
+2025-11-10 20:51:42,412 [INFO] 127.0.0.1 - - [10/Nov/2025 20:51:42] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:52:42,933 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:52:42,936 [INFO] 127.0.0.1 - - [10/Nov/2025 20:52:42] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:52:42,943 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000231232E2EA0>
+2025-11-10 20:52:42,944 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:52:42,944 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:52:42,947 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002312329BA10>
+2025-11-10 20:52:42,947 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:52:42,969 [INFO] 127.0.0.1 - - [10/Nov/2025 20:52:42] "[32mGET /compliance_roadmap/1 HTTP/1.1[0m" 302 -
+2025-11-10 20:52:43,183 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:52:43,191 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000231243844D0>
+2025-11-10 20:52:43,191 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:52:43,192 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:52:43,193 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000231243844D0>
+2025-11-10 20:52:43,193 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:52:43,209 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:52:43,210 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023124384F50>
+2025-11-10 20:52:43,210 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:52:43,213 [INFO] 127.0.0.1 - - [10/Nov/2025 20:52:43] "GET /compliance_strategy HTTP/1.1" 200 -
+2025-11-10 20:52:43,279 [INFO] 127.0.0.1 - - [10/Nov/2025 20:52:43] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:52:48,640 [INFO] 127.0.0.1 - - [10/Nov/2025 20:52:48] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:52:48,950 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:52:48,957 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023124385010>
+2025-11-10 20:52:48,958 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:52:48,958 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:52:48,960 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023124384D10>
+2025-11-10 20:52:48,960 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:52:48,982 [INFO] 127.0.0.1 - - [10/Nov/2025 20:52:48] "[32mGET /compliance_roadmap/1 HTTP/1.1[0m" 302 -
+2025-11-10 20:52:49,299 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:52:49,307 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000231243859D0>
+2025-11-10 20:52:49,307 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:52:49,307 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:52:49,309 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023124385910>
+2025-11-10 20:52:49,309 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:52:49,323 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:52:49,325 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023124386450>
+2025-11-10 20:52:49,325 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:52:49,327 [INFO] 127.0.0.1 - - [10/Nov/2025 20:52:49] "GET /compliance_strategy HTTP/1.1" 200 -
+2025-11-10 20:52:49,549 [INFO] 127.0.0.1 - - [10/Nov/2025 20:52:49] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:53:07,388 [INFO] 127.0.0.1 - - [10/Nov/2025 20:53:07] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:53:07,701 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:53:07,709 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023124386750>
+2025-11-10 20:53:07,709 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:53:07,710 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:53:07,711 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000231243868D0>
+2025-11-10 20:53:07,711 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:53:07,744 [INFO] 127.0.0.1 - - [10/Nov/2025 20:53:07] "[32mGET /compliance_roadmap/1 HTTP/1.1[0m" 302 -
+2025-11-10 20:53:08,066 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:53:08,074 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002312329BA10>
+2025-11-10 20:53:08,074 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:53:08,074 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:53:08,075 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002312329BF50>
+2025-11-10 20:53:08,076 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:53:08,091 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:53:08,092 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002312329B110>
+2025-11-10 20:53:08,092 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:53:08,095 [INFO] 127.0.0.1 - - [10/Nov/2025 20:53:08] "GET /compliance_strategy HTTP/1.1" 200 -
+2025-11-10 20:53:08,323 [INFO] 127.0.0.1 - - [10/Nov/2025 20:53:08] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 20:55:00,015 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:00:00 EST)" (scheduled at 2025-11-10 20:55:00-05:00)
+2025-11-10 20:55:00,035 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:55:00.029568',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:55:00,036 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:00:00 EST)" executed successfully
+2025-11-10 20:55:00,037 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 00:55:00.030274',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 20:55:00,039 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:00:00 EST)" executed successfully
+2025-11-10 20:58:14,450 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:58:14,454 [INFO] 127.0.0.1 - - [10/Nov/2025 20:58:14] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 20:58:14,460 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023123298F50>
+2025-11-10 20:58:14,461 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:58:14,461 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:58:14,462 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002312329B110>
+2025-11-10 20:58:14,462 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:58:14,463 [INFO] 127.0.0.1 - - [10/Nov/2025 20:58:14] "[32mGET /regulatory_conflicts HTTP/1.1[0m" 302 -
+2025-11-10 20:58:14,715 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:58:14,721 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023123298F50>
+2025-11-10 20:58:14,722 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:58:14,722 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:58:14,723 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002312329AE10>
+2025-11-10 20:58:14,723 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:58:14,724 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-10 20:58:14,744 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:58:14,745 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023124386450>
+2025-11-10 20:58:14,746 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:58:14,746 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-10 20:58:14,750 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-10 20:58:14,751 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000023124385E50>
+2025-11-10 20:58:14,751 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-10 20:58:14,752 [INFO] 127.0.0.1 - - [10/Nov/2025 20:58:14] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-10 20:58:14,777 [INFO] 127.0.0.1 - - [10/Nov/2025 20:58:14] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 21:00:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:05:00 EST)" (scheduled at 2025-11-10 21:00:00-05:00)
+2025-11-10 21:00:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:05:00 EST)" (scheduled at 2025-11-10 21:00:00-05:00)
+2025-11-10 21:00:00,027 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 01:00:00.025789',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 21:00:00,028 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:05:00 EST)" executed successfully
+2025-11-10 21:00:00,029 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 01:00:00.026481',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 21:00:00,029 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:05:00 EST)" executed successfully
+2025-11-10 21:03:06,618 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-10 21:03:14,791 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-10 21:03:14,791 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-10 21:03:14,792 [INFO] 127.0.0.1 - - [10/Nov/2025 21:03:14] "[32mGET /regulatory_conflicts HTTP/1.1[0m" 302 -
+2025-11-10 21:04:06,183 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-11-10 21:04:06,191 [INFO] 127.0.0.1 - - [10/Nov/2025 21:04:06] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-11-10 21:04:06,443 [INFO] 127.0.0.1 - - [10/Nov/2025 21:04:06] "GET /login HTTP/1.1" 200 -
+2025-11-10 21:04:06,527 [INFO] 127.0.0.1 - - [10/Nov/2025 21:04:06] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-10 21:04:06,528 [INFO] 127.0.0.1 - - [10/Nov/2025 21:04:06] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-10 21:04:06,783 [INFO] 127.0.0.1 - - [10/Nov/2025 21:04:06] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-10 21:05:00,010 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:10:00 EST)" (scheduled at 2025-11-10 21:05:00-05:00)
+2025-11-10 21:05:00,020 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 01:05:00.018209',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 21:05:00,021 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:10:00 EST)" executed successfully
+2025-11-10 21:05:00,026 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 01:05:00.017912',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 21:05:00,026 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:10:00 EST)" executed successfully
+2025-11-10 21:10:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:15:00 EST)" (scheduled at 2025-11-10 21:10:00-05:00)
+2025-11-10 21:10:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:15:00 EST)" (scheduled at 2025-11-10 21:10:00-05:00)
+2025-11-10 21:10:00,024 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 01:10:00.022569',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 21:10:00,024 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:15:00 EST)" executed successfully
+2025-11-10 21:10:00,025 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 01:10:00.023465',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 21:10:00,025 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:15:00 EST)" executed successfully
+2025-11-10 21:15:00,002 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:20:00 EST)" (scheduled at 2025-11-10 21:15:00-05:00)
+2025-11-10 21:15:00,002 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:20:00 EST)" (scheduled at 2025-11-10 21:15:00-05:00)
+2025-11-10 21:15:00,015 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 01:15:00.012685',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 21:15:00,015 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:20:00 EST)" executed successfully
+2025-11-10 21:15:00,028 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 01:15:00.025905',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 21:15:00,028 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:20:00 EST)" executed successfully
+2025-11-10 21:20:00,009 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:25:00 EST)" (scheduled at 2025-11-10 21:20:00-05:00)
+2025-11-10 21:20:00,041 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-11 01:20:00.034662',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-10 21:20:00,042 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:25:00 EST)" executed successfully
+2025-11-10 21:25:00,004 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-10 21:30:00 EST)" (scheduled at 2025-11-10 21:25:00-05:00)

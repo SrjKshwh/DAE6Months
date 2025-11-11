@@ -1,0 +1,371 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-compass"></i> Advanced Compliance Strategy Management
+                    </h2>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createStrategyModal">
+                            <i class="fas fa-plus"></i> New Strategy
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Strategy Statistics -->
+                    <div class="row mb-4">
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>{{ total_strategies }}</h3>
+                                    <p>Total Strategies</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-compass"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>{{ active_strategies }}</h3>
+                                    <p>Active Strategies</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>{{ total_roadmaps }}</h3>
+                                    <p>Strategic Roadmaps</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-road"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3>{{ control_mappings|length }}</h3>
+                                    <p>Control Mappings</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-link"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Strategies List -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Compliance Strategies</h3>
+                                </div>
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table table-hover text-nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th>Strategy Name</th>
+                                                <th>Organization</th>
+                                                <th>Status</th>
+                                                <th>Maturity Target</th>
+                                                <th>Budget</th>
+                                                <th>Owner</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for strategy in strategies %}
+                                            <tr>
+                                                <td>
+                                                    <strong>{{ strategy.title }}</strong>
+                                                    <br>
+                                                    <small class="text-muted">{{ strategy.description|truncate(50) }}</small>
+                                                </td>
+                                                <td>{{ strategy.organization_name }}</td>
+                                                <td>
+                                                    <span class="badge badge-{{ 'success' if strategy.status == 'active' else 'warning' if strategy.status == 'approved' else 'secondary' }}">
+                                                        {{ strategy.status|title }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ strategy.compliance_maturity_target|title }}</td>
+                                                <td>${{ "{:,.0f}".format(strategy.total_budget) }}</td>
+                                                <td>{{ strategy.owner.email if strategy.owner else 'Unknown' }}</td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-sm btn-info" onclick="viewStrategy({{ strategy.id }})">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-warning" onclick="editStrategy({{ strategy.id }})">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-success" onclick="createRoadmap({{ strategy.id }})">
+                                                            <i class="fas fa-road"></i> Roadmap
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Control Mappings Overview -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Control Mapping Overview</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        {% for framework, count in control_mappings.items() %}
+                                        <div class="col-lg-3 col-6">
+                                            <div class="small-box bg-primary">
+                                                <div class="inner">
+                                                    <h3>{{ count }}</h3>
+                                                    <p>{{ framework }}</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fas fa-shield-alt"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Strategy Modal -->
+<div class="modal fade" id="createStrategyModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Compliance Strategy</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="create_strategy">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Strategy Title</label>
+                                <input type="text" class="form-control" name="title" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Organization Name</label>
+                                <input type="text" class="form-control" name="organization_name" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+
+                    <h5>Strategic Scope</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Geographic Scope</label>
+                                <textarea class="form-control" name="geographic_scope" rows="2" placeholder="Countries/regions covered"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Industry Sector</label>
+                                <input type="text" class="form-control" name="industry_sector">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Employee Count</label>
+                                <input type="number" class="form-control" name="employee_count">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Annual Revenue ($)</label>
+                                <input type="number" class="form-control" name="annual_revenue" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5>Regulatory Landscape</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Primary Frameworks</label>
+                                <textarea class="form-control" name="primary_frameworks" rows="2" placeholder="NIST SP 800-53, ISO 27001, etc."></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Secondary Frameworks</label>
+                                <textarea class="form-control" name="secondary_frameworks" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5>Strategic Objectives</h5>
+                    <div class="form-group">
+                        <label>Strategic Objectives</label>
+                        <textarea class="form-control" name="strategic_objectives" rows="3" placeholder="Achieve 98% compliance across all regulatory frameworks, Reduce compliance costs by 25% through automation, etc."></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Risk Appetite Statement</label>
+                                <textarea class="form-control" name="risk_appetite_statement" rows="2" placeholder="Conservative compliance posture with zero tolerance for regulatory violations"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Compliance Maturity Target</label>
+                                <select class="form-control" name="compliance_maturity_target">
+                                    <option value="basic">Basic</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="advanced" selected>Advanced</option>
+                                    <option value="leading">Leading</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5>Conflict Resolution</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Conflict Resolution Methodology</label>
+                                <select class="form-control" name="conflict_resolution_methodology">
+                                    <option value="risk_based" selected>Risk Based</option>
+                                    <option value="prescriptive">Prescriptive</option>
+                                    <option value="hybrid">Hybrid</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Conflict Prioritization Criteria</label>
+                                <textarea class="form-control" name="conflict_prioritization_criteria" rows="2" placeholder="Business impact, regulatory risk, implementation complexity"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5>Resource Allocation</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Total Budget ($)</label>
+                                <input type="number" class="form-control" name="total_budget" step="0.01">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>FTE Allocation</label>
+                                <input type="number" class="form-control" name="fte_allocation">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Technology Budget ($)</label>
+                                <input type="number" class="form-control" name="technology_budget" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Strategy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Create Roadmap Modal -->
+<div class="modal fade" id="createRoadmapModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Strategic Roadmap</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="create_roadmap">
+                <input type="hidden" name="strategy_id" id="roadmap_strategy_id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Roadmap Title</label>
+                        <input type="text" class="form-control" name="roadmap_title" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Timeframe (Years)</label>
+                                <input type="number" class="form-control" name="timeframe_years" value="3" min="1" max="5">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input type="date" class="form-control" name="start_date" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Roadmap</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function createRoadmap(strategyId) {
+    document.getElementById('roadmap_strategy_id').value = strategyId;
+    $('#createRoadmapModal').modal('show');
+}
+
+function viewStrategy(strategyId) {
+    window.location.href = `/compliance_roadmap/${strategyId}`;
+}
+
+function editStrategy(strategyId) {
+    // Implement edit functionality
+    alert('Edit functionality to be implemented');
+}
+</script>
+
+{% endblock %}

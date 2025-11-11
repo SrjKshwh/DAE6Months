@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-link"></i> Multi-Framework Control Mapping
+                    </h2>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createMappingModal">
+                            <i class="fas fa-plus"></i> New Mapping
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Mapping Statistics -->
+                    <div class="row mb-4">
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>{{ total_mappings }}</h3>
+                                    <p>Total Mappings</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-link"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>{{ automated_mappings }}</h3>
+                                    <p>Automated</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>{{ high_risk_reduction }}</h3>
+                                    <p>High Risk Reduction</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3>{{ framework_coverage|length }}</h3>
+                                    <p>Frameworks Covered</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Framework Coverage -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Framework Coverage</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        {% for framework, count in framework_coverage.items() %}
+                                        <div class="col-lg-3 col-6">
+                                            <div class="small-box bg-primary">
+                                                <div class="inner">
+                                                    <h3>{{ count }}</h3>
+                                                    <p>{{ framework }}</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fas fa-file-contract"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Control Mappings List -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Control Mappings</h3>
+                                </div>
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table table-hover text-nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th>Control ID</th>
+                                                <th>Control Name</th>
+                                                <th>Family</th>
+                                                <th>Automation</th>
+                                                <th>Risk Reduction</th>
+                                                <th>Complexity</th>
+                                                <th>Status</th>
+                                                <th>Created By</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for mapping in mappings %}
+                                            <tr>
+                                                <td>
+                                                    <code>{{ mapping.control_id }}</code>
+                                                </td>
+                                                <td>
+                                                    <strong>{{ mapping.control_name }}</strong>
+                                                    <br>
+                                                    <small class="text-muted">{{ mapping.control_description|truncate(50) }}</small>
+                                                </td>
+                                                <td>{{ mapping.control_family or 'Not specified' }}</td>
+                                                <td>
+                                                    <span class="badge badge-{{ 'success' if mapping.automation_potential == 'automated' else 'info' if mapping.automation_potential == 'semi-automated' else 'secondary' }}">
+                                                        {{ mapping.automation_potential|replace('-', ' ')|title }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-{{ 'danger' if mapping.risk_reduction_potential >= 4 else 'warning' if mapping.risk_reduction_potential >= 3 else 'info' }}">
+                                                        {{ mapping.risk_reduction_potential }}/5
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-{{ 'danger' if mapping.implementation_complexity == 'high' else 'warning' if mapping.implementation_complexity == 'medium' else 'success' }}">
+                                                        {{ mapping.implementation_complexity|title }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-{{ 'success' if mapping.status == 'active' else 'warning' if mapping.status == 'deprecated' else 'secondary' }}">
+                                                        {{ mapping.status|title }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ mapping.creator.email if mapping.creator else 'Unknown' }}</td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-sm btn-info" onclick="viewMapping({{ mapping.id }})">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-warning" onclick="editMapping({{ mapping.id }})">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-danger" onclick="deleteMapping({{ mapping.id }})">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Mapping Modal -->
+<div class="modal fade" id="createMappingModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Control Mapping</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="create_mapping">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Control ID</label>
+                                <input type="text" class="form-control" name="control_id" placeholder="e.g., AC-2, GDPR-25" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Control Family</label>
+                                <input type="text" class="form-control" name="control_family" placeholder="e.g., Access Control, Data Protection">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Control Name</label>
+                        <input type="text" class="form-control" name="control_name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Control Description</label>
+                        <textarea class="form-control" name="control_description" rows="3" required></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Automation Potential</label>
+                                <select class="form-control" name="automation_potential" required>
+                                    <option value="manual">Manual</option>
+                                    <option value="semi-automated">Semi-Automated</option>
+                                    <option value="automated">Automated</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Implementation Complexity</label>
+                                <select class="form-control" name="implementation_complexity" required>
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Risk Reduction Potential (1-5)</label>
+                        <select class="form-control" name="risk_reduction_potential" required>
+                            <option value="1">1 - Minimal reduction</option>
+                            <option value="2">2 - Low reduction</option>
+                            <option value="3" selected>3 - Moderate reduction</option>
+                            <option value="4">4 - High reduction</option>
+                            <option value="5">5 - Very high reduction</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Framework Mappings (JSON)</label>
+                        <textarea class="form-control" name="framework_mappings" rows="4" placeholder='{"NIST SP 800-53": ["AC-2", "AC-3"], "ISO 27001": ["A.9.1", "A.9.2"], "GDPR": ["Article 25"]}'>{"NIST SP 800-53": [], "ISO 27001": [], "PCI DSS": [], "HIPAA": [], "GDPR": []}</textarea>
+                        <small class="form-text text-muted">Enter JSON object mapping this control to requirements in different frameworks</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Mapping</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewMapping(mappingId) {
+    // Implement view mapping details
+    alert('View mapping details to be implemented');
+}
+
+function editMapping(mappingId) {
+    // Implement edit mapping functionality
+    alert('Edit mapping functionality to be implemented');
+}
+
+function deleteMapping(mappingId) {
+    if (confirm('Are you sure you want to delete this control mapping?')) {
+        // Implement delete functionality
+        alert('Delete functionality to be implemented');
+    }
+}
+</script>
+
+{% endblock %}
