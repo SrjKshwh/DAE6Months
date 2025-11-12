@@ -156,7 +156,49 @@
                             <!-- Core Admin Items -->
                             <li><a class="dropdown-item" href="{{ url_for('policies') }}"><i class="fas fa-file-contract me-2"></i>Policies</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('kb') }}"><i class="fas fa-book me-2"></i>Knowledge Base</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('compliance') }}"><i class="fas fa-clipboard-check me-2"></i>Compliance</a></li>
+
+                            <!-- Compliance Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-clipboard me-2"></i>Compliance
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <li><a class="dropdown-item" href="{{ url_for('compliance') }}"><i class="fas fa-clipboard-check me-2"></i>Compliance Management</a></li>
+                                    <!-- Advanced Compliance Strategy Sub-menu -->
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                            <i class="fas fa-compass me-2"></i>Advanced Strategy
+                                        </a>
+                                        <ul class="dropdown-menu submenu">
+                                            <li><a class="dropdown-item" href="{{ url_for('compliance_strategy') }}"><i class="fas fa-compass me-2"></i>Strategy Management</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('regulatory_conflicts') }}"><i class="fas fa-exclamation-triangle me-2"></i>Regulatory Conflicts</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('control_mappings') }}"><i class="fas fa-link me-2"></i>Control Mappings</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('compliance_architecture') }}"><i class="fas fa-building me-2"></i>Enterprise Architecture</a></li>
+                                        </ul>
+                                    </li>
+                                    <!-- Compliance Automation Sub-menu -->
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                            <i class="fas fa-cogs me-2"></i>Automation
+                                        </a>
+                                        <ul class="dropdown-menu submenu">
+                                            <li><a class="dropdown-item" href="{{ url_for('compliance_workflows') }}"><i class="fas fa-cogs me-2"></i>Workflows</a></li>
+                                        </ul>
+                                    </li>
+                                    <!-- Compliance Assessment Sub-menu -->
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                            <i class="fas fa-clipboard-list me-2"></i>Assessment
+                                        </a>
+                                        <ul class="dropdown-menu submenu">
+                                            <li><a class="dropdown-item" href="{{ url_for('compliance_risk_assessment') }}"><i class="fas fa-chart-line me-2"></i>Risk Assessment</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('compliance_obligations') }}"><i class="fas fa-file-contract me-2"></i>Obligations</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('compliance_incidents') }}"><i class="fas fa-exclamation-circle me-2"></i>Compliance Incidents</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+
                             <li><a class="dropdown-item" href="{{ url_for('framework_mapping') }}"><i class="fas fa-sitemap me-2"></i>Framework Mapping</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('dependencies') }}"><i class="fas fa-cogs me-2"></i>Dependencies</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('detection_rules') }}"><i class="fas fa-bell me-2"></i>Detection Rules</a></li>

@@ -3495,3 +3495,272 @@ class DiskImage(Base):
 
     # Metadata
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))    
+
+
+
+
+class ComplianceWorkflow(Base):
+    """Automated compliance workflow system with multi-stage decision points."""
+
+    __tablename__ = "compliance_workflows"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Workflow configuration
+    workflow_type: Mapped[str] = mapped_column(String(50), nullable=False)  # assessment, remediation, monitoring, reporting
+    trigger_type: Mapped[str] = mapped_column(String(50), nullable=False)  # scheduled, event_based, manual, api_triggered
+
+    # Framework and scope
+    framework: Mapped[ComplianceFramework] = mapped_column(Enum(ComplianceFramework), nullable=False)
+    scope: Mapped[str] = mapped_column(Text, nullable=True)  # JSON scope definition
+    target_systems: Mapped[str] = mapped_column(Text, nullable=True)  # JSON target systems
+
+    # Workflow stages (JSON)
+    stages: Mapped[str] = mapped_column(Text, nullable=False)  # JSON workflow stages with decision points
+    decision_points: Mapped[str] = mapped_column(Text, nullable=True)  # JSON decision logic
+
+    # Automation settings
+    ai_integration_enabled: Mapped[bool] = mapped_column(Boolean, default=False)
+    auto_approval_threshold: Mapped[float] = mapped_column(Float, default=0.0)  # Auto-approve below this score
+    escalation_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Exception handling
+    exception_handling_rules: Mapped[str] = mapped_column(Text, nullable=True)  # JSON exception rules
+    fallback_procedures: Mapped[str] = mapped_column(Text, nullable=True)  # JSON fallback procedures
+
+    # Status and execution
+    status: Mapped[str] = mapped_column(String(50), default="draft")  # draft, active, paused, completed, error
+    last_execution: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    next_scheduled_run: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Performance metrics
+    success_rate: Mapped[float] = mapped_column(Float, default=0.0)
+    average_execution_time: Mapped[int] = mapped_column(Integer, default=0)  # seconds
+    total_executions: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Governance
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    approved_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    creator = relationship("User", foreign_keys=[created_by])
+    approver = relationship("User", foreign_keys=[approved_by])
+    executions = relationship("WorkflowExecution", back_populates="workflow", cascade="all, delete-orphan")
+
+
+class WorkflowExecution(Base):
+    """Individual execution instance of a compliance workflow."""
+
+    __tablename__ = "workflow_executions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    workflow_id: Mapped[int] = mapped_column(ForeignKey("compliance_workflows.id"), nullable=False)
+
+    # Execution details
+    execution_id: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)  # UUID-style identifier
+    status: Mapped[str] = mapped_column(String(50), default="pending")  # pending, running, completed, failed, paused
+
+    # Progress tracking
+    current_stage: Mapped[str] = mapped_column(String(100), nullable=True)
+    progress_percentage: Mapped[float] = mapped_column(Float, default=0.0)
+    stage_results: Mapped[str] = mapped_column(Text, nullable=True)  # JSON results by stage
+
+    # Decision outcomes
+    decisions_made: Mapped[str] = mapped_column(Text, nullable=True)  # JSON decision history
+    ai_decisions: Mapped[str] = mapped_column(Text, nullable=True)  # JSON AI-driven decisions
+
+    # Exception handling
+    exceptions_encountered: Mapped[str] = mapped_column(Text, nullable=True)  # JSON exceptions
+    escalations_triggered: Mapped[str] = mapped_column(Text, nullable=True)  # JSON escalations
+
+    # Results and metrics
+    final_result: Mapped[str] = mapped_column(Text, nullable=True)  # JSON final outcome
+    compliance_score: Mapped[float] = mapped_column(Float, nullable=True)
+    execution_time_seconds: Mapped[int] = mapped_column(Integer, nullable=True)
+
+    # Error handling
+    error_message: Mapped[str] = mapped_column(Text, nullable=True)
+    retry_count: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Timestamps
+    started_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    completed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    workflow = relationship("ComplianceWorkflow", back_populates="executions")
+
+
+class WorkflowException(Base):
+    """Exception handling and escalation tracking for compliance workflows."""
+
+    __tablename__ = "workflow_exceptions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    execution_id: Mapped[int] = mapped_column(ForeignKey("workflow_executions.id"), nullable=False)
+
+    # Exception details
+    exception_type: Mapped[str] = mapped_column(String(100), nullable=False)  # system_error, validation_error, timeout, etc.
+    severity: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+
+    # Context
+    stage_name: Mapped[str] = mapped_column(String(100), nullable=True)
+    error_code: Mapped[str] = mapped_column(String(50), nullable=True)
+    error_details: Mapped[str] = mapped_column(Text, nullable=True)  # JSON error context
+
+    # Resolution
+    resolution_strategy: Mapped[str] = mapped_column(String(100), nullable=True)  # auto_retry, manual_intervention, skip_stage, escalate
+    resolution_notes: Mapped[str] = mapped_column(Text, nullable=True)
+    resolved_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    resolved_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Escalation
+    escalation_required: Mapped[bool] = mapped_column(Boolean, default=False)
+    escalation_level: Mapped[str] = mapped_column(String(50), nullable=True)  # team_lead, management, executive
+    escalation_reason: Mapped[str] = mapped_column(Text, nullable=True)
+    escalated_to: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    escalation_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Status
+    status: Mapped[str] = mapped_column(String(50), default="open")  # open, resolved, escalated, closed
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    execution = relationship("WorkflowExecution", backref="exceptions")
+    resolver = relationship("User", foreign_keys=[resolved_by])
+    escalator = relationship("User", foreign_keys=[escalated_to])
+
+
+class ComplianceROI(Base):
+    """ROI analysis and cost-benefit calculations for compliance automation."""
+
+    __tablename__ = "compliance_roi"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    analysis_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    analysis_type: Mapped[str] = mapped_column(String(50), nullable=False)  # workflow_automation, control_implementation, technology_investment
+
+    # Time period
+    analysis_period_start: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    analysis_period_end: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Cost components (JSON)
+    implementation_costs: Mapped[str] = mapped_column(Text, nullable=True)  # JSON breakdown of implementation costs
+    operational_costs: Mapped[str] = mapped_column(Text, nullable=True)  # JSON ongoing operational costs
+    maintenance_costs: Mapped[str] = mapped_column(Text, nullable=True)  # JSON maintenance costs
+
+    # Benefit components (JSON)
+    time_savings: Mapped[str] = mapped_column(Text, nullable=True)  # JSON time savings by activity
+    error_reduction: Mapped[str] = mapped_column(Text, nullable=True)  # JSON error reduction metrics
+    compliance_improvements: Mapped[str] = mapped_column(Text, nullable=True)  # JSON compliance score improvements
+
+    # Financial calculations
+    total_investment: Mapped[float] = mapped_column(Float, default=0.0)
+    annual_savings: Mapped[float] = mapped_column(Float, default=0.0)
+    net_present_value: Mapped[float] = mapped_column(Float, default=0.0)
+    roi_percentage: Mapped[float] = mapped_column(Float, default=0.0)
+    payback_period_months: Mapped[float] = mapped_column(Float, default=0.0)
+
+    # Risk reduction metrics
+    risk_reduction_percentage: Mapped[float] = mapped_column(Float, default=0.0)
+    avoided_incidents_value: Mapped[float] = mapped_column(Float, default=0.0)
+    compliance_fines_avoided: Mapped[float] = mapped_column(Float, default=0.0)
+
+    # Qualitative benefits
+    qualitative_benefits: Mapped[str] = mapped_column(Text, nullable=True)  # JSON qualitative benefits
+
+    # Assumptions and methodology
+    assumptions: Mapped[str] = mapped_column(Text, nullable=True)
+    calculation_methodology: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Status and approval
+    status: Mapped[str] = mapped_column(String(50), default="draft")  # draft, reviewed, approved
+    reviewed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    approved_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    reviewer = relationship("User", foreign_keys=[reviewed_by])
+    approver = relationship("User", foreign_keys=[approved_by])
+
+    def calculate_roi(self):
+        """Calculate ROI metrics based on costs and benefits."""
+        if self.total_investment > 0 and self.annual_savings > 0:
+            # Simple ROI calculation
+            self.roi_percentage = (self.annual_savings / self.total_investment) * 100
+
+            # Payback period in months
+            if self.annual_savings > 0:
+                self.payback_period_months = (self.total_investment / self.annual_savings) * 12
+
+        return self.roi_percentage, self.payback_period_months
+
+    def calculate_npv(self, discount_rate: float = 0.1):
+        """Calculate Net Present Value using discounted cash flow."""
+        if not self.annual_savings or not self.total_investment:
+            return 0.0
+
+        # Simple NPV calculation (could be enhanced with detailed cash flows)
+        years = 5  # Assume 5-year analysis period
+        npv = -self.total_investment
+
+        for year in range(1, years + 1):
+            npv += self.annual_savings / ((1 + discount_rate) ** year)
+
+        self.net_present_value = npv
+        return npv
+
+
+class WorkflowDecisionPoint(Base):
+    """Decision points within compliance workflows with AI integration."""
+
+    __tablename__ = "workflow_decision_points"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    workflow_id: Mapped[int] = mapped_column(ForeignKey("compliance_workflows.id"), nullable=False)
+
+    # Decision point details
+    decision_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    stage_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    decision_type: Mapped[str] = mapped_column(String(50), nullable=False)  # approval, routing, conditional, ai_driven
+
+    # Decision logic
+    conditions: Mapped[str] = mapped_column(Text, nullable=True)  # JSON conditions for decision
+    ai_prompt: Mapped[str] = mapped_column(Text, nullable=True)  # AI prompt for decision making
+    ai_model: Mapped[str] = mapped_column(String(100), nullable=True)  # AI model to use
+
+    # Decision outcomes
+    possible_outcomes: Mapped[str] = mapped_column(Text, nullable=True)  # JSON possible outcomes
+    default_outcome: Mapped[str] = mapped_column(String(100), nullable=True)
+
+    # Automation settings
+    auto_decision_enabled: Mapped[bool] = mapped_column(Boolean, default=False)
+    auto_decision_threshold: Mapped[float] = mapped_column(Float, default=0.8)  # Confidence threshold for auto-decision
+
+    # Escalation rules
+    escalation_conditions: Mapped[str] = mapped_column(Text, nullable=True)  # JSON escalation triggers
+    escalation_levels: Mapped[str] = mapped_column(Text, nullable=True)  # JSON escalation levels
+
+    # Performance tracking
+    total_decisions: Mapped[int] = mapped_column(Integer, default=0)
+    auto_decisions: Mapped[int] = mapped_column(Integer, default=0)
+    manual_decisions: Mapped[int] = mapped_column(Integer, default=0)
+    escalated_decisions: Mapped[int] = mapped_column(Integer, default=0)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    # workflow = relationship("ComplianceWorkflow", backref="decision_points")
