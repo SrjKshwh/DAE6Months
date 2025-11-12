@@ -1,10 +1,14 @@
 import os
+import sys
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+
+# Add the parent directory to sys.path so we can import models
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -60,7 +64,7 @@ def run_migrations_online() -> None:
     """
     # Create engine directly (similar to your db.py)
     from sqlalchemy import create_engine
-    url = os.getenv("DATABASE_URL", "sqlite:///instance/app.db")
+    url = os.getenv("DATABASE_URL", "sqlite:///grc_portal.db")
     connectable = create_engine(url)
 
     with connectable.connect() as connection:

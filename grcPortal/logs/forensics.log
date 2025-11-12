@@ -53724,3 +53724,340 @@ WHERE alerts.created_at >= ?) AS anon_1]
 2025-11-11 23:40:28,579 [INFO] 127.0.0.1 - - [11/Nov/2025 23:40:28] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
 2025-11-11 23:44:32,346 [INFO] 127.0.0.1 - - [11/Nov/2025 23:44:32] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
 2025-11-11 23:44:32,348 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:44:32,356 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F11190>
+2025-11-11 23:44:32,359 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:44:32,360 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:44:32,361 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F10710>
+2025-11-11 23:44:32,362 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:44:32,363 [INFO] 127.0.0.1 - - [11/Nov/2025 23:44:32] "[32mGET /regulatory_conflicts HTTP/1.1[0m" 302 -
+2025-11-11 23:44:32,369 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:44:32,376 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F10A10>
+2025-11-11 23:44:32,376 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:44:32,376 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:44:32,377 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F10E90>
+2025-11-11 23:44:32,378 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:44:32,378 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-11 23:44:32,397 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:44:32,398 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F11D90>
+2025-11-11 23:44:32,398 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:44:32,398 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-11 23:44:32,399 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:44:32,400 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F12090>
+2025-11-11 23:44:32,401 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:44:32,403 [INFO] 127.0.0.1 - - [11/Nov/2025 23:44:32] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-11 23:44:32,423 [INFO] 127.0.0.1 - - [11/Nov/2025 23:44:32] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:45:00,005 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-11 23:50:00 EST)" (scheduled at 2025-11-11 23:45:00-05:00)
+2025-11-11 23:45:00,006 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-11 23:50:00 EST)" (scheduled at 2025-11-11 23:45:00-05:00)
+2025-11-11 23:45:00,023 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-12 03:45:00.018739',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-11 23:45:00,025 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-12 03:45:00.019215',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-11 23:45:00,026 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-11 23:50:00 EST)" executed successfully
+2025-11-11 23:47:15,303 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:15] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-11 23:47:15,303 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:15,313 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F11490>
+2025-11-11 23:47:15,313 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:15,314 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:15,315 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F11FD0>
+2025-11-11 23:47:15,316 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:15,316 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-11 23:47:15,351 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:15,352 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F10E90>
+2025-11-11 23:47:15,353 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:15,353 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-11 23:47:15,354 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:15,356 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13110>
+2025-11-11 23:47:15,357 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:15,359 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:15] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-11 23:47:15,376 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:15] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:47:16,249 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:16] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-11 23:47:16,251 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:16,260 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13110>
+2025-11-11 23:47:16,261 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:16,262 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:16,264 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F10E90>
+2025-11-11 23:47:16,265 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:16,265 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-11 23:47:16,303 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:16,305 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F12210>
+2025-11-11 23:47:16,305 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:16,306 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-11 23:47:16,307 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:16,310 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F119D0>
+2025-11-11 23:47:16,310 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:16,313 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:16] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-11 23:47:16,336 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:16] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:47:16,965 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:16] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-11 23:47:16,966 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:16,973 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F10E90>
+2025-11-11 23:47:16,974 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:16,974 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:16,977 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F12210>
+2025-11-11 23:47:16,977 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:16,978 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-11 23:47:17,020 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:17,022 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F122D0>
+2025-11-11 23:47:17,023 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:17,024 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-11 23:47:17,025 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:17,027 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F10F50>
+2025-11-11 23:47:17,027 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:17,028 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:17] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-11 23:47:17,049 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:17] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:47:17,682 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:17] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-11 23:47:17,683 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:17,691 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F10F50>
+2025-11-11 23:47:17,691 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:17,692 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:17,695 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F12210>
+2025-11-11 23:47:17,695 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:17,696 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-11 23:47:17,730 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:17,731 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F12750>
+2025-11-11 23:47:17,731 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:17,731 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-11 23:47:17,732 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:17,733 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F128D0>
+2025-11-11 23:47:17,733 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:17,735 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:17] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-11 23:47:17,751 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:17] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:47:23,712 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:23] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-11 23:47:23,714 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:23,721 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F12750>
+2025-11-11 23:47:23,721 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:23,722 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:23,724 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F128D0>
+2025-11-11 23:47:23,724 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:23,725 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:23] "[32mGET /regulatory_conflicts HTTP/1.1[0m" 302 -
+2025-11-11 23:47:23,730 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:23,735 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F12210>
+2025-11-11 23:47:23,735 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:23,735 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:23,737 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F134D0>
+2025-11-11 23:47:23,738 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:23,738 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-11 23:47:23,766 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:23,767 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F12690>
+2025-11-11 23:47:23,767 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:23,768 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-11 23:47:23,768 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:47:23,769 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F125D0>
+2025-11-11 23:47:23,769 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:47:23,771 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:23] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-11 23:47:23,793 [INFO] 127.0.0.1 - - [11/Nov/2025 23:47:23] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:48:56,067 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:56,068 [INFO] 127.0.0.1 - - [11/Nov/2025 23:48:56] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-11 23:48:56,077 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F128D0>
+2025-11-11 23:48:56,077 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:56,078 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:56,080 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F11190>
+2025-11-11 23:48:56,080 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:56,081 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-11 23:48:56,112 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:56,113 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F119D0>
+2025-11-11 23:48:56,113 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:56,114 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-11 23:48:56,114 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:56,115 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F11FD0>
+2025-11-11 23:48:56,116 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:56,117 [INFO] 127.0.0.1 - - [11/Nov/2025 23:48:56] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-11 23:48:56,135 [INFO] 127.0.0.1 - - [11/Nov/2025 23:48:56] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:48:56,916 [INFO] 127.0.0.1 - - [11/Nov/2025 23:48:56] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-11 23:48:56,917 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:56,924 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F11FD0>
+2025-11-11 23:48:56,925 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:56,925 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:56,928 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F119D0>
+2025-11-11 23:48:56,929 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:56,929 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-11 23:48:56,953 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:56,955 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F11310>
+2025-11-11 23:48:56,956 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:56,956 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-11 23:48:56,957 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:56,959 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F12150>
+2025-11-11 23:48:56,959 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:56,961 [INFO] 127.0.0.1 - - [11/Nov/2025 23:48:56] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-11 23:48:56,976 [INFO] 127.0.0.1 - - [11/Nov/2025 23:48:56] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:48:57,466 [INFO] 127.0.0.1 - - [11/Nov/2025 23:48:57] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-11 23:48:57,467 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:57,476 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F11310>
+2025-11-11 23:48:57,476 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:57,478 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:57,481 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F12150>
+2025-11-11 23:48:57,481 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:57,482 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-11 23:48:57,509 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:57,512 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13950>
+2025-11-11 23:48:57,512 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:57,513 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-11 23:48:57,514 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:57,516 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13A10>
+2025-11-11 23:48:57,517 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:57,520 [INFO] 127.0.0.1 - - [11/Nov/2025 23:48:57] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-11 23:48:57,538 [INFO] 127.0.0.1 - - [11/Nov/2025 23:48:57] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:48:57,868 [INFO] 127.0.0.1 - - [11/Nov/2025 23:48:57] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-11 23:48:57,869 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:57,878 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F12150>
+2025-11-11 23:48:57,879 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:57,879 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:57,880 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13A10>
+2025-11-11 23:48:57,880 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:57,881 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-11 23:48:57,912 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:57,913 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13DD0>
+2025-11-11 23:48:57,914 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:57,914 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-11 23:48:57,914 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:48:57,915 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13F50>
+2025-11-11 23:48:57,916 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:48:57,917 [INFO] 127.0.0.1 - - [11/Nov/2025 23:48:57] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-11 23:48:57,934 [INFO] 127.0.0.1 - - [11/Nov/2025 23:48:57] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:49:03,400 [INFO] 127.0.0.1 - - [11/Nov/2025 23:49:03] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-11 23:49:03,402 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:49:03,411 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13E90>
+2025-11-11 23:49:03,411 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:49:03,412 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:49:03,414 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13F50>
+2025-11-11 23:49:03,414 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:49:03,415 [INFO] 127.0.0.1 - - [11/Nov/2025 23:49:03] "[32mGET /regulatory_conflicts HTTP/1.1[0m" 302 -
+2025-11-11 23:49:03,422 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:49:03,430 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13A10>
+2025-11-11 23:49:03,431 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:49:03,431 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:49:03,433 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13E90>
+2025-11-11 23:49:03,433 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:49:03,433 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-11 23:49:03,476 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:49:03,478 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13D10>
+2025-11-11 23:49:03,478 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:49:03,479 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-11 23:49:03,480 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:49:03,481 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13B90>
+2025-11-11 23:49:03,482 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:49:03,485 [INFO] 127.0.0.1 - - [11/Nov/2025 23:49:03] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-11 23:49:03,513 [INFO] 127.0.0.1 - - [11/Nov/2025 23:49:03] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:49:44,962 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:49:44,967 [INFO] 127.0.0.1 - - [11/Nov/2025 23:49:44] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-11 23:49:44,970 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13110>
+2025-11-11 23:49:44,971 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:49:44,975 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:49:44,978 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13890>
+2025-11-11 23:49:44,979 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:49:45,007 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:49:45,009 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F104D0>
+2025-11-11 23:49:45,010 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:49:45,011 [INFO] 127.0.0.1 - - [11/Nov/2025 23:49:45] "GET /control_mappings HTTP/1.1" 200 -
+2025-11-11 23:49:45,041 [INFO] 127.0.0.1 - - [11/Nov/2025 23:49:45] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:50:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-11 23:55:00 EST)" (scheduled at 2025-11-11 23:50:00-05:00)
+2025-11-11 23:50:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-11 23:55:00 EST)" (scheduled at 2025-11-11 23:50:00-05:00)
+2025-11-11 23:50:00,027 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-12 03:50:00.024411',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-11 23:50:00,027 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-11 23:55:00 EST)" executed successfully
+2025-11-11 23:50:00,027 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-12 03:50:00.025185',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-11 23:50:00,028 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-11 23:55:00 EST)" executed successfully
+2025-11-11 23:55:00,012 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 00:00:00 EST)" (scheduled at 2025-11-11 23:55:00-05:00)
+2025-11-11 23:55:00,030 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-12 03:55:00.026059',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-11 23:55:00,033 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 00:00:00 EST)" executed successfully
+2025-11-11 23:55:00,036 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-12 03:55:00.032652',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-11 23:55:00,036 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 00:00:00 EST)" executed successfully
+2025-11-11 23:57:20,809 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-11 23:57:20,817 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-11 23:57:57,402 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:57:57,404 [INFO] 127.0.0.1 - - [11/Nov/2025 23:57:57] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-11 23:57:57,415 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F12990>
+2025-11-11 23:57:57,417 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:57:57,417 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:57:57,420 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F11190>
+2025-11-11 23:57:57,421 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:57:57,452 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-11 23:57:57,462 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F13590>
+2025-11-11 23:57:57,464 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-11 23:57:57,471 [INFO] 127.0.0.1 - - [11/Nov/2025 23:57:57] "GET /control_mappings HTTP/1.1" 200 -
+2025-11-11 23:57:57,504 [INFO] 127.0.0.1 - - [11/Nov/2025 23:57:57] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-11 23:59:03,515 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-11 23:59:03,516 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-11 23:59:03,519 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-11 23:59:03,520 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-11 23:59:03,520 [INFO] Scheduler started
+2025-11-11 23:59:56,761 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-11 23:59:56,763 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 00:00:00,008 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 00:05:00 EST)" (scheduled at 2025-11-12 00:00:00-05:00)
+2025-11-12 00:00:00,022 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-12 04:00:00.020207',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-12 00:00:00,024 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 00:05:00 EST)" executed successfully
+2025-11-12 00:00:00,025 [ERROR] Error performing health checks: (sqlite3.OperationalError) no such column: alerts.risk_status
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT alerts.id AS alerts_id, alerts.rule_id AS alerts_rule_id, alerts.title AS alerts_title, alerts.description AS alerts_description, alerts.severity AS alerts_severity, alerts.category AS alerts_category, alerts.impact AS alerts_impact, alerts.actions_taken AS alerts_actions_taken, alerts.triggered_at AS alerts_triggered_at, alerts.source_ip AS alerts_source_ip, alerts.log_entries AS alerts_log_entries, alerts.status AS alerts_status, alerts.assigned_to AS alerts_assigned_to, alerts.resolved_at AS alerts_resolved_at, alerts.resolution_notes AS alerts_resolution_notes, alerts.risk_status AS alerts_risk_status, alerts.created_at AS alerts_created_at, alerts.updated_at AS alerts_updated_at 
+FROM alerts 
+WHERE alerts.created_at >= ?) AS anon_1]
+[parameters: ('2025-11-12 04:00:00.020597',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-11-12 00:00:00,026 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 00:05:00 EST)" executed successfully
+2025-11-12 00:00:03,927 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 00:00:03,928 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 00:00:03,930 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 00:00:03,930 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 00:00:03,930 [INFO] Scheduler started
+2025-11-12 00:01:23,882 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 00:01:23,882 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 00:01:23,885 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 00:01:23,885 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 00:01:23,886 [INFO] Scheduler started
+2025-11-12 00:01:23,887 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 00:01:31,813 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 00:01:31,815 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 00:01:31,817 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 00:01:31,817 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 00:01:31,818 [INFO] Scheduler started
+2025-11-12 00:01:31,819 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 00:01:47,374 [INFO] 127.0.0.1 - - [12/Nov/2025 00:01:47] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 00:01:47,376 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 00:01:47,383 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F134D0>
+2025-11-12 00:01:47,385 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 00:01:47,385 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 00:01:47,387 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E0F128D0>
+2025-11-12 00:01:47,389 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 00:01:47,396 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 00:01:47,396 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002D9E165C110>
+2025-11-12 00:01:47,397 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 00:01:47,398 [INFO] 127.0.0.1 - - [12/Nov/2025 00:01:47] "GET /control_mappings HTTP/1.1" 200 -
+2025-11-12 00:01:47,420 [INFO] 127.0.0.1 - - [12/Nov/2025 00:01:47] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
