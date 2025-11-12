@@ -54061,3 +54061,4 @@ WHERE alerts.created_at >= ?) AS anon_1]
 2025-11-12 00:01:47,397 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
 2025-11-12 00:01:47,398 [INFO] 127.0.0.1 - - [12/Nov/2025 00:01:47] "GET /control_mappings HTTP/1.1" 200 -
 2025-11-12 00:01:47,420 [INFO] 127.0.0.1 - - [12/Nov/2025 00:01:47] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 00:03:50,939 [INFO] 127.0.0.1 - - [12/Nov/2025 00:03:50] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
