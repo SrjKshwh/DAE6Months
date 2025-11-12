@@ -54062,3 +54062,978 @@ WHERE alerts.created_at >= ?) AS anon_1]
 2025-11-12 00:01:47,398 [INFO] 127.0.0.1 - - [12/Nov/2025 00:01:47] "GET /control_mappings HTTP/1.1" 200 -
 2025-11-12 00:01:47,420 [INFO] 127.0.0.1 - - [12/Nov/2025 00:01:47] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
 2025-11-12 00:03:50,939 [INFO] 127.0.0.1 - - [12/Nov/2025 00:03:50] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:06:47,427 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 12:06:47,428 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 12:06:47,430 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 12:06:47,431 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 12:06:47,431 [INFO] Scheduler started
+2025-11-12 12:06:47,432 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 12:06:47,457 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 12:06:47,458 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 12:06:56,222 [INFO] 127.0.0.1 - - [12/Nov/2025 12:06:56] "GET / HTTP/1.1" 200 -
+2025-11-12 12:06:56,362 [INFO] 127.0.0.1 - - [12/Nov/2025 12:06:56] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:06:56,397 [INFO] 127.0.0.1 - - [12/Nov/2025 12:06:56] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 12:06:56,472 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-12 12:06:56,473 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-12 12:06:56,473 [INFO] 127.0.0.1 - - [12/Nov/2025 12:06:56] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 12:07:05,788 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 12:07:05,804 [INFO] 127.0.0.1 - - [12/Nov/2025 12:07:05] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 12:07:05,813 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:07:05,829 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F177750>
+2025-11-12 12:07:05,831 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:07:05,832 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:07:05,834 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F1779D0>
+2025-11-12 12:07:05,835 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:07:05,835 [INFO] DEBUG: current_user() returned: <models.User object at 0x0000015B7F1779D0> - email: kush786srj@gmail.com
+2025-11-12 12:07:05,837 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 12:07:05,928 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:07:05,930 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F1779D0>
+2025-11-12 12:07:05,931 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:07:05,935 [INFO] 127.0.0.1 - - [12/Nov/2025 12:07:05] "GET /home HTTP/1.1" 200 -
+2025-11-12 12:07:05,974 [INFO] 127.0.0.1 - - [12/Nov/2025 12:07:05] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:07:22,177 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:07:22,182 [INFO] 127.0.0.1 - - [12/Nov/2025 12:07:22] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:07:22,189 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F910050>
+2025-11-12 12:07:22,190 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:07:22,190 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:07:22,191 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F910050>
+2025-11-12 12:07:22,192 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:07:22,279 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:07:22,281 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7E325250>
+2025-11-12 12:07:22,281 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:07:22,284 [INFO] 127.0.0.1 - - [12/Nov/2025 12:07:22] "GET /control_mappings HTTP/1.1" 200 -
+2025-11-12 12:07:22,314 [INFO] 127.0.0.1 - - [12/Nov/2025 12:07:22] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:10:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:10:00 EST)" (scheduled at 2025-11-12 12:10:00-05:00)
+2025-11-12 12:10:01,033 [WARNING] Health check completed: 1 issues detected
+2025-11-12 12:10:01,039 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 12:10:01,039 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:15:00 EST)" executed successfully
+2025-11-12 12:10:46,653 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:46] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:10:46,654 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:46,662 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F89C490>
+2025-11-12 12:10:46,669 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:46,671 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:46,675 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F89C490>
+2025-11-12 12:10:46,676 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:46,708 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:46,710 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B00FE9B50>
+2025-11-12 12:10:46,711 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:46,714 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:46] "GET /control_mappings HTTP/1.1" 200 -
+2025-11-12 12:10:46,748 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:46] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:10:47,696 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:47] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:10:47,697 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:47,706 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F19CD50>
+2025-11-12 12:10:47,707 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:47,708 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:47,709 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01020500>
+2025-11-12 12:10:47,710 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:47,715 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:47,717 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01020230>
+2025-11-12 12:10:47,718 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:47,721 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:47] "GET /control_mappings HTTP/1.1" 200 -
+2025-11-12 12:10:47,749 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:47] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:10:48,646 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:48,649 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:48] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:10:48,656 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01037070>
+2025-11-12 12:10:48,658 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:48,659 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:48,661 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B010373F0>
+2025-11-12 12:10:48,661 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:48,668 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:48,670 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01064600>
+2025-11-12 12:10:48,671 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:48,674 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:48] "GET /control_mappings HTTP/1.1" 200 -
+2025-11-12 12:10:48,706 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:48] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:10:49,637 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:49] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:10:49,639 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:49,650 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01019910>
+2025-11-12 12:10:49,651 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:49,652 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:49,655 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01019C10>
+2025-11-12 12:10:49,655 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:49,665 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:49,667 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101A090>
+2025-11-12 12:10:49,668 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:49,671 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:49] "GET /control_mappings HTTP/1.1" 200 -
+2025-11-12 12:10:49,714 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:49] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:10:50,671 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:50,673 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:50] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:10:50,680 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01019B50>
+2025-11-12 12:10:50,681 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:50,681 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:50,683 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01019C10>
+2025-11-12 12:10:50,684 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:50,693 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:10:50,696 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101A450>
+2025-11-12 12:10:50,697 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:10:50,701 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:50] "GET /control_mappings HTTP/1.1" 200 -
+2025-11-12 12:10:50,735 [INFO] 127.0.0.1 - - [12/Nov/2025 12:10:50] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:15:00,004 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:20:00 EST)" (scheduled at 2025-11-12 12:15:00-05:00)
+2025-11-12 12:15:01,038 [WARNING] Health check completed: 1 issues detected
+2025-11-12 12:15:01,053 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 12:15:01,054 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:20:00 EST)" executed successfully
+2025-11-12 12:18:00,502 [INFO] 127.0.0.1 - - [12/Nov/2025 12:18:00] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:18:00,504 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:18:00,515 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101B4D0>
+2025-11-12 12:18:00,516 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:18:00,518 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:18:00,520 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101B350>
+2025-11-12 12:18:00,522 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:18:00,550 [INFO] 127.0.0.1 - - [12/Nov/2025 12:18:00] "[32mPOST /control_mappings HTTP/1.1[0m" 302 -
+2025-11-12 12:18:00,560 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:18:00,568 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101A690>
+2025-11-12 12:18:00,569 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:18:00,570 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:18:00,574 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01019FD0>
+2025-11-12 12:18:00,575 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:18:00,582 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:18:00,584 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B011450D0>
+2025-11-12 12:18:00,585 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:18:00,588 [INFO] 127.0.0.1 - - [12/Nov/2025 12:18:00] "GET /control_mappings HTTP/1.1" 200 -
+2025-11-12 12:18:00,620 [INFO] 127.0.0.1 - - [12/Nov/2025 12:18:00] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:19:52,331 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:19:52,333 [INFO] 127.0.0.1 - - [12/Nov/2025 12:19:52] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:19:52,340 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B011450D0>
+2025-11-12 12:19:52,340 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:19:52,341 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:19:52,343 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01145250>
+2025-11-12 12:19:52,344 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:19:52,345 [INFO] 127.0.0.1 - - [12/Nov/2025 12:19:52] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 12:19:52,352 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:19:52,359 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101B590>
+2025-11-12 12:19:52,360 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:19:52,361 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:19:52,363 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01145490>
+2025-11-12 12:19:52,364 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:19:52,365 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-12 12:19:52,403 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:19:52,406 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101B350>
+2025-11-12 12:19:52,407 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:19:52,407 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-12 12:19:52,438 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:19:52,440 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101A150>
+2025-11-12 12:19:52,441 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:19:52,444 [INFO] 127.0.0.1 - - [12/Nov/2025 12:19:52] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-12 12:19:52,475 [INFO] 127.0.0.1 - - [12/Nov/2025 12:19:52] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:20:00,017 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:25:00 EST)" (scheduled at 2025-11-12 12:20:00-05:00)
+2025-11-12 12:20:01,054 [WARNING] Health check completed: 1 issues detected
+2025-11-12 12:20:01,085 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 12:20:01,089 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:25:00 EST)" executed successfully
+2025-11-12 12:20:42,291 [INFO] 127.0.0.1 - - [12/Nov/2025 12:20:42] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:20:42,294 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:20:42,300 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F807350>
+2025-11-12 12:20:42,300 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:20:42,301 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:20:42,302 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F807410>
+2025-11-12 12:20:42,302 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:20:42,303 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-12 12:20:42,328 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:20:42,330 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F807590>
+2025-11-12 12:20:42,330 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:20:42,330 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-12 12:20:42,331 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:20:42,332 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F806150>
+2025-11-12 12:20:42,332 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:20:42,334 [INFO] 127.0.0.1 - - [12/Nov/2025 12:20:42] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-12 12:20:42,365 [INFO] 127.0.0.1 - - [12/Nov/2025 12:20:42] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:21:00,350 [INFO] 127.0.0.1 - - [12/Nov/2025 12:21:00] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:21:00,350 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:21:00,363 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101A390>
+2025-11-12 12:21:00,364 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:21:00,365 [INFO] 127.0.0.1 - - [12/Nov/2025 12:21:00] "[33mGET /admin/compliance_architecture HTTP/1.1[0m" 404 -
+2025-11-12 12:21:00,394 [INFO] 127.0.0.1 - - [12/Nov/2025 12:21:00] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:22:02,938 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:22:02,948 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F805FD0>
+2025-11-12 12:22:02,949 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:22:02,950 [INFO] 127.0.0.1 - - [12/Nov/2025 12:22:02] "[33mGET /admin/regulatory_conflicts HTTP/1.1[0m" 404 -
+2025-11-12 12:22:02,980 [INFO] 127.0.0.1 - - [12/Nov/2025 12:22:02] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:22:20,912 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:22:20,921 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01145490>
+2025-11-12 12:22:20,922 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:22:20,922 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:22:20,925 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01145490>
+2025-11-12 12:22:20,925 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:22:21,002 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:22:21,003 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01146450>
+2025-11-12 12:22:21,004 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:22:21,006 [INFO] 127.0.0.1 - - [12/Nov/2025 12:22:21] "GET /regulatory_conflicts HTTP/1.1" 200 -
+2025-11-12 12:22:21,031 [INFO] 127.0.0.1 - - [12/Nov/2025 12:22:21] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:22:41,389 [INFO] 127.0.0.1 - - [12/Nov/2025 12:22:41] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:22:41,390 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:22:41,397 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01146450>
+2025-11-12 12:22:41,397 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:22:41,398 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:22:41,399 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01146510>
+2025-11-12 12:22:41,399 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:22:41,421 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:22:41,423 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01146750>
+2025-11-12 12:22:41,423 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:22:41,426 [INFO] 127.0.0.1 - - [12/Nov/2025 12:22:41] "GET /regulatory_conflicts HTTP/1.1" 200 -
+2025-11-12 12:22:41,455 [INFO] 127.0.0.1 - - [12/Nov/2025 12:22:41] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:25:00,015 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:30:00 EST)" (scheduled at 2025-11-12 12:25:00-05:00)
+2025-11-12 12:25:01,047 [WARNING] Health check completed: 1 issues detected
+2025-11-12 12:25:01,066 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 12:25:01,067 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:30:00 EST)" executed successfully
+2025-11-12 12:28:15,182 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:15,186 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:15] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:28:15,192 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139C050>
+2025-11-12 12:28:15,193 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:15,194 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:15,196 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139C050>
+2025-11-12 12:28:15,197 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:15,211 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:15,213 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139C590>
+2025-11-12 12:28:15,214 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:15,216 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:15] "GET /regulatory_conflicts HTTP/1.1" 200 -
+2025-11-12 12:28:15,246 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:15] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:28:24,212 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:24] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:28:24,219 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:24,230 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139C590>
+2025-11-12 12:28:24,231 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:24,313 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:24,314 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139C350>
+2025-11-12 12:28:24,315 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:24,323 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:24] "GET /compliance HTTP/1.1" 200 -
+2025-11-12 12:28:24,349 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:24] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:28:34,707 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:34] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:28:34,710 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:34,716 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101A510>
+2025-11-12 12:28:34,717 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:34,717 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:34,719 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01019850>
+2025-11-12 12:28:34,720 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:34,810 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:34,812 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101A210>
+2025-11-12 12:28:34,812 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:34,814 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:34] "GET /vulnerability_scan HTTP/1.1" 200 -
+2025-11-12 12:28:34,843 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:34] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:28:39,913 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:39] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:28:39,915 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:39,925 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B010199D0>
+2025-11-12 12:28:39,926 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:39,926 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:39,927 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101A210>
+2025-11-12 12:28:39,927 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:39,983 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:39,984 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B010196D0>
+2025-11-12 12:28:39,984 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:39,986 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:39] "GET /critical_risks HTTP/1.1" 200 -
+2025-11-12 12:28:40,014 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:40] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:28:47,881 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:47] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:28:47,884 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:47,894 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01019490>
+2025-11-12 12:28:47,894 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:47,895 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:47,896 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0101A510>
+2025-11-12 12:28:47,896 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:47,906 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:28:47,908 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F807590>
+2025-11-12 12:28:47,908 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:28:47,911 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:47] "GET /regulatory_conflicts HTTP/1.1" 200 -
+2025-11-12 12:28:47,936 [INFO] 127.0.0.1 - - [12/Nov/2025 12:28:47] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:29:19,182 [INFO] 127.0.0.1 - - [12/Nov/2025 12:29:19] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:29:19,184 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:29:19,193 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F805FD0>
+2025-11-12 12:29:19,194 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:29:19,194 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:29:19,195 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F807410>
+2025-11-12 12:29:19,196 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:29:19,197 [INFO] 127.0.0.1 - - [12/Nov/2025 12:29:19] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 12:29:19,204 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:29:19,211 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F807410>
+2025-11-12 12:29:19,212 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:29:19,212 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:29:19,213 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F8077D0>
+2025-11-12 12:29:19,213 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:29:19,214 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-12 12:29:19,243 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:29:19,245 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F807350>
+2025-11-12 12:29:19,245 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:29:19,246 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-12 12:29:19,247 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:29:19,248 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F8074D0>
+2025-11-12 12:29:19,249 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:29:19,251 [INFO] 127.0.0.1 - - [12/Nov/2025 12:29:19] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-12 12:29:19,289 [INFO] 127.0.0.1 - - [12/Nov/2025 12:29:19] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:29:50,194 [INFO] 127.0.0.1 - - [12/Nov/2025 12:29:50] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:29:50,196 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:29:50,209 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F8077D0>
+2025-11-12 12:29:50,209 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:29:50,245 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:29:50,247 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B7F8077D0>
+2025-11-12 12:29:50,248 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:29:50,250 [INFO] 127.0.0.1 - - [12/Nov/2025 12:29:50] "GET /policies HTTP/1.1" 200 -
+2025-11-12 12:29:50,285 [INFO] 127.0.0.1 - - [12/Nov/2025 12:29:50] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:30:00,014 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:35:00 EST)" (scheduled at 2025-11-12 12:30:00-05:00)
+2025-11-12 12:30:01,044 [WARNING] Health check completed: 1 issues detected
+2025-11-12 12:30:01,055 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 12:30:01,056 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:35:00 EST)" executed successfully
+2025-11-12 12:30:34,970 [INFO] 127.0.0.1 - - [12/Nov/2025 12:30:34] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:30:34,974 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:30:34,984 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139C4D0>
+2025-11-12 12:30:34,985 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:30:34,986 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:30:34,989 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139C350>
+2025-11-12 12:30:34,990 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:30:34,994 [INFO] 127.0.0.1 - - [12/Nov/2025 12:30:34] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 12:30:34,999 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:30:35,007 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139C4D0>
+2025-11-12 12:30:35,008 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:30:35,008 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:30:35,013 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139C350>
+2025-11-12 12:30:35,013 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:30:35,014 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-12 12:30:35,053 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:30:35,055 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139C890>
+2025-11-12 12:30:35,056 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:30:35,056 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-12 12:30:35,057 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:30:35,060 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139CAD0>
+2025-11-12 12:30:35,061 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:30:35,065 [INFO] 127.0.0.1 - - [12/Nov/2025 12:30:35] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-12 12:30:35,101 [INFO] 127.0.0.1 - - [12/Nov/2025 12:30:35] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:30:55,337 [INFO] 127.0.0.1 - - [12/Nov/2025 12:30:55] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:35:00,017 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:40:00 EST)" (scheduled at 2025-11-12 12:35:00-05:00)
+2025-11-12 12:35:01,035 [WARNING] Health check completed: 1 issues detected
+2025-11-12 12:35:01,047 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 12:35:01,048 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:40:00 EST)" executed successfully
+2025-11-12 12:40:00,004 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:45:00 EST)" (scheduled at 2025-11-12 12:40:00-05:00)
+2025-11-12 12:40:01,032 [WARNING] Health check completed: 1 issues detected
+2025-11-12 12:40:01,039 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 12:40:01,040 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:45:00 EST)" executed successfully
+2025-11-12 12:40:59,653 [INFO] 127.0.0.1 - - [12/Nov/2025 12:40:59] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:40:59,655 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:40:59,663 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B01019B50>
+2025-11-12 12:40:59,663 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:40:59,664 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:40:59,665 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B010199D0>
+2025-11-12 12:40:59,666 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:40:59,697 [INFO] 127.0.0.1 - - [12/Nov/2025 12:40:59] "GET /policies HTTP/1.1" 200 -
+2025-11-12 12:40:59,725 [INFO] 127.0.0.1 - - [12/Nov/2025 12:40:59] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:41:12,966 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:12] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:41:12,967 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:12,973 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139CE90>
+2025-11-12 12:41:12,975 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:13,012 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:13,014 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139D250>
+2025-11-12 12:41:13,014 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:13,016 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:13] "GET /asset_register HTTP/1.1" 200 -
+2025-11-12 12:41:13,043 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:13] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:41:23,057 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:23] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:41:23,057 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:23,065 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139E2D0>
+2025-11-12 12:41:23,065 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:23,068 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:23,069 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139F290>
+2025-11-12 12:41:23,070 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:23,073 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:23] "GET /asset_register HTTP/1.1" 200 -
+2025-11-12 12:41:23,100 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:23] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:41:23,823 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:23,825 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:23] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:41:23,832 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139CD10>
+2025-11-12 12:41:23,833 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:23,837 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:23,840 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139F890>
+2025-11-12 12:41:23,841 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:23,844 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:23] "GET /asset_register HTTP/1.1" 200 -
+2025-11-12 12:41:23,869 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:23] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:41:24,533 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:24,534 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:24] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:41:24,546 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139CD10>
+2025-11-12 12:41:24,546 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:24,549 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:24,551 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139CC50>
+2025-11-12 12:41:24,551 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:24,554 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:24] "GET /asset_register HTTP/1.1" 200 -
+2025-11-12 12:41:24,583 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:24] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:41:24,755 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:24,759 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:24] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:41:24,767 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139CC50>
+2025-11-12 12:41:24,767 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:24,770 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:24,771 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139D250>
+2025-11-12 12:41:24,771 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:24,773 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:24] "GET /asset_register HTTP/1.1" 200 -
+2025-11-12 12:41:24,821 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:24] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:41:48,141 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:48,143 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:48] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:41:48,152 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139FAD0>
+2025-11-12 12:41:48,152 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:48,153 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:48,155 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139D250>
+2025-11-12 12:41:48,155 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:48,157 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:48] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 12:41:48,168 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:48,184 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139EBD0>
+2025-11-12 12:41:48,185 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:48,186 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:48,188 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139FC50>
+2025-11-12 12:41:48,188 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:48,189 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-12 12:41:48,232 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:48,233 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139EF90>
+2025-11-12 12:41:48,234 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:48,234 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-12 12:41:48,235 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:41:48,237 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139F890>
+2025-11-12 12:41:48,238 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:41:48,241 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:48] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-12 12:41:48,293 [INFO] 127.0.0.1 - - [12/Nov/2025 12:41:48] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:43:42,869 [INFO] 127.0.0.1 - - [12/Nov/2025 12:43:42] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:43:42,871 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:43:42,880 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139F890>
+2025-11-12 12:43:42,881 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:43:42,882 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:43:42,884 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139E2D0>
+2025-11-12 12:43:42,885 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:43:42,886 [INFO] 127.0.0.1 - - [12/Nov/2025 12:43:42] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 12:43:42,893 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:43:42,905 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139F890>
+2025-11-12 12:43:42,906 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:43:42,907 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:43:42,909 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139EF90>
+2025-11-12 12:43:42,910 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:43:42,912 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-12 12:43:42,936 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:43:42,937 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0125C050>
+2025-11-12 12:43:42,938 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:43:42,938 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-12 12:43:42,939 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:43:42,940 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0125C050>
+2025-11-12 12:43:42,940 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:43:42,943 [INFO] 127.0.0.1 - - [12/Nov/2025 12:43:42] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-12 12:43:42,979 [INFO] 127.0.0.1 - - [12/Nov/2025 12:43:42] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:45:00,005 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:50:00 EST)" (scheduled at 2025-11-12 12:45:00-05:00)
+2025-11-12 12:45:01,042 [WARNING] Health check completed: 1 issues detected
+2025-11-12 12:45:01,060 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 12:45:01,061 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:50:00 EST)" executed successfully
+2025-11-12 12:45:12,460 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:45:12,467 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0149D6D0>
+2025-11-12 12:45:12,468 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:45:12,469 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:45:12,471 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0149D850>
+2025-11-12 12:45:12,472 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:45:12,473 [INFO] 127.0.0.1 - - [12/Nov/2025 12:45:12] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 12:45:12,485 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:45:12,497 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0149D850>
+2025-11-12 12:45:12,499 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:45:12,500 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:45:12,503 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0149CA10>
+2025-11-12 12:45:12,503 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:45:12,504 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-12 12:45:12,556 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:45:12,558 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139FDD0>
+2025-11-12 12:45:12,559 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:45:12,560 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-12 12:45:12,560 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 12:45:12,562 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000015B0139EF90>
+2025-11-12 12:45:12,563 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 12:45:12,566 [INFO] 127.0.0.1 - - [12/Nov/2025 12:45:12] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-12 12:45:12,583 [INFO] 127.0.0.1 - - [12/Nov/2025 12:45:12] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:48:29,265 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 12:48:29,266 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 12:48:29,268 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 12:48:29,268 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 12:48:29,268 [INFO] Scheduler started
+2025-11-12 12:48:29,270 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 12:48:29,291 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 12:48:29,291 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 12:48:38,153 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-12 12:48:38,153 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-12 12:48:38,154 [INFO] 127.0.0.1 - - [12/Nov/2025 12:48:38] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 12:49:41,349 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 12:49:41,351 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 12:49:41,353 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 12:49:41,354 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 12:49:41,354 [INFO] Scheduler started
+2025-11-12 12:49:41,356 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 12:49:41,374 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 12:49:41,374 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 12:50:00,010 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:50:00 EST)" (scheduled at 2025-11-12 12:50:00-05:00)
+2025-11-12 12:50:01,284 [WARNING] Health check completed: 1 issues detected
+2025-11-12 12:50:01,292 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 12:50:01,292 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:55:00 EST)" executed successfully
+2025-11-12 12:50:01,298 [WARNING] Health check completed: 1 issues detected
+2025-11-12 12:50:01,304 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 12:50:01,305 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:55:00 EST)" executed successfully
+2025-11-12 12:50:32,903 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 12:50:32,904 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 12:50:32,905 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 12:50:32,905 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 12:50:32,905 [INFO] Scheduler started
+2025-11-12 12:50:32,906 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 12:50:32,930 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 12:50:32,930 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 12:50:43,586 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-12 12:50:43,586 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-12 12:50:43,587 [INFO] 127.0.0.1 - - [12/Nov/2025 12:50:43] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 12:51:10,070 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-11-12 12:51:10,077 [INFO] 127.0.0.1 - - [12/Nov/2025 12:51:10] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-11-12 12:51:10,097 [INFO] 127.0.0.1 - - [12/Nov/2025 12:51:10] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 12:51:10,119 [INFO] 127.0.0.1 - - [12/Nov/2025 12:51:10] "GET /login HTTP/1.1" 200 -
+2025-11-12 12:51:10,181 [INFO] 127.0.0.1 - - [12/Nov/2025 12:51:10] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 12:51:10,197 [INFO] 127.0.0.1 - - [12/Nov/2025 12:51:10] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 12:51:55,467 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 12:51:55,468 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 12:51:55,470 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 12:51:55,470 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 12:51:55,470 [INFO] Scheduler started
+2025-11-12 12:51:55,471 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 12:51:55,490 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 12:51:55,490 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 12:52:24,539 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-12 12:52:24,540 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-12 12:52:24,540 [INFO] 127.0.0.1 - - [12/Nov/2025 12:52:24] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 12:52:53,632 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 12:52:53,632 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 12:52:53,634 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 12:52:53,634 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 12:52:53,634 [INFO] Scheduler started
+2025-11-12 12:52:53,636 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 12:52:53,655 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 12:52:53,655 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 12:53:03,638 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-12 12:53:03,638 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-12 12:53:03,639 [INFO] 127.0.0.1 - - [12/Nov/2025 12:53:03] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 12:55:00,008 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 12:55:00 EST)" (scheduled at 2025-11-12 12:55:00-05:00)
+2025-11-12 12:55:01,178 [WARNING] Health check completed: 1 issues detected
+2025-11-12 12:55:01,192 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 12:55:01,192 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:00:00 EST)" executed successfully
+2025-11-12 13:00:00,015 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:05:00 EST)" (scheduled at 2025-11-12 13:00:00-05:00)
+2025-11-12 13:00:01,037 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:00:01,045 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:00:01,046 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:05:00 EST)" executed successfully
+2025-11-12 13:05:00,009 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:10:00 EST)" (scheduled at 2025-11-12 13:05:00-05:00)
+2025-11-12 13:05:01,042 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:05:01,065 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:05:01,066 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:10:00 EST)" executed successfully
+2025-11-12 13:09:28,488 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 13:09:28,489 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 13:09:28,491 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 13:09:28,491 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 13:09:28,492 [INFO] Scheduler started
+2025-11-12 13:09:28,493 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 13:09:28,504 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 13:09:28,505 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 13:09:32,987 [INFO] 127.0.0.1 - - [12/Nov/2025 13:09:32] "GET / HTTP/1.1" 200 -
+2025-11-12 13:09:33,103 [INFO] 127.0.0.1 - - [12/Nov/2025 13:09:33] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:09:33,124 [INFO] 127.0.0.1 - - [12/Nov/2025 13:09:33] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 13:09:41,567 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 13:09:41,580 [INFO] 127.0.0.1 - - [12/Nov/2025 13:09:41] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 13:09:41,586 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:09:41,593 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024704F61810>
+2025-11-12 13:09:41,594 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:09:41,595 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:09:41,596 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024706685950>
+2025-11-12 13:09:41,597 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:09:41,597 [INFO] DEBUG: current_user() returned: <models.User object at 0x0000024706685950> - email: kush786srj@gmail.com
+2025-11-12 13:09:41,598 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 13:09:41,626 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:09:41,626 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024706685950>
+2025-11-12 13:09:41,627 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:09:41,629 [INFO] 127.0.0.1 - - [12/Nov/2025 13:09:41] "GET /home HTTP/1.1" 200 -
+2025-11-12 13:09:41,669 [INFO] 127.0.0.1 - - [12/Nov/2025 13:09:41] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:09:51,138 [INFO] 127.0.0.1 - - [12/Nov/2025 13:09:51] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:09:51,141 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:09:51,147 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470679F100>
+2025-11-12 13:09:51,148 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:09:51,148 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:09:51,149 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470679F100>
+2025-11-12 13:09:51,149 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:09:51,150 [INFO] 127.0.0.1 - - [12/Nov/2025 13:09:51] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 13:09:51,155 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:09:51,161 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000247068404D0>
+2025-11-12 13:09:51,161 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:09:51,161 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:09:51,162 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024706851590>
+2025-11-12 13:09:51,162 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:09:51,163 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-12 13:09:51,196 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:09:51,197 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024706850380>
+2025-11-12 13:09:51,198 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:09:51,198 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-12 13:09:51,204 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:09:51,206 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470688FA50>
+2025-11-12 13:09:51,206 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:09:51,209 [INFO] 127.0.0.1 - - [12/Nov/2025 13:09:51] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-12 13:09:51,231 [INFO] 127.0.0.1 - - [12/Nov/2025 13:09:51] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:10:00,006 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:15:00 EST)" (scheduled at 2025-11-12 13:10:00-05:00)
+2025-11-12 13:10:00,007 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:10:00 EST)" (scheduled at 2025-11-12 13:10:00-05:00)
+2025-11-12 13:10:01,040 [WARNING] Health check completed: 2 issues detected
+2025-11-12 13:10:01,049 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:10:01,050 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:15:00 EST)" executed successfully
+2025-11-12 13:10:01,428 [WARNING] Health check completed: 2 issues detected
+2025-11-12 13:10:01,440 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:10:01,440 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:15:00 EST)" executed successfully
+2025-11-12 13:12:03,030 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:03,043 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470688FD50>
+2025-11-12 13:12:03,044 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:03,045 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:03,048 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024706981130>
+2025-11-12 13:12:03,050 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:03,052 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:03] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 13:12:03,062 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:03,075 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470692F200>
+2025-11-12 13:12:03,075 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:03,076 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:03,077 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024706972510>
+2025-11-12 13:12:03,077 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:03,077 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-12 13:12:03,122 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:03,124 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x0000024706910910>
+2025-11-12 13:12:03,124 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:03,124 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-12 13:12:03,125 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:03,126 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x00000247067E6750>
+2025-11-12 13:12:03,126 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:03,129 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:03] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-12 13:12:03,145 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:03] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:12:03,469 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:03] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:12:11,352 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:11] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:12:27,558 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 13:12:27,559 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 13:12:27,561 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 13:12:27,561 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 13:12:27,562 [INFO] Scheduler started
+2025-11-12 13:12:27,562 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 13:12:27,585 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 13:12:27,585 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 13:12:30,358 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:30] "GET / HTTP/1.1" 200 -
+2025-11-12 13:12:30,388 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:30] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:12:30,401 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:30] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 13:12:37,579 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 13:12:37,590 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:37] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 13:12:37,594 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:37,604 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470673BDD0>
+2025-11-12 13:12:37,604 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:37,604 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:37,605 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470673AE10>
+2025-11-12 13:12:37,605 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:37,605 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002470673AE10> - email: kush786srj@gmail.com
+2025-11-12 13:12:37,606 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 13:12:37,623 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:37,624 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470673AE10>
+2025-11-12 13:12:37,624 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:37,625 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:37] "GET /home HTTP/1.1" 200 -
+2025-11-12 13:12:37,662 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:37] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:12:44,841 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:44,847 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:44] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:12:44,848 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470673A990>
+2025-11-12 13:12:44,848 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:44,849 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:44,850 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470673B710>
+2025-11-12 13:12:44,851 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:44,853 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:44] "[32mGET /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 13:12:44,858 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:44,863 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470697CF50>
+2025-11-12 13:12:44,863 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:44,863 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:44,864 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470697CF50>
+2025-11-12 13:12:44,864 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:44,864 [INFO] Governance: Admin kush786srj@gmail.com accessed /admin/dashboard
+2025-11-12 13:12:44,883 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:44,884 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470697D190>
+2025-11-12 13:12:44,885 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:44,885 [INFO] Governance: Admin kush786srj@gmail.com accessed admin dashboard
+2025-11-12 13:12:44,885 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:12:44,886 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002470697D250>
+2025-11-12 13:12:44,886 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:12:44,888 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:44] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-11-12 13:12:44,910 [INFO] 127.0.0.1 - - [12/Nov/2025 13:12:44] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:13:48,573 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 13:13:48,581 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 13:13:48,584 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 13:13:48,585 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 13:13:48,586 [INFO] Scheduler started
+2025-11-12 13:13:48,587 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 13:13:48,600 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 13:13:48,601 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 13:14:32,482 [INFO] 127.0.0.1 - - [12/Nov/2025 13:14:32] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:14:41,240 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 13:14:41,241 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 13:14:41,243 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 13:14:41,243 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 13:14:41,244 [INFO] Scheduler started
+2025-11-12 13:14:41,244 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 13:14:41,258 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 13:14:41,258 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 13:14:46,969 [INFO] 127.0.0.1 - - [12/Nov/2025 13:14:46] "GET / HTTP/1.1" 200 -
+2025-11-12 13:14:47,112 [INFO] 127.0.0.1 - - [12/Nov/2025 13:14:47] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:14:47,129 [INFO] 127.0.0.1 - - [12/Nov/2025 13:14:47] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 13:14:58,559 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 13:14:58,570 [INFO] 127.0.0.1 - - [12/Nov/2025 13:14:58] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 13:14:58,574 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:14:58,583 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264B2D16D0>
+2025-11-12 13:14:58,583 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:14:58,583 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:14:58,584 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264B2D3890>
+2025-11-12 13:14:58,584 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:14:58,584 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264B2D3890> - email: kush786srj@gmail.com
+2025-11-12 13:14:58,584 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 13:14:58,627 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:14:58,628 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264B2D3890>
+2025-11-12 13:14:58,628 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:14:58,631 [INFO] 127.0.0.1 - - [12/Nov/2025 13:14:58] "GET /home HTTP/1.1" 200 -
+2025-11-12 13:14:58,778 [INFO] 127.0.0.1 - - [12/Nov/2025 13:14:58] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:15:00,015 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:15:00 EST)" (scheduled at 2025-11-12 13:15:00-05:00)
+2025-11-12 13:15:01,049 [WARNING] Health check completed: 2 issues detected
+2025-11-12 13:15:01,059 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:15:01,060 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:20:00 EST)" executed successfully
+2025-11-12 13:15:01,367 [WARNING] Health check completed: 2 issues detected
+2025-11-12 13:15:01,386 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:15:01,395 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:20:00 EST)" executed successfully
+2025-11-12 13:15:14,522 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:15:14,527 [INFO] 127.0.0.1 - - [12/Nov/2025 13:15:14] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:15:14,532 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CA7E190>
+2025-11-12 13:15:14,532 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:15:14,533 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:15:14,534 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CA7E190>
+2025-11-12 13:15:14,534 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:15:14,558 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:15:14,558 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CA7E190>
+2025-11-12 13:15:14,558 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:15:14,560 [INFO] 127.0.0.1 - - [12/Nov/2025 13:15:14] "GET /compliance_architecture HTTP/1.1" 200 -
+2025-11-12 13:15:14,587 [INFO] 127.0.0.1 - - [12/Nov/2025 13:15:14] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:18:43,061 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 13:18:43,061 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 13:18:43,063 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 13:18:43,064 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 13:18:43,065 [INFO] Scheduler started
+2025-11-12 13:18:43,066 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 13:18:43,077 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 13:18:43,078 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 13:18:49,867 [INFO] 127.0.0.1 - - [12/Nov/2025 13:18:49] "GET / HTTP/1.1" 200 -
+2025-11-12 13:18:49,903 [INFO] 127.0.0.1 - - [12/Nov/2025 13:18:49] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:18:49,914 [INFO] 127.0.0.1 - - [12/Nov/2025 13:18:49] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 13:19:37,332 [INFO] 127.0.0.1 - - [12/Nov/2025 13:19:37] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:19:46,611 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 13:19:46,624 [INFO] 127.0.0.1 - - [12/Nov/2025 13:19:46] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 13:19:46,629 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:19:46,643 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CA016A0>
+2025-11-12 13:19:46,644 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:19:46,644 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:19:46,646 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CA01AE0>
+2025-11-12 13:19:46,647 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:19:46,648 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264CA01AE0> - email: kush786srj@gmail.com
+2025-11-12 13:19:46,649 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 13:19:46,673 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:19:46,673 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CA01AE0>
+2025-11-12 13:19:46,674 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:19:46,676 [INFO] 127.0.0.1 - - [12/Nov/2025 13:19:46] "GET /home HTTP/1.1" 200 -
+2025-11-12 13:19:46,713 [INFO] 127.0.0.1 - - [12/Nov/2025 13:19:46] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:20:00,006 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:25:00 EST)" (scheduled at 2025-11-12 13:20:00-05:00)
+2025-11-12 13:20:00,008 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:20:00 EST)" (scheduled at 2025-11-12 13:20:00-05:00)
+2025-11-12 13:20:01,035 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:20:01,048 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:20:01,049 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:25:00 EST)" executed successfully
+2025-11-12 13:20:01,444 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:20:01,463 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:20:01,464 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:25:00 EST)" executed successfully
+2025-11-12 13:20:01,857 [INFO] 127.0.0.1 - - [12/Nov/2025 13:20:01] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:20:01,860 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:20:01,869 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CBED050>
+2025-11-12 13:20:01,869 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:20:01,869 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:20:01,871 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CBED450>
+2025-11-12 13:20:01,871 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:20:01,881 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:20:01,881 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CBED450>
+2025-11-12 13:20:01,881 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:20:01,883 [INFO] 127.0.0.1 - - [12/Nov/2025 13:20:01] "GET /compliance_architecture HTTP/1.1" 200 -
+2025-11-12 13:20:01,903 [INFO] 127.0.0.1 - - [12/Nov/2025 13:20:01] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:25:00,014 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:30:00 EST)" (scheduled at 2025-11-12 13:25:00-05:00)
+2025-11-12 13:25:01,036 [WARNING] Health check completed: 2 issues detected
+2025-11-12 13:25:01,040 [WARNING] Health check completed: 2 issues detected
+2025-11-12 13:25:01,047 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:25:01,048 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:30:00 EST)" executed successfully
+2025-11-12 13:25:01,066 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:25:01,067 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:30:00 EST)" executed successfully
+2025-11-12 13:25:07,199 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:25:07,200 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:07] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:25:07,207 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CCE58B0>
+2025-11-12 13:25:07,208 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:25:07,208 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:25:07,209 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CCE5A90>
+2025-11-12 13:25:07,209 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:25:07,243 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:25:07,244 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CCE5A90>
+2025-11-12 13:25:07,244 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:25:07,246 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:07] "GET /compliance_architecture HTTP/1.1" 200 -
+2025-11-12 13:25:07,271 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:07] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:25:08,049 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:08] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:25:08,050 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:25:08,057 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CCA6CF0>
+2025-11-12 13:25:08,057 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:25:08,057 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:25:08,058 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CCA6A50>
+2025-11-12 13:25:08,059 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:25:08,068 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:25:08,069 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CCA6A50>
+2025-11-12 13:25:08,069 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:25:08,070 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:08] "GET /compliance_architecture HTTP/1.1" 200 -
+2025-11-12 13:25:08,096 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:08] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:25:08,741 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:25:08,743 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:08] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:25:08,748 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CB35B20>
+2025-11-12 13:25:08,749 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:25:08,749 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:25:08,750 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB3590>
+2025-11-12 13:25:08,750 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:25:08,761 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:25:08,761 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB3590>
+2025-11-12 13:25:08,761 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:25:08,762 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:08] "GET /compliance_architecture HTTP/1.1" 200 -
+2025-11-12 13:25:08,789 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:08] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:25:13,387 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:13] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:25:50,268 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 13:25:50,268 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 13:25:50,269 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 13:25:50,270 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 13:25:50,270 [INFO] Scheduler started
+2025-11-12 13:25:50,271 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 13:25:50,280 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 13:25:50,280 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 13:25:52,359 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:52] "GET / HTTP/1.1" 200 -
+2025-11-12 13:25:52,393 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:52] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:25:52,405 [INFO] 127.0.0.1 - - [12/Nov/2025 13:25:52] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 13:26:00,440 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 13:26:00,450 [INFO] 127.0.0.1 - - [12/Nov/2025 13:26:00] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 13:26:00,455 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:26:00,465 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB0E90>
+2025-11-12 13:26:00,465 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:26:00,465 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:26:00,466 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB0A10>
+2025-11-12 13:26:00,466 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:26:00,467 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264CAB0A10> - email: kush786srj@gmail.com
+2025-11-12 13:26:00,467 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 13:26:00,487 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:26:00,487 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB0A10>
+2025-11-12 13:26:00,487 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:26:00,488 [INFO] 127.0.0.1 - - [12/Nov/2025 13:26:00] "GET /home HTTP/1.1" 200 -
+2025-11-12 13:26:00,526 [INFO] 127.0.0.1 - - [12/Nov/2025 13:26:00] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:26:08,908 [INFO] 127.0.0.1 - - [12/Nov/2025 13:26:08] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:26:08,909 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:26:08,918 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB0290>
+2025-11-12 13:26:08,918 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:26:08,919 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:26:08,920 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB0590>
+2025-11-12 13:26:08,920 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:26:08,930 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:26:08,930 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB0590>
+2025-11-12 13:26:08,930 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:26:08,931 [INFO] 127.0.0.1 - - [12/Nov/2025 13:26:08] "GET /compliance_architecture HTTP/1.1" 200 -
+2025-11-12 13:26:08,950 [INFO] 127.0.0.1 - - [12/Nov/2025 13:26:08] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:26:16,874 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:26:16,876 [INFO] 127.0.0.1 - - [12/Nov/2025 13:26:16] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:26:16,880 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB1D90>
+2025-11-12 13:26:16,881 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:26:16,881 [INFO] 127.0.0.1 - - [12/Nov/2025 13:26:16] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-11-12 13:27:40,411 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:27:40,419 [INFO] 127.0.0.1 - - [12/Nov/2025 13:27:40] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:27:40,419 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB0650>
+2025-11-12 13:27:40,420 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:27:40,421 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:27:40,422 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB04D0>
+2025-11-12 13:27:40,423 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:27:40,451 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:27:40,452 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB04D0>
+2025-11-12 13:27:40,452 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:27:40,455 [INFO] 127.0.0.1 - - [12/Nov/2025 13:27:40] "GET /compliance_architecture HTTP/1.1" 200 -
+2025-11-12 13:27:40,480 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:27:40,486 [INFO] 127.0.0.1 - - [12/Nov/2025 13:27:40] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:27:40,490 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CAB04D0>
+2025-11-12 13:27:40,491 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:27:40,491 [INFO] 127.0.0.1 - - [12/Nov/2025 13:27:40] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-11-12 13:30:00,007 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:35:00 EST)" (scheduled at 2025-11-12 13:30:00-05:00)
+2025-11-12 13:30:00,008 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:30:00 EST)" (scheduled at 2025-11-12 13:30:00-05:00)
+2025-11-12 13:30:01,047 [WARNING] Health check completed: 2 issues detected
+2025-11-12 13:30:01,064 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:30:01,065 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:35:00 EST)" executed successfully
+2025-11-12 13:30:01,373 [WARNING] Health check completed: 2 issues detected
+2025-11-12 13:30:01,397 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:30:01,399 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:35:00 EST)" executed successfully
+2025-11-12 13:35:00,005 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:40:00 EST)" (scheduled at 2025-11-12 13:35:00-05:00)
+2025-11-12 13:35:01,042 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:35:01,052 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:35:01,052 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:40:00 EST)" executed successfully
+2025-11-12 13:35:01,060 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:35:01,071 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:35:01,072 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:40:00 EST)" executed successfully
+2025-11-12 13:40:00,004 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:45:00 EST)" (scheduled at 2025-11-12 13:40:00-05:00)
+2025-11-12 13:40:01,042 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:40:01,052 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:40:01,053 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:45:00 EST)" executed successfully
+2025-11-12 13:40:01,064 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:40:01,072 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:40:01,074 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:45:00 EST)" executed successfully
+2025-11-12 13:41:25,463 [INFO] 127.0.0.1 - - [12/Nov/2025 13:41:25] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:41:25,464 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:41:25,473 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CCD5F10>
+2025-11-12 13:41:25,475 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:41:25,476 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:41:25,477 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CCD5CD0>
+2025-11-12 13:41:25,477 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:41:25,497 [INFO] 127.0.0.1 - - [12/Nov/2025 13:41:25] "[32mPOST /compliance_architecture HTTP/1.1[0m" 302 -
+2025-11-12 13:41:25,502 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:41:25,509 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CCD5CD0>
+2025-11-12 13:41:25,509 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:41:25,509 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:41:25,509 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CCD5FD0>
+2025-11-12 13:41:25,510 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:41:25,520 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 13:41:25,521 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CCD5FD0>
+2025-11-12 13:41:25,521 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 13:41:25,523 [INFO] 127.0.0.1 - - [12/Nov/2025 13:41:25] "GET /compliance_architecture HTTP/1.1" 200 -
+2025-11-12 13:41:25,550 [INFO] 127.0.0.1 - - [12/Nov/2025 13:41:25] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:45:00,010 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:50:00 EST)" (scheduled at 2025-11-12 13:45:00-05:00)
+2025-11-12 13:45:01,032 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:45:01,041 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:45:01,041 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:50:00 EST)" executed successfully
+2025-11-12 13:45:01,058 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:45:01,065 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:45:01,065 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:50:00 EST)" executed successfully
+2025-11-12 13:48:26,891 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-11-12 13:48:26,897 [INFO] 127.0.0.1 - - [12/Nov/2025 13:48:26] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-11-12 13:48:26,921 [INFO] 127.0.0.1 - - [12/Nov/2025 13:48:26] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 13:48:26,923 [INFO] 127.0.0.1 - - [12/Nov/2025 13:48:26] "GET /login HTTP/1.1" 200 -
+2025-11-12 13:48:26,950 [INFO] 127.0.0.1 - - [12/Nov/2025 13:48:26] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 13:48:26,968 [INFO] 127.0.0.1 - - [12/Nov/2025 13:48:26] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 13:50:00,011 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:55:00 EST)" (scheduled at 2025-11-12 13:50:00-05:00)
+2025-11-12 13:50:01,042 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:50:01,047 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:50:01,063 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:50:01,064 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:55:00 EST)" executed successfully
+2025-11-12 13:50:01,084 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:50:01,089 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 13:55:00 EST)" executed successfully
+2025-11-12 13:55:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:00:00 EST)" (scheduled at 2025-11-12 13:55:00-05:00)
+2025-11-12 13:55:01,030 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:55:01,044 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:55:01,045 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:00:00 EST)" executed successfully
+2025-11-12 13:55:01,058 [WARNING] Health check completed: 1 issues detected
+2025-11-12 13:55:01,063 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 13:55:01,064 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:00:00 EST)" executed successfully
+2025-11-12 14:00:00,015 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:05:00 EST)" (scheduled at 2025-11-12 14:00:00-05:00)
+2025-11-12 14:00:01,041 [WARNING] Health check completed: 1 issues detected
+2025-11-12 14:00:01,047 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 14:00:01,048 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:05:00 EST)" executed successfully
+2025-11-12 14:00:01,060 [WARNING] Health check completed: 1 issues detected
+2025-11-12 14:00:01,067 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 14:00:01,068 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:05:00 EST)" executed successfully
+2025-11-12 14:05:00,012 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:10:00 EST)" (scheduled at 2025-11-12 14:05:00-05:00)
+2025-11-12 14:05:01,035 [WARNING] Health check completed: 1 issues detected
+2025-11-12 14:05:01,045 [WARNING] Health check completed: 1 issues detected
+2025-11-12 14:05:01,056 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 14:05:01,057 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:10:00 EST)" executed successfully
+2025-11-12 14:05:01,072 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 14:05:01,075 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:10:00 EST)" executed successfully

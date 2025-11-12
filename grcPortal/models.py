@@ -2747,9 +2747,9 @@ class ComplianceStrategy(Base):
 
     # Relationships
     owner = relationship("User", backref="compliance_strategies")
+    architectures = relationship("ComplianceArchitecture", back_populates="strategy", cascade="all, delete-orphan")
     roadmaps = relationship("ComplianceRoadmap", back_populates="strategy", cascade="all, delete-orphan")
     conflicts = relationship("RegulatoryConflict", back_populates="strategy", cascade="all, delete-orphan")
-    architectures = relationship("ComplianceArchitecture", back_populates="strategy", cascade="all, delete-orphan")
 
 
 class RegulatoryConflict(Base):
@@ -2758,7 +2758,7 @@ class RegulatoryConflict(Base):
     __tablename__ = "regulatory_conflicts"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    strategy_id: Mapped[int] = mapped_column(ForeignKey("compliance_strategies.id"), nullable=False)
+    strategy: Mapped[str] = mapped_column(String(255), nullable=False)
 
     # Conflict details
     conflict_title: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -2917,6 +2917,7 @@ class ComplianceArchitecture(Base):
     # Architecture overview
     architecture_name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)
+    strategy_name: Mapped[str] = mapped_column(String(255), nullable=True)
 
     # Scale and scope
     total_employees: Mapped[int] = mapped_column(Integer, nullable=True)

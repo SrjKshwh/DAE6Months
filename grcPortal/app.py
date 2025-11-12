@@ -67,7 +67,19 @@ load_dotenv()
 from db import get_engine, get_session, close_session
 
 
-from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity, Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea, RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem, RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping, ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis, RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate, APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService, IndicatorOfCompromise, IoCAnalysis, DetectionRule, OpenCTIConnector, OpenCTIIntegration, MonitoringConfiguration, RetentionConfig, RiskArchive, AuditArchive, IncidentArchive, EthicalDecision, ComplianceObligation, ComplianceRiskAssessment, ComplianceIncident, ComplianceFramework, LogSource, CollectedLog, AlertRule, Alert, LogAnalysis, LogCorrelation, IncidentDetection, AlertTriage, AnalysisDocumentation, TimelineEvent, SecurityTimeline, ComplianceStrategy, ComplianceRoadmap, ControlMapping, RegulatoryConflict
+from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity
+from models import Evidence, EvidenceType, AuditLog, BrainstormingSession, BrainstormingParticipant, BrainstormingIdea
+from models import RiskChecklist, RiskChecklistItem, RiskChecklistAssessment, RiskChecklistResponse, SWOTAnalysis, SWOTItem
+from models import RiskIdentificationMethod, RiskSeverity, ApprovalStatus, GovernanceDecision, RiskApproval, RiskComplianceMapping
+from models import ComplianceRequirement, CriticalAssetRegister, RiskManagementFramework, RiskProgramPlan, ProgramPhase, GapAnalysis
+from models import RiskIndicator, IndicatorReading, EnvironmentalChange, MalwareSample, MalwareAnalysis, PhishingTemplate
+from models import APTCampaign, ATTACKMapping, VulnerabilityScan, VulnerabilityFinding, AssetDiscovery, DiscoveredService
+from models import IndicatorOfCompromise, IoCAnalysis, DetectionRule, OpenCTIConnector, OpenCTIIntegration, MonitoringConfiguration
+from models import RetentionConfig, RiskArchive, AuditArchive, IncidentArchive, EthicalDecision, ComplianceObligation
+from models import ComplianceRiskAssessment, ComplianceIncident, ComplianceFramework, LogSource, CollectedLog, AlertRule, Alert
+from models import LogAnalysis, LogCorrelation, IncidentDetection, AlertTriage, AnalysisDocumentation, TimelineEvent
+from models import SecurityTimeline, ComplianceStrategy, ComplianceRoadmap, ControlMapping, RegulatoryConflict, ComplianceArchitecture
+
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -10161,8 +10173,8 @@ def create_app():
                         'vulnerability': f"Primary Event: {primary_log.message[:100]}... | Risk Assessment: {source_record.risk_assessment}",
                         'control': "Implement advanced log correlation and analysis controls",
                         'severity': RiskSeverity.CRITICAL if source_record.risk_assessment == 'critical' else
-                                  RiskSeverity.HIGH if source_record.risk_assessment == 'high' else
-                                  RiskSeverity.MEDIUM if source_record.risk_assessment == 'medium' else RiskSeverity.LOW,
+                                    RiskSeverity.HIGH if source_record.risk_assessment == 'high' else
+                                    RiskSeverity.MEDIUM if source_record.risk_assessment == 'medium' else RiskSeverity.LOW,
                         'likelihood': likelihood,  # Based on correlation strength
                         'impact': 4 if source_record.risk_assessment in ['high', 'critical'] else 3,
                         'category': RiskCategory.AUDIT_LOGGING,
@@ -10709,7 +10721,7 @@ def create_app():
             if action == "create_architecture":
                 try:
                     # Get form data
-                    strategy_id = request.form.get("strategy_id")
+                    strategy = request.form.get("strategy")
                     architecture_name = request.form.get("architecture_name")
                     description = request.form.get("description")
                     total_employees = request.form.get("total_employees")
@@ -10727,13 +10739,17 @@ def create_app():
                     cost_breakdown = request.form.get("cost_breakdown")
 
                     # Validate required fields
-                    if not all([strategy_id, architecture_name]):
+                    if not all([strategy, architecture_name]):
                         flash("Strategy and architecture name are required.", "error")
                         return redirect(url_for('compliance_architecture'))
 
+                    # Get additional form data
+                    status = request.form.get("status", "development")
+                    version = request.form.get("version", "1.0")
+
                     # Create architecture
                     architecture = ComplianceArchitecture(
-                        strategy_id=strategy_id,
+                        strategy=strategy,
                         architecture_name=architecture_name,
                         description=description,
                         total_employees=int(total_employees) if total_employees else None,
@@ -10770,8 +10786,8 @@ def create_app():
         try:
             # Get all architectures with related strategy info
             architectures = db.query(ComplianceArchitecture).options(
-                db.joinedload(ComplianceArchitecture.strategy),
-                db.joinedload(ComplianceArchitecture.owner)
+                joinedload(ComplianceArchitecture.strategy),
+                joinedload(ComplianceArchitecture.owner)
             ).all()
 
             # Get all strategies for the create modal
