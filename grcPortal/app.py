@@ -2796,7 +2796,9 @@ def flash_error(e, message="An error occurred", category="danger"):
     tb = traceback.extract_tb(e.__traceback__)
     if tb:
         frame = tb[-1]
-        detailed_message = f"{message}: {str(e)} (File: {frame.filename}, Line: {frame.lineno})"
+        detailed_message = f"{message}: {str(e)} (File: {frame.filename}, Line: {frame.lineno}, Function: {frame.name})"
+        if frame.line:
+            detailed_message += f" - {frame.line.strip()}"
     else:
         detailed_message = f"{message}: {str(e)}"
     flash(detailed_message, category)
@@ -10910,10 +10912,8 @@ def create_app():
                                   framework_conflicts=framework_conflicts)
 
         except Exception as e:
-            import traceback
-            error_details = traceback.format_exc()
             close_session(db)
-            flash(f"Error loading regulatory conflicts: {str(e)} (File: app.py, Line: ~10870, Reason: NameError - RegulatoryConflict not defined. Check imports.)", "error")
+            flash_error(e, "Error loading regulatory conflicts", "error")
             return render_template("regulatory_conflicts.html",
                                   conflicts=[],
                                   strategies=[],
