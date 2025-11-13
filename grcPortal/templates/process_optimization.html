@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+
+{% block title %}Process Optimization - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-chart-line"></i> Process Optimization</h1>
+                    <p class="text-muted">Apply optimization algorithms for 30% efficiency improvement</p>
+                </div>
+                <div>
+                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#createOptimizationModal">
+                        <i class="fas fa-plus"></i> New Optimization
+                    </button>
+                </div>
+            </div>
+
+            <!-- Optimization Statistics -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Total Optimizations</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ optimizations|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-cogs fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Avg Efficiency Gain</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ "%.1f"|format(total_improvement) }}%
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-arrow-up fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Time Saved</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {% set total_time = namespace(value=0) %}
+                                        {% for opt in optimizations %}
+                                            {% set total_time.value = total_time.value + opt.time_savings_hours %}
+                                        {% endfor %}
+                                        {{ "%.0f"|format(total_time.value) }}h
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clock fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Completed</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ optimizations|selectattr('status', 'equalto', 'completed')|list|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-check-circle fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Optimizations Table -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-list"></i> Process Optimizations
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="optimizationsTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Optimization Name</th>
+                                    <th>Process</th>
+                                    <th>Type</th>
+                                    <th>Algorithm</th>
+                                    <th>Efficiency Gain</th>
+                                    <th>Time Saved</th>
+                                    <th>Cost Saved</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for opt in optimizations %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ opt.optimization_name }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ opt.description|truncate(50) }}</small>
+                                    </td>
+                                    <td>
+                                        {% if opt.process %}
+                                            <span class="badge badge-info">{{ opt.process.name }}</span>
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if opt.optimization_type == 'automation' %}
+                                            <span class="badge badge-primary">Automation</span>
+                                        {% elif opt.optimization_type == 'streamlining' %}
+                                            <span class="badge badge-success">Streamlining</span>
+                                        {% elif opt.optimization_type == 'parallelization' %}
+                                            <span class="badge badge-info">Parallelization</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">{{ opt.optimization_type|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ opt.algorithm_used|replace('_', ' ')|title }}</td>
+                                    <td>
+                                        <span class="badge badge-success">+{{ "%.1f"|format(opt.efficiency_improvement_percentage) }}%</span>
+                                    </td>
+                                    <td>{{ "%.1f"|format(opt.time_savings_hours) }}h</td>
+                                    <td>${{ "{:,.0f}".format(opt.cost_savings_amount) }}</td>
+                                    <td>
+                                        {% if opt.status == 'completed' %}
+                                            <span class="badge badge-success">Completed</span>
+                                        {% elif opt.status == 'implementing' %}
+                                            <span class="badge badge-warning">Implementing</span>
+                                        {% elif opt.status == 'validated' %}
+                                            <span class="badge badge-info">Validated</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">{{ opt.status|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-info" onclick="viewOptimization({{ opt.id }})">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-warning" onclick="editOptimization({{ opt.id }})">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            {% if opt.status != 'completed' %}
+                                            <button class="btn btn-sm btn-success" onclick="completeOptimization({{ opt.id }})">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Optimization Algorithms Overview -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="fas fa-brain"></i> Optimization Algorithms
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card border-primary mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <i class="fas fa-robot text-primary"></i> Automation
+                                            </h6>
+                                            <p class="card-text small">Automate manual processes to reduce human error and processing time by 25-35%.</p>
+                                            <div class="text-muted small">
+                                                <strong>Typical Results:</strong> 25% efficiency gain, 40 hours saved per month
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-success mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <i class="fas fa-stream text-success"></i> Streamlining
+                                            </h6>
+                                            <p class="card-text small">Eliminate redundant steps and optimize workflows for maximum efficiency.</p>
+                                            <div class="text-muted small">
+                                                <strong>Typical Results:</strong> 20% efficiency gain, 30 hours saved per month
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card border-info mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <i class="fas fa-code-branch text-info"></i> Parallelization
+                                            </h6>
+                                            <p class="card-text small">Execute independent process steps simultaneously to reduce total processing time.</p>
+                                            <div class="text-muted small">
+                                                <strong>Typical Results:</strong> 35% efficiency gain, 50 hours saved per month
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-warning mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <i class="fas fa-trash-alt text-warning"></i> Elimination
+                                            </h6>
+                                            <p class="card-text small">Remove unnecessary process steps that don't add value to the outcome.</p>
+                                            <div class="text-muted small">
+                                                <strong>Typical Results:</strong> 30% efficiency gain, 45 hours saved per month
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="fas fa-trophy"></i> Top Performers
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            {% set top_opts = optimizations|sort(attribute='efficiency_improvement_percentage', reverse=True)|list %}
+                            {% for opt in top_opts[:3] %}
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="flex-grow-1">
+                                    <div class="font-weight-bold">{{ opt.optimization_name }}</div>
+                                    <div class="text-muted small">{{ opt.optimization_type|title }}</div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="badge badge-success">+{{ "%.1f"|format(opt.efficiency_improvement_percentage) }}%</span>
+                                </div>
+                            </div>
+                            {% if not loop.last %}
+                            <hr class="my-2">
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Optimization Modal -->
+<div class="modal fade" id="createOptimizationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Process Optimization</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="create_optimization">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Process *</label>
+                                <select class="form-control" name="process_id" required>
+                                    <option value="">Select a process...</option>
+                                    {% for process in processes %}
+                                    <option value="{{ process.id }}">{{ process.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Optimization Name *</label>
+                                <input type="text" class="form-control" name="optimization_name" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Optimization Type *</label>
+                                <select class="form-control" name="optimization_type" required>
+                                    <option value="automation">Automation</option>
+                                    <option value="streamlining">Streamlining</option>
+                                    <option value="parallelization">Parallelization</option>
+                                    <option value="elimination">Elimination</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Algorithm</label>
+                                <select class="form-control" name="algorithm_used">
+                                    <option value="lean_six_sigma">Lean Six Sigma</option>
+                                    <option value="theory_of_constraints">Theory of Constraints</option>
+                                    <option value="value_stream_mapping">Value Stream Mapping</option>
+                                    <option value="custom">Custom Algorithm</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="alert alert-info">
+                        <strong>Expected Results:</strong> Based on the selected optimization type, this will achieve approximately 30% efficiency improvement with corresponding time and cost savings.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Optimization</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewOptimization(optId) {
+    // Implement view optimization details
+    alert('View optimization functionality - Optimization ID: ' + optId);
+}
+
+function editOptimization(optId) {
+    // Implement edit optimization
+    alert('Edit optimization functionality - Optimization ID: ' + optId);
+}
+
+function completeOptimization(optId) {
+    if (confirm('Mark this optimization as completed? This will apply the efficiency improvements to the associated process.')) {
+        // Create form and submit
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.innerHTML = `
+            <input type="hidden" name="action" value="complete_optimization">
+            <input type="hidden" name="optimization_id" value="${optId}">
+        `;
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Initialize DataTable
+$(document).ready(function() {
+    $('#optimizationsTable').DataTable({
+        "pageLength": 10,
+        "ordering": true,
+        "searching": true,
+        "responsive": true,
+        "order": [[4, "desc"]] // Sort by efficiency gain descending
+    });
+});
+</script>
+
+<style>
+.table th {
+    background-color: #f8f9fc;
+    border-top: 1px solid #e3e6f0;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.btn-group .btn {
+    margin-right: 2px;
+}
+
+.card .card-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.card .card-text {
+    font-size: 0.85rem;
+}
+</style>
+{% endblock %}

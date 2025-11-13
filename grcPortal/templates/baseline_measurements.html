@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+
+{% block title %}Baseline Measurements - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-ruler"></i> Baseline Measurements</h1>
+                    <p class="text-muted">Establish and track baseline measurements for process optimization</p>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createMeasurementModal">
+                        <i class="fas fa-plus"></i> Create Measurement
+                    </button>
+                </div>
+            </div>
+
+            <!-- Measurements Statistics -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Total Measurements</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ measurements|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-ruler fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Validated</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ measurements|selectattr('validation_status', 'equalto', 'validated')|list|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-check-circle fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Performance Metrics</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ measurements|selectattr('measurement_type', 'equalto', 'performance')|list|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-tachometer-alt fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Compliance Metrics</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ measurements|selectattr('measurement_type', 'equalto', 'compliance')|list|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-shield-alt fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Measurements Table -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-list"></i> Baseline Measurements
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="measurementsTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Measurement Name</th>
+                                    <th>Process</th>
+                                    <th>Type</th>
+                                    <th>Baseline Value</th>
+                                    <th>Unit</th>
+                                    <th>Measured Date</th>
+                                    <th>Validation Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for measurement in measurements %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ measurement.measurement_name }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ measurement.description|truncate(50) }}</small>
+                                    </td>
+                                    <td>
+                                        {% if measurement.process %}
+                                            <span class="badge badge-info">{{ measurement.process.name }}</span>
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if measurement.measurement_type == 'performance' %}
+                                            <span class="badge badge-info">Performance</span>
+                                        {% elif measurement.measurement_type == 'efficiency' %}
+                                            <span class="badge badge-success">Efficiency</span>
+                                        {% elif measurement.measurement_type == 'compliance' %}
+                                            <span class="badge badge-warning">Compliance</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">{{ measurement.measurement_type|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ "%.2f"|format(measurement.baseline_value) }}</td>
+                                    <td>{{ measurement.unit_of_measure or 'N/A' }}</td>
+                                    <td>{{ measurement.measurement_date.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        {% if measurement.validation_status == 'validated' %}
+                                            <span class="badge badge-success">Validated</span>
+                                        {% elif measurement.validation_status == 'pending' %}
+                                            <span class="badge badge-warning">Pending</span>
+                                        {% else %}
+                                            <span class="badge badge-danger">{{ measurement.validation_status|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-info" onclick="viewMeasurement({{ measurement.id }})">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-warning" onclick="editMeasurement({{ measurement.id }})">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Measurement Guidelines -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="fas fa-clipboard-check"></i> Measurement Guidelines
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Performance Measurements</h5>
+                                    <ul class="small">
+                                        <li><strong>Processing Time:</strong> Average time to complete process steps</li>
+                                        <li><strong>Throughput:</strong> Number of items processed per unit time</li>
+                                        <li><strong>Resource Utilization:</strong> CPU, memory, and system resource usage</li>
+                                        <li><strong>Error Rates:</strong> Frequency of process failures or exceptions</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Compliance Measurements</h5>
+                                    <ul class="small">
+                                        <li><strong>Control Effectiveness:</strong> Percentage of controls operating correctly</li>
+                                        <li><strong>Audit Findings:</strong> Number of compliance violations identified</li>
+                                        <li><strong>Response Time:</strong> Time to detect and respond to incidents</li>
+                                        <li><strong>Documentation Completeness:</strong> Percentage of required documentation maintained</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Measurement Modal -->
+<div class="modal fade" id="createMeasurementModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Baseline Measurement</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="create_measurement">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Process *</label>
+                                <select class="form-control" name="process_id" required>
+                                    <option value="">Select a process...</option>
+                                    {% for process in processes %}
+                                    <option value="{{ process.id }}">{{ process.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Measurement Name *</label>
+                                <input type="text" class="form-control" name="measurement_name" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Measurement Type *</label>
+                                <select class="form-control" name="measurement_type" required>
+                                    <option value="performance">Performance</option>
+                                    <option value="efficiency">Efficiency</option>
+                                    <option value="compliance">Compliance</option>
+                                    <option value="cost">Cost</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Baseline Value *</label>
+                                <input type="number" class="form-control" name="baseline_value" step="0.01" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Unit of Measure</label>
+                                <select class="form-control" name="unit_of_measure">
+                                    <option value="hours">Hours</option>
+                                    <option value="minutes">Minutes</option>
+                                    <option value="seconds">Seconds</option>
+                                    <option value="percentage">Percentage (%)</option>
+                                    <option value="count">Count</option>
+                                    <option value="dollars">Dollars ($)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea class="form-control" name="description" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Measurement</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewMeasurement(measurementId) {
+    // Implement view measurement details
+    alert('View measurement functionality - Measurement ID: ' + measurementId);
+}
+
+function editMeasurement(measurementId) {
+    // Implement edit measurement
+    alert('Edit measurement functionality - Measurement ID: ' + measurementId);
+}
+
+// Initialize DataTable
+$(document).ready(function() {
+    $('#measurementsTable').DataTable({
+        "pageLength": 10,
+        "ordering": true,
+        "searching": true,
+        "responsive": true
+    });
+});
+</script>
+
+<style>
+.table th {
+    background-color: #f8f9fc;
+    border-top: 1px solid #e3e6f0;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.btn-group .btn {
+    margin-right: 2px;
+}
+
+.card h5 {
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+</style>
+{% endblock %}

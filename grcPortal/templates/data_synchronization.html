@@ -1,0 +1,431 @@
+{% extends "base.html" %}
+
+{% block title %}Data Synchronization - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-sync"></i> Data Synchronization</h1>
+                    <p class="text-muted">Real-time data synchronization across enterprise systems</p>
+                </div>
+                <div>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createSyncModal">
+                        <i class="fas fa-plus"></i> Create Sync
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sync Statistics -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Active Syncs</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ synchronizations|selectattr('status', 'equalto', 'active')|list|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-play-circle fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Records Synced</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {% set total_records = namespace(value=0) %}
+                                        {% for sync in synchronizations %}
+                                            {% set total_records.value = total_records.value + sync.records_processed %}
+                                        {% endfor %}
+                                        {{ "{:,}".format(total_records.value) }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-database fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Avg Success Rate</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {% set total_rate = namespace(value=0) %}
+                                        {% set count = namespace(value=0) %}
+                                        {% for sync in synchronizations %}
+                                            {% if sync.success_rate %}
+                                                {% set total_rate.value = total_rate.value + sync.success_rate %}
+                                                {% set count.value = count.value + 1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if count.value > 0 %}
+                                            {{ "%.1f"|format(total_rate.value / count.value) }}%
+                                        {% else %}
+                                            0%
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-percentage fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Real-time Syncs</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ synchronizations|selectattr('sync_frequency', 'equalto', 'real_time')|list|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-bolt fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Synchronizations Table -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-list"></i> Data Synchronizations
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="syncsTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Sync Name</th>
+                                    <th>Source System</th>
+                                    <th>Target System</th>
+                                    <th>Type</th>
+                                    <th>Frequency</th>
+                                    <th>Last Sync</th>
+                                    <th>Records Processed</th>
+                                    <th>Success Rate</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sync in synchronizations %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ sync.sync_name }}</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-info">{{ sync.source_system }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-primary">{{ sync.target_system }}</span>
+                                    </td>
+                                    <td>
+                                        {% if sync.sync_type == 'real_time' %}
+                                            <span class="badge badge-warning">Real-time</span>
+                                        {% elif sync.sync_type == 'incremental' %}
+                                            <span class="badge badge-info">Incremental</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">{{ sync.sync_type|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ sync.sync_frequency|replace('_', ' ')|title }}</td>
+                                    <td>
+                                        {% if sync.last_sync_time %}
+                                            {{ sync.last_sync_time.strftime('%Y-%m-%d %H:%M') }}
+                                            <br>
+                                            <small class="text-muted">{{ sync.sync_duration_seconds }}s</small>
+                                        {% else %}
+                                            Never
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ "{:,}".format(sync.records_processed) }}</td>
+                                    <td>
+                                        {% if sync.success_rate >= 95 %}
+                                            <span class="badge badge-success">{{ "%.1f"|format(sync.success_rate) }}%</span>
+                                        {% elif sync.success_rate >= 80 %}
+                                            <span class="badge badge-warning">{{ "%.1f"|format(sync.success_rate) }}%</span>
+                                        {% else %}
+                                            <span class="badge badge-danger">{{ "%.1f"|format(sync.success_rate) }}%</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if sync.status == 'active' %}
+                                            <span class="badge badge-success">Active</span>
+                                        {% elif sync.status == 'paused' %}
+                                            <span class="badge badge-warning">Paused</span>
+                                        {% elif sync.status == 'error' %}
+                                            <span class="badge badge-danger">Error</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">{{ sync.status|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-info" onclick="viewSync({{ sync.id }})">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-success" onclick="executeSync({{ sync.id }})">
+                                                <i class="fas fa-play"></i> Run
+                                            </button>
+                                            <button class="btn btn-sm btn-warning" onclick="editSync({{ sync.id }})">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sync Performance Chart -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="fas fa-chart-bar"></i> Synchronization Performance
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="syncPerformanceChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Sync Modal -->
+<div class="modal fade" id="createSyncModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Data Synchronization</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="create_sync">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Sync Name *</label>
+                                <input type="text" class="form-control" name="sync_name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Sync Type</label>
+                                <select class="form-control" name="sync_type">
+                                    <option value="incremental">Incremental</option>
+                                    <option value="full_sync">Full Sync</option>
+                                    <option value="real_time">Real-time</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Source System *</label>
+                                <select class="form-control" name="source_system" required>
+                                    <option value="ERP">ERP System</option>
+                                    <option value="CRM">CRM System</option>
+                                    <option value="HRMS">HRMS</option>
+                                    <option value="Financial">Financial System</option>
+                                    <option value="Compliance">Compliance Database</option>
+                                    <option value="SIEM">SIEM</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Target System *</label>
+                                <select class="form-control" name="target_system" required>
+                                    <option value="GRC">GRC Portal</option>
+                                    <option value="Data_Warehouse">Data Warehouse</option>
+                                    <option value="Reporting">Reporting System</option>
+                                    <option value="Compliance">Compliance Database</option>
+                                    <option value="Audit">Audit System</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Sync Frequency</label>
+                        <select class="form-control" name="sync_frequency">
+                            <option value="real_time">Real-time</option>
+                            <option value="hourly">Hourly</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Synchronization</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Execute Sync Modal -->
+<div class="modal fade" id="executeSyncModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Execute Synchronization</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="execute_sync">
+                <input type="hidden" name="sync_id" id="executeSyncId">
+                <div class="modal-body">
+                    <p>Are you sure you want to execute this synchronization?</p>
+                    <div id="syncDetails"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Execute Sync</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+function viewSync(syncId) {
+    // Implement view sync details
+    alert('View sync functionality - Sync ID: ' + syncId);
+}
+
+function editSync(syncId) {
+    // Implement edit sync
+    alert('Edit sync functionality - Sync ID: ' + syncId);
+}
+
+function executeSync(syncId) {
+    document.getElementById('executeSyncId').value = syncId;
+    // Could fetch sync details here
+    $('#executeSyncModal').modal('show');
+}
+
+// Initialize DataTable
+$(document).ready(function() {
+    $('#syncsTable').DataTable({
+        "pageLength": 10,
+        "ordering": true,
+        "searching": true,
+        "responsive": true
+    });
+
+    // Initialize performance chart
+    const ctx = document.getElementById('syncPerformanceChart').getContext('2d');
+    const syncData = {{ synchronizations|tojson }};
+
+    const labels = syncData.map(sync => sync.sync_name);
+    const successRates = syncData.map(sync => sync.success_rate || 0);
+    const recordsProcessed = syncData.map(sync => sync.records_processed || 0);
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Success Rate (%)',
+                data: successRates,
+                backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                borderColor: 'rgba(40, 167, 69, 1)',
+                borderWidth: 1,
+                yAxisID: 'y'
+            }, {
+                label: 'Records Processed',
+                data: recordsProcessed,
+                backgroundColor: 'rgba(0, 123, 255, 0.8)',
+                borderColor: 'rgba(0, 123, 255, 1)',
+                borderWidth: 1,
+                yAxisID: 'y1'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Success Rate (%)'
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Records Processed'
+                    },
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                }
+            }
+        }
+    });
+});
+</script>
+
+<style>
+.table th {
+    background-color: #f8f9fc;
+    border-top: 1px solid #e3e6f0;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.btn-group .btn {
+    margin-right: 2px;
+}
+</style>
+{% endblock %}

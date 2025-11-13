@@ -55037,3 +55037,367 @@ WHERE alerts.created_at >= ?) AS anon_1]
 2025-11-12 14:05:01,057 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:10:00 EST)" executed successfully
 2025-11-12 14:05:01,072 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
 2025-11-12 14:05:01,075 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:10:00 EST)" executed successfully
+2025-11-12 14:38:45,244 [WARNING] Run time of job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:40:00 EST)" was missed by 0:03:45.244595
+2025-11-12 14:40:00,005 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:45:00 EST)" (scheduled at 2025-11-12 14:40:00-05:00)
+2025-11-12 14:40:01,037 [WARNING] Health check completed: 1 issues detected
+2025-11-12 14:40:01,051 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 14:40:01,052 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:45:00 EST)" executed successfully
+2025-11-12 14:40:19,386 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 14:40:19,387 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 14:40:19,390 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 14:40:19,391 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 14:40:19,391 [INFO] Scheduler started
+2025-11-12 14:40:19,393 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 14:40:19,414 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 14:40:19,415 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 14:41:21,352 [INFO] 127.0.0.1 - - [12/Nov/2025 14:41:21] "GET / HTTP/1.1" 200 -
+2025-11-12 14:41:21,387 [INFO] 127.0.0.1 - - [12/Nov/2025 14:41:21] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 14:41:21,403 [INFO] 127.0.0.1 - - [12/Nov/2025 14:41:21] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 14:41:30,096 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 14:41:30,116 [INFO] 127.0.0.1 - - [12/Nov/2025 14:41:30] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 14:41:30,124 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 14:41:30,131 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CEC6990>
+2025-11-12 14:41:30,131 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 14:41:30,131 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 14:41:30,132 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CEC7290>
+2025-11-12 14:41:30,132 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 14:41:30,132 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264CEC7290> - email: kush786srj@gmail.com
+2025-11-12 14:41:30,133 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 14:41:30,183 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 14:41:30,183 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CEC7290>
+2025-11-12 14:41:30,183 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 14:41:30,186 [INFO] 127.0.0.1 - - [12/Nov/2025 14:41:30] "GET /home HTTP/1.1" 200 -
+2025-11-12 14:41:30,229 [INFO] 127.0.0.1 - - [12/Nov/2025 14:41:30] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 14:41:43,013 [INFO] 127.0.0.1 - - [12/Nov/2025 14:41:43] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 14:41:43,014 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 14:41:43,023 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CC83A10>
+2025-11-12 14:41:43,023 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 14:41:43,024 [INFO] DEBUG: Entering compliance_workflows function
+2025-11-12 14:41:43,024 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 14:41:43,025 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CC83E90>
+2025-11-12 14:41:43,025 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 14:41:43,069 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 14:41:43,069 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CC83E90>
+2025-11-12 14:41:43,069 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 14:41:43,071 [INFO] 127.0.0.1 - - [12/Nov/2025 14:41:43] "GET /compliance_workflows HTTP/1.1" 200 -
+2025-11-12 14:41:43,090 [INFO] 127.0.0.1 - - [12/Nov/2025 14:41:43] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 14:45:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:45:00 EST)" (scheduled at 2025-11-12 14:45:00-05:00)
+2025-11-12 14:45:00,240 [ERROR] Error performing health checks: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 14:45:00,241 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:50:00 EST)" executed successfully
+2025-11-12 14:45:01,052 [WARNING] Health check completed: 1 issues detected
+2025-11-12 14:45:01,065 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 14:45:01,066 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:50:00 EST)" executed successfully
+2025-11-12 14:46:53,880 [INFO] User kush786srj@gmail.com logged out from IP 127.0.0.1
+2025-11-12 14:46:53,907 [INFO] 127.0.0.1 - - [12/Nov/2025 14:46:53] "[35m[1mGET /logout HTTP/1.1[0m" 204 -
+2025-11-12 14:46:53,925 [INFO] 127.0.0.1 - - [12/Nov/2025 14:46:53] "[31m[1mPOST /logout HTTP/1.1[0m" 405 -
+2025-11-12 14:46:53,954 [INFO] 127.0.0.1 - - [12/Nov/2025 14:46:53] "GET /login HTTP/1.1" 200 -
+2025-11-12 14:46:54,031 [INFO] 127.0.0.1 - - [12/Nov/2025 14:46:54] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 14:46:54,067 [INFO] 127.0.0.1 - - [12/Nov/2025 14:46:54] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 14:49:38,084 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 14:50:00,012 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:55:00 EST)" (scheduled at 2025-11-12 14:50:00-05:00)
+2025-11-12 14:50:00,017 [ERROR] Error performing health checks: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[ComplianceStrategy(compliance_strategies)]'. Original exception was: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 14:50:00,020 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:55:00 EST)" executed successfully
+2025-11-12 14:50:01,067 [WARNING] Health check completed: 1 issues detected
+2025-11-12 14:50:01,078 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 14:50:01,080 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 14:55:00 EST)" executed successfully
+2025-11-12 15:27:42,205 [WARNING] Run time of job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 15:30:00 EST)" was missed by 0:02:42.205854
+2025-11-12 15:30:00,007 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 15:35:00 EST)" (scheduled at 2025-11-12 15:30:00-05:00)
+2025-11-12 15:30:00,010 [ERROR] Error performing health checks: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[ComplianceStrategy(compliance_strategies)]'. Original exception was: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 15:30:00,011 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 15:35:00 EST)" executed successfully
+2025-11-12 15:30:01,036 [WARNING] Health check completed: 1 issues detected
+2025-11-12 15:30:01,046 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 15:30:01,046 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 15:35:00 EST)" executed successfully
+2025-11-12 15:35:00,014 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 15:40:00 EST)" (scheduled at 2025-11-12 15:35:00-05:00)
+2025-11-12 15:35:00,018 [ERROR] Error performing health checks: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[ComplianceStrategy(compliance_strategies)]'. Original exception was: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 15:35:00,020 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 15:40:00 EST)" executed successfully
+2025-11-12 15:35:01,037 [WARNING] Health check completed: 1 issues detected
+2025-11-12 15:35:01,044 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 15:35:01,044 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 15:40:00 EST)" executed successfully
+2025-11-12 15:40:00,014 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 15:45:00 EST)" (scheduled at 2025-11-12 15:40:00-05:00)
+2025-11-12 15:40:01,034 [WARNING] Health check completed: 1 issues detected
+2025-11-12 15:40:01,051 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 15:40:01,051 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 15:45:00 EST)" executed successfully
+2025-11-12 16:04:14,147 [WARNING] Run time of job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:05:00 EST)" was missed by 0:04:14.147956
+2025-11-12 16:05:00,015 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:10:00 EST)" (scheduled at 2025-11-12 16:05:00-05:00)
+2025-11-12 16:05:01,054 [WARNING] Health check completed: 1 issues detected
+2025-11-12 16:05:01,072 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 16:05:01,074 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:10:00 EST)" executed successfully
+2025-11-12 16:10:00,015 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:15:00 EST)" (scheduled at 2025-11-12 16:10:00-05:00)
+2025-11-12 16:10:01,058 [WARNING] Health check completed: 1 issues detected
+2025-11-12 16:10:01,074 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 16:10:01,074 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:15:00 EST)" executed successfully
+2025-11-12 16:15:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:20:00 EST)" (scheduled at 2025-11-12 16:15:00-05:00)
+2025-11-12 16:15:01,053 [WARNING] Health check completed: 1 issues detected
+2025-11-12 16:15:01,073 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 16:15:01,074 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:20:00 EST)" executed successfully
+2025-11-12 16:20:00,014 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:25:00 EST)" (scheduled at 2025-11-12 16:20:00-05:00)
+2025-11-12 16:20:01,055 [WARNING] Health check completed: 1 issues detected
+2025-11-12 16:20:01,078 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 16:20:01,079 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:25:00 EST)" executed successfully
+2025-11-12 16:25:00,001 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:30:00 EST)" (scheduled at 2025-11-12 16:25:00-05:00)
+2025-11-12 16:25:01,034 [WARNING] Health check completed: 1 issues detected
+2025-11-12 16:25:01,051 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 16:25:01,051 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:30:00 EST)" executed successfully
+2025-11-12 16:30:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:35:00 EST)" (scheduled at 2025-11-12 16:30:00-05:00)
+2025-11-12 16:30:01,045 [WARNING] Health check completed: 1 issues detected
+2025-11-12 16:30:01,084 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 16:30:01,085 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:35:00 EST)" executed successfully
+2025-11-12 16:35:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:40:00 EST)" (scheduled at 2025-11-12 16:35:00-05:00)
+2025-11-12 16:35:01,045 [WARNING] Health check completed: 1 issues detected
+2025-11-12 16:35:01,061 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 16:35:01,062 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:40:00 EST)" executed successfully
+2025-11-12 16:40:00,007 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:45:00 EST)" (scheduled at 2025-11-12 16:40:00-05:00)
+2025-11-12 16:40:01,046 [WARNING] Health check completed: 1 issues detected
+2025-11-12 16:40:01,057 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 16:40:01,058 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:45:00 EST)" executed successfully
+2025-11-12 16:45:00,001 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:50:00 EST)" (scheduled at 2025-11-12 16:45:00-05:00)
+2025-11-12 16:45:01,035 [WARNING] Health check completed: 1 issues detected
+2025-11-12 16:45:01,052 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 16:45:01,053 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:50:00 EST)" executed successfully
+2025-11-12 16:50:00,007 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:55:00 EST)" (scheduled at 2025-11-12 16:50:00-05:00)
+2025-11-12 16:50:01,056 [WARNING] Health check completed: 1 issues detected
+2025-11-12 16:50:01,081 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 16:50:01,082 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 16:55:00 EST)" executed successfully
+2025-11-12 16:55:00,010 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 17:00:00 EST)" (scheduled at 2025-11-12 16:55:00-05:00)
+2025-11-12 16:55:01,091 [WARNING] Health check completed: 1 issues detected
+2025-11-12 16:55:01,110 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 16:55:01,112 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 17:00:00 EST)" executed successfully
+2025-11-12 17:00:00,004 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 17:05:00 EST)" (scheduled at 2025-11-12 17:00:00-05:00)
+2025-11-12 17:00:01,130 [WARNING] Health check completed: 1 issues detected
+2025-11-12 17:00:01,159 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 17:00:01,160 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 17:05:00 EST)" executed successfully
+2025-11-12 17:05:00,012 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 17:10:00 EST)" (scheduled at 2025-11-12 17:05:00-05:00)
+2025-11-12 17:05:01,069 [WARNING] Health check completed: 1 issues detected
+2025-11-12 17:05:01,097 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 17:05:01,099 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 17:10:00 EST)" executed successfully
+2025-11-12 17:10:00,039 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 17:15:00 EST)" (scheduled at 2025-11-12 17:10:00-05:00)
+2025-11-12 17:10:01,087 [WARNING] Health check completed: 1 issues detected
+2025-11-12 17:10:01,117 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 17:10:01,128 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 17:15:00 EST)" executed successfully
+2025-11-12 17:21:16,343 [WARNING] Run time of job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 17:25:00 EST)" was missed by 0:01:16.342848
+2025-11-12 20:49:45,423 [WARNING] Run time of job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 20:50:00 EST)" was missed by 0:04:45.423152
+2025-11-12 20:50:00,011 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 20:55:00 EST)" (scheduled at 2025-11-12 20:50:00-05:00)
+2025-11-12 20:50:01,090 [WARNING] Health check completed: 1 issues detected
+2025-11-12 20:50:01,119 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 20:50:01,122 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 20:55:00 EST)" executed successfully
+2025-11-12 20:55:00,007 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:00:00 EST)" (scheduled at 2025-11-12 20:55:00-05:00)
+2025-11-12 20:55:01,085 [WARNING] Health check completed: 1 issues detected
+2025-11-12 20:55:01,120 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 20:55:01,123 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:00:00 EST)" executed successfully
+2025-11-12 21:03:34,501 [WARNING] Run time of job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:05:00 EST)" was missed by 0:03:34.501038
+2025-11-12 21:05:00,003 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:10:00 EST)" (scheduled at 2025-11-12 21:05:00-05:00)
+2025-11-12 21:05:01,061 [WARNING] Health check completed: 1 issues detected
+2025-11-12 21:05:01,088 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 21:05:01,094 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:10:00 EST)" executed successfully
+2025-11-12 21:10:00,008 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:15:00 EST)" (scheduled at 2025-11-12 21:10:00-05:00)
+2025-11-12 21:10:01,093 [WARNING] Health check completed: 1 issues detected
+2025-11-12 21:10:01,130 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 21:10:01,131 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:15:00 EST)" executed successfully
+2025-11-12 21:22:03,964 [WARNING] Run time of job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:25:00 EST)" was missed by 0:02:03.964655
+2025-11-12 21:25:00,017 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:30:00 EST)" (scheduled at 2025-11-12 21:25:00-05:00)
+2025-11-12 21:25:01,089 [WARNING] Health check completed: 2 issues detected
+2025-11-12 21:25:01,116 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 21:25:01,116 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:30:00 EST)" executed successfully
+2025-11-12 21:30:00,009 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:35:00 EST)" (scheduled at 2025-11-12 21:30:00-05:00)
+2025-11-12 21:30:01,072 [WARNING] Health check completed: 1 issues detected
+2025-11-12 21:30:01,100 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 21:30:01,102 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:35:00 EST)" executed successfully
+2025-11-12 21:35:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:40:00 EST)" (scheduled at 2025-11-12 21:35:00-05:00)
+2025-11-12 21:35:01,135 [WARNING] Health check completed: 1 issues detected
+2025-11-12 21:35:01,164 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 21:35:01,166 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:40:00 EST)" executed successfully
+2025-11-12 21:40:00,009 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:45:00 EST)" (scheduled at 2025-11-12 21:40:00-05:00)
+2025-11-12 21:40:01,120 [WARNING] Health check completed: 1 issues detected
+2025-11-12 21:40:01,146 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 21:40:01,147 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:45:00 EST)" executed successfully
+2025-11-12 21:45:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:50:00 EST)" (scheduled at 2025-11-12 21:45:00-05:00)
+2025-11-12 21:45:01,098 [WARNING] Health check completed: 1 issues detected
+2025-11-12 21:45:01,137 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 21:45:01,144 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:50:00 EST)" executed successfully
+2025-11-12 21:50:00,017 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:55:00 EST)" (scheduled at 2025-11-12 21:50:00-05:00)
+2025-11-12 21:50:01,112 [WARNING] Health check completed: 1 issues detected
+2025-11-12 21:50:01,121 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 21:50:01,122 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 21:55:00 EST)" executed successfully
+2025-11-12 21:55:00,163 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:00:00 EST)" (scheduled at 2025-11-12 21:55:00-05:00)
+2025-11-12 21:55:01,871 [WARNING] Health check completed: 1 issues detected
+2025-11-12 21:55:02,156 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 21:55:02,164 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:00:00 EST)" executed successfully
+2025-11-12 22:00:00,052 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:05:00 EST)" (scheduled at 2025-11-12 22:00:00-05:00)
+2025-11-12 22:00:01,119 [WARNING] Health check completed: 1 issues detected
+2025-11-12 22:00:01,146 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 22:00:01,148 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:05:00 EST)" executed successfully
+2025-11-12 22:05:00,004 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:10:00 EST)" (scheduled at 2025-11-12 22:05:00-05:00)
+2025-11-12 22:05:01,063 [WARNING] Health check completed: 1 issues detected
+2025-11-12 22:05:01,088 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 22:05:01,089 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:10:00 EST)" executed successfully
+2025-11-12 22:10:00,005 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:15:00 EST)" (scheduled at 2025-11-12 22:10:00-05:00)
+2025-11-12 22:10:01,076 [WARNING] Health check completed: 1 issues detected
+2025-11-12 22:10:01,105 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 22:10:01,116 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:15:00 EST)" executed successfully
+2025-11-12 22:15:00,006 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:20:00 EST)" (scheduled at 2025-11-12 22:15:00-05:00)
+2025-11-12 22:15:01,090 [WARNING] Health check completed: 1 issues detected
+2025-11-12 22:15:01,155 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 22:15:01,157 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:20:00 EST)" executed successfully
+2025-11-12 22:20:00,007 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:25:00 EST)" (scheduled at 2025-11-12 22:20:00-05:00)
+2025-11-12 22:20:01,041 [WARNING] Health check completed: 1 issues detected
+2025-11-12 22:20:01,105 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 22:20:01,106 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:25:00 EST)" executed successfully
+2025-11-12 22:28:30,089 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 22:28:30,091 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 22:28:30,093 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 22:28:30,094 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 22:28:30,094 [INFO] Scheduler started
+2025-11-12 22:28:30,095 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 22:28:30,112 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 22:28:30,113 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 22:28:33,881 [INFO] 127.0.0.1 - - [12/Nov/2025 22:28:33] "GET / HTTP/1.1" 200 -
+2025-11-12 22:28:33,927 [INFO] 127.0.0.1 - - [12/Nov/2025 22:28:33] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 22:28:33,939 [INFO] 127.0.0.1 - - [12/Nov/2025 22:28:33] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 22:28:43,685 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 22:28:43,702 [INFO] 127.0.0.1 - - [12/Nov/2025 22:28:43] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 22:28:43,709 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:28:43,721 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CEC7B90>
+2025-11-12 22:28:43,722 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:28:43,723 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:28:43,726 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CEC7B90>
+2025-11-12 22:28:43,726 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:28:43,727 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264CEC7B90> - email: kush786srj@gmail.com
+2025-11-12 22:28:43,728 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 22:28:43,769 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:28:43,770 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CEC7B90>
+2025-11-12 22:28:43,771 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:28:43,851 [INFO] 127.0.0.1 - - [12/Nov/2025 22:28:43] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 22:28:43,921 [INFO] 127.0.0.1 - - [12/Nov/2025 22:28:43] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:28:43,950 [INFO] 127.0.0.1 - - [12/Nov/2025 22:28:43] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 22:28:43,993 [INFO] 127.0.0.1 - - [12/Nov/2025 22:28:43] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 22:28:44,017 [INFO] 127.0.0.1 - - [12/Nov/2025 22:28:44] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 22:29:02,566 [WARNING] Run time of job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:30:00 EST)" was missed by 0:04:02.566208
+2025-11-12 22:30:00,004 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:30:00 EST)" (scheduled at 2025-11-12 22:30:00-05:00)
+2025-11-12 22:30:00,155 [ERROR] Error performing health checks: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 22:30:00,155 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:35:00 EST)" executed successfully
+2025-11-12 22:30:01,023 [WARNING] Health check completed: 1 issues detected
+2025-11-12 22:30:01,029 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 22:30:01,030 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:35:00 EST)" executed successfully
+2025-11-12 22:35:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:40:00 EST)" (scheduled at 2025-11-12 22:35:00-05:00)
+2025-11-12 22:35:00,017 [ERROR] Error performing health checks: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[ComplianceStrategy(compliance_strategies)]'. Original exception was: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 22:35:00,020 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:40:00 EST)" executed successfully
+2025-11-12 22:35:01,069 [WARNING] Health check completed: 1 issues detected
+2025-11-12 22:35:01,090 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 22:35:01,090 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:40:00 EST)" executed successfully
+2025-11-12 22:35:17,370 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:35:17,377 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E43D0D0>
+2025-11-12 22:35:17,377 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:35:17,378 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:35:17,379 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E43C290>
+2025-11-12 22:35:17,380 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:35:17,381 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E43C290> - email: kush786srj@gmail.com
+2025-11-12 22:35:17,382 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 22:35:17,397 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:35:17,398 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E43C290>
+2025-11-12 22:35:17,398 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:35:17,415 [INFO] 127.0.0.1 - - [12/Nov/2025 22:35:17] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 22:35:17,445 [INFO] 127.0.0.1 - - [12/Nov/2025 22:35:17] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:35:17,447 [INFO] 127.0.0.1 - - [12/Nov/2025 22:35:17] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 22:35:17,472 [INFO] 127.0.0.1 - - [12/Nov/2025 22:35:17] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 22:35:17,481 [INFO] 127.0.0.1 - - [12/Nov/2025 22:35:17] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 22:36:58,340 [INFO] 127.0.0.1 - - [12/Nov/2025 22:36:58] "GET / HTTP/1.1" 200 -
+2025-11-12 22:37:09,896 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-12 22:37:09,897 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-12 22:37:09,898 [INFO] 127.0.0.1 - - [12/Nov/2025 22:37:09] "[32mGET /home HTTP/1.1[0m" 302 -
+2025-11-12 22:37:55,362 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 22:37:55,362 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 22:37:55,364 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 22:37:55,364 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 22:37:55,365 [INFO] Scheduler started
+2025-11-12 22:37:55,365 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 22:37:55,379 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 22:37:55,380 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 22:38:06,136 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:06] "GET / HTTP/1.1" 200 -
+2025-11-12 22:38:06,175 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:06] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 22:38:06,186 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:06] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 22:38:16,569 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 22:38:16,583 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:16] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 22:38:16,590 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:38:16,599 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E43E750>
+2025-11-12 22:38:16,599 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:38:16,599 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:38:16,600 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E43FAD0>
+2025-11-12 22:38:16,600 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:38:16,600 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E43FAD0> - email: kush786srj@gmail.com
+2025-11-12 22:38:16,601 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 22:38:16,618 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:38:16,618 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E43FAD0>
+2025-11-12 22:38:16,618 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:38:16,636 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:16] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 22:38:16,681 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:16] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:38:16,682 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:16] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 22:38:16,694 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:16] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 22:38:23,338 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:38:23,348 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E4D44D0>
+2025-11-12 22:38:23,349 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:38:23,349 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:38:23,351 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E4D4710>
+2025-11-12 22:38:23,351 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:38:23,352 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E4D4710> - email: kush786srj@gmail.com
+2025-11-12 22:38:23,352 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 22:38:23,372 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:38:23,372 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E4D4710>
+2025-11-12 22:38:23,373 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:38:23,398 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:23] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 22:38:23,424 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:23] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:38:23,425 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:23] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 22:38:23,446 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:23] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 22:38:23,463 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:23] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 22:38:24,374 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:38:24,384 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E1EFDD0>
+2025-11-12 22:38:24,385 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:38:24,385 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:38:24,387 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E1EE8D0>
+2025-11-12 22:38:24,388 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:38:24,388 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E1EE8D0> - email: kush786srj@gmail.com
+2025-11-12 22:38:24,388 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 22:38:24,408 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:38:24,408 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E1EE8D0>
+2025-11-12 22:38:24,408 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:38:24,426 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:24] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 22:38:24,448 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:24] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:38:24,449 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:24] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 22:38:24,468 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:24] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 22:38:24,478 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:24] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 22:38:27,107 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:38:27,114 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E1EF950>
+2025-11-12 22:38:27,114 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:38:27,114 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:38:27,115 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E1EFAD0>
+2025-11-12 22:38:27,115 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:38:27,115 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E1EFAD0> - email: kush786srj@gmail.com
+2025-11-12 22:38:27,115 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 22:38:27,130 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 22:38:27,130 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E1EFAD0>
+2025-11-12 22:38:27,130 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 22:38:27,147 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:27] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 22:38:27,166 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:27] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 22:38:27,169 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:27] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 22:38:27,178 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:27] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 22:38:27,184 [INFO] 127.0.0.1 - - [12/Nov/2025 22:38:27] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 22:40:00,007 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:45:00 EST)" (scheduled at 2025-11-12 22:40:00-05:00)
+2025-11-12 22:40:00,144 [ERROR] Error performing health checks: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 22:40:00,145 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:45:00 EST)" executed successfully
+2025-11-12 22:40:01,027 [WARNING] Health check completed: 1 issues detected
+2025-11-12 22:40:01,039 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 22:40:01,040 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:45:00 EST)" executed successfully
+2025-11-12 22:45:00,004 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:50:00 EST)" (scheduled at 2025-11-12 22:45:00-05:00)
+2025-11-12 22:45:00,009 [ERROR] Error performing health checks: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[ComplianceStrategy(compliance_strategies)]'. Original exception was: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 22:45:00,011 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:50:00 EST)" executed successfully
+2025-11-12 22:45:01,035 [WARNING] Health check completed: 1 issues detected
+2025-11-12 22:45:01,053 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 22:45:01,053 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:50:00 EST)" executed successfully
+2025-11-12 22:50:00,005 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:55:00 EST)" (scheduled at 2025-11-12 22:50:00-05:00)
+2025-11-12 22:50:00,009 [ERROR] Error performing health checks: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[ComplianceStrategy(compliance_strategies)]'. Original exception was: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 22:50:00,011 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:55:00 EST)" executed successfully
+2025-11-12 22:50:01,026 [WARNING] Health check completed: 1 issues detected
+2025-11-12 22:50:01,041 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 22:50:01,042 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:55:00 EST)" executed successfully

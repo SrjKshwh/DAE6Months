@@ -1,0 +1,387 @@
+{% extends "base.html" %}
+
+{% block title %}Validation Procedures - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-check-double"></i> Validation Procedures</h1>
+                    <p class="text-muted">Validate optimization results and procedures</p>
+                </div>
+                <div>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#createValidationModal">
+                        <i class="fas fa-plus"></i> Create Validation
+                    </button>
+                </div>
+            </div>
+
+            <!-- Validation Statistics -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Total Validations</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ validations|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-check-double fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Passed</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ validations|selectattr('validation_result', 'equalto', 'passed')|list|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-check-circle fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Avg Score</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {% set total_score = namespace(value=0) %}
+                                        {% set count = namespace(value=0) %}
+                                        {% for val in validations %}
+                                            {% if val.validation_score %}
+                                                {% set total_score.value = total_score.value + val.validation_score %}
+                                                {% set count.value = count.value + 1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if count.value > 0 %}
+                                            {{ "%.1f"|format(total_score.value / count.value) }}%
+                                        {% else %}
+                                            0%
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-percentage fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        In Progress</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ validations|selectattr('validation_status', 'equalto', 'in_progress')|list|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clock fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Validations Table -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-list"></i> Validation Procedures
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="validationsTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Procedure Name</th>
+                                    <th>Optimization</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Result</th>
+                                    <th>Score</th>
+                                    <th>Completed</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for validation in validations %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ validation.procedure_name }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ validation.description|truncate(50) }}</small>
+                                    </td>
+                                    <td>
+                                        {% if validation.optimization %}
+                                            <span class="badge badge-info">{{ validation.optimization.optimization_name }}</span>
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if validation.procedure_type == 'statistical' %}
+                                            <span class="badge badge-primary">Statistical</span>
+                                        {% elif validation.procedure_type == 'comparative' %}
+                                            <span class="badge badge-success">Comparative</span>
+                                        {% elif validation.procedure_type == 'expert_review' %}
+                                            <span class="badge badge-warning">Expert Review</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">{{ validation.procedure_type|replace('_', ' ')|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if validation.validation_status == 'completed' %}
+                                            <span class="badge badge-success">Completed</span>
+                                        {% elif validation.validation_status == 'in_progress' %}
+                                            <span class="badge badge-warning">In Progress</span>
+                                        {% elif validation.validation_status == 'pending' %}
+                                            <span class="badge badge-info">Pending</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">{{ validation.validation_status|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if validation.validation_result == 'passed' %}
+                                            <span class="badge badge-success">Passed</span>
+                                        {% elif validation.validation_result == 'failed' %}
+                                            <span class="badge badge-danger">Failed</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">{{ validation.validation_result or 'N/A'|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if validation.validation_score %}
+                                            <span class="badge badge-info">{{ "%.1f"|format(validation.validation_score) }}%</span>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if validation.actual_completion %}
+                                            {{ validation.actual_completion.strftime('%Y-%m-%d') }}
+                                        {% else %}
+                                            <span class="text-muted">Not completed</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-info" onclick="viewValidation({{ validation.id }})">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            {% if validation.validation_status != 'completed' %}
+                                            <button class="btn btn-sm btn-success" onclick="executeValidation({{ validation.id }})">
+                                                <i class="fas fa-play"></i> Run
+                                            </button>
+                                            {% endif %}
+                                            <button class="btn btn-sm btn-warning" onclick="editValidation({{ validation.id }})">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Validation Methods Overview -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="fas fa-microscope"></i> Validation Methods
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Statistical Validation</h5>
+                                    <p class="text-muted small">Uses statistical methods to validate optimization results against baseline measurements.</p>
+                                    <ul class="small">
+                                        <li><strong>Confidence Intervals:</strong> 95% confidence level validation</li>
+                                        <li><strong>Hypothesis Testing:</strong> Statistical significance testing</li>
+                                        <li><strong>Regression Analysis:</strong> Trend analysis and forecasting</li>
+                                        <li><strong>Control Charts:</strong> Process stability assessment</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Comparative Analysis</h5>
+                                    <p class="text-muted small">Compares before and after optimization metrics to quantify improvements.</p>
+                                    <ul class="small">
+                                        <li><strong>Before/After Comparison:</strong> Direct metric comparison</li>
+                                        <li><strong>Control Group Analysis:</strong> Comparison with non-optimized processes</li>
+                                        <li><strong>Benchmarking:</strong> Industry standard comparisons</li>
+                                        <li><strong>ROI Calculation:</strong> Financial impact assessment</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Validation Modal -->
+<div class="modal fade" id="createValidationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Validation Procedure</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="create_validation">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Optimization *</label>
+                                <select class="form-control" name="optimization_id" required>
+                                    <option value="">Select an optimization...</option>
+                                    {% for opt in optimizations %}
+                                    <option value="{{ opt.id }}">{{ opt.optimization_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Procedure Name *</label>
+                                <input type="text" class="form-control" name="procedure_name" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Procedure Type *</label>
+                                <select class="form-control" name="procedure_type" required>
+                                    <option value="statistical">Statistical</option>
+                                    <option value="comparative">Comparative</option>
+                                    <option value="expert_review">Expert Review</option>
+                                    <option value="automated">Automated</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea class="form-control" name="description" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Validation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Execute Validation Modal -->
+<div class="modal fade" id="executeValidationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Execute Validation</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="execute_validation">
+                <input type="hidden" name="validation_id" id="executeValidationId">
+                <div class="modal-body">
+                    <p>Are you sure you want to execute this validation procedure?</p>
+                    <div id="validationDetails"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Execute Validation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewValidation(validationId) {
+    // Implement view validation details
+    alert('View validation functionality - Validation ID: ' + validationId);
+}
+
+function executeValidation(validationId) {
+    document.getElementById('executeValidationId').value = validationId;
+    $('#executeValidationModal').modal('show');
+}
+
+function editValidation(validationId) {
+    // Implement edit validation
+    alert('Edit validation functionality - Validation ID: ' + validationId);
+}
+
+// Initialize DataTable
+$(document).ready(function() {
+    $('#validationsTable').DataTable({
+        "pageLength": 10,
+        "ordering": true,
+        "searching": true,
+        "responsive": true
+    });
+});
+</script>
+
+<style>
+.table th {
+    background-color: #f8f9fc;
+    border-top: 1px solid #e3e6f0;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.btn-group .btn {
+    margin-right: 2px;
+}
+
+.card h5 {
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+</style>
+{% endblock %}

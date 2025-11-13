@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+
+{% block title %}Business Processes - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-project-diagram"></i> Business Processes</h1>
+                    <p class="text-muted">Map and manage complex business processes for compliance integration</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProcessModal">
+                        <i class="fas fa-plus"></i> Create Process
+                    </button>
+                </div>
+            </div>
+
+            <!-- Process Statistics -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Total Processes</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ processes|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-project-diagram fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Active Processes</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ processes|selectattr('status', 'equalto', 'active')|list|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-play-circle fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Avg Efficiency</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        78%
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-percentage fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Critical Processes</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ processes|selectattr('criticality_level', 'equalto', 'critical')|list|length }}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Processes Table -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-list"></i> Business Processes
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="processesTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Owner</th>
+                                    <th>Department</th>
+                                    <th>Criticality</th>
+                                    <th>Baseline Efficiency</th>
+                                    <th>Current Efficiency</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for process in processes %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ process.name }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ process.description|truncate(50) }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-primary">{{ process.process_type|title }}</span>
+                                    </td>
+                                    <td>{{ process.owner or 'Not Assigned' }}</td>
+                                    <td>{{ process.department or 'N/A' }}</td>
+                                    <td>
+                                        {% if process.criticality_level == 'critical' %}
+                                            <span class="badge badge-danger">Critical</span>
+                                        {% elif process.criticality_level == 'high' %}
+                                            <span class="badge badge-warning">High</span>
+                                        {% elif process.criticality_level == 'medium' %}
+                                            <span class="badge badge-info">Medium</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">Low</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ "%.1f"|format(process.baseline_efficiency) }}%</td>
+                                    <td>
+                                        <span class="badge badge-success">{{ "%.1f"|format(process.current_efficiency) }}%</span>
+                                        {% if process.current_efficiency > process.baseline_efficiency %}
+                                            <i class="fas fa-arrow-up text-success ml-1"></i>
+                                        {% elif process.current_efficiency < process.baseline_efficiency %}
+                                            <i class="fas fa-arrow-down text-danger ml-1"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if process.status == 'active' %}
+                                            <span class="badge badge-success">Active</span>
+                                        {% elif process.status == 'draft' %}
+                                            <span class="badge badge-warning">Draft</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">{{ process.status|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-info" onclick="viewProcess({{ process.id }})">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-warning" onclick="editProcess({{ process.id }})">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-success" onclick="updateEfficiency({{ process.id }})">
+                                                <i class="fas fa-chart-line"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Process Flow Visualization -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="fas fa-sitemap"></i> Process Flow Visualization
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="processFlowDiagram" style="height: 400px; border: 1px solid #ddd; border-radius: 5px;">
+                                <!-- Process flow diagram will be rendered here -->
+                                <div class="text-center text-muted" style="padding-top: 150px;">
+                                    <i class="fas fa-project-diagram fa-3x mb-3"></i>
+                                    <p>Select a process to view its flow diagram</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Process Modal -->
+<div class="modal fade" id="createProcessModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Business Process</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="create_process">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Process Name *</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Process Type *</label>
+                                <select class="form-control" name="process_type" required>
+                                    <option value="operational">Operational</option>
+                                    <option value="compliance">Compliance</option>
+                                    <option value="financial">Financial</option>
+                                    <option value="technical">Technical</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" name="description" rows="2"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Owner</label>
+                                <input type="text" class="form-control" name="owner">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Department</label>
+                                <input type="text" class="form-control" name="department">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Criticality Level</label>
+                                <select class="form-control" name="criticality_level">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Process Flow (JSON)</label>
+                                <textarea class="form-control" name="process_flow" rows="4" placeholder='{"steps": ["Planning", "Execution", "Monitoring", "Review"]}'></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Process</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Update Efficiency Modal -->
+<div class="modal fade" id="updateEfficiencyModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Process Efficiency</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="update_efficiency">
+                <input type="hidden" name="process_id" id="efficiencyProcessId">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Current Efficiency (%)</label>
+                        <input type="number" class="form-control" name="current_efficiency" min="0" max="100" step="0.1" required>
+                        <small class="form-text text-muted">Enter the current efficiency percentage (0-100)</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Efficiency</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewProcess(processId) {
+    // Implement view process details
+    alert('View process functionality - Process ID: ' + processId);
+}
+
+function editProcess(processId) {
+    // Implement edit process
+    alert('Edit process functionality - Process ID: ' + processId);
+}
+
+function updateEfficiency(processId) {
+    document.getElementById('efficiencyProcessId').value = processId;
+    $('#updateEfficiencyModal').modal('show');
+}
+
+// Initialize DataTable
+$(document).ready(function() {
+    $('#processesTable').DataTable({
+        "pageLength": 10,
+        "ordering": true,
+        "searching": true,
+        "responsive": true
+    });
+});
+</script>
+
+<style>
+.table th {
+    background-color: #f8f9fc;
+    border-top: 1px solid #e3e6f0;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.btn-group .btn {
+    margin-right: 2px;
+}
+</style>
+{% endblock %}
