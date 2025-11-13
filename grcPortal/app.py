@@ -3420,8 +3420,6 @@ def create_app():
         flash("Logged out securely.", "info")
         return redirect(url_for("login"))
     
-        return redirect(url_for("login"))
-    
 
 
     @app.route("/home", methods=["GET", "POST"])
@@ -11661,6 +11659,7 @@ def create_app():
         except Exception as e:
             logging.error(f"Failed to start APScheduler: {e}")
 
+
     # Log all registered routes for debugging
     def log_registered_routes():
         """Log all registered Flask routes for debugging purposes"""
@@ -11677,6 +11676,19 @@ def create_app():
     import threading
     scheduler_thread = threading.Thread(target=start_scheduler, daemon=True)
     scheduler_thread.start()
+    # --- Process Integration & Optimization Routes ---
+
+    @app.route('/process_integration')
+    @login_required
+    def process_integration():
+        """
+        Process Integration & Optimization dashboard demonstrating advanced process integration
+        and optimization for enterprise compliance environments.
+        """
+        app.logger.info("process_integration route called")
+        print("DEBUG: process_integration function entered")
+        return render_template('process_integration.html')
+
 
     return app
 
@@ -11813,16 +11825,6 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
     thread.start()
 
 
-    # --- Process Integration & Optimization Routes ---
-
-    @app.route('/process_integration')
-    @login_required
-    def process_integration():
-        """
-        Process Integration & Optimization dashboard demonstrating advanced process integration
-        and optimization for enterprise compliance environments.
-        """
-        return render_template('process_integration.html')
 
     @app.route('/business_processes', methods=['GET', 'POST'])
     @login_required
@@ -11833,6 +11835,8 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
         from models import BusinessProcess, EfficiencyMetrics
         from sqlalchemy import desc
         import json
+
+        db = get_session()
 
         if request.method == 'POST':
             action = request.form.get('action')
@@ -11904,6 +11908,7 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
 
         return render_template('business_processes.html', processes=processes)
 
+
     @app.route('/data_synchronization', methods=['GET', 'POST'])
     @login_required
     def data_synchronization():
@@ -11913,6 +11918,8 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
         from models import DataSynchronization
         from sqlalchemy import desc
         import json
+
+        db = get_session()
 
         if request.method == 'POST':
             action = request.form.get('action')
@@ -11981,6 +11988,7 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
 
         return render_template('data_synchronization.html', synchronizations=synchronizations)
 
+
     @app.route('/process_optimization', methods=['GET', 'POST'])
     @login_required
     def process_optimization():
@@ -11990,6 +11998,8 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
         from models import ProcessOptimization, BusinessProcess, OptimizationMethodology
         from sqlalchemy import desc
         import json
+
+        db = get_session()
 
         if request.method == 'POST':
             action = request.form.get('action')
@@ -12077,6 +12087,8 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
         from sqlalchemy import desc
         import json
 
+        db = get_session()
+
         if request.method == 'POST':
             action = request.form.get('action')
 
@@ -12123,6 +12135,8 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
         from models import BaselineMeasurement, BusinessProcess
         from sqlalchemy import desc
         import json
+
+        db = get_session()
 
         if request.method == 'POST':
             action = request.form.get('action')
@@ -12177,6 +12191,8 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
         from models import ValidationProcedure, ProcessOptimization
         from sqlalchemy import desc
         import json
+
+        db = get_session()
 
         if request.method == 'POST':
             action = request.form.get('action')
@@ -12253,6 +12269,7 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
 
 if __name__ == "__main__":
     app = create_app()
+    print("Registered endpoints:", [rule.endpoint for rule in app.url_map.iter_rules()])
     with app.app_context():
         # Seed admin user if none exists
         engine = get_engine()

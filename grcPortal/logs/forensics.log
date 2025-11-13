@@ -55401,3 +55401,1537 @@ WHERE alerts.created_at >= ?) AS anon_1]
 2025-11-12 22:50:01,026 [WARNING] Health check completed: 1 issues detected
 2025-11-12 22:50:01,041 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
 2025-11-12 22:50:01,042 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 22:55:00 EST)" executed successfully
+2025-11-12 22:55:00,002 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:00:00 EST)" (scheduled at 2025-11-12 22:55:00-05:00)
+2025-11-12 22:55:01,050 [WARNING] Health check completed: 1 issues detected
+2025-11-12 22:55:01,065 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 22:55:01,067 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:00:00 EST)" executed successfully
+2025-11-12 23:00:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:05:00 EST)" (scheduled at 2025-11-12 23:00:00-05:00)
+2025-11-12 23:00:01,065 [WARNING] Health check completed: 1 issues detected
+2025-11-12 23:00:01,082 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 23:00:01,083 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:05:00 EST)" executed successfully
+2025-11-12 23:05:00,009 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:10:00 EST)" (scheduled at 2025-11-12 23:05:00-05:00)
+2025-11-12 23:05:01,071 [WARNING] Health check completed: 1 issues detected
+2025-11-12 23:05:01,092 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 23:05:01,093 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:10:00 EST)" executed successfully
+2025-11-12 23:06:40,536 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:06:40,539 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:06:40,541 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 23:06:40,542 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 23:06:40,543 [INFO] Scheduler started
+2025-11-12 23:06:40,544 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 23:06:40,568 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 23:06:40,569 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 23:06:55,404 [INFO] 127.0.0.1 - - [12/Nov/2025 23:06:55] "GET / HTTP/1.1" 200 -
+2025-11-12 23:06:55,436 [INFO] 127.0.0.1 - - [12/Nov/2025 23:06:55] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 23:06:55,446 [INFO] 127.0.0.1 - - [12/Nov/2025 23:06:55] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 23:06:55,496 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-12 23:06:55,497 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-12 23:06:55,498 [INFO] 127.0.0.1 - - [12/Nov/2025 23:06:55] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 23:07:03,623 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 23:07:03,638 [INFO] 127.0.0.1 - - [12/Nov/2025 23:07:03] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 23:07:03,644 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:07:03,648 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E4D7890>
+2025-11-12 23:07:03,649 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:07:03,649 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:07:03,649 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E4D7890>
+2025-11-12 23:07:03,650 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:07:03,650 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E4D7890> - email: kush786srj@gmail.com
+2025-11-12 23:07:03,650 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:07:03,658 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:07:03,658 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E4D7890>
+2025-11-12 23:07:03,658 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:07:03,669 [INFO] 127.0.0.1 - - [12/Nov/2025 23:07:03] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:07:03,709 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:07:03,715 [INFO] 127.0.0.1 - - [12/Nov/2025 23:07:03] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:07:03,716 [INFO] 127.0.0.1 - - [12/Nov/2025 23:07:03] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:07:03,753 [INFO] 127.0.0.1 - - [12/Nov/2025 23:07:03] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:10:00,015 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:10:00 EST)" (scheduled at 2025-11-12 23:10:00-05:00)
+2025-11-12 23:10:00,256 [ERROR] Error performing health checks: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 23:10:00,257 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:15:00 EST)" executed successfully
+2025-11-12 23:10:01,063 [WARNING] Health check completed: 1 issues detected
+2025-11-12 23:10:01,075 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 23:10:01,076 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:15:00 EST)" executed successfully
+2025-11-12 23:15:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:20:00 EST)" (scheduled at 2025-11-12 23:15:00-05:00)
+2025-11-12 23:15:00,019 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:20:00 EST)" (scheduled at 2025-11-12 23:15:00-05:00)
+2025-11-12 23:15:00,022 [ERROR] Error performing health checks: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[ComplianceStrategy(compliance_strategies)]'. Original exception was: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 23:15:00,024 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:20:00 EST)" executed successfully
+2025-11-12 23:15:01,061 [WARNING] Health check completed: 1 issues detected
+2025-11-12 23:15:01,077 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 23:15:01,078 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:20:00 EST)" executed successfully
+2025-11-12 23:19:40,907 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:40,924 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E7FBDD0>
+2025-11-12 23:19:40,925 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:40,927 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:40,929 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E7F8F50>
+2025-11-12 23:19:40,930 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:40,931 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E7F8F50> - email: kush786srj@gmail.com
+2025-11-12 23:19:40,931 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:19:40,960 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:40,961 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E7F8F50>
+2025-11-12 23:19:40,961 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:41,006 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:41] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:19:41,018 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:19:41,033 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:41] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:19:41,035 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:41] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:19:41,050 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:41] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:19:41,059 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:41] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:19:41,977 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:41,988 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E814B90>
+2025-11-12 23:19:41,988 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:41,988 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:41,990 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E8144D0>
+2025-11-12 23:19:41,990 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:41,990 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E8144D0> - email: kush786srj@gmail.com
+2025-11-12 23:19:41,991 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:19:42,019 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:42,019 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E8144D0>
+2025-11-12 23:19:42,019 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:42,055 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:42] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:19:42,065 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:19:42,080 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:42] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:19:42,082 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:42] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:19:42,089 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:42] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:19:42,098 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:42] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:19:42,883 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:42,893 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E815610>
+2025-11-12 23:19:42,894 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:42,894 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:42,895 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E815490>
+2025-11-12 23:19:42,895 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:42,896 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E815490> - email: kush786srj@gmail.com
+2025-11-12 23:19:42,896 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:19:42,924 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:42,924 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E815490>
+2025-11-12 23:19:42,925 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:42,965 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:42] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:19:42,979 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:19:42,991 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:42] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:19:42,993 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:42] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:19:43,001 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:43] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:19:43,009 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:43] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:19:43,126 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:43,136 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E816090>
+2025-11-12 23:19:43,136 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:43,137 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:43,138 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E815FD0>
+2025-11-12 23:19:43,138 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:43,138 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E815FD0> - email: kush786srj@gmail.com
+2025-11-12 23:19:43,139 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:19:43,610 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:43,610 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E815FD0>
+2025-11-12 23:19:43,610 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:43,647 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:43] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:19:43,663 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:19:43,677 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:43] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:19:43,679 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:43] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:19:43,687 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:43] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:19:43,702 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:43] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:19:45,607 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:45,614 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E6F6690>
+2025-11-12 23:19:45,615 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:45,615 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:45,617 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E6F7D10>
+2025-11-12 23:19:45,617 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:45,617 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E6F7D10> - email: kush786srj@gmail.com
+2025-11-12 23:19:45,618 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:19:45,645 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:19:45,646 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E6F7D10>
+2025-11-12 23:19:45,646 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:19:45,683 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:45] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:19:45,693 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:19:45,708 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:45] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:19:45,710 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:45] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:19:45,717 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:45] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:19:45,724 [INFO] 127.0.0.1 - - [12/Nov/2025 23:19:45] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:20:00,008 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:25:00 EST)" (scheduled at 2025-11-12 23:20:00-05:00)
+2025-11-12 23:20:01,045 [WARNING] Health check completed: 1 issues detected
+2025-11-12 23:20:01,062 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 23:20:01,062 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:25:00 EST)" executed successfully
+2025-11-12 23:20:03,851 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:20:03,852 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:20:03,854 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 23:20:03,855 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 23:20:03,856 [INFO] Scheduler started
+2025-11-12 23:20:03,856 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 23:20:03,872 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 23:20:03,872 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 23:20:07,026 [INFO] 127.0.0.1 - - [12/Nov/2025 23:20:07] "GET / HTTP/1.1" 200 -
+2025-11-12 23:20:07,064 [INFO] 127.0.0.1 - - [12/Nov/2025 23:20:07] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 23:20:07,077 [INFO] 127.0.0.1 - - [12/Nov/2025 23:20:07] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 23:20:15,687 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 23:20:15,703 [INFO] 127.0.0.1 - - [12/Nov/2025 23:20:15] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 23:20:15,708 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:20:15,715 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CBFBB90>
+2025-11-12 23:20:15,715 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:20:15,715 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:20:15,715 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CBFBB90>
+2025-11-12 23:20:15,715 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:20:15,715 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264CBFBB90> - email: kush786srj@gmail.com
+2025-11-12 23:20:15,715 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:20:15,722 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:20:15,722 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CBFBB90>
+2025-11-12 23:20:15,722 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:20:15,730 [INFO] 127.0.0.1 - - [12/Nov/2025 23:20:15] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:20:15,736 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:20:15,767 [INFO] 127.0.0.1 - - [12/Nov/2025 23:20:15] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:20:15,768 [INFO] 127.0.0.1 - - [12/Nov/2025 23:20:15] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:20:15,798 [INFO] 127.0.0.1 - - [12/Nov/2025 23:20:15] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:24:49,183 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:24:49,194 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CE29850>
+2025-11-12 23:24:49,196 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:24:49,196 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:24:49,198 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CE29250>
+2025-11-12 23:24:49,199 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:24:49,199 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264CE29250> - email: kush786srj@gmail.com
+2025-11-12 23:24:49,200 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:24:49,227 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:24:49,228 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264CE29250>
+2025-11-12 23:24:49,228 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:24:49,273 [INFO] 127.0.0.1 - - [12/Nov/2025 23:24:49] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:24:49,285 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:24:49,300 [INFO] 127.0.0.1 - - [12/Nov/2025 23:24:49] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:24:49,301 [INFO] 127.0.0.1 - - [12/Nov/2025 23:24:49] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:24:49,311 [INFO] 127.0.0.1 - - [12/Nov/2025 23:24:49] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:24:49,325 [INFO] 127.0.0.1 - - [12/Nov/2025 23:24:49] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:24:53,945 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:24:53,952 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264C9662D0>
+2025-11-12 23:24:53,953 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:24:53,953 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:24:53,955 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264C9671D0>
+2025-11-12 23:24:53,955 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:24:53,955 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264C9671D0> - email: kush786srj@gmail.com
+2025-11-12 23:24:53,956 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:24:53,982 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:24:53,983 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264C9671D0>
+2025-11-12 23:24:53,983 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:24:54,018 [INFO] 127.0.0.1 - - [12/Nov/2025 23:24:54] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:24:54,029 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:24:54,040 [INFO] 127.0.0.1 - - [12/Nov/2025 23:24:54] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:24:54,042 [INFO] 127.0.0.1 - - [12/Nov/2025 23:24:54] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:24:54,050 [INFO] 127.0.0.1 - - [12/Nov/2025 23:24:54] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:24:54,057 [INFO] 127.0.0.1 - - [12/Nov/2025 23:24:54] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:25:00,014 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:30:00 EST)" (scheduled at 2025-11-12 23:25:00-05:00)
+2025-11-12 23:25:00,015 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:25:00 EST)" (scheduled at 2025-11-12 23:25:00-05:00)
+2025-11-12 23:25:00,287 [ERROR] Error performing health checks: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 23:25:00,289 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:30:00 EST)" executed successfully
+2025-11-12 23:25:01,072 [WARNING] Health check completed: 1 issues detected
+2025-11-12 23:25:01,091 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 23:25:01,092 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:30:00 EST)" executed successfully
+2025-11-12 23:25:12,479 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:25:12,480 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:25:12,481 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 23:25:12,481 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 23:25:12,482 [INFO] Scheduler started
+2025-11-12 23:25:12,483 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 23:25:12,502 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 23:25:12,502 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 23:25:15,608 [INFO] 127.0.0.1 - - [12/Nov/2025 23:25:15] "GET / HTTP/1.1" 200 -
+2025-11-12 23:25:15,645 [INFO] 127.0.0.1 - - [12/Nov/2025 23:25:15] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 23:25:15,660 [INFO] 127.0.0.1 - - [12/Nov/2025 23:25:15] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 23:25:24,879 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 23:25:24,896 [INFO] 127.0.0.1 - - [12/Nov/2025 23:25:24] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 23:25:24,902 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:25:24,906 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264B344110>
+2025-11-12 23:25:24,906 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:25:24,906 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:25:24,906 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264B345010>
+2025-11-12 23:25:24,906 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:25:24,906 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264B345010> - email: kush786srj@gmail.com
+2025-11-12 23:25:24,907 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:25:24,914 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:25:24,914 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264B345010>
+2025-11-12 23:25:24,914 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:25:24,922 [INFO] 127.0.0.1 - - [12/Nov/2025 23:25:24] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:25:24,929 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:25:24,966 [INFO] 127.0.0.1 - - [12/Nov/2025 23:25:24] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:25:24,968 [INFO] 127.0.0.1 - - [12/Nov/2025 23:25:24] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:25:24,979 [INFO] 127.0.0.1 - - [12/Nov/2025 23:25:24] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:27:56,231 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:27:56,241 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E7FAED0>
+2025-11-12 23:27:56,242 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:27:56,243 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:27:56,245 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E7F9190>
+2025-11-12 23:27:56,245 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:27:56,246 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E7F9190> - email: kush786srj@gmail.com
+2025-11-12 23:27:56,246 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:27:56,273 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:27:56,274 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E7F9190>
+2025-11-12 23:27:56,274 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:27:56,314 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:56] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:27:56,325 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:27:56,340 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:56] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:27:56,342 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:56] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:27:56,349 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:56] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:27:56,359 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:56] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:27:58,483 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:27:58,493 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E7F90D0>
+2025-11-12 23:27:58,494 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:27:58,494 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:27:58,495 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E7F96D0>
+2025-11-12 23:27:58,495 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:27:58,496 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E7F96D0> - email: kush786srj@gmail.com
+2025-11-12 23:27:58,496 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:27:58,523 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:27:58,524 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E7F96D0>
+2025-11-12 23:27:58,524 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:27:58,558 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:58] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:27:58,567 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:27:58,583 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:58] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:27:58,584 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:58] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:27:58,597 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:58] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:27:58,609 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:58] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:27:59,396 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:27:59,406 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E816A50>
+2025-11-12 23:27:59,406 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:27:59,406 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:27:59,408 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E816BD0>
+2025-11-12 23:27:59,408 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:27:59,408 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E816BD0> - email: kush786srj@gmail.com
+2025-11-12 23:27:59,409 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:27:59,436 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:27:59,436 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E816BD0>
+2025-11-12 23:27:59,436 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:27:59,471 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:59] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:27:59,482 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:27:59,493 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:59] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:27:59,494 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:59] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:27:59,505 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:59] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:27:59,515 [INFO] 127.0.0.1 - - [12/Nov/2025 23:27:59] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:28:00,311 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:28:00,319 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E817590>
+2025-11-12 23:28:00,319 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:28:00,319 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:28:00,321 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E817050>
+2025-11-12 23:28:00,321 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:28:00,322 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264E817050> - email: kush786srj@gmail.com
+2025-11-12 23:28:00,322 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:28:00,347 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:28:00,348 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264E817050>
+2025-11-12 23:28:00,348 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:28:00,383 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:00] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:28:00,393 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:28:00,407 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:00] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:28:00,408 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:00] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:28:00,416 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:00] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:28:00,423 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:00] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:28:00,999 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:28:01,007 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264EB68110>
+2025-11-12 23:28:01,007 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:28:01,008 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:28:01,009 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264EB68050>
+2025-11-12 23:28:01,009 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:28:01,009 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264EB68050> - email: kush786srj@gmail.com
+2025-11-12 23:28:01,010 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:28:01,045 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:28:01,046 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264EB68050>
+2025-11-12 23:28:01,046 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:28:01,082 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:01] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:28:01,093 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:28:01,110 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:01] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:28:01,113 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:01] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:28:01,124 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:01] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:28:01,137 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:01] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:28:01,661 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:28:01,665 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264EB68DD0>
+2025-11-12 23:28:01,666 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:28:01,666 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:28:01,668 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264EB68B90>
+2025-11-12 23:28:01,668 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:28:01,669 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264EB68B90> - email: kush786srj@gmail.com
+2025-11-12 23:28:01,669 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:28:01,696 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:28:01,696 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264EB68B90>
+2025-11-12 23:28:01,696 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:28:01,732 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:01] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:28:01,741 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:28:01,754 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:01] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:28:01,756 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:01] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:28:01,771 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:01] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:28:01,780 [INFO] 127.0.0.1 - - [12/Nov/2025 23:28:01] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:29:12,258 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:29:12,258 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:29:12,261 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 23:29:12,262 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 23:29:12,262 [INFO] Scheduler started
+2025-11-12 23:29:12,263 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 23:29:12,275 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 23:29:12,276 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 23:29:17,548 [INFO] 127.0.0.1 - - [12/Nov/2025 23:29:17] "GET / HTTP/1.1" 200 -
+2025-11-12 23:29:17,586 [INFO] 127.0.0.1 - - [12/Nov/2025 23:29:17] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 23:29:17,600 [INFO] 127.0.0.1 - - [12/Nov/2025 23:29:17] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 23:29:26,245 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 23:29:26,257 [INFO] 127.0.0.1 - - [12/Nov/2025 23:29:26] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 23:29:26,262 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:29:26,267 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264EB69B50>
+2025-11-12 23:29:26,268 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:29:26,268 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:29:26,268 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264EB69A90>
+2025-11-12 23:29:26,268 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:29:26,268 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264EB69A90> - email: kush786srj@gmail.com
+2025-11-12 23:29:26,268 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:29:26,276 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:29:26,276 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264EB69A90>
+2025-11-12 23:29:26,276 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:29:26,283 [INFO] 127.0.0.1 - - [12/Nov/2025 23:29:26] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:29:26,289 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:29:26,330 [INFO] 127.0.0.1 - - [12/Nov/2025 23:29:26] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:29:26,330 [INFO] 127.0.0.1 - - [12/Nov/2025 23:29:26] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:29:26,341 [INFO] 127.0.0.1 - - [12/Nov/2025 23:29:26] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:30:00,002 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:35:00 EST)" (scheduled at 2025-11-12 23:30:00-05:00)
+2025-11-12 23:30:00,003 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:30:00 EST)" (scheduled at 2025-11-12 23:30:00-05:00)
+2025-11-12 23:30:00,152 [ERROR] Error performing health checks: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 23:30:00,153 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:35:00 EST)" executed successfully
+2025-11-12 23:30:01,041 [WARNING] Health check completed: 1 issues detected
+2025-11-12 23:30:01,057 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-12 23:30:01,058 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:35:00 EST)" executed successfully
+2025-11-12 23:31:40,937 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:31:40,943 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:31:40,945 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 23:31:40,945 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 23:31:40,946 [INFO] Scheduler started
+2025-11-12 23:31:40,946 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 23:31:40,956 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 23:31:40,956 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 23:31:48,000 [INFO] 127.0.0.1 - - [12/Nov/2025 23:31:48] "GET / HTTP/1.1" 200 -
+2025-11-12 23:31:48,048 [INFO] 127.0.0.1 - - [12/Nov/2025 23:31:48] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-12 23:31:48,063 [INFO] 127.0.0.1 - - [12/Nov/2025 23:31:48] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-12 23:31:57,983 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-12 23:31:58,001 [INFO] 127.0.0.1 - - [12/Nov/2025 23:31:58] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-12 23:31:58,009 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:31:58,015 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264ED80290>
+2025-11-12 23:31:58,015 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:31:58,015 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:31:58,016 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264ED80290>
+2025-11-12 23:31:58,016 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:31:58,016 [INFO] DEBUG: current_user() returned: <models.User object at 0x000002264ED80290> - email: kush786srj@gmail.com
+2025-11-12 23:31:58,016 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-12 23:31:58,023 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-12 23:31:58,024 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000002264ED80290>
+2025-11-12 23:31:58,024 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-12 23:31:58,035 [INFO] 127.0.0.1 - - [12/Nov/2025 23:31:58] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-12 23:31:58,043 [ERROR] Error on request:
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 341, in debug_application
+    app_iter = self.app(environ, start_response)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1498, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1476, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3027, in wrapper
+    flash("Please login first.", "warning")
+       ^^^^^^^^^^^^^^^^^^
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\app.py", line 3550, in home
+    return render_template(
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\home.html", line 2, in top-level template code
+    {% extends "base.html" %}
+  File "c:\Users\saroj\OneDrive\Desktop\course\FirstSetup\grcPortal\templates\base.html", line 205, in top-level template code
+    <li><a class="dropdown-item" href="{{ url_for('process_integration') }}"><i class="fas fa-tachometer-alt me-2"></i>Main Dashboard</a></li>
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\flask\app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+    
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'process_integration'. Did you mean 'opencti_integration' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 363, in run_wsgi
+    execute(self.server.app)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\serving.py", line 326, in execute
+    for data in application_iter:
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\saroj\AppData\Local\Programs\Python\Python313\Lib\site-packages\werkzeug\debug\__init__.py", line 376, in debug_application
+    environ["wsgi.errors"].write("".join(tb.render_traceback_text()))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-11-12 23:31:58,090 [INFO] 127.0.0.1 - - [12/Nov/2025 23:31:58] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-12 23:31:58,092 [INFO] 127.0.0.1 - - [12/Nov/2025 23:31:58] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-12 23:31:58,102 [INFO] 127.0.0.1 - - [12/Nov/2025 23:31:58] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-12 23:33:20,672 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:33:20,680 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:33:20,683 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 23:33:20,684 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 23:33:20,685 [INFO] Scheduler started
+2025-11-12 23:33:20,686 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 23:33:20,691 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 23:33:20,691 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 23:40:17,268 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:40:17,269 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-12 23:40:17,270 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-12 23:40:17,271 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-12 23:40:17,272 [INFO] Scheduler started
+2025-11-12 23:40:17,273 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-12 23:40:17,294 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-12 23:40:17,294 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-12 23:45:00,017 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:45:00 EST)" (scheduled at 2025-11-12 23:45:00-05:00)
+2025-11-12 23:45:00,307 [ERROR] Error performing health checks: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 23:45:00,308 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:50:00 EST)" executed successfully
+2025-11-12 23:50:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:55:00 EST)" (scheduled at 2025-11-12 23:50:00-05:00)
+2025-11-12 23:50:00,020 [ERROR] Error performing health checks: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[ComplianceStrategy(compliance_strategies)]'. Original exception was: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 23:50:00,021 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-12 23:55:00 EST)" executed successfully
+2025-11-12 23:55:00,013 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-13 00:00:00 EST)" (scheduled at 2025-11-12 23:55:00-05:00)
+2025-11-12 23:55:00,014 [ERROR] Error performing health checks: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[ComplianceStrategy(compliance_strategies)]'. Original exception was: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-12 23:55:00,016 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-13 00:00:00 EST)" executed successfully
+2025-11-13 00:00:00,015 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-13 00:05:00 EST)" (scheduled at 2025-11-13 00:00:00-05:00)
+2025-11-13 00:00:00,020 [ERROR] Error performing health checks: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[ComplianceStrategy(compliance_strategies)]'. Original exception was: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-13 00:00:00,022 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-13 00:05:00 EST)" executed successfully
+2025-11-13 00:05:00,003 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-13 00:10:00 EST)" (scheduled at 2025-11-13 00:05:00-05:00)
+2025-11-13 00:05:00,008 [ERROR] Error performing health checks: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[ComplianceStrategy(compliance_strategies)]'. Original exception was: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-13 00:05:00,008 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-13 00:10:00 EST)" executed successfully
+2025-11-13 00:10:00,002 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-13 00:15:00 EST)" (scheduled at 2025-11-13 00:10:00-05:00)
+2025-11-13 00:10:00,006 [ERROR] Error performing health checks: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[ComplianceStrategy(compliance_strategies)]'. Original exception was: Could not determine join condition between parent/child tables on relationship ComplianceStrategy.conflicts - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-11-13 00:10:00,008 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-13 00:15:00 EST)" executed successfully
+2025-11-13 00:15:00,003 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-13 00:20:00 EST)" (scheduled at 2025-11-13 00:15:00-05:00)
