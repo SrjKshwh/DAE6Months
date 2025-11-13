@@ -34,6 +34,11 @@ Usage:
     python app.py
 
 Environment Variables:
+load_dotenv()
+
+app = Flask(__name__)
+
+from db import get_engine, get_session, close_session
     FLASK_SECRET: Secret key for session encryption
     ALLOWED_IPS: Comma-separated list of allowed IP addresses
     MODEL_NAME: LLM model name for scanning
@@ -54,7 +59,7 @@ import traceback
 from datetime import timedelta, datetime, timezone
 from pathlib import Path
 from functools import wraps
-
+from flask import current_app
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, g, Response
 
@@ -2818,7 +2823,7 @@ def flash_error(e, message="An error occurred", category="danger"):
     flash(detailed_message, category)
 
 
-def create_app():
+def create_app(app=None):
     """
     Flask application factory function implementing secure configuration and Zero Trust Architecture.
 
@@ -2845,7 +2850,8 @@ def create_app():
         Implements defense in depth with multiple security layers
         Uses Flask application context for thread-safe operations
     """
-    app = Flask(__name__, instance_relative_config=True)
+    if app is None:
+        app = Flask(__name__, instance_relative_config=True)
     migrate = Migrate(app, Base)
  
     # Secure config
@@ -3545,6 +3551,9 @@ def create_app():
                 logging.error(f"Error loading risks for scan result: {e}")
                 risks_list = []
 
+        logging.info(f"DEBUG: Current app endpoints: {[rule.endpoint for rule in current_app.url_map.iter_rules()]}")
+
+        # Provide variables for scan button and show current scan results
 
         # Provide variables for scan button and show current scan results
         return render_template(
@@ -10810,37 +10819,41 @@ def create_app():
 
 
     @app.route("/regulatory_conflicts", methods=["GET", "POST"])
-
-    @app.route("/regulatory_conflicts", methods=["GET", "POST"])
     @login_required
     def regulatory_conflicts():
         """
-        Regulatory Conflict Resolution Interface.
+        Regulatory Conflict Resolution Management.
 
-        Manages identification, analysis, and resolution of regulatory conflicts
-        between different compliance frameworks and requirements.
+        Provides comprehensive conflict identification, documentation, and resolution
+        tracking for multinational compliance strategies.
         """
         user = current_user()
         db = get_session()
 
-        if request.method == "POST":
-            action = request.form.get('action')
+        try:
+            if request.method == "POST":
+                action = request.form.get("action")
 
-            if action == "create_conflict":
-                try:
-                    strategy_id = int(request.form.get('strategy_id'))
-                    conflict_title = request.form.get('conflict_title')
-                    description = request.form.get('description')
+                if action == "create_conflict":
+                    # Create new regulatory conflict
+                    strategy_id = int(request.form.get("strategy_id"))
+                    conflict_title = request.form.get("conflict_title").strip()
+                    description = request.form.get("description").strip()
+                    framework_a = request.form.get("framework_a")
+                    requirement_a = request.form.get("requirement_a").strip()
+                    framework_b = request.form.get("framework_b")
+                    requirement_b = request.form.get("requirement_b").strip()
+                    conflict_severity = request.form.get("conflict_severity")
+                    resolution_strategy = request.form.get("resolution_strategy")
+                    resolution_details = request.form.get("resolution_details", "").strip()
 
-                    framework_a = request.form.get('framework_a')
-                    requirement_a = request.form.get('requirement_a')
-                    framework_b = request.form.get('framework_b')
-                    requirement_b = request.form.get('requirement_b')
+                    # Validate required fields
+                    if not all([strategy_id, conflict_title, description, framework_a, requirement_a,
+                               framework_b, requirement_b, conflict_severity, resolution_strategy]):
+                        flash("All required fields must be filled.", "error")
+                        return redirect(url_for("regulatory_conflicts"))
 
-                    conflict_severity = request.form.get('conflict_severity', 'medium')
-                    resolution_strategy = request.form.get('resolution_strategy')
-                    resolution_details = request.form.get('resolution_details')
-
+                    # Create conflict record
                     conflict = RegulatoryConflict(
                         strategy_id=strategy_id,
                         conflict_title=conflict_title,
@@ -10852,6 +10865,7 @@ def create_app():
                         conflict_severity=conflict_severity,
                         resolution_strategy=resolution_strategy,
                         resolution_details=resolution_details,
+                        resolution_status="identified",
                         identified_by=user.id
                     )
 
@@ -10863,80 +10877,73 @@ def create_app():
 
                     flash(f"Regulatory conflict '{conflict_title}' documented successfully!", "success")
 
-                except Exception as e:
-                    db.rollback()
-                    flash(f"Error creating regulatory conflict: {str(e)}", "error")
+                elif action == "resolve_conflict":
+                    # Resolve existing conflict
+                    conflict_id = int(request.form.get("conflict_id"))
+                    effectiveness_rating = int(request.form.get("effectiveness_rating"))
 
-            elif action == "resolve_conflict":
-                try:
-                    conflict_id = int(request.form.get('conflict_id'))
                     conflict = db.query(RegulatoryConflict).filter_by(id=conflict_id).first()
 
-                    if conflict:
-                        conflict.resolution_status = 'resolved'
-                        conflict.resolution_date = datetime.now(timezone.utc)
-                        conflict.resolved_by = user.id
-                        conflict.effectiveness_rating = int(request.form.get('effectiveness_rating', 3))
-
-                        db.commit()
-
-                        log_audit_event(user, "REGULATORY_CONFLICT_RESOLVED", "COMPLIANCE",
-                                      f"Resolved conflict: {conflict.conflict_title}", "/regulatory_conflicts", True)
-
-                        flash(f"Conflict '{conflict.conflict_title}' marked as resolved!", "success")
-                    else:
+                    if not conflict:
                         flash("Conflict not found.", "error")
+                        return redirect(url_for("regulatory_conflicts"))
 
-                except Exception as e:
-                    db.rollback()
-                    flash(f"Error resolving conflict: {str(e)}", "error")
+                    if conflict.resolution_status == "resolved":
+                        flash("Conflict is already resolved.", "warning")
+                        return redirect(url_for("regulatory_conflicts"))
 
-            return redirect(url_for('regulatory_conflicts'))
+                    # Update conflict resolution
+                    conflict.resolution_status = "resolved"
+                    conflict.resolution_date = datetime.now(timezone.utc)
+                    conflict.effectiveness_rating = effectiveness_rating
+                    conflict.resolved_by = user.id
 
-        # GET request - show regulatory conflicts dashboard
-        try:
-            # Get all conflicts with related strategy data
+                    db.commit()
+
+                    log_audit_event(user, "REGULATORY_CONFLICT_RESOLVED", "COMPLIANCE",
+                                  f"Resolved conflict: {conflict.conflict_title}", "/regulatory_conflicts", True)
+
+                    flash(f"Conflict '{conflict.conflict_title}' marked as resolved!", "success")
+
+                return redirect(url_for("regulatory_conflicts"))
+
+            # GET request - display conflicts
+            # Get all conflicts with related data
             conflicts = db.query(RegulatoryConflict).options(
                 joinedload(RegulatoryConflict.strategy),
-                joinedload(RegulatoryConflict.identifier)
-            ).order_by(RegulatoryConflict.created_at.desc()).all()
+                joinedload(RegulatoryConflict.identifier),
+                joinedload(RegulatoryConflict.resolver),
+                joinedload(RegulatoryConflict.approver)
+            ).all()
 
-            # Get strategies for dropdown
-            strategies = db.query(ComplianceStrategy).filter(ComplianceStrategy.status.in_(['active', 'approved'])).all()
+            # Get all strategies for the create modal
+            strategies = db.query(ComplianceStrategy).all()
 
-            # Calculate conflict statistics
+            # Calculate statistics
             total_conflicts = len(conflicts)
-            resolved_conflicts = sum(1 for c in conflicts if c.resolution_status == 'resolved')
-            critical_conflicts = sum(1 for c in conflicts if c.conflict_severity == 'critical')
+            resolved_conflicts = len([c for c in conflicts if c.resolution_status == "resolved"])
+            critical_conflicts = len([c for c in conflicts if c.conflict_severity == "critical"])
 
-            # Framework conflict analysis
+            # Calculate framework conflict pairs
             framework_conflicts = {}
             for conflict in conflicts:
-                key = f"{conflict.framework_a.value} vs {conflict.framework_b.value}"
-                if key not in framework_conflicts:
-                    framework_conflicts[key] = 0
-                framework_conflicts[key] += 1
-
-            close_session(db)
+                framework_pair = f"{conflict.framework_a.value} vs {conflict.framework_b.value}"
+                framework_conflicts[framework_pair] = framework_conflicts.get(framework_pair, 0) + 1
 
             return render_template("regulatory_conflicts.html",
-                                  conflicts=conflicts,
-                                  strategies=strategies,
-                                  total_conflicts=total_conflicts,
-                                  resolved_conflicts=resolved_conflicts,
-                                  critical_conflicts=critical_conflicts,
-                                  framework_conflicts=framework_conflicts)
+                                 conflicts=conflicts,
+                                 strategies=strategies,
+                                 total_conflicts=total_conflicts,
+                                 resolved_conflicts=resolved_conflicts,
+                                 critical_conflicts=critical_conflicts,
+                                 framework_conflicts=framework_conflicts,
+                                 user=user)
 
         except Exception as e:
-            close_session(db)
-            flash_error(e, "Error loading regulatory conflicts", "error")
-            return render_template("regulatory_conflicts.html",
-                                  conflicts=[],
-                                  strategies=[],
-                                  total_conflicts=0,
-                                  resolved_conflicts=0,
-                                  critical_conflicts=0,
-                                  framework_conflicts={})
+            db.rollback()
+            flash(f"Error processing regulatory conflicts: {str(e)}", "error")
+            return redirect(url_for("admin_dashboard"))
+
 
     @app.route("/compliance_roadmap/<int:roadmap_id>", methods=["GET", "POST"])
     @login_required
@@ -11670,12 +11677,16 @@ def create_app():
 
 
     # Call route logging after app creation
-    #log_registered_routes()
+    log_registered_routes()
 
     # Start scheduler in a separate thread to avoid blocking
     import threading
     scheduler_thread = threading.Thread(target=start_scheduler, daemon=True)
     scheduler_thread.start()
+
+
+
+    
     # --- Process Integration & Optimization Routes ---
 
     @app.route('/process_integration')
@@ -11690,143 +11701,9 @@ def create_app():
         return render_template('process_integration.html')
 
 
-    return app
 
 
-# ------------------------------------------------------------------------------
-# Utils
-# ------------------------------------------------------------------------------
-ALLOWED_EXTENSIONS = {".pdf", ".txt", ".log", ".png", ".jpg", ".jpeg"}
-
-
-
-def allowed_file(filename: str) -> bool:
-    """
-    Validate file extension against whitelist for security.
-
-    Checks if uploaded file has an allowed extension to prevent
-    execution of malicious file types and ensure only safe
-    document formats are accepted.
-
-    Args:
-        filename (str): Name of the file to validate
-
-    Returns:
-        bool: True if file extension is allowed, False otherwise
-
-    Allowed Extensions:
-        .pdf: Portable Document Format
-        .txt: Plain text files
-        .log: Log files
-        .png: PNG images
-        .jpg/.jpeg: JPEG images
-
-    Security Note:
-        Prevents upload of executable files, scripts, or other
-        potentially dangerous file types that could compromise security
-    """
-    ext = os.path.splitext(filename)[1].lower()
-    return ext in ALLOWED_EXTENSIONS
-
-
-def secure_filename(name: str) -> str:
-    """
-    Sanitize filename to prevent path traversal and injection attacks.
-
-    Applies stricter sanitization than Werkzeug's default secure_filename
-    to eliminate any characters that could be used for directory traversal
-    or command injection.
-
-    Args:
-        name (str): Original filename to sanitize
-
-    Returns:
-        str: Sanitized filename safe for filesystem operations
-
-    Security Features:
-        - Removes path separators (/, \\)
-        - Eliminates shell metacharacters
-        - Strips control characters
-        - Allows only alphanumeric, underscore, dot, and hyphen
-
-    Note:
-        More restrictive than Werkzeug default for enhanced security
-        Preserves file extension for proper type identification
-    """
-    # stricter sanitization than werkzeug default
-    name = werkzeug_secure(name)
-    return re.sub(r"[^A-Za-z0-9_.-]", "_", name)
-
-
-def json_dumps(obj) -> str:
-    """
-    Serialize Python object to JSON string with consistent formatting.
-
-    Provides standardized JSON serialization for database storage and API responses.
-    Configured for human-readable output and Unicode support.
-
-    Args:
-        obj: Python object to serialize (dict, list, etc.)
-
-    Returns:
-        str: JSON-formatted string with proper indentation
-
-    Configuration:
-        ensure_ascii=False: Preserves Unicode characters
-        indent=2: Human-readable formatting with 2-space indentation
-
-    Note:
-        Used for storing structured data in database text fields
-        Consistent formatting aids in debugging and data analysis
-    """
-    return json.dumps(obj, ensure_ascii=False, indent=2)
-
-
-def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
-    """
-    Schedule secure deletion of uploaded file after specified delay.
-
-    Implements automatic cleanup of temporary files to prevent disk space exhaustion
-    and maintain security by removing potentially sensitive uploaded content.
-
-    Args:
-        file_path (str): Path to the file to delete
-        delay_seconds (int): Delay before deletion in seconds (default: 120)
-
-    Process:
-        1. Creates background daemon thread for non-blocking execution
-        2. Waits for specified delay period
-        3. Checks if file still exists (may have been manually deleted)
-        4. Attempts secure file removal
-        5. Logs success or error conditions
-
-    Security Benefits:
-        - Prevents accumulation of sensitive files on disk
-        - Reduces attack surface by limiting file exposure time
-        - Automatic cleanup reduces manual intervention needs
-
-    Note:
-        Uses daemon thread to prevent blocking application shutdown
-        Gracefully handles deletion errors without crashing
-        Default 2-minute delay allows for processing/scanning time
-    """
-    def delete():
-        time.sleep(delay_seconds)
-        try:
-            if os.path.exists(file_path):
-                os.remove(file_path)
-                logging.info(f"File {file_path} deleted after {delay_seconds} seconds.")
-        except Exception as e:
-            logging.error(f"Error deleting file {file_path}: {e}")
-
-    # Start the deletion in a background thread
-    thread = threading.Thread(target=delete)
-    thread.daemon = True
-    thread.start()
-
-
-
-    @app.route('/business_processes', methods=['GET', 'POST'])
+    @app.route('/business_processes', methods=['GET', 'POST'], endpoint='business_processes')
     @login_required
     def business_processes():
         """
@@ -11874,7 +11751,7 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
 
                     flash('Business process created successfully!', 'success')
                     log_audit_event(current_user, "CREATE", "PROCESS_INTEGRATION",
-                                  f"Created business process: {name}", f"/business_processes", True)
+                                  f"Created business process: {name}", "/business_processes", True)
 
                 except Exception as e:
                     db.rollback()
@@ -11902,6 +11779,45 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
                     db.rollback()
                     logging.error(f"Error updating efficiency: {str(e)}")
                     flash('Error updating efficiency metrics.', 'error')
+
+            elif action == 'edit_process':
+                try:
+                    process_id = request.form.get('process_id')
+                    name = request.form.get('name')
+                    description = request.form.get('description')
+                    process_type = request.form.get('process_type')
+                    process_flow = request.form.get('process_flow')
+                    owner = request.form.get('owner')
+                    department = request.form.get('department')
+                    criticality_level = request.form.get('criticality_level')
+
+                    process = db.query(BusinessProcess).filter(BusinessProcess.id == process_id).first()
+                    if process:
+                        # Parse JSON fields
+                        try:
+                            process_flow_json = json.loads(process_flow) if process_flow else {}
+                        except json.JSONDecodeError:
+                            process_flow_json = {}
+
+                        process.name = name
+                        process.description = description
+                        process.process_type = process_type
+                        process.process_flow = json.dumps(process_flow_json)
+                        process.owner = owner
+                        process.department = department
+                        process.criticality_level = criticality_level
+
+                        db.commit()
+                        flash('Business process updated successfully!', 'success')
+                        log_audit_event(current_user, "UPDATE", "PROCESS_INTEGRATION",
+                                      f"Updated business process: {name}", "/business_processes", True)
+                    else:
+                        flash('Process not found.', 'error')
+
+                except Exception as e:
+                    db.rollback()
+                    logging.error(f"Error updating business process: {str(e)}")
+                    flash('Error updating business process.', 'error')
 
         # Get all business processes
         processes = db.query(BusinessProcess).order_by(desc(BusinessProcess.created_at)).all()
@@ -11946,7 +11862,7 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
 
                     flash('Data synchronization configuration created successfully!', 'success')
                     log_audit_event(current_user, "CREATE", "DATA_SYNC",
-                                  f"Created sync: {sync_name}", f"/data_synchronization", True)
+                                  f"Created sync: {sync_name}", "/data_synchronization", True)
 
                 except Exception as e:
                     db.rollback()
@@ -11976,7 +11892,7 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
 
                         flash(f'Synchronization completed successfully! Processed {sync.records_processed} records.', 'success')
                         log_audit_event(current_user, "EXECUTE", "DATA_SYNC",
-                                      f"Executed sync: {sync.sync_name}", f"/data_synchronization", True)
+                                      f"Executed sync: {sync.sync_name}", "/data_synchronization", True)
 
                 except Exception as e:
                     db.rollback()
@@ -12114,7 +12030,7 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
 
                     flash('Optimization methodology documented successfully!', 'success')
                     log_audit_event(current_user, "CREATE", "OPTIMIZATION_METHODOLOGY",
-                                  f"Created methodology: {name}", f"/optimization_methodology", True)
+                                  f"Created methodology: {name}", "/optimization_methodology", True)
 
                 except Exception as e:
                     db.rollback()
@@ -12127,6 +12043,149 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
         return render_template('optimization_methodology.html', methodologies=methodologies)
 
     @app.route('/baseline_measurements', methods=['GET', 'POST'])
+    @login_required
+    def baseline_measurements():
+        """
+        Baseline measurements for process optimization validation.
+        """
+        from models import BaselineMeasurement, BusinessProcess
+        from sqlalchemy import desc
+        import json
+
+        db = get_session()
+
+        if request.method == 'POST':
+            action = request.form.get('action')
+
+            if action == 'create_measurement':
+                try:
+                    process_id = request.form.get('process_id')
+                    measurement_name = request.form.get('measurement_name')
+                    measurement_type = request.form.get('measurement_type')
+                    baseline_value = float(request.form.get('baseline_value', 0))
+                    unit_of_measure = request.form.get('unit_of_measure')
+
+                    new_measurement = BaselineMeasurement(
+                        process_id=process_id,
+                        measurement_name=measurement_name,
+                        measurement_type=measurement_type,
+                        baseline_value=baseline_value,
+                        unit_of_measure=unit_of_measure,
+                        measured_by=session.get('user_id')
+                    )
+
+                    db.add(new_measurement)
+                    db.commit()
+
+                    flash('Baseline measurement recorded successfully!', 'success')
+                    log_audit_event(current_user, "CREATE", "BASELINE_MEASUREMENT",
+                                  f"Created measurement: {measurement_name}", "/baseline_measurements", True)
+
+                except Exception as e:
+                    db.rollback()
+                    logging.error(f"Error creating measurement: {str(e)}")
+                    flash('Error recording baseline measurement.', 'error')
+
+        # Get all measurements with related processes
+        measurements = db.query(BaselineMeasurement).options(
+            joinedload(BaselineMeasurement.process)
+        ).order_by(desc(BaselineMeasurement.created_at)).all()
+
+        # Get available processes
+        processes = db.query(BusinessProcess).all()
+
+        return render_template('baseline_measurements.html',
+                             measurements=measurements,
+                             processes=processes)
+
+    @app.route('/validation_procedures', methods=['GET', 'POST'])
+    @login_required
+    def validation_procedures():
+        """
+        Validation procedures for process optimization results.
+        """
+        from models import ValidationProcedure, ProcessOptimization
+        from sqlalchemy import desc
+        import json
+
+        db = get_session()
+
+        if request.method == 'POST':
+            action = request.form.get('action')
+
+            if action == 'create_validation':
+                try:
+                    optimization_id = request.form.get('optimization_id')
+                    procedure_name = request.form.get('procedure_name')
+                    procedure_type = request.form.get('procedure_type')
+                    description = request.form.get('description')
+
+                    new_validation = ValidationProcedure(
+                        optimization_id=optimization_id,
+                        procedure_name=procedure_name,
+                        procedure_type=procedure_type,
+                        description=description,
+                        performed_by=session.get('user_id')
+                    )
+
+                    db.add(new_validation)
+                    db.commit()
+
+                    flash('Validation procedure created successfully!', 'success')
+                    log_audit_event(current_user, "CREATE", "VALIDATION_PROCEDURE",
+                                  f"Created validation: {procedure_name}", "/validation_procedures", True)
+
+                except Exception as e:
+                    db.rollback()
+                    logging.error(f"Error creating validation: {str(e)}")
+                    flash('Error creating validation procedure.', 'error')
+
+            elif action == 'execute_validation':
+                try:
+                    validation_id = request.form.get('validation_id')
+                    validation = db.query(ValidationProcedure).filter(ValidationProcedure.id == validation_id).first()
+
+                    if validation:
+                        # Simulate validation execution
+                        import random
+                        import time
+
+                        validation.validation_status = 'completed'
+                        validation.actual_completion = datetime.now(timezone.utc)
+
+                        # Random success/failure for demo
+                        if random.choice([True, False]):
+                            validation.validation_result = 'passed'
+                            validation.validation_score = random.uniform(85, 100)
+                        else:
+                            validation.validation_result = 'failed'
+                            validation.validation_score = random.uniform(0, 84)
+
+                        db.commit()
+
+                        flash(f'Validation completed! Result: {validation.validation_result.upper()} (Score: {validation.validation_score:.1f}%)', 'success')
+
+                except Exception as e:
+                    db.rollback()
+                    logging.error(f"Error executing validation: {str(e)}")
+                    flash('Error executing validation procedure.', 'error')
+
+        # Get all validations with related optimizations
+        validations = db.query(ValidationProcedure).options(
+            joinedload(ValidationProcedure.optimization)
+        ).order_by(desc(ValidationProcedure.created_at)).all()
+
+        # Get available optimizations
+        optimizations = db.query(ProcessOptimization).filter(ProcessOptimization.status.in_(['completed', 'validated'])).all()
+
+        return render_template('validation_procedures.html',
+                             validations=validations,
+                             optimizations=optimizations)
+
+
+
+
+
     @login_required
     def baseline_measurements():
         """
@@ -12182,94 +12241,144 @@ def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
                              measurements=measurements,
                              processes=processes)
 
-    @app.route('/validation_procedures', methods=['GET', 'POST'])
-    @login_required
-    def validation_procedures():
-        """
-        Validation procedures for process optimization results.
-        """
-        from models import ValidationProcedure, ProcessOptimization
-        from sqlalchemy import desc
-        import json
+    return app
 
-        db = get_session()
 
-        if request.method == 'POST':
-            action = request.form.get('action')
+# ------------------------------------------------------------------------------
+# Utils
+# ------------------------------------------------------------------------------
+ALLOWED_EXTENSIONS = {".pdf", ".txt", ".log", ".png", ".jpg", ".jpeg"}
 
-            if action == 'create_validation':
-                try:
-                    optimization_id = request.form.get('optimization_id')
-                    procedure_name = request.form.get('procedure_name')
-                    procedure_type = request.form.get('procedure_type')
-                    description = request.form.get('description')
 
-                    new_validation = ValidationProcedure(
-                        optimization_id=optimization_id,
-                        procedure_name=procedure_name,
-                        procedure_type=procedure_type,
-                        description=description,
-                        performed_by=session.get('user_id')
-                    )
 
-                    db.add(new_validation)
-                    db.commit()
+def allowed_file(filename: str) -> bool:
+    """
+    Validate file extension against whitelist for security.
 
-                    flash('Validation procedure created successfully!', 'success')
-                    log_audit_event(current_user, "CREATE", "VALIDATION_PROCEDURE",
-                                  f"Created validation: {procedure_name}", f"/validation_procedures", True)
+    Checks if uploaded file has an allowed extension to prevent
+    execution of malicious file types and ensure only safe
+    document formats are accepted.
 
-                except Exception as e:
-                    db.rollback()
-                    logging.error(f"Error creating validation: {str(e)}")
-                    flash('Error creating validation procedure.', 'error')
+    Args:
+        filename (str): Name of the file to validate
 
-            elif action == 'execute_validation':
-                try:
-                    validation_id = request.form.get('validation_id')
-                    validation = db.query(ValidationProcedure).filter(ValidationProcedure.id == validation_id).first()
+    Returns:
+        bool: True if file extension is allowed, False otherwise
 
-                    if validation:
-                        # Simulate validation execution
-                        import random
-                        import time
+    Allowed Extensions:
+        .pdf: Portable Document Format
+        .txt: Plain text files
+        .log: Log files
+        .png: PNG images
+        .jpg/.jpeg: JPEG images
 
-                        validation.validation_status = 'completed'
-                        validation.actual_completion = datetime.now(timezone.utc)
+    Security Note:
+        Prevents upload of executable files, scripts, or other
+        potentially dangerous file types that could compromise security
+    """
+    ext = os.path.splitext(filename)[1].lower()
+    return ext in ALLOWED_EXTENSIONS
 
-                        # Random success/failure for demo
-                        if random.choice([True, False]):
-                            validation.validation_result = 'passed'
-                            validation.validation_score = random.uniform(85, 100)
-                        else:
-                            validation.validation_result = 'failed'
-                            validation.validation_score = random.uniform(0, 84)
 
-                        db.commit()
+def secure_filename(name: str) -> str:
+    """
+    Sanitize filename to prevent path traversal and injection attacks.
 
-                        flash(f'Validation completed! Result: {validation.validation_result.upper()} (Score: {validation.validation_score:.1f}%)', 'success')
+    Applies stricter sanitization than Werkzeug's default secure_filename
+    to eliminate any characters that could be used for directory traversal
+    or command injection.
 
-                except Exception as e:
-                    db.rollback()
-                    logging.error(f"Error executing validation: {str(e)}")
-                    flash('Error executing validation procedure.', 'error')
+    Args:
+        name (str): Original filename to sanitize
 
-        # Get all validations with related optimizations
-        validations = db.query(ValidationProcedure).options(
-            joinedload(ValidationProcedure.optimization)
-        ).order_by(desc(ValidationProcedure.created_at)).all()
+    Returns:
+        str: Sanitized filename safe for filesystem operations
 
-        # Get available optimizations
-        optimizations = db.query(ProcessOptimization).filter(ProcessOptimization.status.in_(['completed', 'validated'])).all()
+    Security Features:
+        - Removes path separators (/, \\)
+        - Eliminates shell metacharacters
+        - Strips control characters
+        - Allows only alphanumeric, underscore, dot, and hyphen
 
-        return render_template('validation_procedures.html',
-                             validations=validations,
-                             optimizations=optimizations)
+    Note:
+        More restrictive than Werkzeug default for enhanced security
+        Preserves file extension for proper type identification
+    """
+    # stricter sanitization than werkzeug default
+    name = werkzeug_secure(name)
+    return re.sub(r"[^A-Za-z0-9_.-]", "_", name)
+
+
+def json_dumps(obj) -> str:
+    """
+    Serialize Python object to JSON string with consistent formatting.
+
+    Provides standardized JSON serialization for database storage and API responses.
+    Configured for human-readable output and Unicode support.
+
+    Args:
+        obj: Python object to serialize (dict, list, etc.)
+
+    Returns:
+        str: JSON-formatted string with proper indentation
+
+    Configuration:
+        ensure_ascii=False: Preserves Unicode characters
+        indent=2: Human-readable formatting with 2-space indentation
+
+    Note:
+        Used for storing structured data in database text fields
+        Consistent formatting aids in debugging and data analysis
+    """
+    return json.dumps(obj, ensure_ascii=False, indent=2)
+
+
+def delete_file_after_delay(file_path: str, delay_seconds: int = 120):
+    """
+    Schedule secure deletion of uploaded file after specified delay.
+
+    Implements automatic cleanup of temporary files to prevent disk space exhaustion
+    and maintain security by removing potentially sensitive uploaded content.
+
+    Args:
+        file_path (str): Path to the file to delete
+        delay_seconds (int): Delay before deletion in seconds (default: 120)
+
+    Process:
+        1. Creates background daemon thread for non-blocking execution
+        2. Waits for specified delay period
+        3. Checks if file still exists (may have been manually deleted)
+        4. Attempts secure file removal
+        5. Logs success or error conditions
+
+    Security Benefits:
+        - Prevents accumulation of sensitive files on disk
+        - Reduces attack surface by limiting file exposure time
+        - Automatic cleanup reduces manual intervention needs
+
+    Note:
+        Uses daemon thread to prevent blocking application shutdown
+        Gracefully handles deletion errors without crashing
+        Default 2-minute delay allows for processing/scanning time
+    """
+    def delete():
+        time.sleep(delay_seconds)
+        try:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                logging.info(f"File {file_path} deleted after {delay_seconds} seconds.")
+        except Exception as e:
+            logging.error(f"Error deleting file {file_path}: {e}")
+
+    # Start the deletion in a background thread
+    thread = threading.Thread(target=delete)
+    thread.daemon = True
+    thread.start()
 
 
 if __name__ == "__main__":
     app = create_app()
-    print("Registered endpoints:", [rule.endpoint for rule in app.url_map.iter_rules()])
+    logging.info(f"Registered endpoints: {[rule.endpoint for rule in app.url_map.iter_rules()]}")
     with app.app_context():
         # Seed admin user if none exists
         engine = get_engine()

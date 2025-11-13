@@ -2758,7 +2758,7 @@ class RegulatoryConflict(Base):
     __tablename__ = "regulatory_conflicts"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    strategy: Mapped[str] = mapped_column(String(255), nullable=False)
+    strategy_id: Mapped[int] = mapped_column(Integer, ForeignKey("compliance_strategies.id"), nullable=False)
 
     # Conflict details
     conflict_title: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -3847,7 +3847,6 @@ class ProcessOptimization(Base):
     timeline_days: Mapped[int] = mapped_column(Integer, default=0)
 
     # Validation and results
-    validation_procedures: Mapped[str] = mapped_column(Text, nullable=True)  # JSON validation methods
     validation_results: Mapped[str] = mapped_column(Text, nullable=True)  # JSON validation outcomes
     success_criteria: Mapped[str] = mapped_column(Text, nullable=True)  # JSON success metrics
 
@@ -3867,6 +3866,7 @@ class ProcessOptimization(Base):
     process = relationship("BusinessProcess", back_populates="optimizations")
     performer = relationship("User", foreign_keys=[performed_by])
     reviewer = relationship("User", foreign_keys=[reviewed_by])
+    validation_procedures = relationship("ValidationProcedure", back_populates="optimization")
 
 
 class DataSynchronization(Base):
@@ -4104,6 +4104,6 @@ class ValidationProcedure(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     # Relationships
-    optimization = relationship("ProcessOptimization", backref="validation_procedures")
+    optimization = relationship("ProcessOptimization", back_populates="validation_procedures")
     performer = relationship("User", foreign_keys=[performed_by])
     reviewer = relationship("User", foreign_keys=[reviewed_by])
