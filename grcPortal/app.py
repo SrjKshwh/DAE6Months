@@ -11790,6 +11790,7 @@ def create_app(app=None):
                     owner = request.form.get('owner')
                     department = request.form.get('department')
                     criticality_level = request.form.get('criticality_level')
+                    status = request.form.get('status')
 
                     process = db.query(BusinessProcess).filter(BusinessProcess.id == process_id).first()
                     if process:
@@ -11806,6 +11807,7 @@ def create_app(app=None):
                         process.owner = owner
                         process.department = department
                         process.criticality_level = criticality_level
+                        process.status = status
 
                         db.commit()
                         flash('Business process updated successfully!', 'success')
@@ -11847,6 +11849,15 @@ def create_app(app=None):
                     target_system = request.form.get('target_system')
                     sync_type = request.form.get('sync_type', 'incremental')
                     sync_frequency = request.form.get('sync_frequency', 'hourly')
+                    source_endpoint = request.form.get('source_endpoint')
+                    target_endpoint = request.form.get('target_endpoint')
+                    data_mapping = request.form.get('data_mapping')
+                    transformation_rules = request.form.get('transformation_rules')
+                    batch_size = int(request.form.get('batch_size', 1000))
+                    conflict_resolution = request.form.get('conflict_resolution', 'last_write_wins')
+                    auth_method = request.form.get('auth_method')
+                    encryption_enabled = request.form.get('encryption_enabled') == 'on'
+                    status = request.form.get('status', 'active')
 
                     new_sync = DataSynchronization(
                         sync_name=sync_name,
@@ -11854,6 +11865,15 @@ def create_app(app=None):
                         target_system=target_system,
                         sync_type=sync_type,
                         sync_frequency=sync_frequency,
+                        source_endpoint=source_endpoint,
+                        target_endpoint=target_endpoint,
+                        data_mapping=data_mapping,
+                        transformation_rules=transformation_rules,
+                        batch_size=batch_size,
+                        conflict_resolution=conflict_resolution,
+                        auth_method=auth_method,
+                        encryption_enabled=encryption_enabled,
+                        status=status,
                         created_by=session.get('user_id')
                     )
 
@@ -11902,7 +11922,28 @@ def create_app(app=None):
         # Get all synchronizations
         synchronizations = db.query(DataSynchronization).order_by(desc(DataSynchronization.created_at)).all()
 
-        return render_template('data_synchronization.html', synchronizations=synchronizations)
+        # Convert to dict for JSON serialization
+        sync_data = []
+        for sync in synchronizations:
+            sync_dict = {
+                'id': sync.id,
+                'sync_name': sync.sync_name,
+                'source_system': sync.source_system,
+                'target_system': sync.target_system,
+                'sync_type': sync.sync_type,
+                'sync_frequency': sync.sync_frequency,
+                'last_sync_time': sync.last_sync_time.isoformat() if sync.last_sync_time else None,
+                'records_processed': sync.records_processed,
+                'success_rate': sync.success_rate,
+                'status': sync.status
+            }
+            sync_data.append(sync_dict)
+
+        # Ensure sync_data is always a list
+        if sync_data is None:
+            sync_data = []
+
+        return render_template('data_synchronization.html', synchronizations=synchronizations, sync_data=sync_data if 'sync_data' in locals() else [])
 
 
     @app.route('/process_optimization', methods=['GET', 'POST'])

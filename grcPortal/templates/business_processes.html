@@ -119,7 +119,17 @@
                             </thead>
                             <tbody>
                                 {% for process in processes %}
-                                <tr>
+                                <tr data-process-id="{{ process.id }}"
+                                    data-process-name="{{ process.name|replace('"', '"') }}"
+                                    data-process-description="{{ process.description|replace('"', '"') or '' }}"
+                                    data-process-type="{{ process.process_type }}"
+                                    data-process-owner="{{ process.owner or '' }}"
+                                    data-process-department="{{ process.department or '' }}"
+                                    data-process-criticality="{{ process.criticality_level }}"
+                                    data-process-baseline="{{ process.baseline_efficiency or 0 }}"
+                                    data-process-current="{{ process.current_efficiency or 0 }}"
+                                    data-process-status="{{ process.status }}"
+                                    data-process-flow="{{ process.process_flow|safe|replace('"', '"') }}">
                                     <td>
                                         <strong>{{ process.name }}</strong>
                                         <br>
@@ -211,11 +221,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Create Business Process</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
-            <form method="POST">
+            <form method="POST" id="createProcessForm">
                 <input type="hidden" name="action" value="create_process">
                 <div class="modal-body">
                     <div class="row">
@@ -276,7 +285,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Create Process</button>
                 </div>
             </form>
@@ -290,11 +299,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Update Process Efficiency</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
-            <form method="POST">
+            <form method="POST" id="updateEfficiencyForm">
                 <input type="hidden" name="action" value="update_efficiency">
                 <input type="hidden" name="process_id" id="efficiencyProcessId">
                 <div class="modal-body">
@@ -305,7 +313,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Update Efficiency</button>
                 </div>
             </form>
@@ -319,8 +327,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Process Details</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
             <div class="modal-body">
@@ -329,7 +336,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -341,11 +348,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Edit Business Process</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
-            <form method="POST">
+            <form method="POST" id="editProcessForm">
                 <input type="hidden" name="action" value="edit_process">
                 <input type="hidden" name="process_id" id="editProcessId">
                 <div class="modal-body">
@@ -398,6 +404,18 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="form-control" name="status" id="editStatus">
+                                    <option value="draft">Draft</option>
+                                    <option value="active">Active</option>
+                                    <option value="deprecated">Deprecated</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Process Flow (JSON)</label>
@@ -407,7 +425,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Update Process</button>
                 </div>
             </form>
@@ -416,56 +434,57 @@
 </div>
 
 <script>
-// Store processes data for JavaScript access
-var processesData = [
-    {% for process in processes %}
-    {
-        id: {{ process.id }},
-        name: "{{ process.name|replace('"', '\\"') }}",
-        description: "{{ process.description|replace('"', '\\"') or '' }}",
-        process_type: "{{ process.process_type }}",
-        owner: "{{ process.owner or '' }}",
-        department: "{{ process.department or '' }}",
-        criticality_level: "{{ process.criticality_level }}",
-        baseline_efficiency: {{ process.baseline_efficiency or 0 }},
-        current_efficiency: {{ process.current_efficiency or 0 }},
-        status: "{{ process.status }}",
-        process_flow: {{ process.process_flow|safe or '{}' }}
-    }{% if not loop.last %},{% endif %}
-    {% endfor %}
-];
-
 function viewProcess(processId) {
-    var process = processesData.find(p => p.id === processId);
-    if (!process) return;
+    // Find the table row with the process data
+    var row = document.querySelector('tr[data-process-id="' + processId + '"]');
+    if (!row) {
+        alert('Process not found!');
+        return;
+    }
 
+    // Extract data from data attributes
+    var processData = {
+        id: processId,
+        name: row.getAttribute('data-process-name'),
+        description: row.getAttribute('data-process-description'),
+        process_type: row.getAttribute('data-process-type'),
+        owner: row.getAttribute('data-process-owner'),
+        department: row.getAttribute('data-process-department'),
+        criticality_level: row.getAttribute('data-process-criticality'),
+        baseline_efficiency: parseFloat(row.getAttribute('data-process-baseline')),
+        current_efficiency: parseFloat(row.getAttribute('data-process-current')),
+        status: row.getAttribute('data-process-status'),
+        process_flow: row.getAttribute('data-process-flow')
+    };
+
+    // Populate the view modal
     var detailsHtml = `
         <div class="row">
             <div class="col-md-6">
                 <h5>Basic Information</h5>
-                <p><strong>Name:</strong> ${process.name}</p>
-                <p><strong>Type:</strong> ${process.process_type.charAt(0).toUpperCase() + process.process_type.slice(1)}</p>
-                <p><strong>Owner:</strong> ${process.owner || 'Not Assigned'}</p>
-                <p><strong>Department:</strong> ${process.department || 'N/A'}</p>
-                <p><strong>Criticality:</strong> ${process.criticality_level.charAt(0).toUpperCase() + process.criticality_level.slice(1)}</p>
+                <p><strong>Name:</strong> ${processData.name}</p>
+                <p><strong>Type:</strong> ${processData.process_type.charAt(0).toUpperCase() + processData.process_type.slice(1)}</p>
+                <p><strong>Owner:</strong> ${processData.owner || 'Not Assigned'}</p>
+                <p><strong>Department:</strong> ${processData.department || 'N/A'}</p>
+                <p><strong>Criticality:</strong> ${processData.criticality_level.charAt(0).toUpperCase() + processData.criticality_level.slice(1)}</p>
             </div>
             <div class="col-md-6">
                 <h5>Efficiency Metrics</h5>
-                <p><strong>Baseline Efficiency:</strong> ${process.baseline_efficiency.toFixed(1)}%</p>
-                <p><strong>Current Efficiency:</strong> ${process.current_efficiency.toFixed(1)}%</p>
-                <p><strong>Status:</strong> ${process.status.charAt(0).toUpperCase() + process.status.slice(1)}</p>
+                <p><strong>Baseline Efficiency:</strong> ${processData.baseline_efficiency.toFixed(1)}%</p>
+                <p><strong>Current Efficiency:</strong> ${processData.current_efficiency.toFixed(1)}%</p>
+                <p><strong>Status:</strong> ${processData.status.charAt(0).toUpperCase() + processData.status.slice(1)}</p>
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-12">
                 <h5>Description</h5>
-                <p>${process.description || 'No description available.'}</p>
+                <p>${processData.description || 'No description available.'}</p>
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-12">
                 <h5>Process Flow</h5>
-                <pre>${JSON.stringify(process.process_flow, null, 2)}</pre>
+                <pre>${processData.process_flow}</pre>
             </div>
         </div>
     `;
@@ -475,17 +494,38 @@ function viewProcess(processId) {
 }
 
 function editProcess(processId) {
-    var process = processesData.find(p => p.id === processId);
-    if (!process) return;
+    // Find the table row with the process data
+    var row = document.querySelector('tr[data-process-id="' + processId + '"]');
+    if (!row) {
+        alert('Process not found!');
+        return;
+    }
 
-    document.getElementById('editProcessId').value = process.id;
-    document.getElementById('editName').value = process.name;
-    document.getElementById('editDescription').value = process.description;
-    document.getElementById('editProcessType').value = process.process_type;
-    document.getElementById('editOwner').value = process.owner;
-    document.getElementById('editDepartment').value = process.department;
-    document.getElementById('editCriticality').value = process.criticality_level;
-    document.getElementById('editProcessFlow').value = JSON.stringify(process.process_flow, null, 2);
+    // Extract data from data attributes
+    var processData = {
+        id: processId,
+        name: row.getAttribute('data-process-name'),
+        description: row.getAttribute('data-process-description'),
+        process_type: row.getAttribute('data-process-type'),
+        owner: row.getAttribute('data-process-owner'),
+        department: row.getAttribute('data-process-department'),
+        criticality_level: row.getAttribute('data-process-criticality'),
+        baseline_efficiency: parseFloat(row.getAttribute('data-process-baseline')),
+        current_efficiency: parseFloat(row.getAttribute('data-process-current')),
+        status: row.getAttribute('data-process-status'),
+        process_flow: row.getAttribute('data-process-flow')
+    };
+
+    // Populate the edit modal
+    document.getElementById('editProcessId').value = processData.id;
+    document.getElementById('editName').value = processData.name;
+    document.getElementById('editDescription').value = processData.description;
+    document.getElementById('editProcessType').value = processData.process_type;
+    document.getElementById('editOwner').value = processData.owner;
+    document.getElementById('editDepartment').value = processData.department;
+    document.getElementById('editCriticality').value = processData.criticality_level;
+    document.getElementById('editStatus').value = processData.status;
+    document.getElementById('editProcessFlow').value = processData.process_flow;
 
     $('#editProcessModal').modal('show');
 }
@@ -502,6 +542,57 @@ $(document).ready(function() {
         "ordering": true,
         "searching": true,
         "responsive": true
+    });
+
+    // Handle create process form submission
+    $('#createProcessForm').on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/business_processes',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                $('#createProcessModal').modal('hide');
+                location.reload();
+            },
+            error: function() {
+                alert('Error creating process. Please try again.');
+            }
+        });
+    });
+
+    // Handle edit process form submission
+    $('#editProcessForm').on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/business_processes',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                $('#editProcessModal').modal('hide');
+                location.reload();
+            },
+            error: function() {
+                alert('Error updating process. Please try again.');
+            }
+        });
+    });
+
+    // Handle update efficiency form submission
+    $('#updateEfficiencyForm').on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/business_processes',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                $('#updateEfficiencyModal').modal('hide');
+                location.reload();
+            },
+            error: function() {
+                alert('Error updating efficiency. Please try again.');
+            }
+        });
     });
 });
 </script>
