@@ -35,6 +35,9 @@ Usage:
 
 """
 
+from dotenv import load_dotenv
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, g, Response, jsonify
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -56,16 +59,10 @@ from datetime import timedelta, datetime, timezone
 from pathlib import Path
 from functools import wraps
 from flask import current_app
-from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, g, Response, jsonify
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename as werkzeug_secure
 from flask_migrate import Migrate
-
-load_dotenv()
-
-from db import get_engine, get_session, close_session
 
 
 from models import Base, User, Upload, ScanResult, Risk, Compliance, Dependency, Incident, IncidentStatus, IncidentSeverity
@@ -3037,6 +3034,7 @@ def create_app(app=None):
                 if request.path.startswith('/api/'):
                     return jsonify({'success': False, 'error': 'Authentication required'}), 401
                 flash("Please login first.", "warning")
+                logging.info("About to redirect to login")
                 return redirect(url_for("login"))
             else:
                 logging.info(f"DEBUG: @login_required - user authenticated for path: {request.path}")
@@ -13198,6 +13196,7 @@ def create_app(app=None):
     @login_required
     def advanced_apt_analysis():
         """Advanced APT campaign analysis with malware reverse engineering"""
+        logging.info("advanced_apt_analysis function called")
         user = current_user()
         db = get_session()
 
@@ -13286,36 +13285,45 @@ def create_app(app=None):
                 vulnerability_name = request.form.get("vulnerability_name")
                 affected_system = request.form.get("affected_system")
                 research_methodology = request.form.get("research_methodology")
+                discovery_date = request.form.get("discovery_date")
+                severity = request.form.get("severity")
+                cvss_score = request.form.get("cvss_score")
+                affected_versions = request.form.get("affected_versions")
+                proof_of_concept = request.form.get("proof_of_concept")
+                mitigation_recommendations = request.form.get("mitigation_recommendations")
 
                 # Create zero-day research record
                 research = VulnerabilityFinding(
                     vulnerability_id=f"ZERO-DAY-{vulnerability_name.replace(' ', '-')}",
                     title=f"Zero-Day Research: {vulnerability_name}",
                     description=f"Novel vulnerability discovered in {affected_system}",
-                    severity="critical",
+                    severity=severity,
+                    cvss_score=float(cvss_score) if cvss_score else None,
                     host_ip="0.0.0.0",  # Placeholder for zero-day
                     service="unknown",
-                    remediation=f"Apply emergency patch for {vulnerability_name}",
+                    remediation=mitigation_recommendations or f"Apply emergency patch for {vulnerability_name}",
                     research_methodology=json.dumps({
-                        "discovery_method": "Fuzzing",
+                        "discovery_method": research_methodology,
                         "analysis_tools": ["AFL", "AddressSanitizer", "Valgrind"],
                         "timeline": {
-                            "discovery_date": datetime.now().strftime("%Y-%m-%d"),
+                            "discovery_date": discovery_date,
                             "analysis_completion": (datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d"),
                             "patch_development": (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
                         },
                         "technical_details": {
                             "root_cause": "Buffer overflow in input validation",
                             "exploit_vector": "Remote code execution via crafted payload",
-                            "cvss_score": "9.8",
-                            "attack_complexity": "Low"
+                            "cvss_score": cvss_score,
+                            "attack_complexity": "Low",
+                            "affected_versions": affected_versions
                         }
                     }),
                     zero_day_findings=json.dumps({
                         "novelty_assessment": "Previously unknown vulnerability",
-                        "exploit_poc": "Available in controlled environment",
+                        "exploit_poc": proof_of_concept,
                         "mitigation_status": "Emergency patch in development",
-                        "coordination": "Coordinated disclosure with vendor"
+                        "coordination": "Coordinated disclosure with vendor",
+                        "affected_versions": affected_versions
                     })
                 )
 
@@ -13355,6 +13363,8 @@ def create_app(app=None):
             if request.method == "POST":
                 target_organization = request.form.get("target_organization")
                 assessment_scope = request.form.get("assessment_scope")
+                assessment_type = request.form.get("assessment_type")
+                risk_factors = request.form.get("risk_factors")
 
                 # Create supply chain assessment
                 assessment = VulnerabilityScan(
@@ -13365,6 +13375,8 @@ def create_app(app=None):
                     assessment_scope=json.dumps({
                         "target_organization": target_organization,
                         "scope": assessment_scope,
+                        "assessment_type": assessment_type,
+                        "risk_factors": risk_factors,
                         "methodology": {
                             "vendor_analysis": "Third-party vendor security assessment",
                             "dependency_mapping": "Software bill of materials (SBOM) analysis",
@@ -13776,8 +13788,11 @@ def create_app(app=None):
     def vulnerability_management_procedures():
         """Comprehensive vulnerability management procedures and documentation"""
         user = current_user()
+        db = get_session()
 
         # Get some basic metrics for display
+        logging.info("DEBUG: Checking db availability in vulnerability_management_procedures")
+        logging.info(f"DEBUG: db in locals: {'db' in locals()}")
         try:
             total_vulnerabilities = db.query(VulnerabilityFinding).count()
             critical_vulnerabilities = db.query(VulnerabilityFinding).filter(

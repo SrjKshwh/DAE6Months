@@ -96,6 +96,26 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="assessment_type" class="form-label">Assessment Type</label>
+                                <select class="form-control" id="assessment_type" name="assessment_type" required>
+                                    <option value="">Select Assessment Type</option>
+                                    <option value="vendor_risk">Vendor Risk Assessment</option>
+                                    <option value="supply_chain">Supply Chain Vulnerability</option>
+                                    <option value="third_party">Third-Party Risk</option>
+                                    <option value="dependency">Dependency Analysis</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="risk_factors" class="form-label">Risk Factors</label>
+                                <textarea class="form-control" id="risk_factors" name="risk_factors" rows="3" placeholder="Enter key risk factors to consider..." required></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

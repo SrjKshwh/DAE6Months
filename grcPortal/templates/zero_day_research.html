@@ -92,11 +92,42 @@
                                 <label for="affected_system" class="form-label">Affected System</label>
                                 <input type="text" class="form-control" id="affected_system" name="affected_system" required>
                             </div>
+                            <div class="mb-3">
+                                <label for="discovery_date" class="form-label">Discovery Date</label>
+                                <input type="date" class="form-control" id="discovery_date" name="discovery_date" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="severity" class="form-label">Severity</label>
+                                <select class="form-control" id="severity" name="severity" required>
+                                    <option value="">Select Severity</option>
+                                    <option value="critical">Critical</option>
+                                    <option value="high">High</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="low">Low</option>
+                                    <option value="info">Info</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cvss_score" class="form-label">CVSS Score</label>
+                                <input type="number" class="form-control" id="cvss_score" name="cvss_score" min="0" max="10" step="0.1">
+                            </div>
+                            <div class="mb-3">
+                                <label for="affected_versions" class="form-label">Affected Versions</label>
+                                <input type="text" class="form-control" id="affected_versions" name="affected_versions" placeholder="e.g., 1.0-2.1, 3.0">
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="research_methodology" class="form-label">Research Methodology</label>
-                                <textarea class="form-control" id="research_methodology" name="research_methodology" rows="4" required></textarea>
+                                <textarea class="form-control" id="research_methodology" name="research_methodology" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="proof_of_concept" class="form-label">Proof of Concept</label>
+                                <textarea class="form-control" id="proof_of_concept" name="proof_of_concept" rows="3" placeholder="Describe the proof of concept or exploit code"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="mitigation_recommendations" class="form-label">Mitigation Recommendations</label>
+                                <textarea class="form-control" id="mitigation_recommendations" name="mitigation_recommendations" rows="3" placeholder="Recommended mitigation steps"></textarea>
                             </div>
                         </div>
                     </div>
