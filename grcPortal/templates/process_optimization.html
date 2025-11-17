@@ -293,7 +293,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Create Process Optimization</h4>
-                <button type="button" class="close" data-dismiss="modal">
+                <button type="button" class="close" data-bs-dismiss="modal">
                     <span>&times;</span>
                 </button>
             </div>
@@ -352,8 +352,57 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Create Optimization</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View Optimization Modal -->
+<div class="modal fade" id="viewOptimizationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">View Optimization Details</h4>
+                <button type="button" class="close" data-bs-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="viewOptimizationContent">
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Optimization Modal -->
+<div class="modal fade" id="editOptimizationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Optimization</h4>
+                <button type="button" class="close" data-bs-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form id="editOptimizationForm" method="POST">
+                <input type="hidden" id="editOptimizationId" name="opt_id">
+                <div class="modal-body" id="editOptimizationContent">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Optimization</button>
                 </div>
             </form>
         </div>
@@ -362,13 +411,182 @@
 
 <script>
 function viewOptimization(optId) {
-    // Implement view optimization details
-    alert('View optimization functionality - Optimization ID: ' + optId);
+    console.log('viewOptimization called with optId:', optId);
+    // Fetch and show modal
+    $('#viewOptimizationModal').modal('show');
+    $('#viewOptimizationContent').html('<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>');
+    $.get('/api/optimization/' + optId)
+        .done(function(data) {
+            console.log('viewOptimization AJAX done:', data);
+            if (data.success) {
+                const opt = data.optimization;
+                $('#viewOptimizationContent').html(`
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><strong>Optimization Name:</strong></label>
+                                <p>${opt.optimization_name}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><strong>Process:</strong></label>
+                                <p>${opt.process_name}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><strong>Optimization Type:</strong></label>
+                                <p>${opt.optimization_type.charAt(0).toUpperCase() + opt.optimization_type.slice(1)}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><strong>Algorithm Used:</strong></label>
+                                <p>${opt.algorithm_used ? opt.algorithm_used.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'N/A'}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><strong>Efficiency Improvement:</strong></label>
+                                <p><span class="badge badge-success">+${opt.efficiency_improvement_percentage.toFixed(1)}%</span></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><strong>Time Saved:</strong></label>
+                                <p>${opt.time_savings_hours.toFixed(1)} hours</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><strong>Cost Saved:</strong></label>
+                                <p>$${opt.cost_savings_amount.toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><strong>Status:</strong></label>
+                                <p><span class="badge badge-${opt.status === 'completed' ? 'success' : opt.status === 'implementing' ? 'warning' : opt.status === 'validated' ? 'info' : 'secondary'}">${opt.status.charAt(0).toUpperCase() + opt.status.slice(1)}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><strong>Description:</strong></label>
+                        <p>${opt.description || 'No description provided.'}</p>
+                    </div>
+                    <div class="form-group">
+                        <label><strong>Created At:</strong></label>
+                        <p>${new Date(opt.created_at).toLocaleString()}</p>
+                    </div>
+                `);
+            } else {
+                $('#viewOptimizationContent').html('<div class="alert alert-danger">Error loading optimization details.</div>');
+            }
+        })
+        .fail(function(xhr, status, error) {
+            console.log('viewOptimization AJAX fail:', status, error, xhr.responseText);
+            $('#viewOptimizationContent').html('<div class="alert alert-danger">Error loading optimization details.</div>');
+        });
 }
 
 function editOptimization(optId) {
-    // Implement edit optimization
-    alert('Edit optimization functionality - Optimization ID: ' + optId);
+    console.log('editOptimization called with optId:', optId);
+    // Fetch and show edit modal
+    $('#editOptimizationModal').modal('show');
+    $('#editOptimizationId').val(optId);
+    $('#editOptimizationContent').html('<div class="text-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>');
+    $.get('/api/optimization/' + optId)
+        .done(function(data) {
+            if (data.success) {
+                const opt = data.optimization;
+                $('#editOptimizationContent').html(`
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Optimization Name *</label>
+                                <input type="text" class="form-control" name="optimization_name" value="${opt.optimization_name}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Optimization Type *</label>
+                                <select class="form-control" name="optimization_type" required>
+                                    <option value="automation" ${opt.optimization_type === 'automation' ? 'selected' : ''}>Automation</option>
+                                    <option value="streamlining" ${opt.optimization_type === 'streamlining' ? 'selected' : ''}>Streamlining</option>
+                                    <option value="parallelization" ${opt.optimization_type === 'parallelization' ? 'selected' : ''}>Parallelization</option>
+                                    <option value="elimination" ${opt.optimization_type === 'elimination' ? 'selected' : ''}>Elimination</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Algorithm</label>
+                                <select class="form-control" name="algorithm_used">
+                                    <option value="lean_six_sigma" ${opt.algorithm_used === 'lean_six_sigma' ? 'selected' : ''}>Lean Six Sigma</option>
+                                    <option value="theory_of_constraints" ${opt.algorithm_used === 'theory_of_constraints' ? 'selected' : ''}>Theory of Constraints</option>
+                                    <option value="value_stream_mapping" ${opt.algorithm_used === 'value_stream_mapping' ? 'selected' : ''}>Value Stream Mapping</option>
+                                    <option value="custom" ${opt.algorithm_used === 'custom' ? 'selected' : ''}>Custom Algorithm</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="form-control" name="status">
+                                    <option value="planned" ${opt.status === 'planned' ? 'selected' : ''}>Planned</option>
+                                    <option value="implementing" ${opt.status === 'implementing' ? 'selected' : ''}>Implementing</option>
+                                    <option value="validated" ${opt.status === 'validated' ? 'selected' : ''}>Validated</option>
+                                    <option value="completed" ${opt.status === 'completed' ? 'selected' : ''}>Completed</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" name="description" rows="3">${opt.description || ''}</textarea>
+                    </div>
+                `);
+                // Attach submit handler after form is loaded
+                $('#editOptimizationForm').on('submit', function(e) {
+                    console.log('Edit form submit handler called');
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    const optId = $('#editOptimizationId').val();
+                    $.ajax({
+                        url: '/api/optimization/' + optId,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(data) {
+                            if (data.success) {
+                                $('#editOptimizationModal').modal('hide');
+                                location.reload(); // Reload to show updated data
+                            } else {
+                                alert('Error updating optimization: ' + (data.error || 'Unknown error'));
+                            }
+                        },
+                        error: function() {
+                            alert('Error updating optimization');
+                        }
+                    });
+                });
+            } else {
+                $('#editOptimizationContent').html('<div class="alert alert-danger">Error loading optimization details.</div>');
+            }
+        })
+        .fail(function() {
+            $('#editOptimizationContent').html('<div class="alert alert-danger">Error loading optimization details.</div>');
+        });
 }
 
 function completeOptimization(optId) {
@@ -394,6 +612,7 @@ $(document).ready(function() {
         "responsive": true,
         "order": [[4, "desc"]] // Sort by efficiency gain descending
     });
+
 });
 </script>
 

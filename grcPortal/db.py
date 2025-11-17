@@ -28,8 +28,8 @@ def get_engine():
         Uses future=True for SQLAlchemy 2.0 compatibility
         Echo is disabled to prevent SQL query logging in production
     """
-    # SQLite database in ./instance/app.db (Flask pattern)
-    db_url = "sqlite:///instance/app.db"
+    # SQLite database in ./grc_portal.db
+    db_url = "sqlite:///grc_portal.db"
     engine = create_engine(db_url, echo=False, future=True)
     return engine
 

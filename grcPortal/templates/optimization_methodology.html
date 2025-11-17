@@ -235,15 +235,161 @@
     </div>
 </div>
 
-<!-- Create Methodology Modal -->
-<div class="modal fade" id="createMethodologyModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-xl" role="document">
+<!-- View Methodology Modal -->
+<div class="modal fade" id="viewMethodologyModal" tabindex="-1" aria-labelledby="viewMethodologyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Create Optimization Methodology</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
-                </button>
+                <h4 class="modal-title" id="viewMethodologyModalLabel">View Optimization Methodology</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" class="form-control" id="view_name" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Methodology Type</label>
+                            <input type="text" class="form-control" id="view_methodology_type" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control" id="view_description" rows="3" readonly></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Objectives</label>
+                            <textarea class="form-control" id="view_objectives" rows="3" readonly></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Expected Efficiency Gain (%)</label>
+                            <input type="text" class="form-control" id="view_expected_efficiency_gain" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Typical Timeline</label>
+                            <input type="text" class="form-control" id="view_typical_timeline" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <input type="text" class="form-control" id="view_status" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Version</label>
+                    <input type="text" class="form-control" id="view_version" readonly>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Methodology Modal -->
+<div class="modal fade" id="editMethodologyModal" tabindex="-1" aria-labelledby="editMethodologyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editMethodologyModalLabel">Edit Optimization Methodology</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST">
+                <input type="hidden" name="action" value="edit_methodology">
+                <input type="hidden" name="methodology_id" id="edit_methodology_id">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Name *</label>
+                                <input type="text" class="form-control" name="name" id="edit_name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Methodology Type *</label>
+                                <select class="form-control" name="methodology_type" id="edit_methodology_type" required>
+                                    <option value="lean_six_sigma">Lean Six Sigma</option>
+                                    <option value="theory_of_constraints">Theory of Constraints</option>
+                                    <option value="value_stream_mapping">Value Stream Mapping</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description *</label>
+                        <textarea class="form-control" name="description" id="edit_description" rows="3" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Objectives</label>
+                                <textarea class="form-control" name="objectives" id="edit_objectives" rows="3" placeholder="Enter methodology objectives, one per line"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Expected Efficiency Gain (%)</label>
+                                <input type="number" class="form-control" name="expected_efficiency_gain" id="edit_expected_efficiency_gain" step="0.1" min="0" max="100">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Typical Timeline</label>
+                                <input type="text" class="form-control" name="typical_timeline" id="edit_typical_timeline">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="form-control" name="status" id="edit_status">
+                                    <option value="draft">Draft</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="deprecated">Deprecated</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Version</label>
+                        <input type="text" class="form-control" name="version" id="edit_version">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Methodology</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Create Methodology Modal -->
+<div class="modal fade" id="createMethodologyModal" tabindex="-1" aria-labelledby="createMethodologyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="createMethodologyModalLabel">Create Optimization Methodology</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST">
                 <input type="hidden" name="action" value="create_methodology">
@@ -287,7 +433,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Create Methodology</button>
                 </div>
             </form>
@@ -297,13 +443,70 @@
 
 <script>
 function viewMethodology(methId) {
-    // Implement view methodology details
-    alert('View methodology functionality - Methodology ID: ' + methId);
+    console.log('Fetching methodology data for ID:', methId);
+
+    // Fetch methodology data
+    fetch(`/api/methodology/${methId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch methodology data');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Received methodology data:', data);
+
+            // Populate view modal
+            document.getElementById('view_name').value = data.name || '';
+            document.getElementById('view_methodology_type').value = data.methodology_type || '';
+            document.getElementById('view_description').value = data.description || '';
+            document.getElementById('view_objectives').value = data.objectives || '';
+            document.getElementById('view_expected_efficiency_gain').value = data.expected_efficiency_gain || '';
+            document.getElementById('view_typical_timeline').value = data.typical_timeline || '';
+            document.getElementById('view_status').value = data.status || '';
+            document.getElementById('view_version').value = data.version || '';
+
+            // Show modal
+            $('#viewMethodologyModal').modal('show');
+        })
+        .catch(error => {
+            console.error('Error fetching methodology data:', error);
+            alert('Error loading methodology data: ' + error.message);
+        });
 }
 
 function editMethodology(methId) {
-    // Implement edit methodology
-    alert('Edit methodology functionality - Methodology ID: ' + methId);
+    console.log('Fetching methodology data for editing ID:', methId);
+
+    // Fetch methodology data
+    fetch(`/api/methodology/${methId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch methodology data');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Received methodology data for editing:', data);
+
+            // Populate edit modal
+            document.getElementById('edit_methodology_id').value = data.id;
+            document.getElementById('edit_name').value = data.name || '';
+            document.getElementById('edit_methodology_type').value = data.methodology_type || '';
+            document.getElementById('edit_description').value = data.description || '';
+            document.getElementById('edit_objectives').value = data.objectives || '';
+            document.getElementById('edit_expected_efficiency_gain').value = data.expected_efficiency_gain || '';
+            document.getElementById('edit_typical_timeline').value = data.typical_timeline || '';
+            document.getElementById('edit_status').value = data.status || '';
+            document.getElementById('edit_version').value = data.version || '';
+
+            // Show modal
+            $('#editMethodologyModal').modal('show');
+        })
+        .catch(error => {
+            console.error('Error fetching methodology data:', error);
+            alert('Error loading methodology data: ' + error.message);
+        });
 }
 
 // Initialize DataTable

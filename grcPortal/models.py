@@ -4107,3 +4107,299 @@ class ValidationProcedure(Base):
     optimization = relationship("ProcessOptimization", back_populates="validation_procedures")
     performer = relationship("User", foreign_keys=[performed_by])
     reviewer = relationship("User", foreign_keys=[reviewed_by])
+
+
+# Advanced Auditing Models
+
+class AdvancedAudit(Base):
+    """Advanced multi-site compliance audit with virtual and on-site components."""
+
+    __tablename__ = "advanced_audits"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    audit_title: Mapped[str] = mapped_column(String(255), nullable=False)
+    audit_type: Mapped[str] = mapped_column(String(50), nullable=False)  # compliance, operational, financial, integrated
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Audit scope and coverage
+    scope_frameworks: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of compliance frameworks
+    audit_sites: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of audit sites/locations
+    audit_components: Mapped[str] = mapped_column(Text, nullable=True)  # JSON virtual and on-site components
+
+    # Timeline and scheduling
+    planned_start_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    planned_end_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    actual_start_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    actual_end_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Audit team and resources
+    lead_auditor_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    audit_budget: Mapped[float] = mapped_column(Float, default=0.0)
+    resource_allocation: Mapped[str] = mapped_column(Text, nullable=True)  # JSON resource requirements
+
+    # Audit methodology
+    audit_methodology: Mapped[str] = mapped_column(Text, nullable=True)  # JSON audit approach and techniques
+    risk_assessment_approach: Mapped[str] = mapped_column(String(100), nullable=True)
+    sampling_methodology: Mapped[str] = mapped_column(Text, nullable=True)  # JSON sampling strategy
+
+    # Progress and status
+    status: Mapped[str] = mapped_column(String(50), default="planned")  # planned, in_progress, completed, cancelled
+    progress_percentage: Mapped[float] = mapped_column(Float, default=0.0)
+    current_phase: Mapped[str] = mapped_column(String(100), nullable=True)  # planning, fieldwork, analysis, reporting
+
+    # Findings and results
+    total_findings: Mapped[int] = mapped_column(Integer, default=0)
+    critical_findings: Mapped[int] = mapped_column(Integer, default=0)
+    high_findings: Mapped[int] = mapped_column(Integer, default=0)
+    medium_findings: Mapped[int] = mapped_column(Integer, default=0)
+    low_findings: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Compliance scores
+    overall_compliance_score: Mapped[float] = mapped_column(Float, default=0.0)
+    framework_scores: Mapped[str] = mapped_column(Text, nullable=True)  # JSON scores by framework
+
+    # Documentation
+    audit_plan_document: Mapped[str] = mapped_column(Text, nullable=True)  # JSON audit plan details
+    working_papers: Mapped[str] = mapped_column(Text, nullable=True)  # JSON working paper references
+    final_report: Mapped[str] = mapped_column(Text, nullable=True)  # JSON final audit report
+
+    # Governance
+    approved_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    reviewed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    lead_auditor = relationship("User", foreign_keys=[lead_auditor_id])
+    approver = relationship("User", foreign_keys=[approved_by])
+    reviewer = relationship("User", foreign_keys=[reviewed_by])
+    audit_teams = relationship("AuditTeam", back_populates="audit", cascade="all, delete-orphan")
+    evidence_analyses = relationship("EvidenceAnalysis", back_populates="audit", cascade="all, delete-orphan")
+
+
+class AuditTeam(Base):
+    """Cross-functional audit team covering IT, operational, and financial compliance."""
+
+    __tablename__ = "audit_teams"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    audit_id: Mapped[int] = mapped_column(ForeignKey("advanced_audits.id"), nullable=False)
+
+    # Team member details
+    team_member_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    role_in_audit: Mapped[str] = mapped_column(String(100), nullable=False)  # lead_auditor, it_auditor, financial_auditor, operational_auditor, specialist
+    expertise_areas: Mapped[str] = mapped_column(Text, nullable=True)  # JSON areas of expertise
+    certifications: Mapped[str] = mapped_column(Text, nullable=True)  # JSON relevant certifications
+
+    # Assignment details
+    assigned_sites: Mapped[str] = mapped_column(Text, nullable=True)  # JSON sites assigned to this team member
+    time_allocation: Mapped[float] = mapped_column(Float, default=1.0)  # FTE allocation to this audit
+    start_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    end_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Performance and contribution
+    tasks_completed: Mapped[int] = mapped_column(Integer, default=0)
+    findings_contributed: Mapped[int] = mapped_column(Integer, default=0)
+    quality_rating: Mapped[int] = mapped_column(Integer, nullable=True)  # 1-5 performance rating
+
+    # Communication and collaboration
+    collaboration_notes: Mapped[str] = mapped_column(Text, nullable=True)
+    training_provided: Mapped[str] = mapped_column(Text, nullable=True)  # JSON training sessions provided
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    audit = relationship("AdvancedAudit", back_populates="audit_teams")
+    team_member = relationship("User")
+
+
+class EvidenceAnalysis(Base):
+    """Advanced evidence analysis using data analytics tools and statistical methods."""
+
+    __tablename__ = "evidence_analyses"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    audit_id: Mapped[int] = mapped_column(ForeignKey("advanced_audits.id"), nullable=True)  # Can be standalone or part of audit
+
+    # Analysis details
+    analysis_title: Mapped[str] = mapped_column(String(255), nullable=False)
+    analysis_type: Mapped[str] = mapped_column(String(50), nullable=False)  # statistical, data_analytics, forensic, correlational
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Data sources and scope
+    data_sources: Mapped[str] = mapped_column(Text, nullable=True)  # JSON data sources used
+    analysis_scope: Mapped[str] = mapped_column(Text, nullable=True)  # JSON scope of analysis
+    sample_size: Mapped[int] = mapped_column(Integer, nullable=True)
+    time_period: Mapped[str] = mapped_column(String(100), nullable=True)  # Time period analyzed
+
+    # Analytical methods
+    statistical_methods: Mapped[str] = mapped_column(Text, nullable=True)  # JSON statistical techniques used
+    data_analytics_tools: Mapped[str] = mapped_column(Text, nullable=True)  # JSON tools and algorithms
+    machine_learning_models: Mapped[str] = mapped_column(Text, nullable=True)  # JSON ML models applied
+
+    # Analysis parameters
+    confidence_level: Mapped[float] = mapped_column(Float, default=0.95)  # Statistical confidence level
+    significance_threshold: Mapped[float] = mapped_column(Float, default=0.05)  # Statistical significance threshold
+    outlier_detection_method: Mapped[str] = mapped_column(String(100), nullable=True)
+
+    # Results and findings
+    key_findings: Mapped[str] = mapped_column(Text, nullable=True)  # JSON key analytical findings
+    statistical_significance: Mapped[str] = mapped_column(Text, nullable=True)  # JSON statistical test results
+    anomalies_detected: Mapped[int] = mapped_column(Integer, default=0)
+    patterns_identified: Mapped[str] = mapped_column(Text, nullable=True)  # JSON patterns found
+
+    # Data quality and validation
+    data_quality_score: Mapped[float] = mapped_column(Float, nullable=True)  # 0-100 data quality assessment
+    validation_methods: Mapped[str] = mapped_column(Text, nullable=True)  # JSON validation techniques
+    data_integrity_checks: Mapped[str] = mapped_column(Text, nullable=True)  # JSON integrity verification results
+
+    # Visualizations and reporting
+    charts_generated: Mapped[str] = mapped_column(Text, nullable=True)  # JSON chart configurations
+    statistical_outputs: Mapped[str] = mapped_column(Text, nullable=True)  # JSON statistical analysis outputs
+
+    # Status and metadata
+    status: Mapped[str] = mapped_column(String(50), default="pending")  # pending, in_progress, completed, validated
+    performed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    reviewed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    audit = relationship("AdvancedAudit", back_populates="evidence_analyses")
+    analyst = relationship("User", foreign_keys=[performed_by])
+    reviewer = relationship("User", foreign_keys=[reviewed_by])
+
+
+class ComplianceAnalytics(Base):
+    """Compliance analytics solution with predictive capabilities."""
+
+    __tablename__ = "compliance_analytics"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    analytics_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    analytics_type: Mapped[str] = mapped_column(String(50), nullable=False)  # predictive, diagnostic, descriptive, prescriptive
+
+    # Analytics scope
+    frameworks_analyzed: Mapped[str] = mapped_column(Text, nullable=True)  # JSON compliance frameworks
+    data_sources: Mapped[str] = mapped_column(Text, nullable=True)  # JSON data sources
+    analysis_period: Mapped[str] = mapped_column(String(100), nullable=True)  # Time period for analysis
+
+    # Predictive modeling
+    prediction_target: Mapped[str] = mapped_column(String(255), nullable=True)  # What is being predicted
+    prediction_horizon: Mapped[str] = mapped_column(String(50), nullable=True)  # short_term, medium_term, long_term
+    model_type: Mapped[str] = mapped_column(String(100), nullable=True)  # regression, classification, time_series, anomaly_detection
+
+    # Model performance
+    model_accuracy: Mapped[float] = mapped_column(Float, nullable=True)  # Model accuracy score
+    prediction_confidence: Mapped[float] = mapped_column(Float, nullable=True)  # Prediction confidence level
+    false_positive_rate: Mapped[float] = mapped_column(Float, nullable=True)
+    false_negative_rate: Mapped[float] = mapped_column(Float, nullable=True)
+
+    # Predictive insights
+    risk_predictions: Mapped[str] = mapped_column(Text, nullable=True)  # JSON predicted risks
+    compliance_trends: Mapped[str] = mapped_column(Text, nullable=True)  # JSON compliance trend predictions
+    recommended_actions: Mapped[str] = mapped_column(Text, nullable=True)  # JSON recommended preventive actions
+
+    # Data processing
+    data_preprocessing: Mapped[str] = mapped_column(Text, nullable=True)  # JSON preprocessing steps
+    feature_engineering: Mapped[str] = mapped_column(Text, nullable=True)  # JSON feature engineering details
+    model_features: Mapped[str] = mapped_column(Text, nullable=True)  # JSON model input features
+
+    # Model artifacts
+    model_parameters: Mapped[str] = mapped_column(Text, nullable=True)  # JSON model parameters
+    training_data_summary: Mapped[str] = mapped_column(Text, nullable=True)  # JSON training data statistics
+    validation_results: Mapped[str] = mapped_column(Text, nullable=True)  # JSON model validation results
+
+    # Real-time capabilities
+    real_time_enabled: Mapped[bool] = mapped_column(Boolean, default=False)
+    update_frequency: Mapped[str] = mapped_column(String(50), nullable=True)  # hourly, daily, weekly, monthly
+    last_model_update: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Alerts and notifications
+    alert_thresholds: Mapped[str] = mapped_column(Text, nullable=True)  # JSON alert trigger thresholds
+    notification_rules: Mapped[str] = mapped_column(Text, nullable=True)  # JSON notification configurations
+
+    # Performance monitoring
+    model_drift_detected: Mapped[bool] = mapped_column(Boolean, default=False)
+    performance_metrics: Mapped[str] = mapped_column(Text, nullable=True)  # JSON ongoing performance metrics
+
+    # Governance
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    approved_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    creator = relationship("User", foreign_keys=[created_by])
+    approver = relationship("User", foreign_keys=[approved_by])
+
+
+class AutomatedReporting(Base):
+    """Automated reporting system for compliance analytics."""
+
+    __tablename__ = "automated_reporting"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    report_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    report_type: Mapped[str] = mapped_column(String(50), nullable=False)  # compliance_status, risk_dashboard, audit_findings, predictive_alerts
+
+    # Report configuration
+    report_template: Mapped[str] = mapped_column(Text, nullable=True)  # JSON report template structure
+    data_sources: Mapped[str] = mapped_column(Text, nullable=True)  # JSON data sources for the report
+    report_filters: Mapped[str] = mapped_column(Text, nullable=True)  # JSON filtering criteria
+
+    # Scheduling and automation
+    schedule_frequency: Mapped[str] = mapped_column(String(50), nullable=True)  # daily, weekly, monthly, quarterly, on_demand
+    schedule_time: Mapped[str] = mapped_column(String(10), nullable=True)  # HH:MM format
+    next_run_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    last_run_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Recipients and distribution
+    recipients: Mapped[str] = mapped_column(Text, nullable=True)  # JSON list of recipients
+    distribution_channels: Mapped[str] = mapped_column(Text, nullable=True)  # JSON email, dashboard, api, file_export
+    access_permissions: Mapped[str] = mapped_column(Text, nullable=True)  # JSON access control rules
+
+    # Report content
+    executive_summary: Mapped[bool] = mapped_column(Boolean, default=True)
+    detailed_findings: Mapped[bool] = mapped_column(Boolean, default=True)
+    charts_and_graphs: Mapped[bool] = mapped_column(Boolean, default=True)
+    recommendations: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Customization
+    custom_sections: Mapped[str] = mapped_column(Text, nullable=True)  # JSON custom report sections
+    branding_options: Mapped[str] = mapped_column(Text, nullable=True)  # JSON branding and styling
+    language_settings: Mapped[str] = mapped_column(String(10), default="en")  # Language code
+
+    # Automation features
+    auto_generate_insights: Mapped[bool] = mapped_column(Boolean, default=True)
+    predictive_elements: Mapped[bool] = mapped_column(Boolean, default=False)
+    benchmark_comparisons: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Quality assurance
+    review_required: Mapped[bool] = mapped_column(Boolean, default=False)
+    reviewer_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    approval_workflow: Mapped[str] = mapped_column(Text, nullable=True)  # JSON approval process
+
+    # Performance and monitoring
+    generation_time_avg: Mapped[int] = mapped_column(Integer, nullable=True)  # Average generation time in seconds
+    success_rate: Mapped[float] = mapped_column(Float, default=1.0)  # Success rate of report generation
+    error_count: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Status
+    status: Mapped[str] = mapped_column(String(50), default="active")  # active, paused, error, archived
+
+    # Governance
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    last_modified_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    creator = relationship("User", foreign_keys=[created_by])
+    modifier = relationship("User", foreign_keys=[last_modified_by])
+    reviewer = relationship("User", foreign_keys=[reviewer_id])

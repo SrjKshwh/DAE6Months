@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Advanced Audit Details - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ audit.audit_title }}</h3>
+                    <div class="card-tools">
+                        <a href="{{ url_for('advanced_audits') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Audits
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4>Audit Overview</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th width="200">Audit Type</th>
+                                    <td>{{ audit.audit_type|title }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Lead Auditor</th>
+                                    <td>{{ audit.lead_auditor.email if audit.lead_auditor else 'N/A' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <td>
+                                        <span class="badge
+                                            {% if audit.status == 'completed' %}badge-success
+                                            {% elif audit.status == 'in_progress' %}badge-warning
+                                            {% elif audit.status == 'cancelled' %}badge-danger
+                                            {% else %}badge-secondary{% endif %}">
+                                            {{ audit.status|title }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Current Phase</th>
+                                    <td>{{ audit.current_phase or 'Not Started' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Progress</th>
+                                    <td>{{ audit.progress_percentage }}%</td>
+                                </tr>
+                                <tr>
+                                    <th>Planned Start Date</th>
+                                    <td>{{ audit.planned_start_date.strftime('%Y-%m-%d') if audit.planned_start_date else 'N/A' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Planned End Date</th>
+                                    <td>{{ audit.planned_end_date.strftime('%Y-%m-%d') if audit.planned_end_date else 'N/A' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Budget</th>
+                                    <td>${{ "%.2f"|format(audit.audit_budget) }}</td>
+                                </tr>
+                            </table>
+
+                            {% if audit.description %}
+                            <h5>Description</h5>
+                            <p>{{ audit.description }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <h4>Findings Summary</h4>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="small-box bg-danger">
+                                        <div class="inner">
+                                            <h3>{{ audit.critical_findings }}</h3>
+                                            <p>Critical</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="small-box bg-warning">
+                                        <div class="inner">
+                                            <h3>{{ audit.high_findings }}</h3>
+                                            <p>High</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="small-box bg-info">
+                                        <div class="inner">
+                                            <h3>{{ audit.medium_findings }}</h3>
+                                            <p>Medium</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="small-box bg-success">
+                                        <div class="inner">
+                                            <h3>{{ audit.low_findings }}</h3>
+                                            <p>Low</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audit Team Section -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Audit Team</h4>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Team Member</th>
+                                            <th>Role</th>
+                                            <th>Expertise</th>
+                                            <th>Time Allocation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for team_member in audit.audit_teams %}
+                                        <tr>
+                                            <td>{{ team_member.team_member.email }}</td>
+                                            <td>{{ team_member.role_in_audit|title }}</td>
+                                            <td>{{ team_member.expertise_areas or 'N/A' }}</td>
+                                            <td>{{ team_member.time_allocation }} FTE</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evidence Analyses Section -->
+                    {% if audit.evidence_analyses %}
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h4>Evidence Analyses</h4>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Analysis Title</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Analyst</th>
+                                            <th>Created</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for analysis in audit.evidence_analyses %}
+                                        <tr>
+                                            <td>{{ analysis.analysis_title }}</td>
+                                            <td>{{ analysis.analysis_type|title }}</td>
+                                            <td>
+                                                <span class="badge
+                                                    {% if analysis.status == 'completed' %}badge-success
+                                                    {% else %}badge-warning{% endif %}">
+                                                    {{ analysis.status|title }}
+                                                </span>
+                                            </td>
+                                            <td>{{ analysis.analyst.email if analysis.analyst else 'N/A' }}</td>
+                                            <td>{{ analysis.created_at.strftime('%Y-%m-%d') }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

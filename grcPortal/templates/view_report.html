@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}View Report - {{ report.report_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ report.report_name }}</h3>
+                    <div class="card-tools">
+                        <a href="{{ url_for('automated_reporting') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Reports
+                        </a>
+                        <a href="{{ url_for('edit_report', report_id=report.id) }}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-info"><i class="fas fa-file-alt"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Report Type</span>
+                                    <span class="info-box-number">{{ report.report_type|replace('_', ' ')|title }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-success"><i class="fas fa-clock"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Schedule</span>
+                                    <span class="info-box-number">{{ report.schedule_frequency|title }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-warning"><i class="fas fa-calendar-check"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Last Run</span>
+                                    <span class="info-box-number">
+                                        {% if report.last_run_date %}
+                                            {{ report.last_run_date.strftime('%Y-%m-%d %H:%M') }}
+                                        {% else %}
+                                            Never
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-primary"><i class="fas fa-percentage"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Success Rate</span>
+                                    <span class="info-box-number">{{ "%.1f"|format(report.success_rate * 100) }}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Report Details</h4>
+                                </div>
+                                <div class="card-body">
+                                    <dl class="row">
+                                        <dt class="col-sm-3">Created By</dt>
+                                        <dd class="col-sm-9">{{ report.creator.email if report.creator else 'Unknown' }}</dd>
+
+                                        <dt class="col-sm-3">Created Date</dt>
+                                        <dd class="col-sm-9">{{ report.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</dd>
+
+                                        <dt class="col-sm-3">Status</dt>
+                                        <dd class="col-sm-9">
+                                            <span class="badge badge-{{ 'success' if report.status == 'active' else 'secondary' }}">
+                                                {{ report.status|title }}
+                                            </span>
+                                        </dd>
+
+                                        <dt class="col-sm-3">Next Run</dt>
+                                        <dd class="col-sm-9">
+                                            {% if report.next_run_date %}
+                                                {{ report.next_run_date.strftime('%Y-%m-%d %H:%M') }}
+                                            {% else %}
+                                                Not scheduled
+                                            {% endif %}
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if report_content %}
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Report Content</h4>
+                                </div>
+                                <div class="card-body">
+                                    <pre style="white-space: pre-wrap; font-family: monospace;">{{ report_content }}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

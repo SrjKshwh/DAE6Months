@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Report - {{ report.report_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Edit Automated Report</h3>
+                    <div class="card-tools">
+                        <a href="{{ url_for('view_report', report_id=report.id) }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Report
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="report_name">Report Name</label>
+                                    <input type="text" class="form-control" id="report_name" name="report_name"
+                                           value="{{ report.report_name }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="report_type">Report Type</label>
+                                    <select class="form-control" id="report_type" name="report_type" required>
+                                        <option value="compliance_status" {{ 'selected' if report.report_type == 'compliance_status' else '' }}>Compliance Status Report</option>
+                                        <option value="risk_dashboard" {{ 'selected' if report.report_type == 'risk_dashboard' else '' }}>Risk Dashboard Report</option>
+                                        <option value="audit_findings" {{ 'selected' if report.report_type == 'audit_findings' else '' }}>Audit Findings Report</option>
+                                        <option value="predictive_alerts" {{ 'selected' if report.report_type == 'predictive_alerts' else '' }}>Predictive Alerts Report</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="schedule_frequency">Schedule Frequency</label>
+                            <select class="form-control" id="schedule_frequency" name="schedule_frequency" required>
+                                <option value="daily" {{ 'selected' if report.schedule_frequency == 'daily' else '' }}>Daily</option>
+                                <option value="weekly" {{ 'selected' if report.schedule_frequency == 'weekly' else '' }}>Weekly</option>
+                                <option value="monthly" {{ 'selected' if report.schedule_frequency == 'monthly' else '' }}>Monthly</option>
+                                <option value="quarterly" {{ 'selected' if report.schedule_frequency == 'quarterly' else '' }}>Quarterly</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Update Report</button>
+                            <a href="{{ url_for('automated_reporting') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

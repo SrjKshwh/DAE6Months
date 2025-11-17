@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block title %}Compliance Analytics - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Compliance Analytics with Predictive Capabilities</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createAnalyticsModal">
+                            <i class="fas fa-plus"></i> Create New Analytics Model
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for analytics in analytics_models %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">{{ analytics.analytics_name }}</h5>
+                                    <span class="badge badge-info">{{ analytics.analytics_type|title }}</span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted">{{ analytics.prediction_target or 'N/A' }}</p>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small class="text-muted">Status</small><br>
+                                            <span class="badge
+                                                {% if analytics.status == 'active' %}badge-success
+                                                {% else %}badge-secondary{% endif %}">
+                                                {{ analytics.status|title }}
+                                            </span>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Created</small><br>
+                                            {{ analytics.created_at.strftime('%Y-%m-%d') }}
+                                        </div>
+                                    </div>
+                                    {% if analytics.model_accuracy %}
+                                    <div class="mt-2">
+                                        <small class="text-muted">Model Accuracy: {{ "%.1f"|format(analytics.model_accuracy) }}%</small>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer">
+                                    <button type="button" class="btn btn-sm btn-info btn-block view-analytics-btn"
+                                            data-analytics-id="{{ analytics.id }}"
+                                            data-analytics-name="{{ analytics.analytics_name }}">
+                                        <i class="fas fa-chart-line"></i> View Analytics
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Analytics Modal -->
+<div class="modal fade" id="createAnalyticsModal" tabindex="-1" role="dialog" aria-labelledby="createAnalyticsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createAnalyticsModalLabel">Create New Compliance Analytics Model</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="analytics_name">Analytics Model Name</label>
+                                <input type="text" class="form-control" id="analytics_name" name="analytics_name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="analytics_type">Analytics Type</label>
+                                <select class="form-control" id="analytics_type" name="analytics_type" required>
+                                    <option value="predictive">Predictive Analytics</option>
+                                    <option value="diagnostic">Diagnostic Analytics</option>
+                                    <option value="descriptive">Descriptive Analytics</option>
+                                    <option value="prescriptive">Prescriptive Analytics</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="prediction_target">Prediction Target (for predictive models)</label>
+                        <input type="text" class="form-control" id="prediction_target" name="prediction_target"
+                               placeholder="e.g., Compliance violations, Risk scores, Audit findings">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Analytics Model</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View Analytics Modal -->
+<div class="modal fade" id="viewAnalyticsModal" tabindex="-1" role="dialog" aria-labelledby="viewAnalyticsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewAnalyticsModalLabel">Analytics Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="analyticsModalContent">
+                <!-- Content will be loaded here -->
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('.view-analytics-btn').on('click', function() {
+        var analyticsId = $(this).data('analytics-id');
+        var analyticsName = $(this).data('analytics-name');
+
+        $('#viewAnalyticsModalLabel').text(analyticsName);
+        $('#viewAnalyticsModal').modal('show');
+
+        // Load analytics data via AJAX
+        $.ajax({
+            url: '/view_analytics/' + analyticsId,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(data) {
+                // Build modal content from JSON data
+                var content = buildAnalyticsModalContent(data);
+                $('#analyticsModalContent').html(content);
+            },
+            error: function(xhr) {
+                var errorMsg = 'Error loading analytics data.';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMsg = xhr.responseJSON.error;
+                }
+                $('#analyticsModalContent').html('<div class="alert alert-danger">' + errorMsg + '</div>');
+            }
+        });
+    });
+});
+
+function buildAnalyticsModalContent(data) {
+    var content = '';
+
+    // Analytics info boxes
+    content += '<div class="row">';
+    content += '<div class="col-md-6">';
+    content += '<div class="info-box">';
+    content += '<span class="info-box-icon bg-info"><i class="fas fa-chart-line"></i></span>';
+    content += '<div class="info-box-content">';
+    content += '<span class="info-box-text">Analytics Type</span>';
+    content += '<span class="info-box-number">' + data.analytics_type.charAt(0).toUpperCase() + data.analytics_type.slice(1) + '</span>';
+    content += '</div>';
+    content += '</div>';
+    content += '</div>';
+
+    content += '<div class="col-md-6">';
+    content += '<div class="info-box">';
+    content += '<span class="info-box-icon bg-success"><i class="fas fa-trophy"></i></span>';
+    content += '<div class="info-box-content">';
+    content += '<span class="info-box-text">Model Accuracy</span>';
+    content += '<span class="info-box-number">';
+    if (data.model_accuracy !== null) {
+        content += data.model_accuracy.toFixed(1) + '%';
+    } else {
+        content += 'N/A';
+    }
+    content += '</span>';
+    content += '</div>';
+    content += '</div>';
+    content += '</div>';
+    content += '</div>';
+
+    // Prediction target
+    if (data.prediction_target) {
+        content += '<div class="row mt-3">';
+        content += '<div class="col-12">';
+        content += '<div class="alert alert-info">';
+        content += '<h5><i class="icon fas fa-info"></i> Prediction Target</h5>';
+        content += data.prediction_target;
+        content += '</div>';
+        content += '</div>';
+        content += '</div>';
+    }
+
+    // Validation results
+    if (data.validation_results && data.validation_results.metrics) {
+        content += '<div class="row mt-3">';
+        content += '<div class="col-12">';
+        content += '<div class="card">';
+        content += '<div class="card-header">';
+        content += '<h4 class="card-title">Model Validation Results</h4>';
+        content += '</div>';
+        content += '<div class="card-body">';
+        content += '<div class="row">';
+
+        Object.keys(data.validation_results.metrics).forEach(function(key) {
+            var value = data.validation_results.metrics[key];
+            content += '<div class="col-md-3">';
+            content += '<div class="small-box bg-light">';
+            content += '<div class="inner">';
+            content += '<h4>' + (typeof value === 'number' ? value.toFixed(2) : value) + '</h4>';
+            content += '<p>' + key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) + '</p>';
+            content += '</div>';
+            content += '</div>';
+            content += '</div>';
+        });
+
+        content += '</div>';
+
+        if (data.validation_results.insights) {
+            content += '<div class="mt-3">';
+            content += '<h5>Key Insights</h5>';
+            content += '<ul class="list-group">';
+            data.validation_results.insights.forEach(function(insight) {
+                content += '<li class="list-group-item">' + insight + '</li>';
+            });
+            content += '</ul>';
+            content += '</div>';
+        }
+
+        content += '</div>';
+        content += '</div>';
+        content += '</div>';
+        content += '</div>';
+    }
+
+    // Model details
+    content += '<div class="row mt-3">';
+    content += '<div class="col-12">';
+    content += '<div class="card">';
+    content += '<div class="card-header">';
+    content += '<h4 class="card-title">Model Details</h4>';
+    content += '</div>';
+    content += '<div class="card-body">';
+    content += '<dl class="row">';
+    content += '<dt class="col-sm-3">Created By</dt>';
+    content += '<dd class="col-sm-9">' + data.creator_email + '</dd>';
+    content += '<dt class="col-sm-3">Created Date</dt>';
+    content += '<dd class="col-sm-9">' + data.created_at + '</dd>';
+    content += '<dt class="col-sm-3">Status</dt>';
+    content += '<dd class="col-sm-9">';
+    content += '<span class="badge badge-' + (data.status === 'active' ? 'success' : 'secondary') + '">';
+    content += data.status.charAt(0).toUpperCase() + data.status.slice(1);
+    content += '</span>';
+    content += '</dd>';
+    content += '</dl>';
+    content += '</div>';
+    content += '</div>';
+    content += '</div>';
+    content += '</div>';
+
+    return content;
+}
+</script>
+
+{% endblock %}

@@ -61,7 +61,7 @@ from pathlib import Path
 from functools import wraps
 from flask import current_app
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, g, Response
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, g, Response, jsonify
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename as werkzeug_secure
@@ -85,7 +85,9 @@ from models import ComplianceRiskAssessment, ComplianceIncident, ComplianceFrame
 from models import LogAnalysis, LogCorrelation, IncidentDetection, AlertTriage, AnalysisDocumentation, TimelineEvent
 from models import SecurityTimeline, ComplianceStrategy, ComplianceRoadmap, ControlMapping, RegulatoryConflict, ComplianceArchitecture
 from models import BusinessProcess, ProcessOptimization, DataSynchronization, EfficiencyMetrics, OptimizationMethodology
-from models import BaselineMeasurement, ValidationProcedure
+from models import BaselineMeasurement, ValidationProcedure, AdvancedAudit, AuditTeam, EvidenceAnalysis, ComplianceAnalytics, AutomatedReporting
+from analytics import perform_evidence_analysis, run_predictive_compliance_model, generate_automated_report
+import pandas as pd
 
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -3030,8 +3032,14 @@ def create_app(app=None):
         def wrapper(*args, **kwargs):
             # Zero Trust: Verify user authentication on every protected request
             if not current_user():
+                logging.info(f"DEBUG: @login_required - user not authenticated for path: {request.path}")
+                # For API endpoints, return JSON error instead of redirect
+                if request.path.startswith('/api/'):
+                    return jsonify({'success': False, 'error': 'Authentication required'}), 401
                 flash("Please login first.", "warning")
                 return redirect(url_for("login"))
+            else:
+                logging.info(f"DEBUG: @login_required - user authenticated for path: {request.path}")
             return f(*args, **kwargs)
         return wrapper
 
@@ -12078,10 +12086,72 @@ def create_app(app=None):
                     logging.error(f"Error creating methodology: {str(e)}")
                     flash('Error creating methodology documentation.', 'error')
 
+            elif action == 'edit_methodology':
+                try:
+                    methodology_id = request.form.get('methodology_id')
+                    if not methodology_id:
+                        flash('Methodology ID is required', 'danger')
+                        return redirect(url_for('optimization_methodology'))
+
+                    methodology = db.get(OptimizationMethodology, int(methodology_id))
+                    if not methodology:
+                        flash('Methodology not found', 'danger')
+                        return redirect(url_for('optimization_methodology'))
+
+                    # Update methodology fields
+                    methodology.name = request.form.get('name', methodology.name)
+                    methodology.methodology_type = request.form.get('methodology_type', methodology.methodology_type)
+                    methodology.description = request.form.get('description', methodology.description)
+                    methodology.objectives = request.form.get('objectives', methodology.objectives)
+
+                    expected_gain = request.form.get('expected_efficiency_gain')
+                    if expected_gain:
+                        methodology.expected_efficiency_gain = float(expected_gain)
+
+                    methodology.typical_timeline = request.form.get('typical_timeline', methodology.typical_timeline)
+                    methodology.status = request.form.get('status', methodology.status)
+                    methodology.version = request.form.get('version', methodology.version)
+
+                    db.commit()
+                    flash('Optimization methodology updated successfully!', 'success')
+                    log_audit_event(current_user, "UPDATE", "OPTIMIZATION_METHODOLOGY",
+                                   f"Updated methodology: {methodology.name}", "/optimization_methodology", True)
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f'Error updating methodology: {str(e)}', 'danger')
+                    logging.error(f"Error updating optimization methodology: {e}")
+
         # Get all methodologies
         methodologies = db.query(OptimizationMethodology).order_by(desc(OptimizationMethodology.created_at)).all()
 
         return render_template('optimization_methodology.html', methodologies=methodologies)
+
+    @app.route('/api/methodology/<int:methodology_id>')
+    @login_required
+    def get_methodology(methodology_id):
+        """API endpoint to get methodology data for modals"""
+        from models import OptimizationMethodology
+
+        db = get_session()
+        methodology = db.get(OptimizationMethodology, methodology_id)
+        if not methodology:
+            return jsonify({'error': 'Methodology not found'}), 404
+
+        # Convert to dict for JSON response
+        data = {
+            'id': methodology.id,
+            'name': methodology.name,
+            'methodology_type': methodology.methodology_type,
+            'description': methodology.description,
+            'objectives': methodology.objectives,
+            'expected_efficiency_gain': methodology.expected_efficiency_gain,
+            'typical_timeline': methodology.typical_timeline,
+            'status': methodology.status,
+            'version': methodology.version
+        }
+
+        return jsonify(data)
 
     @app.route('/baseline_measurements', methods=['GET', 'POST'])
     @login_required
@@ -12098,34 +12168,129 @@ def create_app(app=None):
         if request.method == 'POST':
             action = request.form.get('action')
 
-            if action == 'create_measurement':
+            if action == 'edit_measurement':
                 try:
+                    measurement_id = request.form.get('measurement_id')
+                    measurement_name = request.form.get('measurement_name')
+                    measurement_type = request.form.get('measurement_type')
+                    baseline_value_str = request.form.get('baseline_value', '0')
+                    unit_of_measure = request.form.get('unit_of_measure')
+                    description = request.form.get('description')
+
+                    logging.info(f"Editing measurement {measurement_id}. Form data: {dict(request.form)}")
+
+                    # Validate required fields
+                    if not measurement_id:
+                        raise ValueError("measurement_id is required")
+                    if not measurement_name:
+                        raise ValueError("measurement_name is required")
+                    if not measurement_type:
+                        raise ValueError("measurement_type is required")
+
+                    # Convert baseline_value to float
+                    try:
+                        baseline_value = float(baseline_value_str)
+                    except ValueError as ve:
+                        raise ValueError(f"Invalid baseline_value: {baseline_value_str} - {str(ve)}")
+
+                    # Get existing measurement
+                    measurement = db.query(BaselineMeasurement).filter_by(id=int(measurement_id)).first()
+                    if not measurement:
+                        raise ValueError(f"BaselineMeasurement with id {measurement_id} does not exist")
+
+                    # Update measurement
+                    measurement.measurement_name = measurement_name
+                    measurement.measurement_type = measurement_type
+                    measurement.baseline_value = baseline_value
+                    measurement.baseline_unit = unit_of_measure
+                    measurement.description = description
+
+                    db.commit()
+                    logging.info("Database commit successful for edit")
+
+                    flash('Baseline measurement updated successfully!', 'success')
+                    log_audit_event(current_user(), "UPDATE", "BASELINE_MEASUREMENT",
+                                  f"Updated measurement: {measurement_name}", "/baseline_measurements", True)
+
+                except Exception as e:
+                    db.rollback()
+                    logging.error(f"Error editing measurement: {str(e)}")
+                    logging.error(f"Exception type: {type(e).__name__}")
+                    import traceback
+                    logging.error(f"Traceback: {traceback.format_exc()}")
+                    flash(f'Error updating baseline measurement: {str(e)}', 'error')
+
+            elif action == 'create_measurement':
+                try:
+                    # Log all form data for debugging
+                    logging.info(f"Creating baseline measurement. Form data: {dict(request.form)}")
+                    logging.info(f"Session user_id: {session.get('user_id')}")
+                    logging.info(f"Current user: {current_user}")
+
                     process_id = request.form.get('process_id')
                     measurement_name = request.form.get('measurement_name')
                     measurement_type = request.form.get('measurement_type')
-                    baseline_value = float(request.form.get('baseline_value', 0))
+                    baseline_value_str = request.form.get('baseline_value', '0')
                     unit_of_measure = request.form.get('unit_of_measure')
+                    description = request.form.get('description')
+
+                    logging.info(f"Parsed data - process_id: {process_id}, measurement_name: {measurement_name}, measurement_type: {measurement_type}, baseline_value_str: {baseline_value_str}, unit_of_measure: {unit_of_measure}, description: {description}")
+
+                    # Validate required fields
+                    if not process_id:
+                        raise ValueError("process_id is required")
+                    if not measurement_name:
+                        raise ValueError("measurement_name is required")
+                    if not measurement_type:
+                        raise ValueError("measurement_type is required")
+
+                    # Convert baseline_value to float
+                    try:
+                        baseline_value = float(baseline_value_str)
+                        logging.info(f"Converted baseline_value to float: {baseline_value}")
+                    except ValueError as ve:
+                        raise ValueError(f"Invalid baseline_value: {baseline_value_str} - {str(ve)}")
+
+                    # Check if process exists
+                    process = db.query(BusinessProcess).filter_by(id=int(process_id)).first()
+                    if not process:
+                        raise ValueError(f"BusinessProcess with id {process_id} does not exist")
+
+                    # Check user session
+                    user_id = session.get('user_id')
+                    if not user_id:
+                        raise ValueError("User not logged in - no user_id in session")
+
+                    logging.info(f"Creating BaselineMeasurement with process_id={process_id}, measurement_name='{measurement_name}', baseline_value={baseline_value}, description='{description}'")
 
                     new_measurement = BaselineMeasurement(
-                        process_id=process_id,
+                        process_id=int(process_id),
                         measurement_name=measurement_name,
                         measurement_type=measurement_type,
                         baseline_value=baseline_value,
-                        unit_of_measure=unit_of_measure,
-                        measured_by=session.get('user_id')
+                        baseline_unit=unit_of_measure,
+                        description=description,
+                        measured_by=user_id
                     )
 
+                    logging.info(f"Created measurement object: {new_measurement}")
                     db.add(new_measurement)
+                    logging.info("Added to database session")
+
                     db.commit()
+                    logging.info("Database commit successful")
 
                     flash('Baseline measurement recorded successfully!', 'success')
-                    log_audit_event(current_user, "CREATE", "BASELINE_MEASUREMENT",
+                    log_audit_event(current_user(), "CREATE", "BASELINE_MEASUREMENT",
                                   f"Created measurement: {measurement_name}", "/baseline_measurements", True)
 
                 except Exception as e:
                     db.rollback()
                     logging.error(f"Error creating measurement: {str(e)}")
-                    flash('Error recording baseline measurement.', 'error')
+                    logging.error(f"Exception type: {type(e).__name__}")
+                    import traceback
+                    logging.error(f"Traceback: {traceback.format_exc()}")
+                    flash(f'Error recording baseline measurement: {str(e)}', 'error')
 
         # Get all measurements with related processes
         measurements = db.query(BaselineMeasurement).options(
@@ -12138,6 +12303,7 @@ def create_app(app=None):
         return render_template('baseline_measurements.html',
                              measurements=measurements,
                              processes=processes)
+
 
     @app.route('/validation_procedures', methods=['GET', 'POST'])
     @login_required
@@ -12211,6 +12377,36 @@ def create_app(app=None):
                     logging.error(f"Error executing validation: {str(e)}")
                     flash('Error executing validation procedure.', 'error')
 
+            elif action == 'edit_validation':
+                try:
+                    validation_id = request.form.get('validation_id')
+                    validation = db.query(ValidationProcedure).filter(ValidationProcedure.id == validation_id).first()
+
+                    if validation:
+                        validation.procedure_name = request.form.get('procedure_name')
+                        validation.procedure_type = request.form.get('procedure_type')
+                        validation.description = request.form.get('description')
+                        validation.validation_steps = request.form.get('validation_steps')
+                        validation.acceptance_criteria = request.form.get('acceptance_criteria')
+                        validation.statistical_methods = request.form.get('statistical_methods')
+                        validation.required_data_points = request.form.get('required_data_points')
+                        validation.sampling_methodology = request.form.get('sampling_methodology')
+                        validation.measurement_frequency = request.form.get('measurement_frequency')
+                        validation.findings_summary = request.form.get('findings_summary')
+                        validation.recommendations = request.form.get('recommendations')
+                        validation.limitations = request.form.get('limitations')
+
+                        db.commit()
+
+                        flash('Validation procedure updated successfully!', 'success')
+                        log_audit_event(current_user, "UPDATE", "VALIDATION_PROCEDURE",
+                                      f"Updated validation: {validation.procedure_name}", "/validation_procedures", True)
+
+                except Exception as e:
+                    db.rollback()
+                    logging.error(f"Error updating validation: {str(e)}")
+                    flash('Error updating validation procedure.', 'error')
+
         # Get all validations with related optimizations
         validations = db.query(ValidationProcedure).options(
             joinedload(ValidationProcedure.optimization)
@@ -12248,13 +12444,15 @@ def create_app(app=None):
                     measurement_type = request.form.get('measurement_type')
                     baseline_value = float(request.form.get('baseline_value', 0))
                     unit_of_measure = request.form.get('unit_of_measure')
+                    description = request.form.get('description')
 
                     new_measurement = BaselineMeasurement(
                         process_id=process_id,
                         measurement_name=measurement_name,
                         measurement_type=measurement_type,
                         baseline_value=baseline_value,
-                        unit_of_measure=unit_of_measure,
+                        baseline_unit=unit_of_measure,
+                        description=description,
                         measured_by=session.get('user_id')
                     )
 
@@ -12270,6 +12468,52 @@ def create_app(app=None):
                     logging.error(f"Error creating measurement: {str(e)}")
                     flash('Error recording baseline measurement.', 'error')
 
+            elif action == 'edit_measurement':
+                try:
+                    measurement_id = request.form.get('measurement_id')
+                    measurement_name = request.form.get('measurement_name')
+                    measurement_type = request.form.get('measurement_type')
+                    baseline_value_str = request.form.get('baseline_value', '0')
+                    unit_of_measure = request.form.get('unit_of_measure')
+                    description = request.form.get('description')
+
+                    # Validate required fields
+                    if not measurement_id:
+                        raise ValueError("measurement_id is required")
+                    if not measurement_name:
+                        raise ValueError("measurement_name is required")
+                    if not measurement_type:
+                        raise ValueError("measurement_type is required")
+
+                    # Convert baseline_value to float
+                    try:
+                        baseline_value = float(baseline_value_str)
+                    except ValueError as ve:
+                        raise ValueError(f"Invalid baseline_value: {baseline_value_str} - {str(ve)}")
+
+                    # Get existing measurement
+                    measurement = db.query(BaselineMeasurement).filter_by(id=int(measurement_id)).first()
+                    if not measurement:
+                        raise ValueError(f"BaselineMeasurement with id {measurement_id} does not exist")
+
+                    # Update measurement
+                    measurement.measurement_name = measurement_name
+                    measurement.measurement_type = measurement_type
+                    measurement.baseline_value = baseline_value
+                    measurement.baseline_unit = unit_of_measure
+                    measurement.description = description
+
+                    db.commit()
+
+                    flash('Baseline measurement updated successfully!', 'success')
+                    log_audit_event(current_user, "UPDATE", "BASELINE_MEASUREMENT",
+                                  f"Updated measurement: {measurement_name}", f"/baseline_measurements", True)
+
+                except Exception as e:
+                    db.rollback()
+                    logging.error(f"Error editing measurement: {str(e)}")
+                    flash(f'Error updating baseline measurement: {str(e)}', 'error')
+
         # Get all measurements with related processes
         measurements = db.query(BaselineMeasurement).options(
             joinedload(BaselineMeasurement.process)
@@ -12281,6 +12525,635 @@ def create_app(app=None):
         return render_template('baseline_measurements.html',
                              measurements=measurements,
                              processes=processes)
+
+    @app.route('/baseline_measurements/<int:measurement_id>')
+    @login_required
+    def get_baseline_measurement(measurement_id):
+        """
+        API endpoint to get baseline measurement details as JSON.
+        """
+        db = get_session()
+        try:
+            measurement = db.query(BaselineMeasurement).options(
+                joinedload(BaselineMeasurement.process)
+            ).filter_by(id=measurement_id).first()
+
+            if not measurement:
+                return jsonify({'success': False, 'error': 'Measurement not found'}), 404
+
+            measurement_data = {
+                'id': measurement.id,
+                'measurement_name': measurement.measurement_name,
+                'measurement_type': measurement.measurement_type,
+                'baseline_value': measurement.baseline_value,
+                'baseline_unit': measurement.baseline_unit,
+                'description': measurement.description,
+                'measurement_date': measurement.measurement_date.isoformat(),
+                'validation_status': measurement.validation_status,
+                'process': {
+                    'id': measurement.process.id,
+                    'name': measurement.process.name
+                } if measurement.process else None
+            }
+
+            return jsonify({'success': True, 'measurement': measurement_data})
+
+        except Exception as e:
+            logging.error(f"Error fetching measurement {measurement_id}: {str(e)}")
+            return jsonify({'success': False, 'error': str(e)}), 500
+
+    @app.route('/api/optimization/<int:opt_id>', methods=['GET', 'POST'])
+    @login_required
+    def api_optimization(opt_id):
+        """
+        API endpoint for optimization details and updates.
+        """
+        from models import ProcessOptimization, BusinessProcess
+        db = get_session()
+        optimization = db.query(ProcessOptimization).options(
+            joinedload(ProcessOptimization.process)
+        ).filter(ProcessOptimization.id == opt_id).first()
+        if not optimization:
+            return jsonify({'success': False, 'error': 'Optimization not found'}), 404
+
+        if request.method == 'GET':
+            return jsonify({
+                'success': True,
+                'optimization': {
+                    'id': optimization.id,
+                    'optimization_name': optimization.optimization_name,
+                    'process_id': optimization.process_id,
+                    'process_name': optimization.process.name if optimization.process else 'N/A',
+                    'optimization_type': optimization.optimization_type,
+                    'algorithm_used': optimization.algorithm_used,
+                    'efficiency_improvement_percentage': optimization.efficiency_improvement_percentage,
+                    'time_savings_hours': optimization.time_savings_hours,
+                    'cost_savings_amount': optimization.cost_savings_amount,
+                    'status': optimization.status,
+                    'description': optimization.description,
+                    'created_at': optimization.created_at.isoformat()
+                }
+            })
+        elif request.method == 'POST':
+            try:
+                optimization.optimization_name = request.form.get('optimization_name')
+                optimization.optimization_type = request.form.get('optimization_type')
+                optimization.description = request.form.get('description')
+                optimization.algorithm_used = request.form.get('algorithm_used')
+                optimization.status = request.form.get('status')
+                db.commit()
+                flash('Optimization updated successfully.', 'success')
+                log_audit_event(current_user, "UPDATE", "PROCESS_OPTIMIZATION",
+                              f"Updated optimization: {optimization.optimization_name}", f"/api/optimization/{opt_id}", True)
+                return jsonify({'success': True})
+            except Exception as e:
+                db.rollback()
+                logging.error(f"Error updating optimization: {str(e)}")
+                return jsonify({'success': False, 'error': str(e)}), 500
+
+    @app.route('/api/validation/<int:validation_id>', methods=['GET', 'POST'])
+    @login_required
+    def api_validation(validation_id):
+        """
+        API endpoint for validation procedure details and updates.
+        """
+        logging.info(f"DEBUG: api_validation called with validation_id: {validation_id}")
+        from models import ValidationProcedure, ProcessOptimization
+        db = get_session()
+        validation = db.query(ValidationProcedure).options(
+            joinedload(ValidationProcedure.optimization),
+            joinedload(ValidationProcedure.performer),
+            joinedload(ValidationProcedure.reviewer)
+        ).filter(ValidationProcedure.id == validation_id).first()
+        logging.info(f"DEBUG: API validation request for ID: {validation_id}, found: {validation is not None}")
+        if not validation:
+            return jsonify({'success': False, 'error': 'Validation procedure not found'}), 404
+
+        if request.method == 'GET':
+            return jsonify({
+                'success': True,
+                'validation': {
+                    'id': validation.id,
+                    'optimization_id': validation.optimization_id,
+                    'optimization_name': validation.optimization.optimization_name if validation.optimization else 'N/A',
+                    'procedure_name': validation.procedure_name,
+                    'procedure_type': validation.procedure_type,
+                    'description': validation.description,
+                    'validation_steps': validation.validation_steps,
+                    'acceptance_criteria': validation.acceptance_criteria,
+                    'statistical_methods': validation.statistical_methods,
+                    'required_data_points': validation.required_data_points,
+                    'sampling_methodology': validation.sampling_methodology,
+                    'measurement_frequency': validation.measurement_frequency,
+                    'validation_status': validation.validation_status,
+                    'validation_result': validation.validation_result,
+                    'validation_score': validation.validation_score,
+                    'findings_summary': validation.findings_summary,
+                    'recommendations': validation.recommendations,
+                    'limitations': validation.limitations,
+                    'planned_completion': validation.planned_completion.isoformat() if validation.planned_completion else None,
+                    'actual_completion': validation.actual_completion.isoformat() if validation.actual_completion else None,
+                    'performed_by': validation.performer.email if validation.performer else 'N/A',
+                    'reviewed_by': validation.reviewer.email if validation.reviewer else 'N/A',
+                    'created_at': validation.created_at.isoformat(),
+                    'updated_at': validation.updated_at.isoformat()
+                }
+            })
+        elif request.method == 'POST':
+            try:
+                validation.procedure_name = request.form.get('procedure_name')
+                validation.procedure_type = request.form.get('procedure_type')
+                validation.description = request.form.get('description')
+                validation.validation_steps = request.form.get('validation_steps')
+                validation.acceptance_criteria = request.form.get('acceptance_criteria')
+                validation.statistical_methods = request.form.get('statistical_methods')
+                validation.required_data_points = request.form.get('required_data_points')
+                validation.sampling_methodology = request.form.get('sampling_methodology')
+                validation.measurement_frequency = request.form.get('measurement_frequency')
+                validation.findings_summary = request.form.get('findings_summary')
+                validation.recommendations = request.form.get('recommendations')
+                validation.limitations = request.form.get('limitations')
+                db.commit()
+                flash('Validation procedure updated successfully.', 'success')
+                log_audit_event(current_user, "UPDATE", "VALIDATION_PROCEDURE",
+                              f"Updated validation: {validation.procedure_name}", f"/api/validation/{validation_id}", True)
+                return jsonify({'success': True})
+            except Exception as e:
+                db.rollback()
+                logging.error(f"Error updating validation: {str(e)}")
+                return jsonify({'success': False, 'error': str(e)}), 500
+
+    # --- Advanced Auditing Routes ---
+
+    @app.route('/advanced_audits', methods=['GET', 'POST'])
+    @login_required
+    def advanced_audits():
+        """Advanced multi-site compliance audit management"""
+        db = get_session()
+        try:
+            if request.method == 'POST':
+                # Create new advanced audit
+                audit_title = request.form.get('audit_title')
+                audit_type = request.form.get('audit_type')
+                description = request.form.get('description')
+                planned_start_date = datetime.strptime(request.form.get('planned_start_date'), '%Y-%m-%d')
+                planned_end_date = datetime.strptime(request.form.get('planned_end_date'), '%Y-%m-%d')
+                lead_auditor_id = int(request.form.get('lead_auditor_id'))
+                audit_budget = float(request.form.get('audit_budget', 0))
+
+                audit = AdvancedAudit(
+                    audit_title=audit_title,
+                    audit_type=audit_type,
+                    description=description,
+                    planned_start_date=planned_start_date,
+                    planned_end_date=planned_end_date,
+                    lead_auditor_id=lead_auditor_id,
+                    audit_budget=audit_budget
+                )
+
+                db.add(audit)
+                db.commit()
+
+                flash('Advanced audit created successfully!', 'success')
+                return redirect(url_for('advanced_audits'))
+
+            # Get all audits
+            audits = db.query(AdvancedAudit).options(
+                joinedload(AdvancedAudit.lead_auditor),
+                joinedload(AdvancedAudit.audit_teams).joinedload(AuditTeam.team_member)
+            ).order_by(AdvancedAudit.created_at.desc()).all()
+
+            # Get users for lead auditor selection
+            users = db.query(User).all()
+
+            return render_template('advanced_audits.html', audits=audits, users=users)
+
+        except Exception as e:
+            db.rollback()
+            flash(f'Error: {str(e)}', 'error')
+            return redirect(url_for('advanced_audits'))
+        finally:
+            db.close()
+
+    @app.route('/advanced_audit/<int:audit_id>', methods=['GET', 'POST'])
+    @login_required
+    def advanced_audit_detail(audit_id):
+        """View and manage individual advanced audit details"""
+        db = get_session()
+        try:
+            audit = db.query(AdvancedAudit).options(
+                joinedload(AdvancedAudit.lead_auditor),
+                joinedload(AdvancedAudit.audit_teams).joinedload(AuditTeam.team_member),
+                joinedload(AdvancedAudit.evidence_analyses)
+            ).filter_by(id=audit_id).first()
+
+            if not audit:
+                flash('Audit not found', 'error')
+                return redirect(url_for('advanced_audits'))
+
+            if request.method == 'POST':
+                # Update audit status or details
+                if 'update_status' in request.form:
+                    audit.status = request.form.get('status')
+                    audit.current_phase = request.form.get('current_phase')
+                    audit.progress_percentage = float(request.form.get('progress_percentage', 0))
+                    db.commit()
+                    flash('Audit updated successfully!', 'success')
+
+            return render_template('advanced_audit_detail.html', audit=audit)
+
+        except Exception as e:
+            db.rollback()
+            flash(f'Error: {str(e)}', 'error')
+            return redirect(url_for('advanced_audits'))
+        finally:
+            db.close()
+
+    @app.route('/evidence_analysis', methods=['GET', 'POST'])
+    @login_required
+    def evidence_analysis():
+        """Advanced evidence analysis using data analytics tools"""
+        db = get_session()
+        try:
+            if request.method == 'POST':
+                # Create new evidence analysis
+                analysis_title = request.form.get('analysis_title')
+                analysis_type = request.form.get('analysis_type')
+                description = request.form.get('description')
+                audit_id = request.form.get('audit_id')
+                audit_id = int(audit_id) if audit_id else None
+
+                # Perform actual data analysis
+                # For demo purposes, we'll use sample compliance data
+                sample_data = {
+                    'compliance_score': [85, 92, 78, 96, 88, 91, 79, 94, 87, 93],
+                    'risk_level': [3, 2, 4, 1, 3, 2, 4, 1, 3, 2],
+                    'findings_count': [5, 2, 8, 1, 4, 3, 7, 0, 4, 2],
+                    'audit_days': [30, 25, 45, 15, 35, 28, 40, 12, 32, 22]
+                }
+                df = pd.DataFrame(sample_data)
+
+                analysis_config = {
+                    "analysis_type": analysis_type,
+                    "description": description,
+                    "data_points": len(df)
+                }
+
+                # Perform analysis
+                analysis_results = perform_evidence_analysis(df, analysis_config)
+
+                analysis = EvidenceAnalysis(
+                    analysis_title=analysis_title,
+                    analysis_type=analysis_type,
+                    description=description,
+                    audit_id=audit_id,
+                    performed_by=current_user.id,
+                    analysis_results=json.dumps(analysis_results),
+                    status='completed'
+                )
+
+                db.add(analysis)
+                db.commit()
+
+                flash('Evidence analysis completed successfully!', 'success')
+                return redirect(url_for('evidence_analysis'))
+
+            # Get all analyses
+            analyses = db.query(EvidenceAnalysis).options(
+                joinedload(EvidenceAnalysis.analyst),
+                joinedload(EvidenceAnalysis.audit)
+            ).order_by(EvidenceAnalysis.created_at.desc()).all()
+
+            # Get audits for association
+            audits = db.query(AdvancedAudit).all()
+
+            return render_template('evidence_analysis.html', analyses=analyses, audits=audits)
+
+        except Exception as e:
+            db.rollback()
+            flash(f'Error: {str(e)}', 'error')
+            return redirect(url_for('evidence_analysis'))
+        finally:
+            db.close()
+
+    @app.route('/compliance_analytics', methods=['GET', 'POST'])
+    @login_required
+    def compliance_analytics():
+        """Compliance analytics with predictive capabilities"""
+        db = get_session()
+        try:
+            if request.method == 'POST':
+                app.logger.info('Processing POST request for compliance analytics')
+                # Create new analytics model
+                analytics_name = request.form.get('analytics_name')
+                analytics_type = request.form.get('analytics_type')
+                prediction_target = request.form.get('prediction_target')
+
+                app.logger.info(f'Form data: name={analytics_name}, type={analytics_type}, target={prediction_target}')
+
+                if not analytics_name or not analytics_type:
+                    flash('Analytics name and type are required', 'error')
+                    return redirect(url_for('compliance_analytics'))
+
+                try:
+                    # Generate sample historical data for training
+                    np.random.seed(42)
+                    n_samples = 1000
+
+                    if analytics_type == 'predictive':
+                        app.logger.info('Creating predictive analytics model')
+                        # Create sample compliance data
+                        data = {
+                            'compliance_score': np.random.normal(85, 10, n_samples),
+                            'risk_level': np.random.randint(1, 6, n_samples),
+                            'findings_count': np.random.poisson(3, n_samples),
+                            'audit_frequency': np.random.randint(1, 13, n_samples),  # months
+                            'training_hours': np.random.normal(20, 5, n_samples),
+                            'staff_turnover': np.random.normal(15, 8, n_samples),
+                            'budget_allocated': np.random.normal(50000, 10000, n_samples),
+                            prediction_target: np.random.choice([0, 1], n_samples, p=[0.7, 0.3])  # binary target
+                        }
+                        df = pd.DataFrame(data)
+                        app.logger.info(f'Created DataFrame with shape: {df.shape}')
+
+                        # Train predictive model
+                        app.logger.info('Running predictive compliance model')
+                        model_results = run_predictive_compliance_model(df, prediction_target)
+                        app.logger.info(f'Model results: {model_results}')
+
+                        analytics = ComplianceAnalytics(
+                            analytics_name=analytics_name,
+                            analytics_type=analytics_type,
+                            prediction_target=prediction_target,
+                            created_by=current_user.id,
+                            model_accuracy=model_results.get('metrics', {}).get('accuracy', 0),
+                            validation_results=json.dumps(model_results)
+                        )
+                    else:
+                        app.logger.info('Creating non-predictive analytics model')
+                        analytics = ComplianceAnalytics(
+                            analytics_name=analytics_name,
+                            analytics_type=analytics_type,
+                            prediction_target=prediction_target,
+                            created_by=current_user.id
+                        )
+
+                    db.add(analytics)
+                    db.commit()
+                    app.logger.info('Analytics model saved to database')
+
+                    flash('Compliance analytics model created and trained successfully!', 'success')
+                    return redirect(url_for('compliance_analytics'))
+
+                except Exception as model_error:
+                    app.logger.error(f'Error creating analytics model: {str(model_error)}')
+                    db.rollback()
+                    flash(f'Error creating analytics model: {str(model_error)}', 'error')
+                    return redirect(url_for('compliance_analytics'))
+
+            # Get all analytics models
+            analytics_models = db.query(ComplianceAnalytics).options(
+                joinedload(ComplianceAnalytics.creator)
+            ).order_by(ComplianceAnalytics.created_at.desc()).all()
+
+            return render_template('compliance_analytics.html', analytics_models=analytics_models)
+
+        except Exception as e:
+            db.rollback()
+            flash(f'Error: {str(e)}', 'error')
+            return redirect(url_for('compliance_analytics'))
+        finally:
+            db.close()
+
+    @app.route('/view_analytics/<int:analytics_id>')
+    @login_required
+    def view_analytics(analytics_id):
+        """View compliance analytics details"""
+        db = get_session()
+        try:
+            analytics = db.query(ComplianceAnalytics).options(
+                joinedload(ComplianceAnalytics.creator)
+            ).filter(ComplianceAnalytics.id == analytics_id).first()
+
+            if not analytics:
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return jsonify({'error': 'Analytics model not found'}), 404
+                flash('Analytics model not found', 'error')
+                return redirect(url_for('compliance_analytics'))
+
+            # Parse validation results if available
+            validation_results = None
+            if analytics.validation_results:
+                try:
+                    validation_results = json.loads(analytics.validation_results)
+                except:
+                    validation_results = None
+
+            # Check if this is an AJAX request
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                # Return JSON data for modal
+                analytics_data = {
+                    'id': analytics.id,
+                    'analytics_name': analytics.analytics_name,
+                    'analytics_type': analytics.analytics_type,
+                    'prediction_target': analytics.prediction_target,
+                    'model_accuracy': float(analytics.model_accuracy) if analytics.model_accuracy else None,
+                    'status': analytics.status,
+                    'created_at': analytics.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                    'creator_email': analytics.creator.email if analytics.creator else 'Unknown',
+                    'validation_results': validation_results
+                }
+                return jsonify(analytics_data)
+
+            return render_template('view_analytics.html',
+                                 analytics=analytics,
+                                 validation_results=validation_results)
+
+        except Exception as e:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({'error': str(e)}), 500
+            flash(f'Error: {str(e)}', 'error')
+            return redirect(url_for('compliance_analytics'))
+        finally:
+            db.close()
+
+    @app.route('/automated_reporting', methods=['GET', 'POST'])
+    @login_required
+    def automated_reporting():
+        """Automated reporting system for compliance analytics"""
+        db = get_session()
+        try:
+            if request.method == 'POST':
+                # Create new automated report
+                report_name = request.form.get('report_name')
+                report_type = request.form.get('report_type')
+                schedule_frequency = request.form.get('schedule_frequency')
+
+                # Generate sample analytics data for the report
+                sample_analytics = {
+                    "status": "completed",
+                    "analysis_type": "comprehensive",
+                    "insights": [
+                        "Compliance scores show improvement trend over the last quarter",
+                        "High correlation found between training hours and compliance performance",
+                        "Anomaly detection identified 3 unusual compliance patterns",
+                        "Predictive model achieved 87% accuracy in forecasting violations"
+                    ],
+                    "correlation_analysis": {
+                        "strongest_correlations": [
+                            {"variable1": "training_hours", "variable2": "compliance_score", "correlation": 0.78, "strength": "strong"},
+                            {"variable1": "findings_count", "variable2": "risk_level", "correlation": 0.65, "strength": "moderate"}
+                        ]
+                    },
+                    "predictive_model": {
+                        "metrics": {
+                            "accuracy": 0.87,
+                            "precision": 0.82,
+                            "recall": 0.79,
+                            "f1_score": 0.85
+                        }
+                    }
+                }
+
+                # Generate the report content
+                report_config = {
+                    "report_type": report_type,
+                    "generated_by": current_user.email,
+                    "generation_date": datetime.now().isoformat()
+                }
+
+                report_content = generate_automated_report(sample_analytics, report_config)
+
+                report = AutomatedReporting(
+                    report_name=report_name,
+                    report_type=report_type,
+                    schedule_frequency=schedule_frequency,
+                    created_by=current_user.id,
+                    last_run_date=datetime.now(timezone.utc),
+                    success_rate=1.0
+                )
+
+                db.add(report)
+                db.commit()
+
+                # Save report content to a file (in production, you'd save to database or file system)
+                report_filename = f"report_{report.id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+                with open(f"reports/{report_filename}", 'w') as f:
+                    f.write(report_content)
+
+                flash('Automated report generated successfully!', 'success')
+                return redirect(url_for('automated_reporting'))
+
+            # Get all automated reports
+            reports = db.query(AutomatedReporting).options(
+                joinedload(AutomatedReporting.creator)
+            ).order_by(AutomatedReporting.created_at.desc()).all()
+
+            return render_template('automated_reporting.html', reports=reports)
+
+        except Exception as e:
+            db.rollback()
+            flash(f'Error: {str(e)}', 'error')
+            return redirect(url_for('automated_reporting'))
+        finally:
+            db.close()
+
+    @app.route('/view_report/<int:report_id>')
+    @login_required
+    def view_report(report_id):
+        """View automated report details"""
+        db = get_session()
+        try:
+            report = db.query(AutomatedReporting).options(
+                joinedload(AutomatedReporting.creator)
+            ).filter(AutomatedReporting.id == report_id).first()
+
+            if not report:
+                flash('Report not found', 'error')
+                return redirect(url_for('automated_reporting'))
+
+            # Try to find the report file
+            report_content = None
+            report_files = [f for f in os.listdir('reports') if f.startswith(f'report_{report_id}_')]
+            if report_files:
+                latest_file = max(report_files, key=lambda x: os.path.getctime(f'reports/{x}'))
+                try:
+                    with open(f'reports/{latest_file}', 'r') as f:
+                        report_content = f.read()
+                except:
+                    report_content = "Error reading report file"
+
+            return render_template('view_report.html',
+                                 report=report,
+                                 report_content=report_content)
+
+        except Exception as e:
+            flash(f'Error: {str(e)}', 'error')
+            return redirect(url_for('automated_reporting'))
+        finally:
+            db.close()
+
+    @app.route('/edit_report/<int:report_id>', methods=['GET', 'POST'])
+    @login_required
+    def edit_report(report_id):
+        """Edit automated report"""
+        db = get_session()
+        try:
+            report = db.query(AutomatedReporting).filter(AutomatedReporting.id == report_id).first()
+
+            if not report:
+                flash('Report not found', 'error')
+                return redirect(url_for('automated_reporting'))
+
+            if request.method == 'POST':
+                report.report_name = request.form.get('report_name')
+                report.report_type = request.form.get('report_type')
+                report.schedule_frequency = request.form.get('schedule_frequency')
+
+                db.commit()
+                flash('Report updated successfully!', 'success')
+                return redirect(url_for('automated_reporting'))
+
+            return render_template('edit_report.html', report=report)
+
+        except Exception as e:
+            db.rollback()
+            flash(f'Error: {str(e)}', 'error')
+            return redirect(url_for('automated_reporting'))
+        finally:
+            db.close()
+
+    @app.route('/delete_report/<int:report_id>', methods=['POST'])
+    @login_required
+    def delete_report(report_id):
+        """Delete automated report"""
+        db = get_session()
+        try:
+            report = db.query(AutomatedReporting).filter(AutomatedReporting.id == report_id).first()
+
+            if not report:
+                flash('Report not found', 'error')
+                return redirect(url_for('automated_reporting'))
+
+            # Delete associated files
+            report_files = [f for f in os.listdir('reports') if f.startswith(f'report_{report_id}_')]
+            for file in report_files:
+                try:
+                    os.remove(f'reports/{file}')
+                except:
+                    pass
+
+            db.delete(report)
+            db.commit()
+            flash('Report deleted successfully!', 'success')
+            return redirect(url_for('automated_reporting'))
+
+        except Exception as e:
+            db.rollback()
+            flash(f'Error: {str(e)}', 'error')
+            return redirect(url_for('automated_reporting'))
+        finally:
+            db.close()
 
     return app
 

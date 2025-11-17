@@ -122,7 +122,7 @@
                                     <td>
                                         <strong>{{ measurement.measurement_name }}</strong>
                                         <br>
-                                        <small class="text-muted">{{ measurement.description|truncate(50) }}</small>
+                                        <small class="text-muted">{{ measurement.description|truncate(50) if measurement.description else 'No description' }}</small>
                                     </td>
                                     <td>
                                         {% if measurement.process %}
@@ -143,7 +143,7 @@
                                         {% endif %}
                                     </td>
                                     <td>{{ "%.2f"|format(measurement.baseline_value) }}</td>
-                                    <td>{{ measurement.unit_of_measure or 'N/A' }}</td>
+                                    <td>{{ measurement.baseline_unit or 'N/A' }}</td>
                                     <td>{{ measurement.measurement_date.strftime('%Y-%m-%d') }}</td>
                                     <td>
                                         {% if measurement.validation_status == 'validated' %}
@@ -292,15 +292,214 @@
     </div>
 </div>
 
+<!-- View Measurement Modal -->
+<div class="modal fade" id="viewMeasurementModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Measurement Details</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><strong>Measurement Name:</strong></label>
+                            <p id="viewMeasurementName"></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><strong>Measurement Type:</strong></label>
+                            <p id="viewMeasurementType"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><strong>Baseline Value:</strong></label>
+                            <p id="viewBaselineValue"></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><strong>Unit of Measure:</strong></label>
+                            <p id="viewUnitOfMeasure"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><strong>Measured Date:</strong></label>
+                            <p id="viewMeasuredDate"></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><strong>Validation Status:</strong></label>
+                            <p id="viewValidationStatus"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><strong>Process:</strong></label>
+                            <p id="viewProcessName"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><strong>Description:</strong></label>
+                    <p id="viewDescription"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Measurement Modal -->
+<div class="modal fade" id="editMeasurementModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Baseline Measurement</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form id="editMeasurementForm" method="POST">
+                <input type="hidden" name="action" value="edit_measurement">
+                <input type="hidden" id="editMeasurementId" name="measurement_id">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Measurement Name *</label>
+                                <input type="text" class="form-control" id="editMeasurementName" name="measurement_name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Measurement Type *</label>
+                                <select class="form-control" id="editMeasurementType" name="measurement_type" required>
+                                    <option value="performance">Performance</option>
+                                    <option value="efficiency">Efficiency</option>
+                                    <option value="compliance">Compliance</option>
+                                    <option value="cost">Cost</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Baseline Value *</label>
+                                <input type="number" class="form-control" id="editBaselineValue" name="baseline_value" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Unit of Measure</label>
+                                <select class="form-control" id="editUnitOfMeasure" name="unit_of_measure">
+                                    <option value="hours">Hours</option>
+                                    <option value="minutes">Minutes</option>
+                                    <option value="seconds">Seconds</option>
+                                    <option value="percentage">Percentage (%)</option>
+                                    <option value="count">Count</option>
+                                    <option value="dollars">Dollars ($)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="editDescription" name="description" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitEditMeasurement()">Update Measurement</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
 function viewMeasurement(measurementId) {
-    // Implement view measurement details
-    alert('View measurement functionality - Measurement ID: ' + measurementId);
+    // Fetch measurement details and show in modal
+    fetch(`/baseline_measurements/${measurementId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const measurement = data.measurement;
+                document.getElementById('viewMeasurementName').textContent = measurement.measurement_name;
+                document.getElementById('viewMeasurementType').textContent = measurement.measurement_type;
+                document.getElementById('viewBaselineValue').textContent = measurement.baseline_value;
+                document.getElementById('viewUnitOfMeasure').textContent = measurement.baseline_unit || 'N/A';
+                document.getElementById('viewDescription').textContent = measurement.description || 'No description';
+                document.getElementById('viewMeasuredDate').textContent = new Date(measurement.measurement_date).toLocaleDateString();
+                document.getElementById('viewValidationStatus').textContent = measurement.validation_status;
+                document.getElementById('viewProcessName').textContent = measurement.process ? measurement.process.name : 'N/A';
+
+                $('#viewMeasurementModal').modal('show');
+            } else {
+                alert('Error loading measurement details: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+        });
 }
 
 function editMeasurement(measurementId) {
-    // Implement edit measurement
-    alert('Edit measurement functionality - Measurement ID: ' + measurementId);
+    // Fetch measurement details and populate edit modal
+    fetch(`/baseline_measurements/${measurementId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const measurement = data.measurement;
+                document.getElementById('editMeasurementId').value = measurement.id;
+                document.getElementById('editMeasurementName').value = measurement.measurement_name;
+                document.getElementById('editMeasurementType').value = measurement.measurement_type;
+                document.getElementById('editBaselineValue').value = measurement.baseline_value;
+                document.getElementById('editUnitOfMeasure').value = measurement.baseline_unit || '';
+                document.getElementById('editDescription').value = measurement.description || '';
+
+                $('#editMeasurementModal').modal('show');
+            } else {
+                alert('Error loading measurement details: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+        });
+}
+
+function submitEditMeasurement() {
+    const formData = new FormData(document.getElementById('editMeasurementForm'));
+    formData.append('action', 'edit_measurement');
+
+    fetch('/baseline_measurements', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(() => {
+        $('#editMeasurementModal').modal('hide');
+        location.reload(); // Refresh the page to show updated data
+    })
+    .catch(error => {
+        alert('Error updating measurement: ' + error.message);
+    });
 }
 
 // Initialize DataTable
