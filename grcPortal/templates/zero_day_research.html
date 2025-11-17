@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Zero-Day Research - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-search text-warning"></i> Zero-Day Vulnerability Research</h2>
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#createResearchModal">
+                <i class="fas fa-plus"></i> Document Research
+            </button>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-info-circle text-primary me-2"></i>Zero-Day Research Methodology</h5>
+                <p class="card-text">
+                    Document and track zero-day vulnerability research findings, including discovery methodology,
+                    technical analysis, and coordinated disclosure processes.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Zero-Day Research Findings</h5>
+            </div>
+            <div class="card-body">
+                {% if findings %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Vulnerability</th>
+                                <th>Severity</th>
+                                <th>Research Status</th>
+                                <th>Discovery Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for finding in findings %}
+                            <tr>
+                                <td><strong>{{ finding.title }}</strong></td>
+                                <td><span class="badge bg-danger">{{ finding.severity }}</span></td>
+                                <td>Documented</td>
+                                <td>{{ finding.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-warning">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No zero-day research documented</h5>
+                    <p class="text-muted">Document zero-day vulnerability research findings</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Research Modal -->
+<div class="modal fade" id="createResearchModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Document Zero-Day Research</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="vulnerability_name" class="form-label">Vulnerability Name</label>
+                                <input type="text" class="form-control" id="vulnerability_name" name="vulnerability_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="affected_system" class="form-label">Affected System</label>
+                                <input type="text" class="form-control" id="affected_system" name="affected_system" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="research_methodology" class="form-label">Research Methodology</label>
+                                <textarea class="form-control" id="research_methodology" name="research_methodology" rows="4" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Document Research</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

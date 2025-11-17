@@ -71273,3 +71273,460 @@ apper[ValidationProcedure(validation_procedures)]'. Original exception was: Erro
 2025-11-17 13:15:01,034 [WARNING] Health check completed: 1 issues detected
 2025-11-17 13:15:01,056 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
 2025-11-17 13:15:01,057 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:20:00 EST)" executed successfully
+2025-11-17 13:20:00,009 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:25:00 EST)" (scheduled at 2025-11-17 13:20:00-05:00)
+2025-11-17 13:20:01,040 [WARNING] Health check completed: 1 issues detected
+2025-11-17 13:20:01,057 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 13:20:01,058 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:25:00 EST)" executed successfully
+2025-11-17 13:25:00,008 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:30:00 EST)" (scheduled at 2025-11-17 13:25:00-05:00)
+2025-11-17 13:25:01,026 [WARNING] Health check completed: 1 issues detected
+2025-11-17 13:25:01,034 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 13:25:01,034 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:30:00 EST)" executed successfully
+2025-11-17 13:30:00,015 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:35:00 EST)" (scheduled at 2025-11-17 13:30:00-05:00)
+2025-11-17 13:30:01,047 [WARNING] Health check completed: 1 issues detected
+2025-11-17 13:30:01,062 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 13:30:01,063 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:35:00 EST)" executed successfully
+2025-11-17 13:35:00,004 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:40:00 EST)" (scheduled at 2025-11-17 13:35:00-05:00)
+2025-11-17 13:35:01,314 [WARNING] Health check completed: 1 issues detected
+2025-11-17 13:35:01,321 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 13:35:01,322 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:40:00 EST)" executed successfully
+2025-11-17 13:40:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:45:00 EST)" (scheduled at 2025-11-17 13:40:00-05:00)
+2025-11-17 13:40:01,030 [WARNING] Health check completed: 1 issues detected
+2025-11-17 13:40:01,037 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 13:40:01,038 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:45:00 EST)" executed successfully
+2025-11-17 13:45:00,010 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:50:00 EST)" (scheduled at 2025-11-17 13:45:00-05:00)
+2025-11-17 13:45:01,027 [WARNING] Health check completed: 1 issues detected
+2025-11-17 13:45:01,040 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 13:45:01,041 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:50:00 EST)" executed successfully
+2025-11-17 13:50:00,007 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:55:00 EST)" (scheduled at 2025-11-17 13:50:00-05:00)
+2025-11-17 13:50:01,023 [WARNING] Health check completed: 1 issues detected
+2025-11-17 13:50:01,034 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 13:50:01,035 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 13:55:00 EST)" executed successfully
+2025-11-17 13:55:00,012 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:00:00 EST)" (scheduled at 2025-11-17 13:55:00-05:00)
+2025-11-17 13:55:01,032 [WARNING] Health check completed: 1 issues detected
+2025-11-17 13:55:01,041 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 13:55:01,042 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:00:00 EST)" executed successfully
+2025-11-17 14:00:00,014 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:05:00 EST)" (scheduled at 2025-11-17 14:00:00-05:00)
+2025-11-17 14:00:01,053 [WARNING] Health check completed: 1 issues detected
+2025-11-17 14:00:01,071 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 14:00:01,072 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:05:00 EST)" executed successfully
+2025-11-17 14:05:00,003 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:10:00 EST)" (scheduled at 2025-11-17 14:05:00-05:00)
+2025-11-17 14:05:01,029 [WARNING] Health check completed: 1 issues detected
+2025-11-17 14:05:01,038 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 14:05:01,038 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:10:00 EST)" executed successfully
+2025-11-17 14:10:00,011 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:15:00 EST)" (scheduled at 2025-11-17 14:10:00-05:00)
+2025-11-17 14:10:01,035 [WARNING] Health check completed: 1 issues detected
+2025-11-17 14:10:01,042 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 14:10:01,042 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:15:00 EST)" executed successfully
+2025-11-17 14:14:22,475 [INFO] Registered Flask Routes:
+2025-11-17 14:14:22,475 [INFO]   static: /static/<path:filename> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,476 [INFO]   login: /login -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,476 [INFO]   login: / -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,476 [INFO]   logout: /logout -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,476 [INFO]   home: /home -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,477 [INFO]   register: /register -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,477 [INFO]   scan: /scan/<int:upload_id> -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,477 [INFO]   uploaded_file: /uploads/<path:filename> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,478 [INFO]   evidence_file: /evidence/<path:filename> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,478 [INFO]   docs_file: /docs/<path:filename> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,478 [INFO]   risks: /risks -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,478 [INFO]   risk_programs: /risk_programs -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,479 [INFO]   create_program: /create_program -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,479 [INFO]   view_program: /program/<int:program_id> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,479 [INFO]   gap_analysis: /gap_analysis/<int:program_id> -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,479 [INFO]   risk_indicators: /risk_indicators -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,480 [INFO]   environmental_changes: /environmental_changes -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,480 [INFO]   view_risk: /risk/<int:risk_id> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,481 [INFO]   approve_risk: /approve_risk/<int:risk_id> -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,481 [INFO]   escalate_risk: /escalate_risk/<int:risk_id> -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,482 [INFO]   risk_dashboard: /risk_dashboard -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,482 [INFO]   add_risk: /add_risk -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,482 [INFO]   compliance: /compliance -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,483 [INFO]   add_compliance: /add_compliance -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,483 [INFO]   dependencies: /dependencies -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,483 [INFO]   add_dependency: /add_dependency -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,484 [INFO]   compliance_workflows: /compliance_workflows -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,484 [INFO]   admin_users: /admin/users -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,484 [INFO]   admin_change_role: /admin/change_role/<int:user_id> -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,484 [INFO]   admin_dashboard: /admin/dashboard -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,484 [INFO]   audit_logs: /audit/logs -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,485 [INFO]   policies: /policies -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,485 [INFO]   kb: /kb -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,485 [INFO]   monitoring: /monitoring -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,485 [INFO]   security_metrics: /security_metrics -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,486 [INFO]   security_summary_report: /security_summary_report -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,486 [INFO]   alert_documentation: /alert_documentation -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,486 [INFO]   incidents: /incidents -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,486 [INFO]   report_incident: /report_incident -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,486 [INFO]   view_incident: /incident/<int:incident_id> -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,487 [INFO]   incident_tracking: /incident_tracking -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,487 [INFO]   incident_report: /incident_report -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,487 [INFO]   forensics: /forensics -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,487 [INFO]   disk_acquisition: /disk_acquisition -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,487 [INFO]   chain_of_custody: /chain_of_custody -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,487 [INFO]   brainstorming: /brainstorming -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,488 [INFO]   view_brainstorming_session: /brainstorming/<int:session_id> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,488 [INFO]   checklists: /checklists -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,488 [INFO]   checklist_assessment: /checklist_assessment/<int:assessment_id> -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,488 [INFO]   swot_analysis: /swot_analysis -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,488 [INFO]   view_swot_analysis: /swot_analysis/<int:analysis_id> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,488 [INFO]   asset_register: /asset_register -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,488 [INFO]   asset_report: /asset_report/<int:asset_id> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,488 [INFO]   framework_mapping: /framework_mapping -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,489 [INFO]   threat_analysis: /threat_analysis -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,489 [INFO]   malware_analysis: /malware_analysis -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,489 [INFO]   analyze_malware: /analyze_malware/<int:sample_id> -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,489 [INFO]   phishing_templates: /phishing_templates -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,489 [INFO]   apt_campaigns: /apt_campaigns -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,489 [INFO]   view_apt_campaign: /apt_campaign/<int:campaign_id> -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,489 [INFO]   vulnerability_assessment: /vulnerability_assessment -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,490 [INFO]   vulnerability_scan: /vulnerability_scan -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,490 [INFO]   upload_scan_results: /upload_scan_results/<int:scan_id> -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,490 [INFO]   asset_discovery: /asset_discovery -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,490 [INFO]   run_asset_discovery: /run_asset_discovery/<int:discovery_id> -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,490 [INFO]   threat_intelligence: /threat_intelligence -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,490 [INFO]   ioc_analysis: /ioc_analysis -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,490 [INFO]   analyze_ioc: /analyze_ioc/<int:ioc_id> -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,491 [INFO]   get_ioc_details: /api/ioc_details/<int:ioc_id> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,491 [INFO]   opencti_integration: /opencti_integration -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,491 [INFO]   sync_opencti: /sync_opencti/<int:integration_id> -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,491 [INFO]   risk_identification: /risk_identification -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,491 [INFO]   critical_risks: /critical_risks -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,491 [INFO]   risk_monitoring: /risk_monitoring -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,491 [INFO]   monitoring_setup: /monitoring_setup -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,491 [INFO]   detection_rules: /detection_rules -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,492 [INFO]   get_detection_rule_details: /detection_rule/<int:rule_id> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,492 [INFO]   incident_response: /incident_response -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,492 [INFO]   data_archiving: /admin/data_archiving -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,492 [INFO]   admin_retention_settings: /admin/retention_settings -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,492 [INFO]   admin_archived_risks: /admin/archived_risks -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,492 [INFO]   admin_archived_audit: /admin/archived_audit -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,492 [INFO]   admin_archived_incidents: /admin/archived_incidents -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,492 [INFO]   archive_status: /admin/archive_status -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,492 [INFO]   add_log_data: /add_log_data -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,492 [INFO]   collected_logs: /collected_logs -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,493 [INFO]   compliance_status_report: /compliance_status_report -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,493 [INFO]   ethical_decision_support: /ethical_decision_support -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,493 [INFO]   compliance_obligations: /compliance_obligations -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,493 [INFO]   compliance_risk_assessment: /compliance_risk_assessment -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,493 [INFO]   get_compliance_obligation_details: /api/compliance_obligation/<int:obligation_id> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,493 [INFO]   get_compliance_assessment: /api/compliance_assessment/<int:assessment_id> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,493 [INFO]   get_alert_details: /api/alert_details/<int:alert_id> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,493 [INFO]   add_alert: /add_alert -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,494 [INFO]   get_log_details: /api/log_details/<int:log_id> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,494 [INFO]   triage_alert: /api/triage_alert/<int:alert_id> -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,494 [INFO]   bulk_create_risks: /bulk_create_risks/<int:scan_id> -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,494 [INFO]   get_live_parrot_system_state: /api/live_parrot_system_state/<system_name> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,494 [INFO]   get_live_parrot_processes: /api/live_parrot_processes/<system_name> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,494 [INFO]   get_live_parrot_network: /api/live_parrot_network/<system_name> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,494 [INFO]   get_live_parrot_file_evidence: /api/live_parrot_file_evidence/<system_name> -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,494 [INFO]   get_live_parrot_systems: /api/live_parrot_systems -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,494 [INFO]   create_risk_from_source: /api/create_risk_from_source -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,495 [INFO]   export_alert_docs: /export_alert_docs -> {'OPTIONS', 'POST'}
+2025-11-17 14:14:22,495 [INFO]   guide: /guide -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,495 [INFO]   compliance_strategy: /compliance_strategy -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,495 [INFO]   compliance_architecture: /compliance_architecture -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,495 [INFO]   regulatory_conflicts: /regulatory_conflicts -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,495 [INFO]   compliance_roadmap_detail: /compliance_roadmap/<int:roadmap_id> -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,495 [INFO]   control_mappings: /control_mappings -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,496 [INFO]   compliance_incidents: /compliance_incidents -> {'OPTIONS', 'POST', 'GET', 'HEAD'}
+2025-11-17 14:14:22,496 [INFO]   security_event_analysis: /security_event_analysis -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,496 [INFO]   suspicious_login_analysis: /suspicious_login_analysis -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,496 [INFO]   incident_classification: /incident_classification -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,496 [INFO]   network_isolation: /network_isolation -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,496 [INFO]   evidence_preservation: /evidence_preservation -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,497 [INFO]   containment_playbook: /containment_playbook -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,497 [INFO]   ir_environment_setup: /ir_environment_setup -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,497 [INFO]   incident_response_containment: /incident_response_containment -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,497 [INFO]   digital_evidence_management: /digital_evidence_management -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,497 [INFO]   ir_documentation_reporting: /ir_documentation_reporting -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,497 [INFO]   post_incident_procedures: /post_incident_procedures -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,497 [INFO]   root_cause_analysis: /root_cause_analysis -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,497 [INFO]   recovery_validation: /recovery_validation -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,498 [INFO]   process_improvement: /process_improvement -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,498 [INFO]   system_recovery: /system_recovery -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,498 [INFO]   incident_detection: /incident_detection -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,498 [INFO]   log_analysis: /log_analysis -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,498 [INFO]   live_data_collection: /live_data_collection -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,498 [INFO]   wireshark_setup: /wireshark_setup -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,498 [INFO]   volatility_setup: /volatility_setup -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,498 [INFO]   logging_setup: /logging_setup -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,498 [INFO]   wazuh_setup: /wazuh_setup -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,499 [INFO]   memory_analysis: /memory_analysis -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,499 [INFO]   incident_playbook: /incident_playbook -> {'OPTIONS', 'GET', 'HEAD'}
+2025-11-17 14:14:22,499 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-17 14:14:22,507 [INFO] Registered endpoints: ['static', 'login', 'login', 'logout', 'home', 'register', 'scan', 'uploaded_file', 'evidence_file', 'docs_file', 'risks', 'risk_programs', 'create_program', 'view_program', 'gap_analysis', 'risk_indicators', 'environmental_changes', 'view_risk', 'approve_risk', 'escalate_risk', 'risk_dashboard', 'add_risk', 'compliance', 'add_compliance', 'dependencies', 'add_dependency', 'compliance_workflows', 'admin_users', 'admin_change_role', 'admin_dashboard', 'audit_logs', 'policies', 'kb', 'monitoring', 'security_metrics', 'security_summary_report', 'alert_documentation', 'incidents', 'report_incident', 'view_incident', 'incident_tracking', 'incident_report', 'forensics', 'disk_acquisition', 'chain_of_custody', 'brainstorming', 'view_brainstorming_session', 'checklists', 'checklist_assessment', 'swot_analysis', 'view_swot_analysis', 'asset_register', 'asset_report', 'framework_mapping', 'threat_analysis', 'malware_analysis', 'analyze_malware', 'phishing_templates', 'apt_campaigns', 'view_apt_campaign', 'vulnerability_assessment', 'vulnerability_scan', 'upload_scan_results', 'asset_discovery', 'run_asset_discovery', 'threat_intelligence', 'ioc_analysis', 'analyze_ioc', 'get_ioc_details', 'opencti_integration', 'sync_opencti', 'risk_identification', 'critical_risks', 'risk_monitoring', 'monitoring_setup', 'detection_rules', 'get_detection_rule_details', 'incident_response', 'data_archiving', 'admin_retention_settings', 'admin_archived_risks', 'admin_archived_audit', 'admin_archived_incidents', 'archive_status', 'add_log_data', 'collected_logs', 'compliance_status_report', 'ethical_decision_support', 'compliance_obligations', 'compliance_risk_assessment', 'get_compliance_obligation_details', 'get_compliance_assessment', 'get_alert_details', 'add_alert', 'get_log_details', 'triage_alert', 'bulk_create_risks', 'get_live_parrot_system_state', 'get_live_parrot_processes', 'get_live_parrot_network', 'get_live_parrot_file_evidence', 'get_live_parrot_systems', 'create_risk_from_source', 'export_alert_docs', 'guide', 'compliance_strategy', 'compliance_architecture', 'regulatory_conflicts', 'compliance_roadmap_detail', 'control_mappings', 'compliance_incidents', 'security_event_analysis', 'suspicious_login_analysis', 'incident_classification', 'network_isolation', 'evidence_preservation', 'containment_playbook', 'ir_environment_setup', 'incident_response_containment', 'digital_evidence_management', 'ir_documentation_reporting', 'post_incident_procedures', 'root_cause_analysis', 'recovery_validation', 'process_improvement', 'system_recovery', 'incident_detection', 'log_analysis', 'live_data_collection', 'wireshark_setup', 'volatility_setup', 'logging_setup', 'wazuh_setup', 'memory_analysis', 'incident_playbook', 'process_integration', 'business_processes', 'data_synchronization', 'process_optimization', 'optimization_methodology', 'get_methodology', 'baseline_measurements', 'validation_procedures', 'get_baseline_measurement', 'api_optimization', 'api_validation', 'advanced_audits', 'advanced_audit_detail', 'evidence_analysis', 'compliance_analytics', 'view_analytics', 'automated_reporting', 'view_report', 'edit_report', 'delete_report', 'advanced_apt_analysis', 'zero_day_research', 'supply_chain_assessment', 'methodology_documentation', 'technical_findings', 'mitigation_recommendations', 'reverse_engineering_outputs', 'attack_pattern_analysis', 'vulnerability_management_procedures', 'automated_testing', 'execute_security_test', 'get_test_results', 'custom_assessment_tools', 'run_custom_assessment', 'security_control_assessment', 'create_control_assessment', 'get_assessment_report', 'performance_metrics', 'get_performance_metrics_api', 'collect_metric', 'create_evidence']
+2025-11-17 14:14:22,508 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-17 14:14:22,511 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-17 14:14:22,511 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-17 14:14:22,511 [INFO] Scheduler started
+2025-11-17 14:14:22,512 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-17 14:14:22,529 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-17 14:14:22,529 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-17 14:14:24,786 [INFO] 127.0.0.1 - - [17/Nov/2025 14:14:24] "GET / HTTP/1.1" 200 -
+2025-11-17 14:14:24,820 [INFO] 127.0.0.1 - - [17/Nov/2025 14:14:24] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-17 14:14:24,835 [INFO] 127.0.0.1 - - [17/Nov/2025 14:14:24] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-17 14:14:32,278 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-17 14:14:32,302 [INFO] 127.0.0.1 - - [17/Nov/2025 14:14:32] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-17 14:14:32,315 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-17 14:14:32,346 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D738F732F0>
+2025-11-17 14:14:32,346 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-17 14:14:32,346 [INFO] DEBUG: @login_required - user authenticated for path: /home
+2025-11-17 14:14:32,346 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-17 14:14:32,347 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D739148910>
+2025-11-17 14:14:32,347 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-17 14:14:32,347 [INFO] DEBUG: current_user() returned: <models.User object at 0x000001D739148910> - email: kush786srj@gmail.com
+2025-11-17 14:14:32,348 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-17 14:14:32,355 [INFO] DEBUG: Current app endpoints: ['static', 'login', 'login', 'logout', 'home', 'register', 'scan', 'uploaded_file', 'evidence_file', 'docs_file', 'risks', 'risk_programs', 'create_program', 'view_program', 'gap_analysis', 'risk_indicators', 'environmental_changes', 'view_risk', 'approve_risk', 'escalate_risk', 'risk_dashboard', 'add_risk', 'compliance', 'add_compliance', 'dependencies', 'add_dependency', 'compliance_workflows', 'admin_users', 'admin_change_role', 'admin_dashboard', 'audit_logs', 'policies', 'kb', 'monitoring', 'security_metrics', 'security_summary_report', 'alert_documentation', 'incidents', 'report_incident', 'view_incident', 'incident_tracking', 'incident_report', 'forensics', 'disk_acquisition', 'chain_of_custody', 'brainstorming', 'view_brainstorming_session', 'checklists', 'checklist_assessment', 'swot_analysis', 'view_swot_analysis', 'asset_register', 'asset_report', 'framework_mapping', 'threat_analysis', 'malware_analysis', 'analyze_malware', 'phishing_templates', 'apt_campaigns', 'view_apt_campaign', 'vulnerability_assessment', 'vulnerability_scan', 'upload_scan_results', 'asset_discovery', 'run_asset_discovery', 'threat_intelligence', 'ioc_analysis', 'analyze_ioc', 'get_ioc_details', 'opencti_integration', 'sync_opencti', 'risk_identification', 'critical_risks', 'risk_monitoring', 'monitoring_setup', 'detection_rules', 'get_detection_rule_details', 'incident_response', 'data_archiving', 'admin_retention_settings', 'admin_archived_risks', 'admin_archived_audit', 'admin_archived_incidents', 'archive_status', 'add_log_data', 'collected_logs', 'compliance_status_report', 'ethical_decision_support', 'compliance_obligations', 'compliance_risk_assessment', 'get_compliance_obligation_details', 'get_compliance_assessment', 'get_alert_details', 'add_alert', 'get_log_details', 'triage_alert', 'bulk_create_risks', 'get_live_parrot_system_state', 'get_live_parrot_processes', 'get_live_parrot_network', 'get_live_parrot_file_evidence', 'get_live_parrot_systems', 'create_risk_from_source', 'export_alert_docs', 'guide', 'compliance_strategy', 'compliance_architecture', 'regulatory_conflicts', 'compliance_roadmap_detail', 'control_mappings', 'compliance_incidents', 'security_event_analysis', 'suspicious_login_analysis', 'incident_classification', 'network_isolation', 'evidence_preservation', 'containment_playbook', 'ir_environment_setup', 'incident_response_containment', 'digital_evidence_management', 'ir_documentation_reporting', 'post_incident_procedures', 'root_cause_analysis', 'recovery_validation', 'process_improvement', 'system_recovery', 'incident_detection', 'log_analysis', 'live_data_collection', 'wireshark_setup', 'volatility_setup', 'logging_setup', 'wazuh_setup', 'memory_analysis', 'incident_playbook', 'process_integration', 'business_processes', 'data_synchronization', 'process_optimization', 'optimization_methodology', 'get_methodology', 'baseline_measurements', 'validation_procedures', 'get_baseline_measurement', 'api_optimization', 'api_validation', 'advanced_audits', 'advanced_audit_detail', 'evidence_analysis', 'compliance_analytics', 'view_analytics', 'automated_reporting', 'view_report', 'edit_report', 'delete_report']
+2025-11-17 14:14:32,357 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-17 14:14:32,357 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D739148910>
+2025-11-17 14:14:32,357 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-17 14:14:32,469 [INFO] 127.0.0.1 - - [17/Nov/2025 14:14:32] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-17 14:14:32,545 [INFO] 127.0.0.1 - - [17/Nov/2025 14:14:32] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-17 14:14:32,560 [INFO] 127.0.0.1 - - [17/Nov/2025 14:14:32] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-17 14:14:32,602 [INFO] 127.0.0.1 - - [17/Nov/2025 14:14:32] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-17 14:14:32,614 [INFO] 127.0.0.1 - - [17/Nov/2025 14:14:32] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-17 14:15:00,005 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:15:00 EST)" (scheduled at 2025-11-17 14:15:00-05:00)
+2025-11-17 14:15:00,006 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:20:00 EST)" (scheduled at 2025-11-17 14:15:00-05:00)
+2025-11-17 14:15:01,038 [WARNING] Health check completed: 1 issues detected
+2025-11-17 14:15:01,045 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 14:15:01,045 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:20:00 EST)" executed successfully
+2025-11-17 14:15:01,173 [WARNING] Health check completed: 1 issues detected
+2025-11-17 14:15:01,179 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 14:15:01,179 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:20:00 EST)" executed successfully
+2025-11-17 14:20:00,009 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:25:00 EST)" (scheduled at 2025-11-17 14:20:00-05:00)
+2025-11-17 14:20:00,016 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:25:00 EST)" (scheduled at 2025-11-17 14:20:00-05:00)
+2025-11-17 14:20:01,029 [WARNING] Health check completed: 1 issues detected
+2025-11-17 14:20:01,035 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 14:20:01,035 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:25:00 EST)" executed successfully
+2025-11-17 14:20:01,043 [WARNING] Health check completed: 1 issues detected
+2025-11-17 14:20:01,050 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 14:20:01,051 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:25:00 EST)" executed successfully
+2025-11-17 14:22:49,316 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-17 14:22:49,322 [INFO] Registered Flask Routes:
+2025-11-17 14:22:49,323 [INFO] Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-11-17 14:22:49,323 [INFO]   static: /static/<path:filename> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,323 [INFO]   login: /login -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,324 [INFO]   login: / -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,324 [INFO] Added job "Weekly Data Archiving" to job store "default"
+2025-11-17 14:22:49,324 [INFO]   logout: /logout -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,325 [INFO] Added job "Health Monitoring Checks" to job store "default"
+2025-11-17 14:22:49,325 [INFO]   home: /home -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,325 [INFO] Scheduler started
+2025-11-17 14:22:49,325 [INFO]   register: /register -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,326 [INFO]   scan: /scan/<int:upload_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,326 [INFO]   uploaded_file: /uploads/<path:filename> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,326 [INFO]   evidence_file: /evidence/<path:filename> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,326 [INFO]   docs_file: /docs/<path:filename> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,326 [INFO]   risks: /risks -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,326 [INFO]   risk_programs: /risk_programs -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,326 [INFO] APScheduler started successfully with weekly archiving and health monitoring jobs
+2025-11-17 14:22:49,326 [INFO]   create_program: /create_program -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,327 [INFO]   view_program: /program/<int:program_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,327 [INFO]   gap_analysis: /gap_analysis/<int:program_id> -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,327 [INFO]   risk_indicators: /risk_indicators -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,327 [INFO]   environmental_changes: /environmental_changes -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,327 [INFO]   view_risk: /risk/<int:risk_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,327 [INFO]   approve_risk: /approve_risk/<int:risk_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,327 [INFO]   escalate_risk: /escalate_risk/<int:risk_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,327 [INFO]   risk_dashboard: /risk_dashboard -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,327 [INFO]   add_risk: /add_risk -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,328 [INFO]   compliance: /compliance -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   add_compliance: /add_compliance -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,328 [INFO]   dependencies: /dependencies -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   add_dependency: /add_dependency -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,328 [INFO]   compliance_workflows: /compliance_workflows -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   admin_users: /admin/users -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   admin_change_role: /admin/change_role/<int:user_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,328 [INFO]   admin_dashboard: /admin/dashboard -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   audit_logs: /audit/logs -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   policies: /policies -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   kb: /kb -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   monitoring: /monitoring -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   security_metrics: /security_metrics -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   security_summary_report: /security_summary_report -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   alert_documentation: /alert_documentation -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   incidents: /incidents -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   report_incident: /report_incident -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   view_incident: /incident/<int:incident_id> -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   incident_tracking: /incident_tracking -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   incident_report: /incident_report -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   forensics: /forensics -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,328 [INFO]   disk_acquisition: /disk_acquisition -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   chain_of_custody: /chain_of_custody -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   brainstorming: /brainstorming -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   view_brainstorming_session: /brainstorming/<int:session_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   checklists: /checklists -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   checklist_assessment: /checklist_assessment/<int:assessment_id> -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   swot_analysis: /swot_analysis -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   view_swot_analysis: /swot_analysis/<int:analysis_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   asset_register: /asset_register -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   asset_report: /asset_report/<int:asset_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   framework_mapping: /framework_mapping -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   threat_analysis: /threat_analysis -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   malware_analysis: /malware_analysis -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   analyze_malware: /analyze_malware/<int:sample_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,329 [INFO]   phishing_templates: /phishing_templates -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,329 [INFO]   apt_campaigns: /apt_campaigns -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,330 [INFO]   view_apt_campaign: /apt_campaign/<int:campaign_id> -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,330 [INFO]   vulnerability_assessment: /vulnerability_assessment -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,330 [INFO]   vulnerability_scan: /vulnerability_scan -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,330 [INFO]   upload_scan_results: /upload_scan_results/<int:scan_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,330 [INFO]   asset_discovery: /asset_discovery -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,331 [INFO]   run_asset_discovery: /run_asset_discovery/<int:discovery_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,331 [INFO]   threat_intelligence: /threat_intelligence -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,331 [INFO]   ioc_analysis: /ioc_analysis -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,331 [INFO]   analyze_ioc: /analyze_ioc/<int:ioc_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,331 [INFO]   get_ioc_details: /api/ioc_details/<int:ioc_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,331 [INFO]   opencti_integration: /opencti_integration -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,331 [INFO]   sync_opencti: /sync_opencti/<int:integration_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,332 [INFO]   risk_identification: /risk_identification -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,332 [INFO]   critical_risks: /critical_risks -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,332 [INFO]   risk_monitoring: /risk_monitoring -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,332 [INFO]   monitoring_setup: /monitoring_setup -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,332 [INFO]   detection_rules: /detection_rules -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,332 [INFO]   get_detection_rule_details: /detection_rule/<int:rule_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,332 [INFO]   incident_response: /incident_response -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,332 [INFO]   data_archiving: /admin/data_archiving -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,332 [INFO]   admin_retention_settings: /admin/retention_settings -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,332 [INFO]   admin_archived_risks: /admin/archived_risks -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,332 [INFO]   admin_archived_audit: /admin/archived_audit -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,333 [INFO]   admin_archived_incidents: /admin/archived_incidents -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,333 [INFO]   archive_status: /admin/archive_status -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,333 [INFO]   add_log_data: /add_log_data -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,333 [INFO]   collected_logs: /collected_logs -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,333 [INFO]   compliance_status_report: /compliance_status_report -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,334 [INFO]   ethical_decision_support: /ethical_decision_support -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,334 [INFO]   compliance_obligations: /compliance_obligations -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,334 [INFO]   compliance_risk_assessment: /compliance_risk_assessment -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,334 [INFO]   get_compliance_obligation_details: /api/compliance_obligation/<int:obligation_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,335 [INFO]   get_compliance_assessment: /api/compliance_assessment/<int:assessment_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,335 [INFO]   get_alert_details: /api/alert_details/<int:alert_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,335 [INFO]   add_alert: /add_alert -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,336 [INFO]   get_log_details: /api/log_details/<int:log_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,336 [INFO]   triage_alert: /api/triage_alert/<int:alert_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,336 [INFO]   bulk_create_risks: /bulk_create_risks/<int:scan_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,336 [INFO]   get_live_parrot_system_state: /api/live_parrot_system_state/<system_name> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,336 [INFO]   get_live_parrot_processes: /api/live_parrot_processes/<system_name> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,337 [INFO]   get_live_parrot_network: /api/live_parrot_network/<system_name> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,337 [INFO]   get_live_parrot_file_evidence: /api/live_parrot_file_evidence/<system_name> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,337 [INFO]   get_live_parrot_systems: /api/live_parrot_systems -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,337 [INFO]   create_risk_from_source: /api/create_risk_from_source -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,337 [INFO]   export_alert_docs: /export_alert_docs -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,337 [INFO]   guide: /guide -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,338 [INFO]   compliance_strategy: /compliance_strategy -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,338 [INFO]   compliance_architecture: /compliance_architecture -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,338 [INFO]   regulatory_conflicts: /regulatory_conflicts -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,338 [INFO]   compliance_roadmap_detail: /compliance_roadmap/<int:roadmap_id> -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,338 [INFO]   control_mappings: /control_mappings -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,338 [INFO]   compliance_incidents: /compliance_incidents -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,338 [INFO]   security_event_analysis: /security_event_analysis -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,339 [INFO]   suspicious_login_analysis: /suspicious_login_analysis -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,339 [INFO]   incident_classification: /incident_classification -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,339 [INFO]   network_isolation: /network_isolation -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,339 [INFO]   evidence_preservation: /evidence_preservation -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,339 [INFO]   containment_playbook: /containment_playbook -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,339 [INFO]   ir_environment_setup: /ir_environment_setup -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,339 [INFO]   incident_response_containment: /incident_response_containment -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,340 [INFO]   digital_evidence_management: /digital_evidence_management -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,340 [INFO]   ir_documentation_reporting: /ir_documentation_reporting -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,340 [INFO]   post_incident_procedures: /post_incident_procedures -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,340 [INFO]   root_cause_analysis: /root_cause_analysis -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,341 [INFO]   recovery_validation: /recovery_validation -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,341 [INFO]   process_improvement: /process_improvement -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,341 [INFO]   system_recovery: /system_recovery -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,341 [INFO]   incident_detection: /incident_detection -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,341 [INFO]   log_analysis: /log_analysis -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,341 [INFO]   live_data_collection: /live_data_collection -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,341 [INFO]   wireshark_setup: /wireshark_setup -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,341 [INFO]   volatility_setup: /volatility_setup -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,341 [INFO]   logging_setup: /logging_setup -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   wazuh_setup: /wazuh_setup -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   memory_analysis: /memory_analysis -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   incident_playbook: /incident_playbook -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   process_integration: /process_integration -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   business_processes: /business_processes -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   data_synchronization: /data_synchronization -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   process_optimization: /process_optimization -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   optimization_methodology: /optimization_methodology -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   get_methodology: /api/methodology/<int:methodology_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   baseline_measurements: /baseline_measurements -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   validation_procedures: /validation_procedures -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   get_baseline_measurement: /baseline_measurements/<int:measurement_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   api_optimization: /api/optimization/<int:opt_id> -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   api_validation: /api/validation/<int:validation_id> -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,342 [INFO]   advanced_audits: /advanced_audits -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,343 [INFO]   advanced_audit_detail: /advanced_audit/<int:audit_id> -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,343 [INFO]   evidence_analysis: /evidence_analysis -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,343 [INFO]   compliance_analytics: /compliance_analytics -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,343 [INFO]   view_analytics: /view_analytics/<int:analytics_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,343 [INFO]   automated_reporting: /automated_reporting -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,343 [INFO]   view_report: /view_report/<int:report_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,343 [INFO]   edit_report: /edit_report/<int:report_id> -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,343 [INFO]   delete_report: /delete_report/<int:report_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,343 [INFO]   advanced_apt_analysis: /advanced_apt_analysis -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,344 [INFO]   zero_day_research: /zero_day_research -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,344 [INFO]   supply_chain_assessment: /supply_chain_assessment -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,344 [INFO]   methodology_documentation: /methodology_documentation -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,344 [INFO]   technical_findings: /technical_findings -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,344 [INFO]   mitigation_recommendations: /mitigation_recommendations -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,344 [INFO]   reverse_engineering_outputs: /reverse_engineering_outputs -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,344 [INFO]   attack_pattern_analysis: /attack_pattern_analysis -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,344 [INFO]   vulnerability_management_procedures: /vulnerability_management_procedures -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,344 [INFO]   automated_testing: /automated_testing -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,344 [INFO]   execute_security_test: /execute_security_test/<test_id> -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,345 [INFO]   get_test_results: /get_test_results/<test_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,345 [INFO]   custom_assessment_tools: /custom_assessment_tools -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,345 [INFO]   run_custom_assessment: /run_custom_assessment -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,345 [INFO]   security_control_assessment: /security_control_assessment -> {'POST', 'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,345 [INFO]   create_control_assessment: /create_control_assessment -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,345 [INFO]   get_assessment_report: /get_assessment_report/<assessment_id> -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,345 [INFO]   performance_metrics: /performance_metrics -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,346 [INFO]   get_performance_metrics_api: /api/performance_metrics -> {'HEAD', 'OPTIONS', 'GET'}
+2025-11-17 14:22:49,346 [INFO]   collect_metric: /api/collect_metric -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,346 [INFO]   create_evidence: /api/create_evidence -> {'POST', 'OPTIONS'}
+2025-11-17 14:22:49,346 [INFO] Registered endpoints: ['static', 'login', 'login', 'logout', 'home', 'register', 'scan', 'uploaded_file', 'evidence_file', 'docs_file', 'risks', 'risk_programs', 'create_program', 'view_program', 'gap_analysis', 'risk_indicators', 'environmental_changes', 'view_risk', 'approve_risk', 'escalate_risk', 'risk_dashboard', 'add_risk', 'compliance', 'add_compliance', 'dependencies', 'add_dependency', 'compliance_workflows', 'admin_users', 'admin_change_role', 'admin_dashboard', 'audit_logs', 'policies', 'kb', 'monitoring', 'security_metrics', 'security_summary_report', 'alert_documentation', 'incidents', 'report_incident', 'view_incident', 'incident_tracking', 'incident_report', 'forensics', 'disk_acquisition', 'chain_of_custody', 'brainstorming', 'view_brainstorming_session', 'checklists', 'checklist_assessment', 'swot_analysis', 'view_swot_analysis', 'asset_register', 'asset_report', 'framework_mapping', 'threat_analysis', 'malware_analysis', 'analyze_malware', 'phishing_templates', 'apt_campaigns', 'view_apt_campaign', 'vulnerability_assessment', 'vulnerability_scan', 'upload_scan_results', 'asset_discovery', 'run_asset_discovery', 'threat_intelligence', 'ioc_analysis', 'analyze_ioc', 'get_ioc_details', 'opencti_integration', 'sync_opencti', 'risk_identification', 'critical_risks', 'risk_monitoring', 'monitoring_setup', 'detection_rules', 'get_detection_rule_details', 'incident_response', 'data_archiving', 'admin_retention_settings', 'admin_archived_risks', 'admin_archived_audit', 'admin_archived_incidents', 'archive_status', 'add_log_data', 'collected_logs', 'compliance_status_report', 'ethical_decision_support', 'compliance_obligations', 'compliance_risk_assessment', 'get_compliance_obligation_details', 'get_compliance_assessment', 'get_alert_details', 'add_alert', 'get_log_details', 'triage_alert', 'bulk_create_risks', 'get_live_parrot_system_state', 'get_live_parrot_processes', 'get_live_parrot_network', 'get_live_parrot_file_evidence', 'get_live_parrot_systems', 'create_risk_from_source', 'export_alert_docs', 'guide', 'compliance_strategy', 'compliance_architecture', 'regulatory_conflicts', 'compliance_roadmap_detail', 'control_mappings', 'compliance_incidents', 'security_event_analysis', 'suspicious_login_analysis', 'incident_classification', 'network_isolation', 'evidence_preservation', 'containment_playbook', 'ir_environment_setup', 'incident_response_containment', 'digital_evidence_management', 'ir_documentation_reporting', 'post_incident_procedures', 'root_cause_analysis', 'recovery_validation', 'process_improvement', 'system_recovery', 'incident_detection', 'log_analysis', 'live_data_collection', 'wireshark_setup', 'volatility_setup', 'logging_setup', 'wazuh_setup', 'memory_analysis', 'incident_playbook', 'process_integration', 'business_processes', 'data_synchronization', 'process_optimization', 'optimization_methodology', 'get_methodology', 'baseline_measurements', 'validation_procedures', 'get_baseline_measurement', 'api_optimization', 'api_validation', 'advanced_audits', 'advanced_audit_detail', 'evidence_analysis', 'compliance_analytics', 'view_analytics', 'automated_reporting', 'view_report', 'edit_report', 'delete_report', 'advanced_apt_analysis', 'zero_day_research', 'supply_chain_assessment', 'methodology_documentation', 'technical_findings', 'mitigation_recommendations', 'reverse_engineering_outputs', 'attack_pattern_analysis', 'vulnerability_management_procedures', 'automated_testing', 'execute_security_test', 'get_test_results', 'custom_assessment_tools', 'run_custom_assessment', 'security_control_assessment', 'create_control_assessment', 'get_assessment_report', 'performance_metrics', 'get_performance_metrics_api', 'collect_metric', 'create_evidence']
+2025-11-17 14:22:49,363 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-11-17 14:22:49,364 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-17 14:22:52,183 [INFO] 127.0.0.1 - - [17/Nov/2025 14:22:52] "GET / HTTP/1.1" 200 -
+2025-11-17 14:22:52,205 [INFO] 127.0.0.1 - - [17/Nov/2025 14:22:52] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-17 14:22:52,222 [INFO] 127.0.0.1 - - [17/Nov/2025 14:22:52] "[36mGET /static/images/cybersecurityBG.png HTTP/1.1[0m" 304 -
+2025-11-17 14:23:14,035 [INFO] User kush786srj@gmail.com logged in successfully from IP 127.0.0.1
+2025-11-17 14:23:14,048 [INFO] 127.0.0.1 - - [17/Nov/2025 14:23:14] "[32mPOST / HTTP/1.1[0m" 302 -
+2025-11-17 14:23:14,054 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-17 14:23:14,070 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D7393A72B0>
+2025-11-17 14:23:14,070 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-17 14:23:14,071 [INFO] DEBUG: @login_required - user authenticated for path: /home
+2025-11-17 14:23:14,071 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-17 14:23:14,072 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D738EEC1D0>
+2025-11-17 14:23:14,073 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-17 14:23:14,073 [INFO] DEBUG: current_user() returned: <models.User object at 0x000001D738EEC1D0> - email: kush786srj@gmail.com
+2025-11-17 14:23:14,073 [INFO] Policy compliance: User kush786srj@gmail.com accessing /home
+2025-11-17 14:23:14,077 [INFO] DEBUG: Current app endpoints: ['static', 'login', 'login', 'logout', 'home', 'register', 'scan', 'uploaded_file', 'evidence_file', 'docs_file', 'risks', 'risk_programs', 'create_program', 'view_program', 'gap_analysis', 'risk_indicators', 'environmental_changes', 'view_risk', 'approve_risk', 'escalate_risk', 'risk_dashboard', 'add_risk', 'compliance', 'add_compliance', 'dependencies', 'add_dependency', 'compliance_workflows', 'admin_users', 'admin_change_role', 'admin_dashboard', 'audit_logs', 'policies', 'kb', 'monitoring', 'security_metrics', 'security_summary_report', 'alert_documentation', 'incidents', 'report_incident', 'view_incident', 'incident_tracking', 'incident_report', 'forensics', 'disk_acquisition', 'chain_of_custody', 'brainstorming', 'view_brainstorming_session', 'checklists', 'checklist_assessment', 'swot_analysis', 'view_swot_analysis', 'asset_register', 'asset_report', 'framework_mapping', 'threat_analysis', 'malware_analysis', 'analyze_malware', 'phishing_templates', 'apt_campaigns', 'view_apt_campaign', 'vulnerability_assessment', 'vulnerability_scan', 'upload_scan_results', 'asset_discovery', 'run_asset_discovery', 'threat_intelligence', 'ioc_analysis', 'analyze_ioc', 'get_ioc_details', 'opencti_integration', 'sync_opencti', 'risk_identification', 'critical_risks', 'risk_monitoring', 'monitoring_setup', 'detection_rules', 'get_detection_rule_details', 'incident_response', 'data_archiving', 'admin_retention_settings', 'admin_archived_risks', 'admin_archived_audit', 'admin_archived_incidents', 'archive_status', 'add_log_data', 'collected_logs', 'compliance_status_report', 'ethical_decision_support', 'compliance_obligations', 'compliance_risk_assessment', 'get_compliance_obligation_details', 'get_compliance_assessment', 'get_alert_details', 'add_alert', 'get_log_details', 'triage_alert', 'bulk_create_risks', 'get_live_parrot_system_state', 'get_live_parrot_processes', 'get_live_parrot_network', 'get_live_parrot_file_evidence', 'get_live_parrot_systems', 'create_risk_from_source', 'export_alert_docs', 'guide', 'compliance_strategy', 'compliance_architecture', 'regulatory_conflicts', 'compliance_roadmap_detail', 'control_mappings', 'compliance_incidents', 'security_event_analysis', 'suspicious_login_analysis', 'incident_classification', 'network_isolation', 'evidence_preservation', 'containment_playbook', 'ir_environment_setup', 'incident_response_containment', 'digital_evidence_management', 'ir_documentation_reporting', 'post_incident_procedures', 'root_cause_analysis', 'recovery_validation', 'process_improvement', 'system_recovery', 'incident_detection', 'log_analysis', 'live_data_collection', 'wireshark_setup', 'volatility_setup', 'logging_setup', 'wazuh_setup', 'memory_analysis', 'incident_playbook', 'process_integration', 'business_processes', 'data_synchronization', 'process_optimization', 'optimization_methodology', 'get_methodology', 'baseline_measurements', 'validation_procedures', 'get_baseline_measurement', 'api_optimization', 'api_validation', 'advanced_audits', 'advanced_audit_detail', 'evidence_analysis', 'compliance_analytics', 'view_analytics', 'automated_reporting', 'view_report', 'edit_report', 'delete_report']
+2025-11-17 14:23:14,077 [INFO] DEBUG: current_user() - session user_id: 1
+2025-11-17 14:23:14,078 [INFO] DEBUG: current_user() - db.get(User, 1) returned: <models.User object at 0x000001D738EEC1D0>
+2025-11-17 14:23:14,078 [INFO] DEBUG: current_user() - user email: kush786srj@gmail.com, verified: True
+2025-11-17 14:23:14,127 [INFO] 127.0.0.1 - - [17/Nov/2025 14:23:14] "[35m[1mGET /home HTTP/1.1[0m" 500 -
+2025-11-17 14:23:14,176 [INFO] 127.0.0.1 - - [17/Nov/2025 14:23:14] "[36mGET /home?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-11-17 14:23:14,178 [INFO] 127.0.0.1 - - [17/Nov/2025 14:23:14] "[36mGET /home?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-11-17 14:23:14,191 [INFO] 127.0.0.1 - - [17/Nov/2025 14:23:14] "[36mGET /home?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-11-17 14:23:24,272 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-17 14:23:24,273 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-17 14:23:24,274 [INFO] 127.0.0.1 - - [17/Nov/2025 14:23:24] "[33mGET /advanced_apt_analysis HTTP/1.1[0m" 404 -
+2025-11-17 14:23:24,301 [INFO] 127.0.0.1 - - [17/Nov/2025 14:23:24] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-17 14:23:24,510 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-17 14:23:24,510 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-17 14:23:24,511 [INFO] 127.0.0.1 - - [17/Nov/2025 14:23:24] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-17 14:23:37,976 [INFO] DEBUG: current_user() - session user_id: None
+2025-11-17 14:23:37,976 [INFO] DEBUG: current_user() - no user_id in session
+2025-11-17 14:23:37,977 [INFO] 127.0.0.1 - - [17/Nov/2025 14:23:37] "[33mGET /advanced_apt_analysis HTTP/1.1[0m" 404 -
+2025-11-17 14:23:38,005 [INFO] 127.0.0.1 - - [17/Nov/2025 14:23:38] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2025-11-17 14:25:00,005 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:30:00 EST)" (scheduled at 2025-11-17 14:25:00-05:00)
+2025-11-17 14:25:00,006 [INFO] Running job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:25:00 EST)" (scheduled at 2025-11-17 14:25:00-05:00)
+2025-11-17 14:25:01,028 [WARNING] Health check completed: 1 issues detected
+2025-11-17 14:25:01,041 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 14:25:01,042 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:30:00 EST)" executed successfully
+2025-11-17 14:25:01,183 [WARNING] Health check completed: 1 issues detected
+2025-11-17 14:25:01,194 [WARNING] SYSTEM HEALTH ALERT: Health check failed - monitoring issues detected
+2025-11-17 14:25:01,194 [INFO] Job "Health Monitoring Checks (trigger: cron[minute='*/5'], next run at: 2025-11-17 14:30:00 EST)" executed successfully

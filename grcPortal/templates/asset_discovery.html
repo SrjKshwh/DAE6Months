@@ -43,6 +43,7 @@
                                 <th>Target Network</th>
                                 <th>Assets Found</th>
                                 <th>Critical Assets</th>
+                                <th>Risk Exposure</th>
                                 <th>Services</th>
                                 <th>Performed</th>
                                 <th>Actions</th>
@@ -57,6 +58,15 @@
                                 <td>{{ discovery.assets_discovered }}</td>
                                 <td>
                                     <span class="badge bg-danger">{{ discovery.critical_assets }}</span>
+                                </td>
+                                <td>
+                                    {% if discovery.risk_exposure_score %}
+                                        <span class="badge bg-{{ 'danger' if discovery.risk_exposure_score > 4 else 'warning' if discovery.risk_exposure_score > 2.5 else 'success' }}">
+                                            {{ "%.1f"|format(discovery.risk_exposure_score) }}/5
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
                                 </td>
                                 <td>{{ discovery.services|length }}</td>
                                 <td>{{ discovery.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
@@ -128,6 +138,26 @@
                                           placeholder='{"timeout": 300, "max_hosts": 256, "ports": "common"}'></textarea>
                                 <div class="form-text">Optional: JSON configuration for discovery parameters</div>
                             </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="service_discovery_enabled" name="service_discovery_enabled" checked>
+                                    <label class="form-check-label" for="service_discovery_enabled">
+                                        Enable Service Discovery
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="dependency_mapping_enabled" name="dependency_mapping_enabled" checked>
+                                    <label class="form-check-label" for="dependency_mapping_enabled">
+                                        Enable Dependency Mapping
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="impact_analysis_enabled" name="impact_analysis_enabled" checked>
+                                    <label class="form-check-label" for="impact_analysis_enabled">
+                                        Enable Impact Analysis
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -173,18 +203,55 @@ function viewDiscoveryDetails(discoveryId) {
                     <tr><td><strong>Target Network:</strong></td><td><code>${discovery.target_network || 'N/A'}</code></td></tr>
                     <tr><td><strong>Assets Discovered:</strong></td><td><span class="badge bg-info">${discovery.assets_discovered}</span></td></tr>
                     <tr><td><strong>Critical Assets:</strong></td><td><span class="badge bg-danger">${discovery.critical_assets}</span></td></tr>
+                    <tr><td><strong>Risk Exposure Score:</strong></td><td><span class="badge bg-${discovery.risk_exposure_score > 4 ? 'danger' : discovery.risk_exposure_score > 2.5 ? 'warning' : 'success'}">${discovery.risk_exposure_score ? discovery.risk_exposure_score.toFixed(1) + '/5' : 'N/A'}</span></td></tr>
+                    <tr><td><strong>Scan Duration:</strong></td><td>${discovery.scan_duration_seconds ? discovery.scan_duration_seconds + 's' : 'N/A'}</td></tr>
+                    <tr><td><strong>Discovery Accuracy:</strong></td><td>${discovery.discovery_accuracy_score ? discovery.discovery_accuracy_score.toFixed(1) + '%' : 'N/A'}</td></tr>
                     <tr><td><strong>Performed By:</strong></td><td>${discovery.performer ? discovery.performer.email : 'Unknown'}</td></tr>
                     <tr><td><strong>Created:</strong></td><td>${new Date(discovery.created_at).toLocaleString()}</td></tr>
                 </table>
             </div>
             <div class="col-md-6">
+                <h6>Advanced Features Status</h6>
+                <div class="mb-2">
+                    <span class="badge bg-${discovery.service_discovery_enabled ? 'success' : 'secondary'}">Service Discovery ${discovery.service_discovery_enabled ? 'Enabled' : 'Disabled'}</span>
+                    <span class="badge bg-${discovery.dependency_mapping_enabled ? 'success' : 'secondary'}">Dependency Mapping ${discovery.dependency_mapping_enabled ? 'Enabled' : 'Disabled'}</span>
+                    <span class="badge bg-${discovery.impact_analysis_enabled ? 'success' : 'secondary'}">Impact Analysis ${discovery.impact_analysis_enabled ? 'Enabled' : 'Disabled'}</span>
+                </div>
                 <h6>Network Topology</h6>
-                <div class="bg-light p-3 small">
+                <div class="bg-light p-3 small" style="max-height: 200px; overflow-y: auto;">
                     <pre>${JSON.stringify(JSON.parse(discovery.network_topology || '{}'), null, 2)}</pre>
                 </div>
             </div>
         </div>
     `;
+
+    // Add relationship mapping section if enabled
+    if (discovery.dependency_mapping_enabled && discovery.asset_relationships) {
+        content += `
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h6>Asset Relationships & Dependencies</h6>
+                    <div class="bg-light p-3 small" style="max-height: 300px; overflow-y: auto;">
+                        <pre>${JSON.stringify(JSON.parse(discovery.asset_relationships), null, 2)}</pre>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Add impact analysis section if enabled
+    if (discovery.impact_analysis_enabled && discovery.business_impact_assessment) {
+        content += `
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h6>Business Impact Analysis</h6>
+                    <div class="bg-light p-3 small" style="max-height: 300px; overflow-y: auto;">
+                        <pre>${JSON.stringify(JSON.parse(discovery.business_impact_assessment), null, 2)}</pre>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
 
     if (discovery.services && discovery.services.length > 0) {
         content += `

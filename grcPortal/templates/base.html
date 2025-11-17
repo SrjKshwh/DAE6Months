@@ -249,6 +249,23 @@
                             <i class="fas fa-search me-1"></i> Vulnerability Mgmt
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="vulnerabilityManagementDropdown">
+                            <!-- Vulnerability Management Procedures -->
+                            <li><a class="dropdown-item" href="{{ url_for('vulnerability_management_procedures') }}"><i class="fas fa-file-contract me-2"></i>Vulnerability Procedures</a></li>
+
+                            <!-- Automated Testing Framework -->
+                            <li><a class="dropdown-item" href="{{ url_for('automated_testing') }}"><i class="fas fa-robot me-2"></i>Automated Testing</a></li>
+
+                            <!-- Custom Assessment Tools -->
+                            <li><a class="dropdown-item" href="{{ url_for('custom_assessment_tools') }}"><i class="fas fa-tools me-2"></i>Custom Assessment Tools</a></li>
+
+                            <!-- Security Control Assessment -->
+                            <li><a class="dropdown-item" href="{{ url_for('security_control_assessment') }}"><i class="fas fa-shield-alt me-2"></i>Security Control Assessment</a></li>
+
+                            <!-- Performance Metrics -->
+                            <li><a class="dropdown-item" href="{{ url_for('performance_metrics') }}"><i class="fas fa-chart-line me-2"></i>Performance Metrics</a></li>
+
+                            <li><hr class="dropdown-divider"></li>
+
                             <li><a class="dropdown-item" href="{{ url_for('vulnerability_assessment') }}"><i class="fas fa-clipboard-list me-2"></i>Vulnerability Assessment</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('vulnerability_scan') }}"><i class="fas fa-search-plus me-2"></i>Vulnerability Scans</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('asset_discovery') }}"><i class="fas fa-network-wired me-2"></i>Asset Discovery</a></li>

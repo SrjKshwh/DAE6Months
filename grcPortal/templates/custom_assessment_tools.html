@@ -1,0 +1,345 @@
+{% extends "base.html" %}
+
+{% block title %}Custom Security Assessment Tools - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-tools text-primary"></i> Custom Security Assessment Tools</h2>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#runAssessmentModal">
+                <i class="fas fa-play"></i> Run Assessment
+            </button>
+        </div>
+        <div class="alert alert-primary" role="alert">
+            <h5>Custom Assessment Tools Suite</h5>
+            <p>This suite provides specialized security assessment tools designed for comprehensive vulnerability management and compliance validation. Each tool offers detailed analysis with evidence collection and remediation guidance.</p>
+            <h6>Available Tools</h6>
+            <ul>
+                <li><strong>Network Security Assessor:</strong> Comprehensive network security evaluation including port scanning, firewall analysis, and segmentation assessment</li>
+                <li><strong>Web Application Security Scanner:</strong> Advanced web application security testing for common vulnerabilities and authentication issues</li>
+                <li><strong>Configuration Compliance Checker:</strong> Automated compliance validation against industry standards (NIST, ISO 27001, PCI DSS)</li>
+                <li><strong>Risk Assessment Calculator:</strong> Quantitative and qualitative risk analysis with CVSS scoring and business impact evaluation</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Tools Overview -->
+<div class="row mb-4">
+    {% for tool_key, tool_info in available_tools.items() %}
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-{{ 'network-wired' if tool_key == 'network_security' else 'globe' if tool_key == 'web_application' else 'clipboard-check' if tool_key == 'configuration_compliance' else 'calculator' }} fa-2x text-primary mb-3"></i>
+                <h6 class="card-title">{{ tool_info.name }}</h6>
+                <p class="card-text small">{{ tool_info.description }}</p>
+                <span class="badge bg-secondary">v{{ tool_info.version }}</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Assessment History -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Assessment History</h5>
+            </div>
+            <div class="card-body">
+                {% if assessment_history %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tool</th>
+                                <th>Target</th>
+                                <th>Status</th>
+                                <th>Duration</th>
+                                <th>Findings</th>
+                                <th>Risk Score</th>
+                                <th>Compliance</th>
+                                <th>Executed</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for assessment in assessment_history %}
+                            <tr>
+                                <td><strong>{{ assessment.tool_name }}</strong></td>
+                                <td>
+                                    <code class="text-truncate" style="max-width: 200px;" title="{{ assessment.target }}">
+                                        {{ assessment.target }}
+                                    </code>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if assessment.status == 'completed' else 'danger' if assessment.status == 'failed' else 'secondary' }}">
+                                        {{ assessment.status.title() }}
+                                    </span>
+                                </td>
+                                <td>{{ assessment.duration_seconds or 0 }}s</td>
+                                <td>
+                                    {% if assessment.summary %}
+                                        <span class="badge bg-warning">{{ assessment.summary.total_findings or 0 }}</span>
+                                    {% else %}
+                                        <span class="text-muted">0</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if assessment.risk_score %}
+                                        <span class="badge bg-{{ 'danger' if assessment.risk_score > 7 else 'warning' if assessment.risk_score > 4 else 'success' }}">
+                                            {{ "%.1f"|format(assessment.risk_score) }}/10
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if assessment.compliance_score %}
+                                        <span class="badge bg-{{ 'success' if assessment.compliance_score > 80 else 'warning' if assessment.compliance_score > 60 else 'danger' }}">
+                                            {{ "%.0f"|format(assessment.compliance_score) }}%
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ assessment.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-info" onclick="viewAssessmentResults('{{ assessment.test_id }}')">
+                                        <i class="fas fa-eye"></i> Details
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-tools fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No assessments performed yet</h5>
+                    <p class="text-muted">Run your first security assessment to get started</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Run Assessment Modal -->
+<div class="modal fade" id="runAssessmentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Run Security Assessment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('run_custom_assessment') }}">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="tool_type" class="form-label">Assessment Tool</label>
+                                <select class="form-select" id="tool_type" name="tool_type" required onchange="updateToolForm()">
+                                    <option value="">Select Tool...</option>
+                                    <option value="network_security">Network Security Assessor</option>
+                                    <option value="web_application">Web Application Security Scanner</option>
+                                    <option value="configuration_compliance">Configuration Compliance Checker</option>
+                                    <option value="risk_calculator">Risk Assessment Calculator</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="target" class="form-label">Target</label>
+                                <input type="text" class="form-control" id="target" name="target" required
+                                       placeholder="e.g., 192.168.1.0/24 or https://example.com">
+                                <div class="form-text">Target system, network, or asset to assess</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Dynamic parameters based on tool type -->
+                            <div id="toolParameters">
+                                <div class="mb-3">
+                                    <label class="form-label">Tool Parameters (JSON)</label>
+                                    <textarea class="form-control" id="parameters" name="parameters" rows="6"
+                                              placeholder='{"timeout": 300, "aggressive": false}'></textarea>
+                                    <div class="form-text">Optional: JSON parameters specific to the selected tool</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Run Assessment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Assessment Results Modal -->
+<div class="modal fade" id="assessmentResultsModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assessment Results</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="assessmentResultsContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateToolForm() {
+    const toolType = document.getElementById('tool_type').value;
+    const parametersTextarea = document.getElementById('parameters');
+
+    // Update placeholder based on tool type
+    const placeholders = {
+        'network_security': '{"timeout": 300, "max_hosts": 256, "ports": "common"}',
+        'web_application': '{"scan_type": "full", "crawl_depth": 3, "include_subdomains": false}',
+        'configuration_compliance': '{"standard": "NIST_SP_800_53", "strict_mode": true}',
+        'risk_calculator': '{"threat": "Data Breach", "vulnerability": "Weak Access Controls", "likelihood": 4, "impact": 5}'
+    };
+
+    parametersTextarea.placeholder = placeholders[toolType] || '{"custom": "parameters"}';
+}
+
+function viewAssessmentResults(assessmentId) {
+    // Find assessment results from history
+    const history = {{ assessment_history|tojson }};
+    const assessment = history.find(a => a.test_id === assessmentId);
+
+    if (!assessment) return;
+
+    let content = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Assessment Information</h6>
+                <table class="table table-sm">
+                    <tr><td><strong>Tool:</strong></td><td>${assessment.tool_name}</td></tr>
+                    <tr><td><strong>Type:</strong></td><td>${assessment.tool_type.replace('_', ' ').toUpperCase()}</td></tr>
+                    <tr><td><strong>Target:</strong></td><td><code>${assessment.target}</code></td></tr>
+                    <tr><td><strong>Status:</strong></td><td><span class="badge bg-${assessment.status === 'completed' ? 'success' : 'danger'}">${assessment.status.toUpperCase()}</span></td></tr>
+                    <tr><td><strong>Duration:</strong></td><td>${assessment.duration_seconds || 0} seconds</td></tr>
+                    <tr><td><strong>Started:</strong></td><td>${new Date(assessment.start_time).toLocaleString()}</td></tr>
+                    ${assessment.end_time ? `<tr><td><strong>Completed:</strong></td><td>${new Date(assessment.end_time).toLocaleString()}</td></tr>` : ''}
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h6>Assessment Scores</h6>
+                <div class="mb-2">
+                    <strong>Risk Score:</strong>
+                    <span class="badge bg-${assessment.risk_score > 7 ? 'danger' : assessment.risk_score > 4 ? 'warning' : 'success'} ms-2">
+                        ${assessment.risk_score ? assessment.risk_score.toFixed(1) + '/10' : 'N/A'}
+                    </span>
+                </div>
+                <div class="mb-2">
+                    <strong>Compliance Score:</strong>
+                    <span class="badge bg-${assessment.compliance_score > 80 ? 'success' : assessment.compliance_score > 60 ? 'warning' : 'danger'} ms-2">
+                        ${assessment.compliance_score ? assessment.compliance_score.toFixed(0) + '%' : 'N/A'}
+                    </span>
+                </div>
+    `;
+
+    if (assessment.summary) {
+        content += `
+                <div class="mt-3">
+                    <strong>Findings Summary:</strong>
+                    <ul class="list-unstyled small mt-2">
+                        <li><span class="badge bg-danger">${assessment.summary.critical_findings || 0}</span> Critical</li>
+                        <li><span class="badge bg-warning">${assessment.summary.high_findings || 0}</span> High</li>
+                        <li><span class="badge bg-info">${assessment.summary.medium_findings || 0}</span> Medium</li>
+                        <li><span class="badge bg-secondary">${assessment.summary.low_findings || 0}</span> Low</li>
+                    </ul>
+                </div>
+        `;
+    }
+
+    content += `
+            </div>
+        </div>
+    `;
+
+    if (assessment.findings && assessment.findings.length > 0) {
+        content += `
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h6>Detailed Findings</h6>
+                    <div class="accordion" id="findingsAccordion">
+        `;
+
+        assessment.findings.forEach((finding, index) => {
+            const severityClass = finding.severity === 'critical' ? 'danger' :
+                                finding.severity === 'high' ? 'warning' :
+                                finding.severity === 'medium' ? 'info' : 'secondary';
+
+            content += `
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#finding${index}">
+                            <span class="badge bg-${severityClass} me-2">${finding.severity.toUpperCase()}</span>
+                            ${finding.title}
+                        </button>
+                    </h2>
+                    <div id="finding${index}" class="accordion-collapse collapse" data-bs-parent="#findingsAccordion">
+                        <div class="accordion-body">
+                            <p><strong>Description:</strong> ${finding.description}</p>
+                            <p><strong>Category:</strong> ${finding.category}</p>
+                            <p><strong>Affected Component:</strong> <code>${finding.affected_component}</code></p>
+                            ${finding.risk_score ? `<p><strong>Risk Score:</strong> ${finding.risk_score}/10</p>` : ''}
+                            <p><strong>Recommendation:</strong> ${finding.recommendation}</p>
+                            ${finding.remediation_steps ? `
+                                <p><strong>Remediation Steps:</strong></p>
+                                <ol>
+                                    ${finding.remediation_steps.map(step => `<li>${step}</li>`).join('')}
+                                </ol>
+                            ` : ''}
+                            ${finding.compliance_mapping ? `
+                                <p><strong>Compliance Mapping:</strong></p>
+                                <ul>
+                                    ${Object.entries(finding.compliance_mapping).map(([standard, control]) =>
+                                        `<li><strong>${standard}:</strong> ${control}</li>`).join('')}
+                                </ul>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        content += `
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    if (assessment.error_message) {
+        content += `
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h6>Error Details</h6>
+                    <div class="alert alert-danger">
+                        ${assessment.error_message}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    document.getElementById('assessmentResultsContent').innerHTML = content;
+    new bootstrap.Modal(document.getElementById('assessmentResultsModal')).show();
+}
+
+// Initialize tool form on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateToolForm();
+});
+</script>
+{% endblock %}

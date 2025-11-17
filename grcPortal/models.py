@@ -1839,6 +1839,10 @@ class IndicatorOfCompromise(Base):
     tags: Mapped[str] = mapped_column(Text, nullable=True)  # JSON array of tags
     created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
 
+    # Technical findings fields
+    technical_findings: Mapped[str] = mapped_column(Text, nullable=True)  # JSON technical analysis findings
+    extracted_iocs: Mapped[str] = mapped_column(Text, nullable=True)  # JSON extracted IoCs
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
@@ -1941,6 +1945,9 @@ class MalwareAnalysis(Base):
     potential_impact: Mapped[str] = mapped_column(Text, nullable=True)
     severity: Mapped[str] = mapped_column(String(20), default="low")  # low, medium, high, critical
 
+    # Reverse engineering fields
+    analysis_output: Mapped[str] = mapped_column(Text, nullable=True)  # JSON detailed analysis output
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
@@ -1987,6 +1994,13 @@ class APTCampaign(Base):
     relevance_to_organization: Mapped[str] = mapped_column(String(50), default="unknown")  # low, medium, high, direct
     documented_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
 
+    # Advanced threat analysis fields
+    analysis_type: Mapped[str] = mapped_column(String(100), nullable=True)  # comprehensive, targeted, reverse_engineering
+    malware_sample: Mapped[str] = mapped_column(String(500), nullable=True)  # Associated malware sample hash
+    reverse_engineering_output: Mapped[str] = mapped_column(Text, nullable=True)  # JSON reverse engineering findings
+    attack_patterns: Mapped[str] = mapped_column(Text, nullable=True)  # JSON attack pattern analysis
+    iocs_extracted: Mapped[str] = mapped_column(Text, nullable=True)  # JSON extracted IoCs
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
@@ -2009,6 +2023,11 @@ class ATTACKMapping(Base):
     evidence: Mapped[str] = mapped_column(Text, nullable=True)
     confidence: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high
     mapped_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    # Attack pattern analysis fields
+    detection_methods: Mapped[str] = mapped_column(Text, nullable=True)  # JSON detection methods
+    mitigation_strategies: Mapped[str] = mapped_column(Text, nullable=True)  # JSON mitigation strategies
+    attack_complexity: Mapped[str] = mapped_column(Text, nullable=True)  # JSON attack complexity analysis
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
@@ -2036,6 +2055,11 @@ class VulnerabilityScan(Base):
     duration_seconds: Mapped[int] = mapped_column(Integer, nullable=True)
     performed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
 
+    # Supply chain assessment fields
+    assessment_scope: Mapped[str] = mapped_column(Text, nullable=True)  # JSON assessment scope
+    supply_chain_findings: Mapped[str] = mapped_column(Text, nullable=True)  # JSON supply chain findings
+    mitigation_recommendations: Mapped[str] = mapped_column(Text, nullable=True)  # JSON mitigation recommendations
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
@@ -2061,6 +2085,10 @@ class VulnerabilityFinding(Base):
     # Risk status tracking for workflow optimization
     risk_status: Mapped[str] = mapped_column(String(50), default="unassessed")  # unassessed, risk_created: R123, mitigated, accepted
 
+    # Zero-day research fields
+    research_methodology: Mapped[str] = mapped_column(Text, nullable=True)  # JSON research methodology
+    zero_day_findings: Mapped[str] = mapped_column(Text, nullable=True)  # JSON zero-day findings
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
@@ -2069,7 +2097,7 @@ class VulnerabilityFinding(Base):
 
 
 class AssetDiscovery(Base):
-    """Asset discovery scan records"""
+    """Advanced asset discovery scan records with relationship mapping and impact analysis"""
     __tablename__ = "asset_discoveries"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -2082,11 +2110,93 @@ class AssetDiscovery(Base):
     network_topology: Mapped[str] = mapped_column(Text, nullable=True)  # JSON string
     performed_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
 
+    # Advanced relationship mapping
+    asset_relationships: Mapped[str] = mapped_column(Text, nullable=True)  # JSON dependency graph
+    business_processes: Mapped[str] = mapped_column(Text, nullable=True)  # JSON business process mapping
+    data_flows: Mapped[str] = mapped_column(Text, nullable=True)  # JSON data flow relationships
+
+    # Impact analysis
+    business_impact_assessment: Mapped[str] = mapped_column(Text, nullable=True)  # JSON impact analysis
+    criticality_matrix: Mapped[str] = mapped_column(Text, nullable=True)  # JSON criticality scoring
+    risk_exposure_score: Mapped[float] = mapped_column(Float, default=0.0)  # Overall risk exposure
+
+    # Vulnerability correlation
+    vulnerability_scan_id: Mapped[int] = mapped_column(ForeignKey("vulnerability_scans.id"), nullable=True)
+    correlated_vulnerabilities: Mapped[int] = mapped_column(Integer, default=0)
+    vulnerability_impact_score: Mapped[float] = mapped_column(Float, default=0.0)
+
+    # Advanced discovery features
+    service_discovery_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    dependency_mapping_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    impact_analysis_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Performance metrics
+    scan_duration_seconds: Mapped[int] = mapped_column(Integer, nullable=True)
+    discovery_accuracy_score: Mapped[float] = mapped_column(Float, default=0.0)  # 0-100 accuracy rating
+    false_positive_rate: Mapped[float] = mapped_column(Float, default=0.0)  # 0-100 percentage
+
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     # Relationships
     performer = relationship("User", backref="asset_discoveries")
+    vulnerability_scan = relationship("VulnerabilityScan", backref="asset_discoveries")
+
+    def calculate_risk_exposure_score(self):
+        """Calculate overall risk exposure based on asset criticality and vulnerabilities"""
+        import json
+
+        try:
+            # Parse criticality matrix
+            criticality_data = json.loads(self.criticality_matrix or '{}')
+            avg_criticality = criticality_data.get('average_score', 3.0)
+
+            # Factor in vulnerability impact
+            vuln_factor = min(self.correlated_vulnerabilities / 10, 5) if self.correlated_vulnerabilities else 0
+
+            # Calculate weighted score
+            self.risk_exposure_score = (avg_criticality * 0.6) + (vuln_factor * 0.4)
+            return self.risk_exposure_score
+        except (json.JSONDecodeError, KeyError):
+            return 0.0
+
+    def generate_dependency_graph(self):
+        """Generate a dependency graph from discovered assets and services"""
+        import json
+
+        graph = {
+            'nodes': [],
+            'edges': [],
+            'metadata': {
+                'total_assets': self.assets_discovered,
+                'critical_assets': self.critical_assets,
+                'generated_at': datetime.now(timezone.utc).isoformat()
+            }
+        }
+
+        # This would be populated from actual discovery data
+        # For now, return template structure
+        return json.dumps(graph, indent=2)
+
+    def assess_business_impact(self):
+        """Perform business impact analysis for discovered assets"""
+        import json
+
+        impact_analysis = {
+            'overall_impact_score': self.risk_exposure_score,
+            'critical_business_processes': [],
+            'impact_categories': {
+                'financial': 0.0,
+                'operational': 0.0,
+                'compliance': 0.0,
+                'reputational': 0.0
+            },
+            'recovery_priorities': [],
+            'assessment_date': datetime.now(timezone.utc).isoformat()
+        }
+
+        # This would be populated based on asset criticality and business mapping
+        return json.dumps(impact_analysis, indent=2)
 
 
 class DiscoveredService(Base):
