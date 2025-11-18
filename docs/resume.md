@@ -4,9 +4,9 @@ title: Resume
 permalink: /resume/
 ---
 
-# 👨‍💻 Saroj Kushwaha <a href="#" onclick="window.print(); return false;">Print Resume</a> <a href="resume.pdf" download>Download Resume</a>
+# 👨‍💻 Saroj Kushwaha
 
-📧 saroj24786@gmail.com | 📱 (475) 232-3515
+📧 saroj24786@gmail.com | 📱 (475) 232-3515 <a href="#" onclick="window.print(); return false;">Print Resume</a> <a href="resume.pdf" download>Download Resume</a>
 
 ---
 
