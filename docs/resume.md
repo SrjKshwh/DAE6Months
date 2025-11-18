@@ -102,6 +102,14 @@ Python GUI application featuring a 20x20 grid word search with user-defined word
   - Comprehensive training in cybersecurity fundamentals, risk management, and compliance frameworks
   - Hands-on development of enterprise-grade security applications and tools
   - Focus on Zero Trust Architecture, incident response, and digital forensics
+  - AI integration for automated compliance scanning and risk assessment
+  - LLM-powered document analysis for regulatory compliance
+  - Prompt engineering techniques for cybersecurity automation
+  - Threat intelligence enhancement with AI-driven IoC analysis
+  - Predictive analytics for vulnerability management and incident forecasting
+  - Secure software development practices with AI-assisted code review
+  - Digital forensics with AI-enhanced evidence collection and analysis
+  - Compliance monitoring with real-time AI-generated reports
   - **Tech Stack**: Python, Flask, SQLAlchemy, JavaScript, HTML/CSS, SQLite, Git
 
 - **Master of Computer Applications (MCA)**
