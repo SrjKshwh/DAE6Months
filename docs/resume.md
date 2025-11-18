@@ -79,11 +79,14 @@ Web-based tool analyzing files against GLBA, NIST CSF, PCI DSS. Generates risk r
 - **Tech Stack**: Python, Flask, SQLAlchemy, OpenRouter API, Bootstrap, JavaScript, SQLite
 
 ### Interactive Word Search Game | DAE Semester 1 | Jul 2025
-Python GUI app with user-input words, grid generation, timer, and dynamic word list updates.
-- Built interactive word search game using Tkinter with dynamic grid generation
-- Implemented word placement algorithms with collision detection and diagonal placement
-- Added timer functionality, scoring system, and user input validation
-- Created mouse event handling for word selection and highlighting
+Python GUI application featuring a 20x20 grid word search with user-defined words, interactive gameplay, and scoring mechanics.
+- Developed Tkinter-based GUI with left panel for 20x20 letter grid and right panel for controls and word list
+- Implemented word loading from text file (7 random words) and user input (3 custom words, max 12 characters, alphabetic only)
+- Created diagonal word placement algorithms in four directions (up-left, up-right, down-left, down-right) with collision detection
+- Added special handling for long words to ensure proper grid allocation and prevent overlaps
+- Built interactive mouse event system for letter selection, word formation, and real-time highlighting of found words
+- Integrated timer functionality with start, pause, and reset controls, plus scoring system (found words × time in seconds)
+- Incorporated undo features for clearing selections and resetting the game state
 - **Tech Stack**: Python, Tkinter, Random library, File I/O operations
 
 ---
