@@ -35,25 +35,25 @@ Dynamic IT professional with 2+ years of experience in web design, development, 
 
 ## 🏢 Professional Experience
 
-### Medical Document Analyst | MEDIKIGAI INC | 2024
+### **Medical Document Analyst** | MEDIKIGAI INC | 2024
 - Analyzed and reported on patient data, lab results, hospitalizations, and physician notes.
 - Ensured accurate data reconciliation within healthcare teams.
 
-### PHP Web Developer & Designer | Maven Group, Hyderabad, India | 2013 – 2014
+### **PHP Web Developer & Designer** | Maven Group, Hyderabad, India | 2013 – 2014
 - Designed and developed client advertising websites, including UI/UX with HTML, CSS, sliders, and lightboxes.
 - Built and maintained MySQL databases; programmed and tested online forms.
 - Implemented JavaScript/jQuery validations and AJAX communications.
 - Debugged with Firebug/Fiddler; provided ongoing support and enhancements.
 - **Tech Stack**: MySQL, JavaScript, jQuery, AngularJS, PHP, HTML5, Git, Dreamweaver.
 
-### Salesforce Admin & Developer (Volunteer) | GOPIO CT & American Hindu RCO | Apr 2022 – Dec 2022
+### **Salesforce Admin & Developer** (Volunteer) | GOPIO CT & American Hindu RCO | Apr 2022 – Dec 2022
 - Managed full SDLC for LWR community sites, including requirements, design, and QA.
 - Developed responsive Lightning Web Components with custom CSS; managed user profiles.
 - Created Apex classes, triggers, and test classes; implemented Flows for data collection.
 - Supported community organizations promoting Indian culture and PIO contributions.
 - **Sites**: [gopioct.org](http://gopioct.org/), [whindutemple](https://learner-7c-dev-ed.my.site.com/whindutemple/).
 
-### Freelance Web Developer | Upwork | Sep 2012 – Sep 2013
+### **Freelance Web Developer** | Upwork | Sep 2012 – Sep 2013
 - **Omnisleep.in**: Integrated PayPal shopping cart with add/remove/checkout functionality.
 - **Kii3.com**: Built tourist portal for browsing hotels, directions, and bookings.
 - **Foxotic.com**: Developed responsive web pages with HTML, JS, CSS, AJAX, PHP.
@@ -64,7 +64,7 @@ Dynamic IT professional with 2+ years of experience in web design, development, 
 
 ## 🚀 Projects
 
-### Cybersecurity Compliance Checker | DAE Semester 3-5 | Aug-Oct 2025
+### **Cybersecurity Compliance Checker** | DAE Semester 3-5 | Aug-Oct 2025
 Web-based tool analyzing files against GLBA, NIST CSF, PCI DSS. Generates risk registers and heat maps for compliance prioritization.
 - Developed comprehensive GRC portal with AI-powered document analysis for automated compliance gap identification
 - Implemented multi-framework compliance scanning supporting NIST CSF, PCI DSS, GLBA, ISO 27001, GDPR, and HIPAA
@@ -78,7 +78,7 @@ Web-based tool analyzing files against GLBA, NIST CSF, PCI DSS. Generates risk r
 - Built predictive analytics for risk forecasting and trend analysis with automated alerting
 - **Tech Stack**: Python, Flask, SQLAlchemy, OpenRouter API, Bootstrap, JavaScript, SQLite
 
-### Interactive Word Search Game | DAE Semester 1 | Jul 2025
+### **Interactive Word Search Game** | DAE Semester 1 | Jul 2025
 Python GUI application featuring a 20x20 grid word search with user-defined words, interactive gameplay, and scoring mechanics.
 - Developed Tkinter-based GUI with left panel for 20x20 letter grid and right panel for controls and word list
 - Implemented word loading from text file (7 random words) and user input (3 custom words, max 12 characters, alphabetic only)
