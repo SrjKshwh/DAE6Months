@@ -23,13 +23,18 @@ Dynamic IT professional with 2+ years of experience in web design, development, 
 ---
 
 ## 💻 Technical Skills
-- **Operating Systems**: All major Windows versions
+- **AI/ML**: LLM Integration (OpenRouter API), Document Analysis, Automated Risk Assessment, Prompt Engineering
+- **Cybersecurity**: Risk Management, Incident Response, Compliance Frameworks (NIST CSF, ISO 27001, PCI DSS, GDPR, HIPAA), Zero Trust Architecture, Digital Forensics, Threat Intelligence, IoC Analysis, Malware Detection, Vulnerability Scanning, Secure Coding Practices
+- **Databases**: SQLite, MySQL, Oracle 8i
+- **IDE Tools**: Notepad++, MyEclipse, Dreamweaver, VS Code
+- **Operating Systems**: Windows, Linux/Unix
+- **Programming Languages**: Python, SQL, SOQL, Apex (Classes, Triggers, Batch, Schedule), PHP, Java
 - **Salesforce CRM**: Workflow Rules, Approval Processes, LWC, Lightning, Profiles, Roles, Permission Sets, Relationships, Validation Rules, Custom Objects, Dashboards, Reports, Search/Page Layouts, Record Types, Process Builders, Flows, OmniScript, OmniStudio
-- **Programming Languages**: Python, SOQL, Apex (Classes, Triggers, Batch, Schedule), PHP, Java
-- **Web Technologies**: HTML5, XHTML, XML, JavaScript, AJAX, jQuery, CSS, Photoshop
-- **Application Servers**: Tomcat, WAMP/XAMPP
-- **Databases**: MySQL, Oracle 8i
-- **IDE Tools**: Notepad++, MyEclipse, Dreamweaver
+- **Static Site Generators**: Jekyll
+- **Tools & Libraries**: Tkinter (GUI), APScheduler (Task Scheduling), Automated Testing Framework, Git CLI, Bandit (Security Scanning), Bash Scripting, Alembic
+- **Version Control**: Git
+- **Web Frameworks**: Flask, SQLAlchemy ORM
+- **Web Technologies**: HTML5, XHTML, XML, JavaScript, AJAX, jQuery, CSS, Bootstrap
 
 ---
 
