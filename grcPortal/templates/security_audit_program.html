@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Security Audit Program{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Security Audit Program</h3>
+                    <p class="card-subtitle">Clear procedures and guidelines for comprehensive security auditing</p>
+                </div>
+                <div class="card-body">
+                    <!-- Audit Program Form -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <h4>Create Audit Program</h4>
+                            <form method="POST">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="program_name">Program Name</label>
+                                            <input type="text" class="form-control" id="program_name" name="program_name" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="audit_type">Audit Type</label>
+                                            <select class="form-control" id="audit_type" name="audit_type">
+                                                <option value="compliance">Compliance Audit</option>
+                                                <option value="operational">Operational Audit</option>
+                                                <option value="financial">Financial Audit</option>
+                                                <option value="integrated">Integrated Audit</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="frequency">Frequency</label>
+                                            <select class="form-control" id="frequency" name="frequency">
+                                                <option value="annual">Annual</option>
+                                                <option value="semi-annual">Semi-Annual</option>
+                                                <option value="quarterly">Quarterly</option>
+                                                <option value="monthly">Monthly</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Create Program</button>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <h4>Audit Program Guidelines</h4>
+                            <div class="alert alert-info">
+                                <h6>Key Procedures:</h6>
+                                <ul class="mb-0">
+                                    <li>Planning & Scoping</li>
+                                    <li>Risk Assessment</li>
+                                    <li>Fieldwork Execution</li>
+                                    <li>Evidence Collection</li>
+                                    <li>Finding Documentation</li>
+                                    <li>Report Generation</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audit Procedures Documentation -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Audit Procedures & Guidelines</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Planning Phase</h6>
+                                            <ol>
+                                                <li>Define audit objectives and scope</li>
+                                                <li>Assemble audit team with appropriate expertise</li>
+                                                <li>Develop audit program and procedures</li>
+                                                <li>Schedule fieldwork and resource allocation</li>
+                                                <li>Notify auditees and coordinate logistics</li>
+                                            </ol>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Execution Phase</h6>
+                                            <ol>
+                                                <li>Conduct opening meeting with auditees</li>
+                                                <li>Execute audit procedures and tests</li>
+                                                <li>Document findings and collect evidence</li>
+                                                <li>Perform analytical procedures</li>
+                                                <li>Conduct interviews and observations</li>
+                                                <li>Prepare working papers</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <h6>Reporting Phase</h6>
+                                            <ol>
+                                                <li>Evaluate findings against criteria</li>
+                                                <li>Develop recommendations and action plans</li>
+                                                <li>Prepare draft audit report</li>
+                                                <li>Conduct closing meeting</li>
+                                                <li>Issue final audit report</li>
+                                                <li>Follow up on corrective actions</li>
+                                            </ol>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Quality Assurance</h6>
+                                            <ul>
+                                                <li>Independent review of work papers</li>
+                                                <li>Supervisory approval of findings</li>
+                                                <li>Compliance with professional standards</li>
+                                                <li>Documentation of audit methodology</li>
+                                                <li>Peer review and quality control</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Audit Programs -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Active Audit Programs</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Audit Title</th>
+                                                    <th>Type</th>
+                                                    <th>Status</th>
+                                                    <th>Progress</th>
+                                                    <th>Start Date</th>
+                                                    <th>End Date</th>
+                                                    <th>Lead Auditor</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for audit in audits %}
+                                                <tr>
+                                                    <td>{{ audit.audit_title }}</td>
+                                                    <td>{{ audit.audit_type }}</td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'success' if audit.status == 'completed' else 'warning' if audit.status == 'in_progress' else 'secondary' }}">
+                                                            {{ audit.status.replace('_', ' ').title() }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="progress" style="width: 100px;">
+                                                            <div class="progress-bar" role="progressbar" style="width: {{ audit.progress_percentage }}%">
+                                                                {{ audit.progress_percentage }}%
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ audit.planned_start_date.strftime('%Y-%m-%d') if audit.planned_start_date else 'Not set' }}</td>
+                                                    <td>{{ audit.planned_end_date.strftime('%Y-%m-%d') if audit.planned_end_date else 'Not set' }}</td>
+                                                    <td>{{ audit.lead_auditor.email if audit.lead_auditor else 'Not assigned' }}</td>
+                                                    <td>
+                                                        <a href="{{ url_for('advanced_audit', audit_id=audit.id) }}" class="btn btn-sm btn-primary">View</a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

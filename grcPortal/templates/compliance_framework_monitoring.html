@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}Compliance Framework Monitoring{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Compliance Framework Monitoring</h3>
+                    <p class="card-subtitle">Evidence of proper controls and monitoring across multiple frameworks</p>
+                </div>
+                <div class="card-body">
+                    <!-- Compliance Overview -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card bg-success text-white">
+                                <div class="card-body text-center">
+                                    <h4>{{ compliance_rate|round(1) }}%</h4>
+                                    <small>Overall Compliance Rate</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-info text-white">
+                                <div class="card-body text-center">
+                                    <h4>{{ compliance_scores|length }}</h4>
+                                    <small>Total Controls Assessed</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-warning text-white">
+                                <div class="card-body text-center">
+                                    <h4>{{ compliance_scores|selectattr('status', 'equalto', 'non_compliant')|list|length }}</h4>
+                                    <small>Non-Compliant Controls</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body text-center">
+                                    <h4>{{ compliance_scores|selectattr('status', 'equalto', 'not_assessed')|list|length }}</h4>
+                                    <small>Unassessed Controls</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Framework Selection -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Supported Compliance Frameworks</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        {% for framework in frameworks %}
+                                        <div class="col-md-3 mb-3">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <h6>{{ framework.value }}</h6>
+                                                    <small>{{ framework.value }} Framework</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Control Monitoring -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Control Monitoring & Evidence</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Framework</th>
+                                                    <th>Control</th>
+                                                    <th>Control Family</th>
+                                                    <th>Score</th>
+                                                    <th>Status</th>
+                                                    <th>Assessment Method</th>
+                                                    <th>Last Assessed</th>
+                                                    <th>Evidence</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for score in compliance_scores %}
+                                                <tr>
+                                                    <td>{{ score.framework }}</td>
+                                                    <td>{{ score.control }}</td>
+                                                    <td>{{ score.control_family or 'N/A' }}</td>
+                                                    <td>
+                                                        <div class="progress" style="width: 80px;">
+                                                            <div class="progress-bar bg-{{ 'success' if score.score >= 80 else 'warning' if score.score >= 60 else 'danger' }}"
+                                                                 role="progressbar"
+                                                                 style="width: {{ score.score }}%">
+                                                                {{ score.score }}%
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'success' if score.status == 'compliant' else 'danger' if score.status == 'non_compliant' else 'secondary' }}">
+                                                            {{ score.status.replace('_', ' ').title() }}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{ score.assessment_method.title() }}</td>
+                                                    <td>{{ score.updated_at.strftime('%Y-%m-%d') if score.updated_at else 'Never' }}</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-info" onclick="viewEvidence({{ score.id }})">
+                                                            View Evidence
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monitoring Procedures -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Monitoring Procedures & Controls</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Automated Monitoring</h6>
+                                            <ul>
+                                                <li>Continuous compliance scanning</li>
+                                                <li>Real-time control validation</li>
+                                                <li>Automated evidence collection</li>
+                                                <li>Threshold-based alerting</li>
+                                                <li>Scheduled compliance assessments</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Manual Verification</h6>
+                                            <ul>
+                                                <li>Periodic manual reviews</li>
+                                                <li>Sample-based testing</li>
+                                                <li>Documentation verification</li>
+                                                <li>Interview-based validation</li>
+                                                <li>Independent assessments</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <h6>Evidence Collection Methods</h6>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="card text-center">
+                                                        <div class="card-body">
+                                                            <i class="fas fa-file-alt fa-2x text-primary"></i>
+                                                            <h6>Documentation</h6>
+                                                            <small>Policies, procedures, logs</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="card text-center">
+                                                        <div class="card-body">
+                                                            <i class="fas fa-search fa-2x text-success"></i>
+                                                            <h6>Testing</h6>
+                                                            <small>Control validation tests</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="card text-center">
+                                                        <div class="card-body">
+                                                            <i class="fas fa-users fa-2x text-warning"></i>
+                                                            <h6>Interviews</h6>
+                                                            <small>Stakeholder validation</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="card text-center">
+                                                        <div class="card-body">
+                                                            <i class="fas fa-chart-line fa-2x text-info"></i>
+                                                            <h6>Analytics</h6>
+                                                            <small>Performance metrics</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewEvidence(scoreId) {
+    // Implement evidence viewing functionality
+    alert('Evidence viewing for control ' + scoreId + ' - Feature to be implemented');
+}
+</script>
+{% endblock %}

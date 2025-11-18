@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block title %}{{ actor.display_name or actor.actor_name }} - Threat Actor Profile{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-user-secret"></i> {{ actor.display_name or actor.actor_name }}
+                    </h3>
+                    <div class="card-tools">
+                        <a href="{{ url_for('threat_actors') }}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Back to Profiles
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!-- Profile Overview -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Profile Overview</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <td><strong>Actor Name:</strong></td>
+                                                    <td>{{ actor.actor_name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Display Name:</strong></td>
+                                                    <td>{{ actor.display_name or 'N/A' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Actor Type:</strong></td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'primary' if actor.actor_type == 'state_sponsored' else 'secondary' if actor.actor_type == 'criminal' else 'warning' if actor.actor_type == 'hacktivist' else 'info' }}">
+                                                            {{ actor.actor_type|replace('_', ' ')|title }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Motivation:</strong></td>
+                                                    <td>{{ actor.motivation|title or 'Unknown' }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <td><strong>Attribution Confidence:</strong></td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'success' if actor.attribution_confidence == 'confirmed' else 'warning' if actor.attribution_confidence == 'high' else 'info' }}">
+                                                            {{ actor.attribution_confidence|title }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Sophistication:</strong></td>
+                                                    <td>{{ actor.sophistication_level|title }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Threat Level:</strong></td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'danger' if actor.threat_level == 'critical' else 'warning' if actor.threat_level == 'high' else 'info' }}">
+                                                            {{ actor.threat_level|title }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Location:</strong></td>
+                                                    <td>{{ actor.primary_location or 'Unknown' }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Profile Summary -->
+                            {% if actor.profile_summary %}
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h5 class="card-title">Profile Summary</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>{{ actor.profile_summary }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Key Indicators -->
+                            {% if actor.key_indicators %}
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h5 class="card-title">Key Indicators</h5>
+                                </div>
+                                <div class="card-body">
+                                    <pre class="bg-light p-3">{{ actor.key_indicators }}</pre>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <!-- Edit Profile -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Edit Profile</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" action="{{ url_for('view_threat_actor', actor_id=actor.id) }}">
+                                        <div class="form-group">
+                                            <label>Display Name</label>
+                                            <input type="text" name="display_name" class="form-control"
+                                                   value="{{ actor.display_name }}" placeholder="Human-readable name">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Attribution Confidence</label>
+                                            <select name="attribution_confidence" class="form-control">
+                                                <option value="low" {{ 'selected' if actor.attribution_confidence == 'low' }}>Low</option>
+                                                <option value="medium" {{ 'selected' if actor.attribution_confidence == 'medium' }}>Medium</option>
+                                                <option value="high" {{ 'selected' if actor.attribution_confidence == 'high' }}>High</option>
+                                                <option value="confirmed" {{ 'selected' if actor.attribution_confidence == 'confirmed' }}>Confirmed</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Actor Type</label>
+                                            <select name="actor_type" class="form-control" required>
+                                                <option value="state_sponsored" {{ 'selected' if actor.actor_type == 'state_sponsored' }}>State Sponsored</option>
+                                                <option value="criminal" {{ 'selected' if actor.actor_type == 'criminal' }}>Criminal</option>
+                                                <option value="hacktivist" {{ 'selected' if actor.actor_type == 'hacktivist' }}>Hacktivist</option>
+                                                <option value="insider" {{ 'selected' if actor.actor_type == 'insider' }}>Insider Threat</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Motivation</label>
+                                            <select name="motivation" class="form-control">
+                                                <option value="" {{ 'selected' if not actor.motivation }}>Unknown</option>
+                                                <option value="espionage" {{ 'selected' if actor.motivation == 'espionage' }}>Espionage</option>
+                                                <option value="financial" {{ 'selected' if actor.motivation == 'financial' }}>Financial Gain</option>
+                                                <option value="political" {{ 'selected' if actor.motivation == 'political' }}>Political</option>
+                                                <option value="disruption" {{ 'selected' if actor.motivation == 'disruption' }}>Disruption</option>
+                                                <option value="influence" {{ 'selected' if actor.motivation == 'influence' }}>Influence Operations</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Sophistication Level</label>
+                                            <select name="sophistication_level" class="form-control">
+                                                <option value="low" {{ 'selected' if actor.sophistication_level == 'low' }}>Low</option>
+                                                <option value="medium" {{ 'selected' if actor.sophistication_level == 'medium' }}>Medium</option>
+                                                <option value="high" {{ 'selected' if actor.sophistication_level == 'high' }}>High</option>
+                                                <option value="advanced" {{ 'selected' if actor.sophistication_level == 'advanced' }}>Advanced</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Threat Level</label>
+                                            <select name="threat_level" class="form-control">
+                                                <option value="low" {{ 'selected' if actor.threat_level == 'low' }}>Low</option>
+                                                <option value="medium" {{ 'selected' if actor.threat_level == 'medium' }}>Medium</option>
+                                                <option value="high" {{ 'selected' if actor.threat_level == 'high' }}>High</option>
+                                                <option value="critical" {{ 'selected' if actor.threat_level == 'critical' }}>Critical</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Primary Location</label>
+                                            <input type="text" name="primary_location" class="form-control"
+                                                   value="{{ actor.primary_location }}" placeholder="e.g., Russia, North Korea">
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary btn-block">
+                                            <i class="fas fa-save"></i> Update Profile
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Profile Metadata -->
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h5 class="card-title">Profile Metadata</h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Created:</strong></td>
+                                            <td>{{ actor.created_at.strftime('%Y-%m-%d %H:%M') if actor.created_at else 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Updated:</strong></td>
+                                            <td>{{ actor.updated_at.strftime('%Y-%m-%d %H:%M') if actor.updated_at else 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Documenter:</strong></td>
+                                            <td>{{ actor.documenter.email if actor.documenter else 'Unknown' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Status:</strong></td>
+                                            <td>
+                                                <span class="badge badge-{{ 'success' if actor.activity_status == 'active' else 'warning' if actor.activity_status == 'dormant' else 'secondary' }}">
+                                                    {{ actor.activity_status|title }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

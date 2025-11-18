@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}{{ operation.operation_name }} - Fusion Operation{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-project-diagram"></i> {{ operation.operation_name }}
+                    </h3>
+                    <div class="card-tools">
+                        <a href="{{ url_for('intelligence_fusion') }}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Back to Operations
+                        </a>
+                        {% if operation.status != 'completed' %}
+                        <form method="POST" action="{{ url_for('run_fusion_operation', operation_id=operation.id) }}" style="display: inline;">
+                            <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Execute this fusion operation?')">
+                                <i class="fas fa-play"></i> Execute Fusion
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!-- Operation Overview -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Operation Overview</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <td><strong>Operation Name:</strong></td>
+                                                    <td>{{ operation.operation_name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Type:</strong></td>
+                                                    <td>
+                                                        <span class="badge badge-secondary">
+                                                            {{ operation.operation_type|replace('_', ' ')|title }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Status:</strong></td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'success' if operation.status == 'completed' else 'warning' if operation.status == 'active' else 'secondary' }}">
+                                                            {{ operation.status|title }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Real-time Enabled:</strong></td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'success' if operation.real_time_enabled else 'secondary' }}">
+                                                            {{ 'Yes' if operation.real_time_enabled else 'No' }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <td><strong>Accuracy Score:</strong></td>
+                                                    <td>
+                                                        {% if operation.fusion_accuracy_score %}
+                                                            <span class="badge badge-{{ 'success' if operation.fusion_accuracy_score >= 80 else 'warning' if operation.fusion_accuracy_score >= 60 else 'danger' }}">
+                                                                {{ "%.1f"|format(operation.fusion_accuracy_score) }}%
+                                                            </span>
+                                                        {% else %}
+                                                            <span class="text-muted">Not calculated</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Data Points Processed:</strong></td>
+                                                    <td>{{ operation.data_points_processed or 0 }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Processing Time:</strong></td>
+                                                    <td>{{ operation.processing_time_seconds or 0 }} seconds</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Last Run:</strong></td>
+                                                    <td>{{ operation.last_fusion_run.strftime('%Y-%m-%d %H:%M') if operation.last_fusion_run else 'Never' }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fusion Objectives -->
+                            {% if operation.fusion_objectives %}
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h5 class="card-title">Fusion Objectives</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>{{ operation.fusion_objectives }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Key Findings -->
+                            {% if operation.key_findings %}
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h5 class="card-title">Key Findings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <pre class="bg-light p-3">{{ operation.key_findings }}</pre>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <!-- Edit Operation -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Update Operation</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" action="{{ url_for('view_fusion_operation', operation_id=operation.id) }}">
+                                        <div class="form-group">
+                                            <label>Fusion Objectives</label>
+                                            <textarea name="fusion_objectives" class="form-control" rows="3">{{ operation.fusion_objectives }}</textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Key Findings</label>
+                                            <textarea name="key_findings" class="form-control" rows="4">{{ operation.key_findings }}</textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Status</label>
+                                            <select name="status" class="form-control">
+                                                <option value="active" {{ 'selected' if operation.status == 'active' }}>Active</option>
+                                                <option value="paused" {{ 'selected' if operation.status == 'paused' }}>Paused</option>
+                                                <option value="completed" {{ 'selected' if operation.status == 'completed' }}>Completed</option>
+                                                <option value="error" {{ 'selected' if operation.status == 'error' }}>Error</option>
+                                            </select>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary btn-block">
+                                            <i class="fas fa-save"></i> Update Operation
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Operation Metadata -->
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h5 class="card-title">Operation Metadata</h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Created:</strong></td>
+                                            <td>{{ operation.created_at.strftime('%Y-%m-%d %H:%M') if operation.created_at else 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Updated:</strong></td>
+                                            <td>{{ operation.updated_at.strftime('%Y-%m-%d %H:%M') if operation.updated_at else 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Created By:</strong></td>
+                                            <td>{{ operation.creator.email if operation.creator else 'Unknown' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Approved By:</strong></td>
+                                            <td>{{ operation.approver.email if operation.approver else 'Not approved' }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Performance Metrics -->
+                            {% if operation.fusion_accuracy_score %}
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h5 class="card-title">Performance Metrics</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-2">
+                                        <h4 class="text-{{ 'success' if operation.fusion_accuracy_score >= 80 else 'warning' if operation.fusion_accuracy_score >= 60 else 'danger' }}">
+                                            {{ "%.1f"|format(operation.fusion_accuracy_score) }}%
+                                        </h4>
+                                        <small class="text-muted">Fusion Accuracy Score</small>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <h4 class="text-primary">{{ operation.data_points_processed or 0 }}</h4>
+                                            <small>Data Points</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <h4 class="text-info">{{ operation.processing_time_seconds or 0 }}s</h4>
+                                            <small>Processing Time</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

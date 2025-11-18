@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block title %}Advanced Control Validation{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Advanced Control Validation</h3>
+                    <p class="card-subtitle">Detailed testing documentation and comprehensive control validation</p>
+                </div>
+                <div class="card-body">
+                    <!-- Validation Test Form -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <h4>Initiate Control Validation Test</h4>
+                            <form method="POST">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="control_id">Control ID</label>
+                                            <input type="text" class="form-control" id="control_id" name="control_id" placeholder="e.g., AC-2, IA-5" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="test_type">Test Type</label>
+                                            <select class="form-control" id="test_type" name="test_type">
+                                                <option value="automated">Automated Testing</option>
+                                                <option value="manual">Manual Testing</option>
+                                                <option value="hybrid">Hybrid Testing</option>
+                                                <option value="penetration">Penetration Testing</option>
+                                                <option value="compliance">Compliance Testing</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="framework">Framework</label>
+                                            <select class="form-control" id="framework" name="framework">
+                                                <option value="NIST_SP_800_53">NIST SP 800-53</option>
+                                                <option value="ISO_27001">ISO 27001</option>
+                                                <option value="PCI_DSS">PCI DSS</option>
+                                                <option value="HIPAA">HIPAA</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Initiate Validation Test</button>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <h4>Validation Metrics</h4>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="card bg-success text-white">
+                                        <div class="card-body text-center">
+                                            <h5>{{ assessments|selectattr('status', 'equalto', 'passed')|list|length }}</h5>
+                                            <small>Passed</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card bg-danger text-white">
+                                        <div class="card-body text-center">
+                                            <h5>{{ assessments|selectattr('status', 'equalto', 'failed')|list|length }}</h5>
+                                            <small>Failed</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card bg-warning text-white">
+                                        <div class="card-body text-center">
+                                            <h5>{{ assessments|selectattr('status', 'equalto', 'in_progress')|list|length }}</h5>
+                                            <small>In Progress</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card bg-info text-white">
+                                        <div class="card-body text-center">
+                                            <h5>{{ assessments|length }}</h5>
+                                            <small>Total Tests</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testing Methodology -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Control Validation Testing Methodology</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Automated Testing Procedures</h6>
+                                            <ul>
+                                                <li><strong>Configuration Validation:</strong> Automated checks of system configurations</li>
+                                                <li><strong>Access Control Testing:</strong> Verification of permission settings</li>
+                                                <li><strong>Log Analysis:</strong> Automated review of audit logs</li>
+                                                <li><strong>Vulnerability Scanning:</strong> Automated security scans</li>
+                                                <li><strong>Compliance Checking:</strong> Automated policy compliance validation</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Manual Testing Procedures</h6>
+                                            <ul>
+                                                <li><strong>Process Walkthroughs:</strong> Manual verification of processes</li>
+                                                <li><strong>Documentation Review:</strong> Examination of policies and procedures</li>
+                                                <li><strong>Interview Testing:</strong> Stakeholder interviews and validation</li>
+                                                <li><strong>Physical Inspection:</strong> Physical security control verification</li>
+                                                <li><strong>Re-performance Testing:</strong> Manual re-execution of controls</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <h6>Testing Evidence Collection</h6>
+                                            <ul>
+                                                <li>Screenshots of test results</li>
+                                                <li>Log extracts and analysis</li>
+                                                <li>Configuration files and settings</li>
+                                                <li>Test scripts and procedures</li>
+                                                <li>Interview notes and recordings</li>
+                                                <li>Observation documentation</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Documentation Standards</h6>
+                                            <ul>
+                                                <li>Test objectives and scope</li>
+                                                <li>Detailed test procedures</li>
+                                                <li>Expected vs. actual results</li>
+                                                <li>Evidence collection methodology</li>
+                                                <li>Findings and conclusions</li>
+                                                <li>Recommendations for improvement</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Control Assessment Results -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Control Validation Assessments</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Control ID</th>
+                                                    <th>Test Type</th>
+                                                    <th>Framework</th>
+                                                    <th>Status</th>
+                                                    <th>Test Date</th>
+                                                    <th>Result</th>
+                                                    <th>Evidence</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for assessment in assessments %}
+                                                <tr>
+                                                    <td>{{ assessment.control_id }}</td>
+                                                    <td>{{ assessment.test_type.title() }}</td>
+                                                    <td>{{ assessment.framework }}</td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'success' if assessment.status == 'passed' else 'danger' if assessment.status == 'failed' else 'warning' }}">
+                                                            {{ assessment.status.replace('_', ' ').title() }}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{ assessment.test_date.strftime('%Y-%m-%d') if assessment.test_date else 'N/A' }}</td>
+                                                    <td>{{ assessment.result or 'N/A' }}</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-info" onclick="viewEvidence('{{ assessment.id }}')">
+                                                            View Evidence
+                                                        </button>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary" onclick="viewReport('{{ assessment.id }}')">
+                                                            View Report
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                {% if assessments|length == 0 %}
+                                                <tr>
+                                                    <td colspan="8" class="text-center text-muted">
+                                                        No control validation assessments found. Initiate a test to get started.
+                                                    </td>
+                                                </tr>
+                                                {% endif %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testing Standards -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Testing Standards & Best Practices</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h6>Planning Standards</h6>
+                                            <ul>
+                                                <li>Risk-based test planning</li>
+                                                <li>Comprehensive scope definition</li>
+                                                <li>Resource allocation planning</li>
+                                                <li>Timeline and milestone setting</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6>Execution Standards</h6>
+                                            <ul>
+                                                <li>Standardized test procedures</li>
+                                                <li>Consistent evidence collection</li>
+                                                <li>Quality control checkpoints</li>
+                                                <li>Issue tracking and resolution</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6>Reporting Standards</h6>
+                                            <ul>
+                                                <li>Detailed findings documentation</li>
+                                                <li>Clear recommendations</li>
+                                                <li>Executive summary format</li>
+                                                <li>Action plan development</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewEvidence(assessmentId) {
+    // Implement evidence viewing functionality
+    alert('Viewing evidence for assessment ' + assessmentId);
+}
+
+function viewReport(assessmentId) {
+    // Implement report viewing functionality
+    alert('Viewing detailed report for assessment ' + assessmentId);
+}
+</script>
+{% endblock %}

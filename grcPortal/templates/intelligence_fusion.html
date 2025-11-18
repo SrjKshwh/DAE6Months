@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Intelligence Fusion Operations - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-project-diagram"></i> Intelligence Fusion Operations
+                    </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addFusionModal">
+                            <i class="fas fa-plus"></i> New Fusion Operation
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-info">
+                                <h5><i class="icon fas fa-info"></i> About Intelligence Fusion</h5>
+                                <p>Intelligence fusion operations combine data from multiple sources to create comprehensive threat intelligence. This process integrates IoCs, threat actor profiles, campaign data, and external intelligence feeds to provide actionable insights.</p>
+                                <h6>Fusion Capabilities:</h6>
+                                <ul class="mb-0">
+                                    <li><strong>Multi-Source Integration:</strong> Combine data from OpenCTI, MISP, threat intelligence feeds, and internal sources</li>
+                                    <li><strong>Correlation Analysis:</strong> Identify relationships between indicators, campaigns, and threat actors</li>
+                                    <li><strong>Risk Scoring:</strong> Generate comprehensive risk assessments from fused intelligence</li>
+                                    <li><strong>Operational Metrics:</strong> Track fusion effectiveness and data quality</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics -->
+                    <div class="row mb-4">
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>{{ operations|length }}</h3>
+                                    <p>Total Operations</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>{{ operations|selectattr('status', 'equalto', 'completed')|list|length }}</h3>
+                                    <p>Completed</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>{{ operations|selectattr('status', 'equalto', 'active')|list|length }}</h3>
+                                    <p>Active Operations</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-play-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3>{{ operations|selectattr('fusion_accuracy_score')|list|length }}</h3>
+                                    <p>With Metrics</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Operations List -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Fusion Operations</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Operation Name</th>
+                                                    <th>Type</th>
+                                                    <th>Status</th>
+                                                    <th>Accuracy Score</th>
+                                                    <th>Last Run</th>
+                                                    <th>Data Points</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for operation in operations %}
+                                                <tr>
+                                                    <td>
+                                                        <strong>{{ operation.operation_name }}</strong>
+                                                        {% if operation.fusion_objectives %}
+                                                        <br><small class="text-muted">{{ operation.fusion_objectives[:50] }}...</small>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-secondary">
+                                                            {{ operation.operation_type|replace('_', ' ')|title }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'success' if operation.status == 'completed' else 'warning' if operation.status == 'active' else 'secondary' }}">
+                                                            {{ operation.status|title }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        {% if operation.fusion_accuracy_score %}
+                                                            <span class="badge badge-{{ 'success' if operation.fusion_accuracy_score >= 80 else 'warning' if operation.fusion_accuracy_score >= 60 else 'danger' }}">
+                                                                {{ "%.1f"|format(operation.fusion_accuracy_score) }}%
+                                                            </span>
+                                                        {% else %}
+                                                            <span class="text-muted">N/A</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {{ operation.last_fusion_run.strftime('%Y-%m-%d %H:%M') if operation.last_fusion_run else 'Never' }}
+                                                    </td>
+                                                    <td>
+                                                        {{ operation.data_points_processed or 0 }}
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ url_for('view_fusion_operation', operation_id=operation.id) }}" class="btn btn-sm btn-info">
+                                                            <i class="fas fa-eye"></i> View
+                                                        </a>
+                                                        {% if operation.status != 'completed' %}
+                                                        <form method="POST" action="{{ url_for('run_fusion_operation', operation_id=operation.id) }}" style="display: inline;">
+                                                            <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Execute this fusion operation?')">
+                                                                <i class="fas fa-play"></i> Run
+                                                            </button>
+                                                        </form>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    {% if not operations %}
+                                    <div class="text-center mt-4">
+                                        <p class="text-muted">No intelligence fusion operations created yet.</p>
+                                        <p class="text-muted">Click "New Fusion Operation" to create your first operation.</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fusion Features -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Intelligence Fusion Features</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h6><i class="fas fa-database text-primary"></i> Multi-Source Integration</h6>
+                                            <p class="small">Integrate intelligence from OpenCTI, MISP, threat feeds, and internal sources for comprehensive analysis.</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6><i class="fas fa-link text-success"></i> Correlation Analysis</h6>
+                                            <p class="small">Identify relationships between indicators, campaigns, and threat actors using advanced correlation techniques.</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6><i class="fas fa-chart-bar text-warning"></i> Operational Metrics</h6>
+                                            <p class="small">Track fusion effectiveness, data quality, processing times, and accuracy scores for continuous improvement.</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-4">
+                                            <h6><i class="fas fa-robot text-info"></i> Automated Processing</h6>
+                                            <p class="small">Leverage automated fusion processes with configurable rules and real-time data processing capabilities.</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6><i class="fas fa-shield-alt text-danger"></i> Risk Assessment</h6>
+                                            <p class="small">Generate comprehensive risk assessments from fused intelligence with confidence scoring and impact analysis.</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6><i class="fas fa-file-alt text-secondary"></i> Actionable Intelligence</h6>
+                                            <p class="small">Produce actionable intelligence products with clear recommendations and prioritized mitigation strategies.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Fusion Operation Modal -->
+<div class="modal fade" id="addFusionModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Intelligence Fusion Operation</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+            <form method="POST" action="{{ url_for('intelligence_fusion') }}">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Operation Name *</label>
+                        <input type="text" name="operation_name" class="form-control" required
+                               placeholder="e.g., Q4 Threat Landscape Analysis, SolarWinds Campaign Fusion">
+                        <small class="form-text text-muted">Descriptive name for the fusion operation</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Operation Type *</label>
+                        <select name="operation_type" class="form-control" required>
+                            <option value="">Select Type</option>
+                            <option value="threat_analysis">Threat Analysis</option>
+                            <option value="campaign_tracking">Campaign Tracking</option>
+                            <option value="risk_assessment">Risk Assessment</option>
+                            <option value="situational_awareness">Situational Awareness</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fusion Objectives</label>
+                        <textarea name="fusion_objectives" class="form-control" rows="3"
+                                  placeholder="Describe the objectives and scope of this fusion operation"></textarea>
+                        <small class="form-text text-muted">What intelligence gaps does this operation address?</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Operation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

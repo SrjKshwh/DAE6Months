@@ -2037,6 +2037,127 @@ class ATTACKMapping(Base):
     mapper = relationship("User", backref="attack_mappings")
 
 
+class ThreatActor(Base):
+    """Detailed threat actor profiles with attribution analysis and supporting evidence"""
+    __tablename__ = "threat_actors"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    actor_name: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
+    display_name: Mapped[str] = mapped_column(String(255), nullable=True)
+
+    # Attribution details
+    attribution_confidence: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, confirmed
+    attribution_methods: Mapped[str] = mapped_column(Text, nullable=True)  # JSON attribution techniques used
+    attribution_evidence: Mapped[str] = mapped_column(Text, nullable=True)  # JSON supporting evidence
+
+    # Actor characteristics
+    actor_type: Mapped[str] = mapped_column(String(50), nullable=False)  # state_sponsored, criminal, hacktivist, insider
+    motivation: Mapped[str] = mapped_column(String(100), nullable=True)  # espionage, financial, political, disruption
+    sophistication_level: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, advanced
+
+    # Geographic and operational details
+    primary_location: Mapped[str] = mapped_column(String(100), nullable=True)
+    operating_regions: Mapped[str] = mapped_column(Text, nullable=True)  # JSON regions of operation
+    target_industries: Mapped[str] = mapped_column(Text, nullable=True)  # JSON targeted industries/sectors
+
+    # Technical capabilities
+    known_ttps: Mapped[str] = mapped_column(Text, nullable=True)  # JSON known TTPs
+    malware_families: Mapped[str] = mapped_column(Text, nullable=True)  # JSON associated malware
+    infrastructure_indicators: Mapped[str] = mapped_column(Text, nullable=True)  # JSON C2 servers, domains, etc.
+
+    # Attribution timeline
+    first_observed: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    last_observed: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    activity_status: Mapped[str] = mapped_column(String(20), default="active")  # active, dormant, disbanded
+
+    # Intelligence sources
+    intelligence_sources: Mapped[str] = mapped_column(Text, nullable=True)  # JSON sources of intelligence
+    aliases: Mapped[str] = mapped_column(Text, nullable=True)  # JSON alternative names/codenames
+
+    # Risk assessment
+    threat_level: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, critical
+    potential_impact: Mapped[str] = mapped_column(Text, nullable=True)  # JSON potential impacts
+    recommended_defenses: Mapped[str] = mapped_column(Text, nullable=True)  # JSON defense recommendations
+
+    # Documentation
+    profile_summary: Mapped[str] = mapped_column(Text, nullable=True)
+    detailed_analysis: Mapped[str] = mapped_column(Text, nullable=True)
+    key_indicators: Mapped[str] = mapped_column(Text, nullable=True)  # JSON key indicators for detection
+
+    # Governance
+    documented_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    last_updated_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    review_required: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    documenter = relationship("User", foreign_keys=[documented_by])
+    updater = relationship("User", foreign_keys=[last_updated_by])
+
+
+class IntelligenceFusion(Base):
+    """Intelligence fusion operations combining data from multiple sources with integration capabilities"""
+    __tablename__ = "intelligence_fusion"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    operation_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    operation_type: Mapped[str] = mapped_column(String(50), nullable=False)  # threat_analysis, campaign_tracking, risk_assessment, situational_awareness
+
+    # Fusion scope and objectives
+    fusion_objectives: Mapped[str] = mapped_column(Text, nullable=True)  # JSON fusion objectives
+    scope_definition: Mapped[str] = mapped_column(Text, nullable=True)  # JSON scope of fusion operation
+    target_frameworks: Mapped[str] = mapped_column(Text, nullable=True)  # JSON frameworks addressed
+
+    # Data sources integration
+    intelligence_sources: Mapped[str] = mapped_column(Text, nullable=True)  # JSON intelligence sources integrated
+    data_connectors: Mapped[str] = mapped_column(Text, nullable=True)  # JSON data connectors used
+    integration_methods: Mapped[str] = mapped_column(Text, nullable=True)  # JSON integration techniques
+
+    # Fusion process
+    fusion_methodology: Mapped[str] = mapped_column(String(100), nullable=True)  # JDL, OODA, custom
+    processing_stages: Mapped[str] = mapped_column(Text, nullable=True)  # JSON fusion processing stages
+    correlation_rules: Mapped[str] = mapped_column(Text, nullable=True)  # JSON correlation rules applied
+
+    # Data quality and validation
+    data_quality_metrics: Mapped[str] = mapped_column(Text, nullable=True)  # JSON data quality assessments
+    confidence_levels: Mapped[str] = mapped_column(Text, nullable=True)  # JSON confidence levels by source
+    validation_procedures: Mapped[str] = mapped_column(Text, nullable=True)  # JSON validation methods
+
+    # Fusion outputs
+    fused_intelligence: Mapped[str] = mapped_column(Text, nullable=True)  # JSON fused intelligence products
+    key_findings: Mapped[str] = mapped_column(Text, nullable=True)  # JSON key findings from fusion
+    actionable_intelligence: Mapped[str] = mapped_column(Text, nullable=True)  # JSON actionable intelligence
+
+    # Operational metrics
+    processing_time_seconds: Mapped[int] = mapped_column(Integer, nullable=True)
+    data_points_processed: Mapped[int] = mapped_column(Integer, nullable=True)
+    fusion_accuracy_score: Mapped[float] = mapped_column(Float, nullable=True)  # 0-100 accuracy score
+    false_positive_rate: Mapped[float] = mapped_column(Float, nullable=True)
+
+    # Integration capabilities
+    real_time_enabled: Mapped[bool] = mapped_column(Boolean, default=False)
+    automated_updates: Mapped[bool] = mapped_column(Boolean, default=True)
+    alert_generation: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Status and monitoring
+    status: Mapped[str] = mapped_column(String(50), default="active")  # active, paused, completed, error
+    last_fusion_run: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    next_scheduled_run: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
+    # Governance
+    created_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    approved_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    creator = relationship("User", foreign_keys=[created_by])
+    approver = relationship("User", foreign_keys=[approved_by])
+
+
 class VulnerabilityScan(Base):
     """Vulnerability scan records"""
     __tablename__ = "vulnerability_scans"

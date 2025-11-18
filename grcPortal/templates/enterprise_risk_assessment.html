@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Enterprise Risk Assessment{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Comprehensive Enterprise Risk Assessment</h3>
+                    <p class="card-subtitle">Detailed quantification methodology with enterprise-level risk analysis</p>
+                </div>
+                <div class="card-body">
+                    <!-- Risk Assessment Form -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <h4>Assessment Parameters</h4>
+                            <form method="POST">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="assessment_name">Assessment Name</label>
+                                            <input type="text" class="form-control" id="assessment_name" name="assessment_name" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="scope">Scope</label>
+                                            <select class="form-control" id="scope" name="scope">
+                                                <option value="enterprise">Enterprise-wide</option>
+                                                <option value="business_unit">Business Unit</option>
+                                                <option value="department">Department</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="methodology">Methodology</label>
+                                            <select class="form-control" id="methodology" name="methodology">
+                                                <option value="NIST SP 800-30">NIST SP 800-30</option>
+                                                <option value="ISO 31000">ISO 31000</option>
+                                                <option value="COSO">COSO ERM</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Initiate Assessment</button>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <h4>Enterprise Risk Metrics</h4>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="card bg-light">
+                                        <div class="card-body text-center">
+                                            <h5>{{ total_risks }}</h5>
+                                            <small>Total Risks</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card bg-warning">
+                                        <div class="card-body text-center">
+                                            <h5>{{ high_risks }}</h5>
+                                            <small>High Risks</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card bg-danger">
+                                        <div class="card-body text-center">
+                                            <h5>{{ critical_risks }}</h5>
+                                            <small>Critical Risks</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card bg-info">
+                                        <div class="card-body text-center">
+                                            <h5>${{ "{:,.0f}".format(total_ale) }}</h5>
+                                            <small>Total ALE</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Quantification Methodology -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Risk Quantification Methodology</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Quantitative Risk Analysis</h6>
+                                            <ul>
+                                                <li><strong>ALE (Annual Loss Expectancy):</strong> Probability × Impact</li>
+                                                <li><strong>EMV (Expected Monetary Value):</strong> ALE - Mitigation Cost</li>
+                                                <li><strong>Multi-criteria Scoring:</strong> Financial + Operational + Compliance + Reputation</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Assessment Framework</h6>
+                                            <ul>
+                                                <li><strong>Likelihood Scale:</strong> 1-5 (Very Low to Very High)</li>
+                                                <li><strong>Impact Scale:</strong> 1-5 (Minimal to Catastrophic)</li>
+                                                <li><strong>Risk Score:</strong> Likelihood × Impact (1-25)</li>
+                                                <li><strong>Severity Levels:</strong> Low (1-5), Medium (6-11), High (12-19), Critical (20-25)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Register -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Enterprise Risk Register</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Asset</th>
+                                                    <th>Threat</th>
+                                                    <th>Vulnerability</th>
+                                                    <th>Control</th>
+                                                    <th>Likelihood</th>
+                                                    <th>Impact</th>
+                                                    <th>Score</th>
+                                                    <th>ALE</th>
+                                                    <th>EMV</th>
+                                                    <th>Severity</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for risk in risks %}
+                                                <tr>
+                                                    <td>{{ risk.asset }}</td>
+                                                    <td>{{ risk.threat }}</td>
+                                                    <td>{{ risk.vulnerability }}</td>
+                                                    <td>{{ risk.control }}</td>
+                                                    <td>{{ risk.likelihood }}</td>
+                                                    <td>{{ risk.impact }}</td>
+                                                    <td>{{ risk.score }}</td>
+                                                    <td>${{ "{:,.0f}".format(risk.ale_calculated or risk.ale or 0) }}</td>
+                                                    <td>${{ "{:,.0f}".format(risk.emv_calculated or risk.emv or 0) }}</td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'danger' if risk.severity.value == 'Critical' else 'warning' if risk.severity.value == 'High' else 'info' if risk.severity.value == 'Medium' else 'success' }}">
+                                                            {{ risk.severity.value }}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{ risk.status.value }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

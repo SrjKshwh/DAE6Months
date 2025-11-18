@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}Threat Actor Profiles - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-user-secret"></i> Threat Actor Profiles
+                    </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addActorModal">
+                            <i class="fas fa-plus"></i> Add Threat Actor
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-info">
+                                <h5><i class="icon fas fa-info"></i> About Threat Actor Profiles</h5>
+                                <p>Threat actor profiles provide detailed attribution analysis and intelligence on cyber threat actors. Each profile includes attribution confidence, technical capabilities, motivations, and recommended defense strategies.</p>
+                                <h6>Key Features:</h6>
+                                <ul class="mb-0">
+                                    <li><strong>Attribution Analysis:</strong> Confidence levels and supporting evidence for actor identification</li>
+                                    <li><strong>Technical Intelligence:</strong> Known TTPs, malware families, and infrastructure indicators</li>
+                                    <li><strong>Risk Assessment:</strong> Threat levels and potential impact analysis</li>
+                                    <li><strong>Defense Recommendations:</strong> Targeted mitigation strategies based on actor characteristics</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics -->
+                    <div class="row mb-4">
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>{{ actors|length }}</h3>
+                                    <p>Total Profiles</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-user-secret"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3>{{ actors|selectattr('threat_level', 'equalto', 'critical')|list|length }}</h3>
+                                    <p>Critical Threats</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>{{ actors|selectattr('attribution_confidence', 'equalto', 'confirmed')|list|length }}</h3>
+                                    <p>Confirmed Attribution</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>{{ actors|selectattr('actor_type', 'equalto', 'state_sponsored')|list|length }}</h3>
+                                    <p>State Sponsored</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-flag"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Threat Actor List -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Threat Actor Profiles</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Actor Name</th>
+                                                    <th>Type</th>
+                                                    <th>Attribution</th>
+                                                    <th>Threat Level</th>
+                                                    <th>Location</th>
+                                                    <th>Last Updated</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for actor in actors %}
+                                                <tr>
+                                                    <td>
+                                                        <strong>{{ actor.display_name or actor.actor_name }}</strong>
+                                                        <br><small class="text-muted">{{ actor.actor_name }}</small>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'primary' if actor.actor_type == 'state_sponsored' else 'secondary' if actor.actor_type == 'criminal' else 'warning' if actor.actor_type == 'hacktivist' else 'info' }}">
+                                                            {{ actor.actor_type|replace('_', ' ')|title }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'success' if actor.attribution_confidence == 'confirmed' else 'warning' if actor.attribution_confidence == 'high' else 'info' }}">
+                                                            {{ actor.attribution_confidence|title }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-{{ 'danger' if actor.threat_level == 'critical' else 'warning' if actor.threat_level == 'high' else 'info' }}">
+                                                            {{ actor.threat_level|title }}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{ actor.primary_location or 'Unknown' }}</td>
+                                                    <td>{{ actor.updated_at.strftime('%Y-%m-%d') if actor.updated_at else 'N/A' }}</td>
+                                                    <td>
+                                                        <a href="{{ url_for('view_threat_actor', actor_id=actor.id) }}" class="btn btn-sm btn-info">
+                                                            <i class="fas fa-eye"></i> View
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    {% if not actors %}
+                                    <div class="text-center mt-4">
+                                        <p class="text-muted">No threat actor profiles created yet.</p>
+                                        <p class="text-muted">Click "Add Threat Actor" to create your first profile.</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Threat Actor Modal -->
+<div class="modal fade" id="addActorModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Threat Actor Profile</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+            <form method="POST" action="{{ url_for('threat_actors') }}">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Actor Name *</label>
+                                <input type="text" name="actor_name" class="form-control" required
+                                       placeholder="e.g., APT28, Lazarus Group">
+                                <small class="form-text text-muted">Unique identifier for the threat actor</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Display Name</label>
+                                <input type="text" name="display_name" class="form-control"
+                                       placeholder="e.g., Fancy Bear, Guardians of Peace">
+                                <small class="form-text text-muted">Human-readable name (optional)</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Actor Type *</label>
+                                <select name="actor_type" class="form-control" required>
+                                    <option value="">Select Type</option>
+                                    <option value="state_sponsored">State Sponsored</option>
+                                    <option value="criminal">Criminal</option>
+                                    <option value="hacktivist">Hacktivist</option>
+                                    <option value="insider">Insider Threat</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Motivation</label>
+                                <select name="motivation" class="form-control">
+                                    <option value="">Select Motivation</option>
+                                    <option value="espionage">Espionage</option>
+                                    <option value="financial">Financial Gain</option>
+                                    <option value="political">Political</option>
+                                    <option value="disruption">Disruption</option>
+                                    <option value="influence">Influence Operations</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Attribution Confidence</label>
+                                <select name="attribution_confidence" class="form-control">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="confirmed">Confirmed</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Sophistication Level</label>
+                                <select name="sophistication_level" class="form-control">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="advanced">Advanced</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Threat Level</label>
+                                <select name="threat_level" class="form-control">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Primary Location</label>
+                                <input type="text" name="primary_location" class="form-control"
+                                       placeholder="e.g., Russia, North Korea, China">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
