@@ -6,7 +6,7 @@ permalink: /resume/
 
 # 👨‍💻 Saroj Kushwaha
 
-📧 saroj24786@gmail.com | 📱 (475) 232-3515 <a href="#" onclick="window.print(); return false;">Print Resume</a> <a href="resume.pdf" download>Download Resume</a>
+📧 saroj24786@gmail.com | 📱 (475) 232-3515 | <a href="#" onclick="window.print(); return false;">Print Resume</a> | <a href="resume.pdf" download>Download Resume</a>
 
 ---
 
@@ -66,10 +66,16 @@ Dynamic IT professional with 2+ years of experience in web design, development, 
 
 ### Cybersecurity Compliance Checker | DAE Semester 3-5 | Aug-Oct 2025
 Web-based tool analyzing files against GLBA, NIST CSF, PCI DSS. Generates risk registers and heat maps for compliance prioritization.
-- Developed comprehensive GRC (Governance, Risk, and Compliance) portal with AI-powered document analysis
-- Implemented Zero Trust Architecture with role-based access control and session management
-- Built automated compliance scanning, risk assessment, and incident response workflows
-- Integrated threat intelligence feeds and digital forensics capabilities
+- Developed comprehensive GRC portal with AI-powered document analysis for automated compliance gap identification
+- Implemented multi-framework compliance scanning supporting NIST CSF, PCI DSS, GLBA, ISO 27001, GDPR, and HIPAA
+- Built advanced risk assessment engine with multi-criteria scoring (Financial, Operational, Compliance, Reputation) and heat map visualization
+- Integrated Zero Trust Architecture with role-based access control, session management, and continuous authentication
+- Created automated incident response workflows with evidence collection, severity classification, and forensic analysis
+- Added threat intelligence capabilities including IoC analysis, malware detection, and APT campaign tracking
+- Implemented vulnerability scanning integration with automated risk assessment and remediation tracking
+- Developed compliance monitoring dashboard with real-time KPI tracking and automated gap analysis
+- Incorporated digital forensics tools with integrity hashing, chain of custody, and evidence preservation
+- Built predictive analytics for risk forecasting and trend analysis with automated alerting
 - **Tech Stack**: Python, Flask, SQLAlchemy, OpenRouter API, Bootstrap, JavaScript, SQLite
 
 ### Interactive Word Search Game | DAE Semester 1 | Jul 2025
