@@ -4,6 +4,15 @@
 
 {% block content %}
 <div class="container-fluid">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('threat_intelligence') }}">Threat Intelligence</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('threat_actors') }}">Advanced Threat Intelligence Operations</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ actor.display_name or actor.actor_name }}</li>
+        </ol>
+    </nav>
+
     <div class="row">
         <div class="col-12">
             <div class="card">
