@@ -29,7 +29,7 @@ Dynamic IT professional with 2+ years of experience in web design, development, 
 - **IDE Tools**: Notepad++, MyEclipse, Dreamweaver, VS Code
 - **Operating Systems**: Windows, Linux/Unix
 - **Programming Languages**: Python, SQL, SOQL, Apex (Classes, Triggers, Batch, Schedule), PHP, Java
-- **Salesforce CRM**: Workflow Rules, Approval Processes, LWC, Lightning, Profiles, Roles, Permission Sets, Relationships, Validation Rules, Custom Objects, Dashboards, Reports, Search/Page Layouts, Record Types, Process Builders, Flows, OmniScript, OmniStudio
+- **Salesforce CRM**: Workflow Rules, Approval Processes, LWC, Lightning, Profiles, Roles, Permission Sets, Relationships, Validation Rules, Custom Objects, Dashboards, Reports, Search/Page Layouts, Record Types, Process Builders, Flows
 - **Static Site Generators**: Jekyll
 - **Tools & Libraries**: Tkinter (GUI), APScheduler (Task Scheduling), Automated Testing Framework, Git CLI, Bandit (Security Scanning), Bash Scripting, Alembic
 - **Version Control**: Git
