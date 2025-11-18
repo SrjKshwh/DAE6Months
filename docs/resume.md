@@ -6,7 +6,7 @@ permalink: /resume/
 
 # 👨‍💻 Saroj Kushwaha
 
-📧 saroj24786@gmail.com | 📱 (475) 232-3515 | <a href="#" onclick="window.print(); return false;">Print Resume</a> | <a href="resume.pdf" download>Download Resume</a>
+📧 saroj24786@gmail.com | 📱 (475) 232-3515 | <a href="#" onclick="window.print(); return false;">Print Resume</a> | <a href="Saroj_Kushwaha_resume.pdf" download>Download Resume</a>
 
 ---
 
