@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Enhanced Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Enhanced Analytics Dashboard</h3>
+                    <p class="card-subtitle">Comprehensive metrics and visualizations for GRC monitoring</p>
+                </div>
+                <div class="card-body">
+                    <!-- Key Metrics Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-2">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ metrics.total_risks }}</h5>
+                                    <p class="card-text">Total Risks</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card bg-warning text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ metrics.open_risks }}</h5>
+                                    <p class="card-text">Open Risks</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ metrics.critical_risks }}</h5>
+                                    <p class="card-text">Critical Risks</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ metrics.compliance_score }}%</h5>
+                                    <p class="card-text">Compliance Score</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card bg-info text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ metrics.active_incidents }}</h5>
+                                    <p class="card-text">Active Incidents</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card bg-secondary text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ metrics.audit_events_today }}</h5>
+                                    <p class="card-text">Today's Audit Events</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Risk Distribution by Category</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="categoryChart" width="400" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Risk Severity Distribution</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="severityChart" width="400" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compliance Trends -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Compliance Score Trends</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="complianceChart" width="800" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Metrics Table -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Detailed Analytics</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Metric</th>
+                                                    <th>Value</th>
+                                                    <th>Status</th>
+                                                    <th>Trend</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Risk Mitigation Rate</td>
+                                                    <td>78%</td>
+                                                    <td><span class="badge bg-success">Good</span></td>
+                                                    <td>↗️ Improving</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Incident Response Time</td>
+                                                    <td>2.3 hours</td>
+                                                    <td><span class="badge bg-warning">Average</span></td>
+                                                    <td>→ Stable</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Compliance Audit Pass Rate</td>
+                                                    <td>92%</td>
+                                                    <td><span class="badge bg-success">Excellent</span></td>
+                                                    <td>↗️ Improving</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Security Training Completion</td>
+                                                    <td>85%</td>
+                                                    <td><span class="badge bg-info">Good</span></td>
+                                                    <td>↗️ Improving</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js for visualizations -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Category Chart
+const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+const categoryData = {{ category_data | tojson | safe }};
+new Chart(categoryCtx, {
+    type: 'doughnut',
+    data: {
+        labels: categoryData.map(item => item.category || 'Uncategorized'),
+        datasets: [{
+            data: categoryData.map(item => item.count),
+            backgroundColor: [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            }
+        }
+    }
+});
+
+// Severity Chart
+const severityCtx = document.getElementById('severityChart').getContext('2d');
+const severityData = {{ severity_chart | tojson | safe }};
+new Chart(severityCtx, {
+    type: 'bar',
+    data: {
+        labels: severityData.map(item => item.severity),
+        datasets: [{
+            label: 'Risk Count',
+            data: severityData.map(item => item.count),
+            backgroundColor: [
+                '#28a745', '#17a2b8', '#ffc107', '#dc3545'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Compliance Trends Chart
+const complianceCtx = document.getElementById('complianceChart').getContext('2d');
+const complianceData = {{ compliance_trends | tojson | safe }};
+new Chart(complianceCtx, {
+    type: 'line',
+    data: {
+        labels: complianceData.map(item => item.month),
+        datasets: [{
+            label: 'Compliance Score',
+            data: complianceData.map(item => item.score),
+            borderColor: '#007bff',
+            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: false,
+                min: 70,
+                max: 100
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

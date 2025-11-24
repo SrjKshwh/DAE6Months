@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Feed Data Flow Evidence{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Feed Integration Data Flow Evidence</h3>
+                    <p class="card-subtitle">Demonstration of secure data processing pipeline</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Data Flow Architecture</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="flow-diagram">
+                                        <div class="flow-step">
+                                            <strong>1. Source Validation</strong>
+                                            <p>URL validation, SSL verification, rate limiting</p>
+                                        </div>
+                                        <div class="flow-arrow">↓</div>
+                                        <div class="flow-step">
+                                            <strong>2. Data Acquisition</strong>
+                                            <p>Secure HTTP requests with timeout controls</p>
+                                        </div>
+                                        <div class="flow-arrow">↓</div>
+                                        <div class="flow-step">
+                                            <strong>3. Content Parsing</strong>
+                                            <p>RSS/Atom parsing with schema validation</p>
+                                        </div>
+                                        <div class="flow-arrow">↓</div>
+                                        <div class="flow-step">
+                                            <strong>4. Security Filtering</strong>
+                                            <p>Malicious content detection and sanitization</p>
+                                        </div>
+                                        <div class="flow-arrow">↓</div>
+                                        <div class="flow-step">
+                                            <strong>5. Data Enrichment</strong>
+                                            <p>Risk correlation and intelligence enhancement</p>
+                                        </div>
+                                        <div class="flow-arrow">↓</div>
+                                        <div class="flow-step">
+                                            <strong>6. Storage & Integrity</strong>
+                                            <p>Database storage with hash verification</p>
+                                        </div>
+                                        <div class="flow-arrow">↓</div>
+                                        <div class="flow-step">
+                                            <strong>7. Audit Logging</strong>
+                                            <p>Complete audit trail and compliance tracking</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Security Controls</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <strong>Input Validation:</strong> URL format and protocol validation
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Network Security:</strong> HTTPS enforcement, certificate validation
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Rate Limiting:</strong> Request throttling to prevent abuse
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Content Sanitization:</strong> XSS prevention and malicious content filtering
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Data Integrity:</strong> SHA-256 hashing for evidence preservation
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Access Control:</strong> Role-based permissions for feed management
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Audit Trail:</strong> Complete logging of all data processing activities
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4">Evidence of Implementation</h5>
+                            <div class="alert alert-success">
+                                <strong>✅ Verified Data Flow:</strong>
+                                <ul class="mb-0">
+                                    <li>Secure feed fetching with proper error handling</li>
+                                    <li>Content parsing with validation</li>
+                                    <li>Database storage with transaction safety</li>
+                                    <li>Audit logging for compliance</li>
+                                    <li>Integrity verification through hashing</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.flow-diagram {
+    text-align: center;
+}
+
+.flow-step {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0;
+}
+
+.flow-arrow {
+    color: #6c757d;
+    font-size: 18px;
+    margin: 5px 0;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  grc-portal:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-default-secret-key-change-in-production}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - DATABASE_URL=sqlite:///grc_portal.db
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+      - ./evidence:/app/evidence
+      - ./reports:/app/reports
+      - grc-portal-db:/app/grc_portal.db
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+volumes:
+  grc-portal-db:
+  redis-data:

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Feed Integration & Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Feed Integration & Management</h3>
+                    <p class="card-subtitle">Integrate external security feeds with evidence of proper data flow</p>
+                </div>
+                <div class="card-body">
+                    <!-- Add New Feed Form -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <h5>Add New Security Feed</h5>
+                            <form method="POST" action="{{ url_for('feed_integration') }}">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" name="feed_name" placeholder="Feed Name" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="url" class="form-control" name="feed_url" placeholder="Feed URL" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-primary">Add Feed</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Sample Feeds for Demonstration -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5>Sample Security Feeds</h5>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6>CISA Cybersecurity Advisories</h6>
+                                            <p>Official US government security alerts</p>
+                                            <form method="POST" action="{{ url_for('fetch_feed', feed_id=1) }}">
+                                                <button type="submit" class="btn btn-outline-primary btn-sm">Fetch Feed</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6>The Hacker News</h6>
+                                            <p>Latest cybersecurity news and updates</p>
+                                            <form method="POST" action="{{ url_for('fetch_feed', feed_id=2) }}">
+                                                <button type="submit" class="btn btn-outline-primary btn-sm">Fetch Feed</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6>Dark Reading</h6>
+                                            <p>Enterprise cybersecurity insights</p>
+                                            <form method="POST" action="{{ url_for('fetch_feed', feed_id=3) }}">
+                                                <button type="submit" class="btn btn-outline-primary btn-sm">Fetch Feed</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Flow Evidence -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Data Flow Evidence</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-info">
+                                        <strong>Data Flow Process:</strong>
+                                        <ol>
+                                            <li>Feed URL validation and secure access</li>
+                                            <li>RSS/Atom parsing with content normalization</li>
+                                            <li>Security filtering and deduplication</li>
+                                            <li>Risk correlation and intelligence enrichment</li>
+                                            <li>Database storage with integrity verification</li>
+                                            <li>Audit logging and compliance tracking</li>
+                                        </ol>
+                                    </div>
+                                    <a href="{{ url_for('feed_data_flow') }}" class="btn btn-info">View Detailed Data Flow</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
