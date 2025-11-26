@@ -2951,7 +2951,7 @@ def create_app(app=None):
 
     # Zero Trust: IP-based access control
     # Restrict access to allowed IPs (Zero Trust: verify every access)
-    ALLOWED_IPS = os.getenv("ALLOWED_IPS", "127.0.0.1").split(",")
+    ALLOWED_IPS = os.getenv("ALLOWED_IPS", "127.0.0.1,http://localhost:5000/").split(",")
     @app.before_request
     def check_ip_restriction():
         if request.endpoint not in ['login', 'register', 'static'] and request.remote_addr not in ALLOWED_IPS:
@@ -14546,235 +14546,289 @@ def create_app(app=None):
         return render_template("professional_audit_reports.html",
                              audits=audits)
 
-@app.route("/feed_integration", methods=["GET", "POST"])
-@login_required
-def feed_integration():
-    """Feed integration and management with data flow evidence"""
-    db = get_session()
-    try:
-        if request.method == "POST":
-            feed_url = request.form.get("feed_url", "").strip()
-            feed_name = request.form.get("feed_name", "").strip()
-            feed_type = request.form.get("feed_type", "rss")  # rss, atom, json
+    @app.route("/feed_integration", methods=["GET", "POST"])
+    @login_required
+    def feed_integration():
+        """Feed integration and management with data flow evidence"""
+        db = get_session()
+        try:
+            if request.method == "POST":
+                feed_url = request.form.get("feed_url", "").strip()
+                feed_name = request.form.get("feed_name", "").strip()
+                feed_type = request.form.get("feed_type", "rss")  # rss, atom, json
 
-            if not feed_url or not feed_name:
-                flash("Feed URL and name are required.", "danger")
+                if not feed_url or not feed_name:
+                    flash("Feed URL and name are required.", "danger")
+                    return redirect(url_for("feed_integration"))
+
+                # Create new feed entry (assuming we have a Feed model)
+                # For now, store in a simple structure
+                feed_data = {
+                    "name": feed_name,
+                    "url": feed_url,
+                    "type": feed_type,
+                    "active": True,
+                    "last_fetched": None,
+                    "items": []
+                }
+
+                # In a real implementation, save to database
+                flash(f"Feed '{feed_name}' added successfully.", "success")
                 return redirect(url_for("feed_integration"))
 
-            # Create new feed entry (assuming we have a Feed model)
-            # For now, store in a simple structure
-            feed_data = {
-                "name": feed_name,
-                "url": feed_url,
-                "type": feed_type,
-                "active": True,
-                "last_fetched": None,
-                "items": []
-            }
+            # GET request - display feeds
+            feeds = []  # In real implementation, fetch from database
 
-            # In a real implementation, save to database
-            flash(f"Feed '{feed_name}' added successfully.", "success")
-            return redirect(url_for("feed_integration"))
-
-        # GET request - display feeds
-        feeds = []  # In real implementation, fetch from database
-
-        return render_template("feed_integration.html", feeds=feeds)
-
-    except Exception as e:
-        flash(f"Error in feed integration: {str(e)}", "danger")
-        return redirect(url_for("home"))
-
-
-@app.route("/fetch_feed/<int:feed_id>", methods=["POST"])
-@login_required
-def fetch_feed(feed_id):
-    """Fetch data from a specific feed and demonstrate data flow"""
-    db = get_session()
-    try:
-        # In real implementation, fetch feed by ID and process
-        # For demonstration, simulate RSS feed fetching
-
-        import feedparser
-        import requests
-
-        # Example security feed URLs
-        sample_feeds = {
-            1: "https://www.cisa.gov/cybersecurity-advisories/all.xml",
-            2: "https://feeds.feedburner.com/TheHackersNews",
-            3: "https://www.darkreading.com/rss.xml"
-        }
-
-        feed_url = sample_feeds.get(feed_id, "https://www.cisa.gov/cybersecurity-advisories/all.xml")
-
-        # Fetch and parse feed
-        try:
-            response = requests.get(feed_url, timeout=10)
-            feed = feedparser.parse(response.content)
-
-            # Process feed items
-            processed_items = []
-            for entry in feed.entries[:10]:  # Limit to 10 items
-                item = {
-                    "title": entry.title,
-                    "link": entry.link,
-                    "published": entry.get("published", "Unknown"),
-                    "summary": entry.get("summary", "")[:200] + "..." if entry.get("summary") else "",
-                    "processed_at": datetime.now(timezone.utc).isoformat()
-                }
-                processed_items.append(item)
-
-            # Log data flow
-            log_audit_event(
-                session.get("user_id"),
-                "FEED_FETCH",
-                "SECURITY",
-                f"Fetched {len(processed_items)} items from feed {feed_id}",
-                f"/fetch_feed/{feed_id}"
-            )
-
-            flash(f"Successfully fetched {len(processed_items)} feed items with proper data flow.", "success")
+            return render_template("feed_integration.html", feeds=feeds)
 
         except Exception as e:
-            flash(f"Error fetching feed: {str(e)}", "danger")
-
-        return redirect(url_for("feed_integration"))
-
-    except Exception as e:
-        flash(f"Error in feed fetching: {str(e)}", "danger")
-        return redirect(url_for("feed_integration"))
+            flash(f"Error in feed integration: {str(e)}", "danger")
+            return redirect(url_for("home"))
 
 
-@app.route("/feed_data_flow")
-@login_required
-def feed_data_flow():
-    """Demonstrate data flow in feed integration"""
-    db = get_session()
-    try:
-        # Simulate data flow demonstration
-        data_flow = {
-            "source": "External Security Feeds",
-            "processing_steps": [
-                "1. Feed URL validation and access",
-                "2. RSS/Atom parsing and normalization",
-                "3. Content filtering and deduplication",
-                "4. Risk correlation and enrichment",
-                "5. Database storage with integrity checks",
-                "6. Audit logging and compliance tracking"
-            ],
-            "destination": "GRC Portal Risk Register",
-            "evidence": "All feed data processed with timestamps, source attribution, and integrity hashing"
-        }
+    @app.route("/fetch_feed/<int:feed_id>", methods=["POST"])
+    @login_required
+    def fetch_feed(feed_id):
+        """Fetch data from a specific feed and demonstrate data flow"""
+        db = get_session()
+        try:
+            # In real implementation, fetch feed by ID and process
+            # For demonstration, simulate RSS feed fetching
 
-        return render_template("feed_data_flow.html", data_flow=data_flow)
+            import feedparser
+            import requests
 
-    except Exception as e:
-        flash(f"Error displaying data flow: {str(e)}", "danger")
-        return redirect(url_for("home"))
+            # Example security feed URLs
+            sample_feeds = {
+                1: "https://www.cisa.gov/cybersecurity-advisories/all.xml",
+                2: "https://feeds.feedburner.com/TheHackersNews",
+                3: "https://www.darkreading.com/rss.xml"
+            }
+
+            feed_url = sample_feeds.get(feed_id, "https://www.cisa.gov/cybersecurity-advisories/all.xml")
+
+            # Fetch and parse feed
+            try:
+                response = requests.get(feed_url, timeout=10)
+                feed = feedparser.parse(response.content)
+
+                # Process feed items
+                processed_items = []
+                for entry in feed.entries[:10]:  # Limit to 10 items
+                    item = {
+                        "title": entry.title,
+                        "link": entry.link,
+                        "published": entry.get("published", "Unknown"),
+                        "summary": entry.get("summary", "")[:200] + "..." if entry.get("summary") else "",
+                        "processed_at": datetime.now(timezone.utc).isoformat()
+                    }
+                    processed_items.append(item)
+
+                # Log data flow
+                log_audit_event(
+                    session.get("user_id"),
+                    "FEED_FETCH",
+                    "SECURITY",
+                    f"Fetched {len(processed_items)} items from feed {feed_id}",
+                    f"/fetch_feed/{feed_id}"
+                )
+
+                flash(f"Successfully fetched {len(processed_items)} feed items with proper data flow.", "success")
+
+            except Exception as e:
+                flash(f"Error fetching feed: {str(e)}", "danger")
+
+            return redirect(url_for("feed_integration"))
+
+        except Exception as e:
+            flash(f"Error in feed fetching: {str(e)}", "danger")
+            return redirect(url_for("feed_integration"))
+
+
+    @app.route("/feed_data_flow")
+    @login_required
+    def feed_data_flow():
+        """Demonstrate data flow in feed integration"""
+        db = get_session()
+        try:
+            # Simulate data flow demonstration
+            data_flow = {
+                "source": "External Security Feeds",
+                "processing_steps": [
+                    "1. Feed URL validation and access",
+                    "2. RSS/Atom parsing and normalization",
+                    "3. Content filtering and deduplication",
+                    "4. Risk correlation and enrichment",
+                    "5. Database storage with integrity checks",
+                    "6. Audit logging and compliance tracking"
+                ],
+                "destination": "GRC Portal Risk Register",
+                "evidence": "All feed data processed with timestamps, source attribution, and integrity hashing"
+            }
+
+            return render_template("feed_data_flow.html", data_flow=data_flow)
+
+        except Exception as e:
+            flash(f"Error displaying data flow: {str(e)}", "danger")
+            return redirect(url_for("home"))
 
 
 # Platform configuration management
-@app.route("/platform_config", methods=["GET", "POST"])
-@admin_required
-def platform_config():
-    """Platform configuration management with security settings"""
-    db = get_session()
-    try:
-        if request.method == "POST":
-            # Security configurations
-            session_timeout = request.form.get("session_timeout", "600")  # 10 minutes default
-            max_login_attempts = request.form.get("max_login_attempts", "5")
-            password_min_length = request.form.get("password_min_length", "8")
-            enable_2fa = request.form.get("enable_2fa") == "on"
-            audit_log_retention = request.form.get("audit_log_retention", "365")
+    @app.route("/platform_config", methods=["GET", "POST"])
+    @admin_required
+    def platform_config():
+        """Platform configuration management with security settings"""
+        db = get_session()
+        try:
+            if request.method == "POST":
+                # Security configurations
+                session_timeout = request.form.get("session_timeout", "600")  # 10 minutes default
+                max_login_attempts = request.form.get("max_login_attempts", "5")
+                password_min_length = request.form.get("password_min_length", "8")
+                enable_2fa = request.form.get("enable_2fa") == "on"
+                audit_log_retention = request.form.get("audit_log_retention", "365")
 
-            # Update configuration (in real implementation, save to config file or database)
-            config_updates = {
-                "session_timeout": int(session_timeout),
-                "max_login_attempts": int(max_login_attempts),
-                "password_min_length": int(password_min_length),
-                "enable_2fa": enable_2fa,
-                "audit_log_retention_days": int(audit_log_retention)
+                # Update configuration (in real implementation, save to config file or database)
+                config_updates = {
+                    "session_timeout": int(session_timeout),
+                    "max_login_attempts": int(max_login_attempts),
+                    "password_min_length": int(password_min_length),
+                    "enable_2fa": enable_2fa,
+                    "audit_log_retention_days": int(audit_log_retention)
+                }
+
+                # Log configuration change
+                log_audit_event(
+                    session.get("user_id"),
+                    "CONFIG_UPDATE",
+                    "ADMINISTRATION",
+                    f"Updated platform security configuration: {config_updates}",
+                    "/platform_config"
+                )
+
+                flash("Platform configuration updated successfully.", "success")
+                return redirect(url_for("platform_config"))
+
+            # GET request - display current config
+            current_config = {
+                "session_timeout": 600,
+                "max_login_attempts": 5,
+                "password_min_length": 8,
+                "enable_2fa": False,
+                "audit_log_retention_days": 365
             }
 
-            # Log configuration change
-            log_audit_event(
-                session.get("user_id"),
-                "CONFIG_UPDATE",
-                "ADMINISTRATION",
-                f"Updated platform security configuration: {config_updates}",
-                "/platform_config"
-            )
+            return render_template("platform_config.html", config=current_config)
 
-            flash("Platform configuration updated successfully.", "success")
-            return redirect(url_for("platform_config"))
-
-        # GET request - display current config
-        current_config = {
-            "session_timeout": 600,
-            "max_login_attempts": 5,
-            "password_min_length": 8,
-            "enable_2fa": False,
-            "audit_log_retention_days": 365
-        }
-
-        return render_template("platform_config.html", config=current_config)
-
-    except Exception as e:
-        flash(f"Error in platform configuration: {str(e)}", "danger")
-        return redirect(url_for("home"))
+        except Exception as e:
+            flash(f"Error in platform configuration: {str(e)}", "danger")
+            return redirect(url_for("home"))
 
 
-# Enhanced analytics dashboard
-@app.route("/enhanced_analytics")
-@login_required
-def enhanced_analytics():
-    """Enhanced analytics dashboard with metrics and visualizations"""
-    db = get_session()
-    try:
-        # Gather comprehensive metrics
-        metrics = {
-            "total_risks": db.query(Risk).count(),
-            "open_risks": db.query(Risk).filter(Risk.status == "open").count(),
-            "critical_risks": db.query(Risk).filter(Risk.severity == "Critical").count(),
-            "compliance_score": 85.5,  # Mock compliance score
-            "active_incidents": db.query(Incident).filter(Incident.status == "open").count(),
-            "total_users": db.query(User).count(),
-            "audit_events_today": db.query(AuditLog).filter(
-                AuditLog.created_at >= datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
-            ).count()
-        }
+    # Enhanced analytics dashboard
+    @app.route("/enhanced_analytics")
+    @login_required
+    def enhanced_analytics():
+        """Enhanced analytics dashboard with metrics and visualizations"""
+        db = get_session()
+        try:
+            # Gather comprehensive metrics
+            metrics = {
+                "total_risks": db.query(Risk).count(),
+                "open_risks": db.query(Risk).filter(Risk.status == "open").count(),
+                "critical_risks": db.query(Risk).filter(Risk.severity == "Critical").count(),
+                "compliance_score": 85.5,  # Mock compliance score
+                "active_incidents": db.query(Incident).filter(Incident.status == "open").count(),
+                "total_users": db.query(User).count(),
+                "audit_events_today": db.query(AuditLog).filter(
+                    AuditLog.created_at >= datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+                ).count()
+            }
 
-        # Risk distribution by category
-        risk_categories = db.query(Risk.category, db.func.count(Risk.id)).group_by(Risk.category).all()
-        category_data = [{"category": cat, "count": count} for cat, count in risk_categories]
+            # Risk distribution by category
+            risk_categories = db.query(Risk.category, db.func.count(Risk.id)).group_by(Risk.category).all()
+            category_data = [{"category": cat, "count": count} for cat, count in risk_categories]
 
-        # Risk severity distribution
-        severity_data = db.query(Risk.severity, db.func.count(Risk.id)).group_by(Risk.severity).all()
-        severity_chart = [{"severity": sev, "count": count} for sev, count in severity_data]
+            # Risk severity distribution
+            severity_data = db.query(Risk.severity, db.func.count(Risk.id)).group_by(Risk.severity).all()
+            severity_chart = [{"severity": sev, "count": count} for sev, count in severity_data]
 
-        # Compliance trends (mock data for demonstration)
-        compliance_trends = [
-            {"month": "Jan", "score": 82},
-            {"month": "Feb", "score": 85},
-            {"month": "Mar", "score": 83},
-            {"month": "Apr", "score": 87},
-            {"month": "May", "score": 85},
-            {"month": "Jun", "score": 88}
-        ]
+            # Compliance trends (mock data for demonstration)
+            compliance_trends = [
+                {"month": "Jan", "score": 82},
+                {"month": "Feb", "score": 85},
+                {"month": "Mar", "score": 83},
+                {"month": "Apr", "score": 87},
+                {"month": "May", "score": 85},
+                {"month": "Jun", "score": 88}
+            ]
 
-        return render_template("enhanced_analytics.html",
+            return render_template("enhanced_analytics.html",
                              metrics=metrics,
                              category_data=category_data,
                              severity_chart=severity_chart,
                              compliance_trends=compliance_trends)
 
-    except Exception as e:
-        flash(f"Error loading analytics: {str(e)}", "danger")
-        return redirect(url_for("home"))
+        except Exception as e:
+            flash(f"Error loading analytics: {str(e)}", "danger")
+            return redirect(url_for("home"))
 
+    @app.route("/kpi_dashboard")
+    @login_required
+    def kpi_dashboard():
+        """KPI Dashboard with key performance indicators"""
+        try:
+            # Placeholder for KPI data - can be expanded
+            kpis = {
+                "compliance_score": 85,
+                "compliance_trend": "up",
+                "compliance_change": 5,
+                "critical_risks": 3,
+                "avg_mttr": 2.5,
+                "mttr_trend": "improving",
+                "system_availability": 99.5
+            }
+            # Other required variables
+            compliance_gaps = [
+                {"framework": "ISO 27001", "count": 2, "priority": "High"},
+                {"framework": "GDPR", "count": 1, "priority": "Medium"}
+            ]
+            risk_progress = {"completed": 75, "completed_count": 15, "total_count": 20}
+            active_alerts = [
+                {"message": "High CPU usage detected", "severity": "warning", "time": "10:30 AM"},
+                {"message": "Failed login attempts", "severity": "critical", "time": "09:15 AM"}
+            ]
+            detailed_kpis = [
+                {"name": "Incident Response Time", "category": "Operations", "value": "2.5h", "target": "4h", "status": "On Target", "trend": "up"},
+                {"name": "Compliance Score", "category": "Compliance", "value": "85%", "target": "90%", "status": "At Risk", "trend": "up"}
+            ]
+            last_update = "2023-11-26 14:30:00"
+            compliance_trend_labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+            compliance_trend_data = [80, 82, 85, 83, 87, 85]
+            framework_labels = ["ISO 27001", "GDPR", "NIST", "PCI DSS"]
+            framework_scores = [88, 92, 85, 90]
+            risk_treatment_data = [10, 5, 2]  # Completed, In Progress, Overdue
+            system_performance_data = [45, 60, 30, 20]  # CPU, Memory, Disk, Network
 
-return app
+            print(f"DEBUG: kpis = {kpis}")
+            print("DEBUG: Rendering kpi_dashboard.html with kpis and other variables")
+            return render_template("kpi_dashboard.html",
+                                 kpis=kpis,
+                                 compliance_gaps=compliance_gaps,
+                                 risk_progress=risk_progress,
+                                 active_alerts=active_alerts,
+                                 detailed_kpis=detailed_kpis,
+                                 last_update=last_update,
+                                 compliance_trend_labels=compliance_trend_labels,
+                                 compliance_trend_data=compliance_trend_data,
+                                 framework_labels=framework_labels,
+                                 framework_scores=framework_scores,
+                                 risk_treatment_data=risk_treatment_data,
+                                 system_performance_data=system_performance_data)
+        except Exception as e:
+            flash(f"Error loading KPI dashboard: {str(e)}", "danger")
+            return redirect(url_for("home"))
+
     logging.info("create_app completed")
     return app
 

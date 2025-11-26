@@ -232,6 +232,21 @@
                             <li><a class="dropdown-item" href="{{ url_for('dependencies') }}"><i class="fas fa-cogs me-2"></i>Dependencies</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('detection_rules') }}"><i class="fas fa-bell me-2"></i>Detection Rules</a></li>
 
+                            <!-- Platform Development & Integration Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-code me-2"></i>Platform Development & Integration
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <li><a class="dropdown-item" href="{{ url_for('feed_integration') }}"><i class="fas fa-rss me-2"></i>Feed Integration</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('feed_data_flow') }}"><i class="fas fa-project-diagram me-2"></i>Feed Data Flow</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('platform_config') }}"><i class="fas fa-cogs me-2"></i>Platform Config</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('compliance_analytics') }}"><i class="fas fa-chart-line me-2"></i>Compliance Analytics</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('enhanced_analytics') }}"><i class="fas fa-chart-bar me-2"></i>Enhanced Analytics</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('kpi_dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i>KPI Dashboard</a></li>
+                                </ul>
+                            </li>
+
                             <!-- Admin Only Items -->
                             {% if current_user.role in ['admin', 'auditor'] %}
                             <li><hr class="dropdown-divider"></li>
