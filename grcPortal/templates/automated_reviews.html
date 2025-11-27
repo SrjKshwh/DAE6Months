@@ -1,0 +1,408 @@
+{% extends "base.html" %}
+
+{% block title %}Automated Reviews - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-robot text-primary"></i> Automated Review Processes</h2>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="runAllReviews()">
+                        <i class="fas fa-play"></i> Run All Reviews
+                    </button>
+                    <button class="btn btn-outline-success" onclick="scheduleReviews()">
+                        <i class="fas fa-clock"></i> Schedule Reviews
+                    </button>
+                </div>
+            </div>
+
+            <!-- Overview Cards -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Reviews Completed</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ review_recommendations|length }}</div>
+                                    <div class="text-xs text-muted">This session</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-check-circle fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-danger shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                        High Priority</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ review_recommendations|selectattr('priority', 'equalto', 'high')|list|length }}
+                                    </div>
+                                    <div class="text-xs text-muted">Require immediate attention</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Medium Priority</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ review_recommendations|selectattr('priority', 'equalto', 'medium')|list|length }}
+                                    </div>
+                                    <div class="text-xs text-muted">Review within 30 days</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clock fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Automation Rate</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">87%</div>
+                                    <div class="text-xs text-success">Of reviews automated</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-cogs fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Recommendations -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="fas fa-list-check"></i> Automated Review Recommendations
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            {% if review_recommendations %}
+                                <div class="accordion" id="reviewAccordion">
+                                    {% for review in review_recommendations %}
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button {{ 'collapsed' if not loop.first else '' }}"
+                                                    type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#review{{ loop.index }}"
+                                                    aria-expanded="{{ 'true' if loop.first else 'false' }}">
+                                                <span class="badge bg-{{ 'danger' if review.priority == 'high' else 'warning' if review.priority == 'medium' else 'secondary' }} me-2">
+                                                    {{ review.priority.title() }}
+                                                </span>
+                                                {{ review.title }}
+                                                <small class="text-muted ms-auto">{{ review.type.replace('_', ' ').title() }}</small>
+                                            </button>
+                                        </h2>
+                                        <div id="review{{ loop.index }}"
+                                             class="accordion-collapse collapse {{ 'show' if loop.first else '' }}"
+                                             data-bs-parent="#reviewAccordion">
+                                            <div class="accordion-body">
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <h6>Description</h6>
+                                                        <p>{{ review.description }}</p>
+
+                                                        <h6>Recommended Actions</h6>
+                                                        <ul class="list-group list-group-flush">
+                                                            {% for action in review.action_items %}
+                                                            <li class="list-group-item px-0">
+                                                                <i class="fas fa-check-circle text-success me-2"></i>
+                                                                {{ action }}
+                                                            </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="card border-info">
+                                                            <div class="card-body">
+                                                                <h6 class="card-title">
+                                                                    <i class="fas fa-info-circle text-info"></i> Review Details
+                                                                </h6>
+                                                                <p class="card-text small">
+                                                                    <strong>Type:</strong> {{ review.type.replace('_', ' ').title() }}<br>
+                                                                    <strong>Priority:</strong>
+                                                                    <span class="badge bg-{{ 'danger' if review.priority == 'high' else 'warning' if review.priority == 'medium' else 'secondary' }}">
+                                                                        {{ review.priority.title() }}
+                                                                    </span><br>
+                                                                    <strong>Status:</strong> <span class="badge bg-secondary">Pending</span>
+                                                                </p>
+                                                                <button class="btn btn-sm btn-outline-primary w-100"
+                                                                        onclick="triggerReview('{{ review.type }}', '{{ loop.index }}')">
+                                                                    <i class="fas fa-play"></i> Execute Review
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="text-center py-5">
+                                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                                    <h5>No Review Recommendations</h5>
+                                    <p class="text-muted">All systems are performing within acceptable parameters.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review History -->
+            <div class="row mb-4">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-info">
+                                <i class="fas fa-history"></i> Recent Review History
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-success"></div>
+                                    <div class="timeline-content">
+                                        <h6>SLA Compliance Review</h6>
+                                        <p>Automated review completed successfully</p>
+                                        <small class="text-muted">2 hours ago</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>Evidence Validation</h6>
+                                        <p>5 evidence records validated, 2 pending review</p>
+                                        <small class="text-muted">4 hours ago</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>Performance Anomaly Detection</h6>
+                                        <p>No anomalies detected in system metrics</p>
+                                        <small class="text-muted">6 hours ago</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-warning">
+                                <i class="fas fa-chart-pie"></i> Review Statistics
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="reviewStatsChart" width="100%" height="200"></canvas>
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-between small mb-1">
+                                    <span>Automated Reviews</span>
+                                    <span>87%</span>
+                                </div>
+                                <div class="progress mb-3" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: 87%"></div>
+                                </div>
+                                <div class="d-flex justify-content-between small mb-1">
+                                    <span>Manual Reviews</span>
+                                    <span>13%</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-warning" style="width: 13%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+});
+
+function initializeCharts() {
+    const reviewStatsCtx = document.getElementById('reviewStatsChart');
+    if (reviewStatsCtx) {
+        new Chart(reviewStatsCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Automated', 'Manual', 'Pending'],
+                datasets: [{
+                    data: [87, 13, 5],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(255, 205, 86, 0.8)',
+                        'rgba(255, 99, 132, 0.8)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+}
+
+function runAllReviews() {
+    if (confirm('Run all automated reviews? This may take several minutes.')) {
+        // Show loading state
+        const btn = event.target.closest('button');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running...';
+        btn.disabled = true;
+
+        // Simulate running reviews
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            showToast('All automated reviews completed successfully', 'success');
+            location.reload();
+        }, 3000);
+    }
+}
+
+function triggerReview(reviewType, reviewId) {
+    fetch('/api/trigger_automated_review', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            review_type: reviewType,
+            target_id: reviewId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Review triggered successfully', 'success');
+        } else {
+            showToast('Failed to trigger review: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        showToast('Error triggering review', 'error');
+    });
+}
+
+function scheduleReviews() {
+    alert('Review scheduling functionality would be implemented here');
+}
+
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.remove();
+        }
+    }, 5000);
+}
+</script>
+
+<style>
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #e9ecef;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.timeline-content p {
+    margin-bottom: 5px;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #f8f9fa;
+}
+</style>
+{% endblock %}

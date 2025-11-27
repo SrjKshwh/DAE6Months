@@ -4504,6 +4504,305 @@ class EvidenceAnalysis(Base):
     reviewer = relationship("User", foreign_keys=[reviewed_by])
 
 
+class QuantitativeRiskAssessment(Base):
+    """Advanced quantitative risk assessment with scenario analysis and statistical modeling."""
+
+    __tablename__ = "quantitative_risk_assessments"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    assessment_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    assessment_type: Mapped[str] = mapped_column(String(50), default="comprehensive")  # comprehensive, targeted, compliance_focused
+
+    # Assessment scope
+    scope_description: Mapped[str] = mapped_column(Text, nullable=True)
+    frameworks_assessed: Mapped[str] = mapped_column(Text, nullable=True)  # JSON frameworks
+    business_units: Mapped[str] = mapped_column(Text, nullable=True)  # JSON business units
+    assessment_period: Mapped[str] = mapped_column(String(100), nullable=True)  # Time period
+
+    # Scenario Analysis
+    scenarios_defined: Mapped[int] = mapped_column(Integer, default=0)
+    scenarios_analyzed: Mapped[int] = mapped_column(Integer, default=0)
+    scenario_analysis_data: Mapped[str] = mapped_column(Text, nullable=True)  # JSON scenario details
+
+    # Statistical Modeling
+    statistical_methods_used: Mapped[str] = mapped_column(Text, nullable=True)  # JSON statistical methods
+    monte_carlo_simulations: Mapped[int] = mapped_column(Integer, default=0)
+    confidence_intervals: Mapped[str] = mapped_column(Text, nullable=True)  # JSON confidence intervals
+    statistical_significance: Mapped[float] = mapped_column(Float, nullable=True)
+
+    # Financial Quantification
+    total_financial_impact: Mapped[float] = mapped_column(Float, default=0.0)
+    annual_loss_expectancy: Mapped[float] = mapped_column(Float, default=0.0)
+    expected_monetary_value: Mapped[float] = mapped_column(Float, default=0.0)
+    value_at_risk: Mapped[float] = mapped_column(Float, default=0.0)  # VaR calculation
+    conditional_var: Mapped[float] = mapped_column(Float, default=0.0)  # CVaR calculation
+
+    # Cost-Benefit Analysis
+    implementation_costs: Mapped[float] = mapped_column(Float, default=0.0)
+    operational_costs: Mapped[float] = mapped_column(Float, default=0.0)
+    benefit_quantification: Mapped[str] = mapped_column(Text, nullable=True)  # JSON benefits
+    roi_calculation: Mapped[float] = mapped_column(Float, nullable=True)
+    payback_period_months: Mapped[float] = mapped_column(Float, nullable=True)
+    net_present_value: Mapped[float] = mapped_column(Float, nullable=True)
+
+    # Risk Treatment Strategy
+    treatment_strategy: Mapped[str] = mapped_column(Text, nullable=True)  # JSON treatment plan
+    transfer_mechanisms: Mapped[str] = mapped_column(Text, nullable=True)  # JSON transfer options
+    insurance_coverage: Mapped[float] = mapped_column(Float, default=0.0)
+    risk_retention_amount: Mapped[float] = mapped_column(Float, default=0.0)
+
+    # Residual Risk Management
+    residual_risk_assessment: Mapped[str] = mapped_column(Text, nullable=True)  # JSON residual risks
+    monitoring_plan: Mapped[str] = mapped_column(Text, nullable=True)  # JSON monitoring strategy
+    contingency_plans: Mapped[str] = mapped_column(Text, nullable=True)  # JSON contingency measures
+
+    # Impact Assessment
+    business_impact_analysis: Mapped[str] = mapped_column(Text, nullable=True)  # JSON impact assessment
+    regulatory_impact: Mapped[str] = mapped_column(Text, nullable=True)  # JSON regulatory impacts
+    reputational_impact: Mapped[str] = mapped_column(Text, nullable=True)  # JSON reputation impacts
+
+    # Status and governance
+    status: Mapped[str] = mapped_column(String(50), default="draft")  # draft, in_progress, completed, approved
+    lead_analyst: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    approved_by: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Relationships
+    analyst = relationship("User", foreign_keys=[lead_analyst])
+    approver = relationship("User", foreign_keys=[approved_by])
+
+    def perform_scenario_analysis(self, scenarios_data):
+        """Perform scenario analysis with statistical modeling"""
+        import json
+        import numpy as np
+        from scipy import stats
+
+        # Store scenario data
+        self.scenario_analysis_data = json.dumps(scenarios_data)
+
+        # Calculate statistical measures
+        if 'probabilities' in scenarios_data and 'impacts' in scenarios_data:
+            probs = np.array(scenarios_data['probabilities'])
+            impacts = np.array(scenarios_data['impacts'])
+
+            # Expected value
+            expected_value = np.sum(probs * impacts)
+
+            # Variance and standard deviation
+            variance = np.sum(probs * (impacts - expected_value)**2)
+            std_dev = np.sqrt(variance)
+
+            # Value at Risk (95% confidence)
+            var_95 = np.percentile(impacts, 5)  # 5th percentile for 95% VaR
+
+            # Conditional VaR (Expected Shortfall)
+            tail_losses = impacts[impacts <= var_95]
+            cvar_95 = np.mean(tail_losses) if len(tail_losses) > 0 else var_95
+
+            # Update assessment
+            self.expected_monetary_value = expected_value
+            self.value_at_risk = abs(var_95)  # VaR is typically positive
+            self.conditional_var = abs(cvar_95)
+
+            # Confidence intervals
+            confidence_intervals = {
+                'mean_ci_95': stats.norm.interval(0.95, loc=expected_value, scale=std_dev/np.sqrt(len(impacts))),
+                'var_ci_95': (var_95 * 0.9, var_95 * 1.1),  # Simplified CI for VaR
+                'std_dev': std_dev
+            }
+            self.confidence_intervals = json.dumps(confidence_intervals)
+
+        return {
+            'expected_value': expected_value,
+            'variance': variance,
+            'std_dev': std_dev,
+            'var_95': var_95,
+            'cvar_95': cvar_95
+        }
+
+    def calculate_cost_benefit_analysis(self, costs, benefits, discount_rate=0.1):
+        """Perform comprehensive cost-benefit analysis"""
+        import json
+
+        # Calculate NPV
+        total_costs = sum(costs.values())
+        total_benefits = sum(benefits.values())
+
+        # Simple NPV calculation (could be enhanced with time-series)
+        npv = total_benefits - total_costs
+
+        # ROI calculation
+        if total_costs > 0:
+            roi = (total_benefits - total_costs) / total_costs * 100
+        else:
+            roi = 0
+
+        # Payback period (simplified)
+        if total_benefits > 0:
+            payback_period = total_costs / (total_benefits / 12)  # Monthly payback
+        else:
+            payback_period = 0
+
+        # Store results
+        self.implementation_costs = costs.get('implementation', 0)
+        self.operational_costs = costs.get('operational', 0)
+        self.roi_calculation = roi
+        self.payback_period_months = payback_period
+        self.net_present_value = npv
+
+        benefit_quantification = {
+            'quantitative_benefits': benefits,
+            'qualitative_benefits': ['Risk reduction', 'Compliance improvement', 'Operational efficiency'],
+            'cost_breakdown': costs
+        }
+        self.benefit_quantification = json.dumps(benefit_quantification)
+
+        return {
+            'npv': npv,
+            'roi': roi,
+            'payback_period': payback_period,
+            'benefit_cost_ratio': total_benefits / total_costs if total_costs > 0 else 0
+        }
+
+    def develop_risk_treatment_strategy(self, risk_data):
+        """Develop comprehensive risk treatment strategy"""
+        import json
+
+        treatment_options = {
+            'accept': {
+                'description': 'Accept the risk if it falls within risk appetite',
+                'conditions': 'Risk score < tolerance threshold',
+                'monitoring_required': True
+            },
+            'mitigate': {
+                'description': 'Implement controls to reduce risk',
+                'methods': ['Technical controls', 'Administrative controls', 'Physical controls'],
+                'cost_benefit_required': True
+            },
+            'transfer': {
+                'description': 'Transfer risk to third party',
+                'mechanisms': ['Insurance', 'Contracts', 'Outsourcing'],
+                'cost_considerations': True
+            },
+            'avoid': {
+                'description': 'Eliminate the risk by changing business practices',
+                'conditions': 'High risk with low benefit',
+                'impact_assessment_required': True
+            }
+        }
+
+        # Determine optimal treatment based on risk characteristics
+        recommended_treatment = 'mitigate'  # Default
+
+        if risk_data.get('risk_score', 0) < 10:
+            recommended_treatment = 'accept'
+        elif risk_data.get('risk_score', 0) > 20:
+            if risk_data.get('transfer_feasible', False):
+                recommended_treatment = 'transfer'
+            else:
+                recommended_treatment = 'avoid'
+
+        # Transfer mechanisms
+        transfer_options = {
+            'insurance': {
+                'coverage_types': ['Cyber liability', 'Professional indemnity', 'Property damage'],
+                'premium_estimates': {'low': 50000, 'medium': 150000, 'high': 500000},
+                'deductibles': {'low': 25000, 'medium': 100000, 'high': 250000}
+            },
+            'contracts': {
+                'types': ['Service level agreements', 'Vendor contracts', 'Partnership agreements'],
+                'risk_allocation': 'Transfer operational risks to vendors'
+            },
+            'hedging': {
+                'applicable_to': 'Financial and market risks',
+                'instruments': ['Options', 'Futures', 'Swaps']
+            }
+        }
+
+        strategy = {
+            'recommended_treatment': recommended_treatment,
+            'treatment_options': treatment_options,
+            'transfer_mechanisms': transfer_options,
+            'implementation_plan': f'Implement {recommended_treatment} strategy within 90 days',
+            'success_metrics': ['Risk score reduction', 'Cost effectiveness', 'Compliance improvement']
+        }
+
+        self.treatment_strategy = json.dumps(strategy)
+        self.transfer_mechanisms = json.dumps(transfer_options)
+
+        return strategy
+
+    def create_residual_risk_management_plan(self, mitigation_effectiveness=0.7):
+        """Create residual risk management plan"""
+        import json
+
+        # Calculate residual risks based on mitigation effectiveness
+        residual_risks = {
+            'likelihood_reduction': mitigation_effectiveness,
+            'impact_reduction': mitigation_effectiveness * 0.8,  # Slightly less effective for impact
+            'residual_score_calculation': 'original_score * (1 - effectiveness)',
+            'monitoring_frequency': 'Monthly for high residual risks'
+        }
+
+        monitoring_plan = {
+            'key_risk_indicators': [
+                'Control effectiveness metrics',
+                'Incident frequency and severity',
+                'Compliance testing results',
+                'Audit findings'
+            ],
+            'monitoring_methods': [
+                'Automated monitoring systems',
+                'Regular risk assessments',
+                'Incident tracking and analysis',
+                'Performance metrics review'
+            ],
+            'reporting_frequency': 'Quarterly',
+            'escalation_thresholds': {
+                'low': 'Residual score > 5',
+                'medium': 'Residual score > 10',
+                'high': 'Residual score > 15'
+            }
+        }
+
+        contingency_plans = {
+            'trigger_conditions': [
+                'Control failure detection',
+                'Unexpected risk increase',
+                'Regulatory changes',
+                'Business process changes'
+            ],
+            'response_actions': [
+                'Activate backup controls',
+                'Implement emergency procedures',
+                'Notify stakeholders',
+                'Escalate to senior management'
+            ],
+            'recovery_procedures': [
+                'Control restoration',
+                'Impact assessment',
+                'Lesson learned documentation',
+                'Process improvement implementation'
+            ]
+        }
+
+        residual_plan = {
+            'residual_risks': residual_risks,
+            'monitoring_plan': monitoring_plan,
+            'contingency_plans': contingency_plans,
+            'review_frequency': 'Annual',
+            'responsibility_assignment': 'Risk owners and control owners'
+        }
+
+        self.residual_risk_assessment = json.dumps(residual_risks)
+        self.monitoring_plan = json.dumps(monitoring_plan)
+        self.contingency_plans = json.dumps(contingency_plans)
+
+        return residual_plan
+
+
 class ComplianceAnalytics(Base):
     """Compliance analytics solution with predictive capabilities."""
 

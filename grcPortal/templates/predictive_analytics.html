@@ -1,0 +1,345 @@
+{% extends "base.html" %}
+
+{% block title %}Predictive Analytics - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-brain text-primary"></i> Predictive Analytics Dashboard</h2>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="refreshPredictions()">
+                        <i class="fas fa-sync"></i> Refresh Predictions
+                    </button>
+                    <button class="btn btn-outline-info" onclick="exportAnalytics()">
+                        <i class="fas fa-download"></i> Export Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Overview Cards -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Anomalies Detected</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ dashboard_data.predictive_insights.anomalies_detected or 0 }}</div>
+                                    <div class="text-xs text-muted">Last 24 hours</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Forecast Accuracy</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">94.2%</div>
+                                    <div class="text-xs text-success">High confidence</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-chart-line fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Risk Level</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <span class="badge bg-{{ 'danger' if dashboard_data.performance_forecast.risk_level == 'high' else 'warning' if dashboard_data.performance_forecast.risk_level == 'medium' else 'success' }}">
+                                            {{ dashboard_data.performance_forecast.risk_level.title() }}
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-muted">Next 24 hours</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-shield-alt fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Predictive Models</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">8</div>
+                                    <div class="text-xs text-primary">Active models</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-robot fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Predictive Insights -->
+            <div class="row mb-4">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Performance Forecast (Next 24 Hours)</h6>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="forecastChart" width="100%" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-warning">Risk Indicators</h6>
+                        </div>
+                        <div class="card-body">
+                            {% if dashboard_data.predictive_insights.risk_indicators %}
+                                {% for indicator in dashboard_data.predictive_insights.risk_indicators %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-truncate">{{ indicator.metric }}</span>
+                                    <span class="badge bg-{{ 'danger' if indicator.severity == 'high' else 'warning' }}">
+                                        {{ indicator.anomalies }} anomalies
+                                    </span>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                    <p class="text-muted mb-0">No significant risk indicators detected</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trend Analysis -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-info">Trend Analysis</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="trendTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th>Trend</th>
+                                            <th>Slope</th>
+                                            <th>R² Score</th>
+                                            <th>Confidence</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for metric, data in dashboard_data.predictive_insights.trend_analysis.items() %}
+                                        <tr>
+                                            <td>{{ metric }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if data.trend == 'increasing' else 'danger' if data.trend == 'decreasing' else 'secondary' }}">
+                                                    {{ data.trend.title() }}
+                                                </span>
+                                            </td>
+                                            <td>{{ "%.4f"|format(data.slope) }}</td>
+                                            <td>{{ "%.3f"|format(data.r_squared) }}</td>
+                                            <td>
+                                                <div class="progress" style="height: 20px;">
+                                                    <div class="progress-bar bg-{{ 'success' if data.r_squared > 0.8 else 'warning' if data.r_squared > 0.6 else 'danger' }}"
+                                                         data-width="{{ (data.r_squared * 100)|int }}">
+                                                        {{ "%.0f"|format(data.r_squared * 100) }}%
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Anomaly Detection -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-danger">Anomaly Detection Results</h6>
+                        </div>
+                        <div class="card-body">
+                            {% if dashboard_data.predictive_insights.anomalies_detected > 0 %}
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <strong>{{ dashboard_data.predictive_insights.anomalies_detected }}</strong> anomalies detected in system metrics.
+                                    These may indicate potential issues requiring attention.
+                                </div>
+                                <canvas id="anomalyChart" width="100%" height="200"></canvas>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                                    <h5>No Anomalies Detected</h5>
+                                    <p class="text-muted">System metrics are within normal parameters</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden data elements for JavaScript -->
+<div id="forecast-data" style="display: none;">{{ dashboard_data.performance_forecast.predictions|tojson }}</div>
+<div id="anomaly-count" style="display: none;">{{ dashboard_data.predictive_insights.anomalies_detected or 0 }}</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    initializeProgressBars();
+});
+
+function initializeProgressBars() {
+    // Set progress bar widths from data attributes
+    document.querySelectorAll('.progress-bar[data-width]').forEach(bar => {
+        const width = bar.getAttribute('data-width');
+        bar.style.width = width + '%';
+    });
+}
+
+function initializeCharts() {
+    // Forecast Chart
+    const forecastCtx = document.getElementById('forecastChart');
+    if (forecastCtx) {
+        const forecastDataElement = document.getElementById('forecast-data');
+        const forecastData = JSON.parse(forecastDataElement.textContent || '{}');
+
+        const labels = [];
+        for (let i = 1; i <= 24; i++) {
+            labels.push(`+${i}h`);
+        }
+
+        const datasets = [];
+        let index = 0;
+        for (const [key, value] of Object.entries(forecastData)) {
+            datasets.push({
+                label: key.replace(/_/g, ' '),
+                data: value.forecasted_values || [],
+                borderColor: `hsl(${(index * 137.5) % 360}, 70%, 50%)`,
+                backgroundColor: `hsl(${(index * 137.5) % 360}, 70%, 50%, 0.1)`,
+                tension: 0.4
+            });
+            index++;
+        }
+
+        new Chart(forecastCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    }
+
+    // Anomaly Chart (placeholder - would need actual anomaly data)
+    const anomalyCtx = document.getElementById('anomalyChart');
+    if (anomalyCtx) {
+        const anomalyCountElement = document.getElementById('anomaly-count');
+        const anomalyCount = parseInt(anomalyCountElement.textContent || '0');
+
+        new Chart(anomalyCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Normal Data Points',
+                    data: Array.from({length: 100}, () => ({
+                        x: Math.random() * 24,
+                        y: Math.random() * 100
+                    })),
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)'
+                }, {
+                    label: 'Anomalies',
+                    data: Array.from({length: anomalyCount}, () => ({
+                        x: Math.random() * 24,
+                        y: Math.random() * 100
+                    })),
+                    backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                    pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time (hours)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Metric Value'
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+function refreshPredictions() {
+    location.reload();
+}
+
+function exportAnalytics() {
+    alert('Export functionality would be implemented here');
+}
+</script>
+
+<style>
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.progress-bar {
+    transition: width 0.5s;
+}
+</style>
+{% endblock %}

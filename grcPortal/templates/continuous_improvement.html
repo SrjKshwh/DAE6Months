@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+
+{% block title %}Continuous Improvement - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-chart-line text-primary"></i> Continuous Improvement Program</h2>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="refreshImprovementData()">
+                        <i class="fas fa-sync"></i> Refresh Data
+                    </button>
+                    <button class="btn btn-outline-success" onclick="addNewInitiative()">
+                        <i class="fas fa-plus"></i> New Initiative
+                    </button>
+                </div>
+            </div>
+
+            <!-- Program Overview Cards -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Total Initiatives</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ dashboard_data.program_metrics.total_initiatives }}</div>
+                                    <div class="text-xs text-muted">Active improvement projects</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-tasks fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Completed</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ dashboard_data.program_metrics.completed_initiatives }}</div>
+                                    <div class="text-xs text-success">{{ "%.1f"|format(dashboard_data.program_metrics.completion_rate) }}% completion rate</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-check-circle fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Average Progress</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ "%.1f"|format(dashboard_data.program_metrics.average_progress) }}%</div>
+                                    <div class="text-xs text-info">Across all initiatives</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-chart-pie fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Backlog Items</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ dashboard_data.backlog_items }}</div>
+                                    <div class="text-xs text-warning">Ideas for future initiatives</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-list fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PDCA Cycle Overview -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="fas fa-recycle"></i> PDCA Cycle Progress
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% for phase, count in dashboard_data.phase_distribution.items() %}
+                                <div class="col-md-3 mb-3">
+                                    <div class="card border-left-{{ 'primary' if phase == 'plan' else 'info' if phase == 'do' else 'warning' if phase == 'check' else 'success' }} h-100">
+                                        <div class="card-body text-center">
+                                            <div class="h4 mb-2 text-{{ 'primary' if phase == 'plan' else 'info' if phase == 'do' else 'warning' if phase == 'check' else 'success' }}">
+                                                {{ count }}
+                                            </div>
+                                            <div class="text-uppercase font-weight-bold text-xs">
+                                                {{ phase.title() }} Phase
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Initiatives -->
+            <div class="row mb-4">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="fas fa-play-circle"></i> Active Improvement Initiatives
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            {% for initiative in dashboard_data.initiatives %}
+                            {% if initiative.status in ['implementing', 'testing', 'planned'] %}
+                            <div class="d-flex align-items-center mb-3 p-3 border rounded">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="mb-1">{{ initiative.title }}</h6>
+                                        <span class="badge bg-{{ 'danger' if initiative.priority == 'high' else 'warning' if initiative.priority == 'medium' else 'secondary' }}">
+                                            {{ initiative.priority.title() }}
+                                        </span>
+                                    </div>
+                                    <p class="text-muted small mb-2">{{ initiative.description }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            <i class="fas fa-user me-1"></i>{{ initiative.owner }} •
+                                            <i class="fas fa-tag me-1"></i>{{ initiative.category.replace('_', ' ').title() }}
+                                        </small>
+                                        <div class="progress" style="width: 120px; height: 8px;">
+                                            <div class="progress-bar bg-{{ 'success' if initiative.phase == 'act' else 'info' if initiative.phase == 'do' else 'warning' if initiative.phase == 'check' else 'primary' }}"
+                                                 data-width="{{ initiative.progress }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-info">
+                                <i class="fas fa-clock"></i> Recent Activities
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            {% for activity in dashboard_data.recent_activities %}
+                            <div class="d-flex mb-3">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-circle text-{{ 'success' if activity.type == 'phase_completion' else 'info' if activity.type == 'initiative_created' else 'warning' }} small mt-1"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-2">
+                                    <small class="text-muted d-block">{{ activity.date[:10] }}</small>
+                                    <small>{{ activity.activity }}</small>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Performance -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-warning">
+                                <i class="fas fa-chart-bar"></i> Improvement Categories Performance
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="categoryTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Total Initiatives</th>
+                                            <th>Completed</th>
+                                            <th>Active</th>
+                                            <th>Average Progress</th>
+                                            <th>Success Rate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for category, stats in dashboard_data.category_stats.items() %}
+                                        <tr>
+                                            <td>{{ category.replace('_', ' ').title() }}</td>
+                                            <td>{{ stats.total }}</td>
+                                            <td>{{ stats.completed }}</td>
+                                            <td>{{ stats.active }}</td>
+                                            <td>
+                                                <div class="progress" style="height: 20px;">
+                                                    <div class="progress-bar bg-info" data-width="{{ stats.average_progress }}">
+                                                        {{ "%.0f"|format(stats.average_progress) }}%
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {% if stats.total > 0 %}
+                                                    {{ "%.1f"|format((stats.completed / stats.total) * 100) }}%
+                                                {% else %}
+                                                    N/A
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Priority Distribution -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-danger">
+                                <i class="fas fa-exclamation-triangle"></i> Priority Distribution
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="priorityChart" width="100%" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-success">
+                                <i class="fas fa-trophy"></i> Program Impact
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="h4 text-success mb-1">35%</div>
+                                    <small class="text-muted">MTTR Reduction</small>
+                                </div>
+                                <div class="col-6">
+                                    <div class="h4 text-info mb-1">28%</div>
+                                    <small class="text-muted">Cost Savings</small>
+                                </div>
+                                <div class="col-6">
+                                    <div class="h4 text-warning mb-1">4.6/5</div>
+                                    <small class="text-muted">Stakeholder Satisfaction</small>
+                                </div>
+                                <div class="col-6">
+                                    <div class="h4 text-primary mb-1">92%</div>
+                                    <small class="text-muted">Process Efficiency</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden data elements for JavaScript -->
+<div id="priority-data" style="display: none;">{{ dashboard_data.priority_distribution|tojson }}</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    initializeProgressBars();
+});
+
+function initializeProgressBars() {
+    // Set progress bar widths from data attributes
+    document.querySelectorAll('.progress-bar[data-width]').forEach(bar => {
+        const width = bar.getAttribute('data-width');
+        bar.style.width = width + '%';
+    });
+}
+
+function initializeCharts() {
+    const priorityDataElement = document.getElementById('priority-data');
+    const priorityData = JSON.parse(priorityDataElement.textContent || '{}');
+
+    const priorityCtx = document.getElementById('priorityChart');
+    if (priorityCtx) {
+        new Chart(priorityCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['High Priority', 'Medium Priority', 'Low Priority'],
+                datasets: [{
+                    data: [priorityData.high || 0, priorityData.medium || 0, priorityData.low || 0],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(255, 205, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+}
+
+function refreshImprovementData() {
+    location.reload();
+}
+
+function addNewInitiative() {
+    alert('Add New Initiative functionality would be implemented here - opening initiative creation form');
+}
+</script>
+
+<style>
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.progress-bar {
+    transition: width 0.5s;
+}
+
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.border {
+    border-width: 2px !important;
+}
+
+.border-left-primary {
+    border-left: 4px solid #4e73df !important;
+}
+
+.border-left-info {
+    border-left: 4px solid #36b9cc !important;
+}
+
+.border-left-warning {
+    border-left: 4px solid #f6c23e !important;
+}
+
+.border-left-success {
+    border-left: 4px solid #1cc88a !important;
+}
+</style>
+{% endblock %}

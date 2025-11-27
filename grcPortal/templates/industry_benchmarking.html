@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block title %}Industry Benchmarking - GRC Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-chart-bar text-primary"></i> Industry Benchmarking</h2>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="refreshBenchmarks()">
+                        <i class="fas fa-sync"></i> Refresh Data
+                    </button>
+                    <button class="btn btn-outline-info" onclick="exportBenchmarkReport()">
+                        <i class="fas fa-download"></i> Export Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Benchmark Overview Cards -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Overall Performance</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ "%.1f"|format(benchmark_report.report.overall_score) }}%</div>
+                                    <div class="text-xs text-muted">Compliance Score</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-trophy fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Percentile Rank</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ "%.1f"|format(benchmark_report.report.percentile_rank) }}th</div>
+                                    <div class="text-xs text-info">Among peers</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-users fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Strengths</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ benchmark_report.report.strengths|length }}</div>
+                                    <div class="text-xs text-success">Identified</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-thumbs-up fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Areas for Improvement</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ benchmark_report.report.weaknesses|length }}</div>
+                                    <div class="text-xs text-warning">Identified</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Comparison Chart -->
+            <div class="row mb-4">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Performance vs Industry Averages</h6>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="benchmarkChart" width="100%" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-info">Performance Rating</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                {% if benchmark_report.report.percentile_rank >= 75 %}
+                                    <i class="fas fa-trophy fa-4x text-warning mb-3"></i>
+                                    <h4 class="text-success">Top Performer</h4>
+                                    <p class="text-muted">Your organization ranks in the top quartile</p>
+                                {% elif benchmark_report.report.percentile_rank >= 50 %}
+                                    <i class="fas fa-medal fa-4x text-info mb-3"></i>
+                                    <h4 class="text-info">Above Average</h4>
+                                    <p class="text-muted">Performing better than half of peers</p>
+                                {% elif benchmark_report.report.percentile_rank >= 25 %}
+                                    <i class="fas fa-balance-scale fa-4x text-warning mb-3"></i>
+                                    <h4 class="text-warning">Average</h4>
+                                    <p class="text-muted">Meeting industry standards</p>
+                                {% else %}
+                                    <i class="fas fa-exclamation-triangle fa-4x text-danger mb-3"></i>
+                                    <h4 class="text-danger">Needs Improvement</h4>
+                                    <p class="text-muted">Below industry average performance</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Metrics Table -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Detailed Benchmark Metrics</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="benchmarkTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th>Your Value</th>
+                                            <th>Industry Average</th>
+                                            <th>Gap to Average</th>
+                                            <th>Percentile Rank</th>
+                                            <th>Performance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for metric_name, data in benchmark_report.report.detailed_metrics.items() %}
+                                        <tr>
+                                            <td>{{ metric_name }}</td>
+                                            <td>{{ "%.1f"|format(data.current_value) }}</td>
+                                            <td>{{ "%.1f"|format(data.industry_average) }}</td>
+                                            <td>
+                                                {% if data.gap_to_average > 0 %}
+                                                    <span class="text-success">+{{ "%.1f"|format(data.gap_to_average) }}</span>
+                                                {% else %}
+                                                    <span class="text-danger">{{ "%.1f"|format(data.gap_to_average) }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ "%.1f"|format(data.percentile_rank) }}th</td>
+                                            <td>
+                                                {% if data.performance_rating == "excellent" %}
+                                                    <span class="badge bg-success">Excellent</span>
+                                                {% elif data.performance_rating == "good" %}
+                                                    <span class="badge bg-info">Good</span>
+                                                {% elif data.performance_rating == "average" %}
+                                                    <span class="badge bg-warning">Average</span>
+                                                {% elif data.performance_rating == "below_average" %}
+                                                    <span class="badge bg-orange">Below Average</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Poor</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strengths and Weaknesses -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-success">
+                                <i class="fas fa-thumbs-up"></i> Strengths
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            {% if benchmark_report.report.strengths %}
+                                <ul class="list-group list-group-flush">
+                                    {% for strength in benchmark_report.report.strengths %}
+                                    <li class="list-group-item">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        {{ strength }}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="fas fa-info-circle fa-2x text-muted mb-2"></i>
+                                    <p class="text-muted">No significant strengths identified</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-warning">
+                                <i class="fas fa-exclamation-triangle"></i> Areas for Improvement
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            {% if benchmark_report.report.weaknesses %}
+                                <ul class="list-group list-group-flush">
+                                    {% for weakness in benchmark_report.report.weaknesses %}
+                                    <li class="list-group-item">
+                                        <i class="fas fa-exclamation-circle text-warning me-2"></i>
+                                        {{ weakness }}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                    <p class="text-muted">No significant weaknesses identified</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-info">
+                                <i class="fas fa-lightbulb"></i> Improvement Recommendations
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            {% if benchmark_report.report.recommendations %}
+                                <div class="row">
+                                    {% for recommendation in benchmark_report.report.recommendations %}
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card border-info">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="flex-shrink-0">
+                                                        <i class="fas fa-arrow-right text-info me-2"></i>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <p class="mb-0 small">{{ recommendation }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                    <p class="text-muted">No specific recommendations at this time</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden data elements for JavaScript -->
+<div id="benchmark-data" style="display: none;">{{ benchmark_report.report.detailed_metrics|tojson }}</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+});
+
+function initializeCharts() {
+    const benchmarkDataElement = document.getElementById('benchmark-data');
+    const benchmarkData = JSON.parse(benchmarkDataElement.textContent || '{}');
+
+    const benchmarkCtx = document.getElementById('benchmarkChart');
+    if (benchmarkCtx && Object.keys(benchmarkData).length > 0) {
+        const labels = Object.keys(benchmarkData);
+        const yourValues = labels.map(key => benchmarkData[key].current_value);
+        const industryAverages = labels.map(key => benchmarkData[key].industry_average);
+
+        new Chart(benchmarkCtx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Your Organization',
+                    data: yourValues,
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Industry Average',
+                    data: industryAverages,
+                    backgroundColor: 'rgba(255, 205, 86, 0.8)',
+                    borderColor: 'rgba(255, 205, 86, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+}
+
+function refreshBenchmarks() {
+    location.reload();
+}
+
+function exportBenchmarkReport() {
+    alert('Export functionality would be implemented here - generating PDF report with charts and detailed analysis');
+}
+</script>
+
+<style>
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.list-group-item {
+    border: none;
+    padding: 0.75rem 0;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+</style>
+{% endblock %}

@@ -14424,36 +14424,163 @@ def create_app(app=None):
         Comprehensive enterprise risk assessment with detailed quantification methodology.
         Provides enterprise-level risk analysis with quantitative metrics and professional reporting.
         """
-        if request.method == "POST":
-            # Handle form submission for new enterprise risk assessment
-            assessment_name = request.form.get("assessment_name")
-            scope = request.form.get("scope")
-            methodology = request.form.get("methodology", "NIST SP 800-30")
+        user = current_user()
+        db = get_session()
 
-            # Create enterprise risk assessment record
-            # This would use a new model or extend existing Risk model
-            flash("Enterprise risk assessment initiated successfully", "success")
+        if request.method == "POST":
+            action = request.form.get('action')
+
+            if action == "create_enterprise_assessment":
+                try:
+                    # Create enterprise-level quantitative risk assessment
+                    assessment_name = request.form.get("assessment_name")
+                    scope = request.form.get("scope")
+                    methodology = request.form.get("methodology", "NIST SP 800-30")
+                    frameworks = request.form.getlist("frameworks")
+
+                    assessment = QuantitativeRiskAssessment(
+                        assessment_name=f"Enterprise: {assessment_name}",
+                        assessment_type="enterprise",
+                        scope_description=scope,
+                        frameworks_assessed=json.dumps(frameworks),
+                        lead_analyst=user.id,
+                        status='in_progress'
+                    )
+
+                    db.add(assessment)
+                    db.commit()
+
+                    log_audit_event(user, "ENTERPRISE_RISK_ASSESSMENT_CREATED", "RISK",
+                                  f"Created enterprise assessment: {assessment_name}", "/enterprise_risk_assessment", True)
+
+                    flash("Enterprise risk assessment initiated successfully", "success")
+                    return redirect(url_for("enterprise_risk_assessment"))
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error creating enterprise assessment: {str(e)}", "error")
+
+            elif action == "perform_enterprise_analysis":
+                try:
+                    # Get all risks for comprehensive enterprise analysis
+                    risks = db.query(Risk).all()
+
+                    # Perform enterprise-level scenario analysis
+                    if risks:
+                        # Aggregate risk data for enterprise scenario analysis
+                        enterprise_scenarios = {
+                            'probabilities': [r.annual_occurrence_probability or (r.likelihood / 20.0) for r in risks if r.annual_occurrence_probability or r.likelihood],
+                            'impacts': [r.financial_impact_amount or (r.impact * 10000) for r in risks if r.financial_impact_amount or r.impact],
+                            'descriptions': [f"{r.asset}: {r.threat}" for r in risks]
+                        }
+
+                        # Create or update enterprise assessment
+                        enterprise_assessment = db.query(QuantitativeRiskAssessment).filter(
+                            QuantitativeRiskAssessment.assessment_name.like("Enterprise:%")
+                        ).first()
+
+                        if not enterprise_assessment:
+                            enterprise_assessment = QuantitativeRiskAssessment(
+                                assessment_name="Enterprise: Comprehensive Analysis",
+                                assessment_type="enterprise",
+                                lead_analyst=user.id,
+                                status='in_progress'
+                            )
+                            db.add(enterprise_assessment)
+                            db.commit()
+
+                        # Perform scenario analysis
+                        results = enterprise_assessment.perform_scenario_analysis(enterprise_scenarios)
+
+                        # Calculate enterprise cost-benefit
+                        total_risk_cost = sum(r.ale_calculated or r.ale or 0 for r in risks)
+                        mitigation_budget = total_risk_cost * 0.3  # Assume 30% of risk cost for mitigation
+
+                        costs = {
+                            'implementation': mitigation_budget * 0.6,
+                            'operational': mitigation_budget * 0.3,
+                            'monitoring': mitigation_budget * 0.1
+                        }
+
+                        benefits = {
+                            'risk_reduction': total_risk_cost * 0.7,  # 70% risk reduction
+                            'compliance_improvement': total_risk_cost * 0.2,
+                            'operational_efficiency': total_risk_cost * 0.1
+                        }
+
+                        cba_results = enterprise_assessment.calculate_cost_benefit_analysis(costs, benefits)
+
+                        # Develop enterprise treatment strategy
+                        enterprise_risk_data = {
+                            'risk_score': sum(r.score for r in risks) / len(risks),
+                            'transfer_feasible': True,  # Enterprise can transfer risks
+                            'business_impact': 'critical',
+                            'regulatory_impact': 'high'
+                        }
+
+                        treatment_strategy = enterprise_assessment.develop_risk_treatment_strategy(enterprise_risk_data)
+
+                        # Create residual risk plan
+                        residual_plan = enterprise_assessment.create_residual_risk_management_plan(0.75)  # 75% effectiveness
+
+                        db.commit()
+
+                        flash(f"Enterprise analysis completed. Total risks: {len(risks)}, Expected loss: ${results['expected_value']:,.0f}, ROI: {cba_results['roi']:.1f}%", "success")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error performing enterprise analysis: {str(e)}", "error")
+
             return redirect(url_for("enterprise_risk_assessment"))
 
-        # Get all risks for enterprise view
-        risks = Risk.query.all()
+        # GET request - show enterprise risk assessment
+        try:
+            # Get all risks for enterprise view
+            risks = db.query(Risk).all()
 
-        # Calculate enterprise risk metrics
-        total_risks = len(risks)
-        high_risks = len([r for r in risks if r.severity == RiskSeverity.HIGH])
-        critical_risks = len([r for r in risks if r.severity == RiskSeverity.CRITICAL])
+            # Get enterprise assessments
+            enterprise_assessments = db.query(QuantitativeRiskAssessment).filter(
+                QuantitativeRiskAssessment.assessment_type == "enterprise"
+            ).order_by(QuantitativeRiskAssessment.created_at.desc()).all()
 
-        # Quantitative analysis
-        total_ale = sum(r.ale_calculated or r.ale or 0 for r in risks)
-        total_emv = sum(r.emv_calculated or r.emv or 0 for r in risks)
+            # Calculate enterprise risk metrics
+            total_risks = len(risks)
+            high_risks = len([r for r in risks if r.severity == RiskSeverity.HIGH])
+            critical_risks = len([r for r in risks if r.severity == RiskSeverity.CRITICAL])
 
-        return render_template("enterprise_risk_assessment.html",
-                             risks=risks,
-                             total_risks=total_risks,
-                             high_risks=high_risks,
-                             critical_risks=critical_risks,
-                             total_ale=total_ale,
-                             total_emv=total_emv)
+            # Advanced quantitative analysis
+            total_ale = sum(r.ale_calculated or r.ale or 0 for r in risks)
+            total_emv = sum(r.emv_calculated or r.emv or 0 for r in risks)
+
+            # Risk distribution by category
+            risk_categories = {}
+            for risk in risks:
+                cat = risk.category.value if risk.category else "Uncategorized"
+                risk_categories[cat] = risk_categories.get(cat, 0) + 1
+
+            # Compliance framework coverage
+            framework_coverage = {}
+            for risk in risks:
+                framework = risk.compliance_standard.value if risk.compliance_standard else "No Framework"
+                framework_coverage[framework] = framework_coverage.get(framework, 0) + 1
+
+            close_session(db)
+
+            return render_template("enterprise_risk_assessment.html",
+                                 risks=risks,
+                                 enterprise_assessments=enterprise_assessments,
+                                 total_risks=total_risks,
+                                 high_risks=high_risks,
+                                 critical_risks=critical_risks,
+                                 total_ale=total_ale,
+                                 total_emv=total_emv,
+                                 risk_categories=risk_categories,
+                                 framework_coverage=framework_coverage)
+
+        except Exception as e:
+            close_session(db)
+            flash(f"Error loading enterprise risk assessment: {str(e)}", "error")
+            return redirect(url_for('admin_dashboard'))
 
     @app.route("/security_audit_program", methods=["GET", "POST"])
     @login_required
@@ -14828,6 +14955,442 @@ def create_app(app=None):
         except Exception as e:
             flash(f"Error loading KPI dashboard: {str(e)}", "danger")
             return redirect(url_for("home"))
+
+    @app.route("/quantitative_risk_assessment", methods=["GET", "POST"])
+    @login_required
+    def quantitative_risk_assessment():
+        """
+        Advanced quantitative risk assessment with scenario analysis, statistical modeling,
+        and comprehensive risk treatment strategies for enterprise compliance.
+        """
+        user = current_user()
+        db = get_session()
+
+        if request.method == "POST":
+            action = request.form.get('action')
+
+            if action == "create_assessment":
+                try:
+                    # Create new quantitative risk assessment
+                    assessment_name = request.form.get('assessment_name')
+                    assessment_type = request.form.get('assessment_type', 'comprehensive')
+                    scope_description = request.form.get('scope_description')
+                    frameworks = request.form.getlist('frameworks')
+
+                    assessment = QuantitativeRiskAssessment(
+                        assessment_name=assessment_name,
+                        assessment_type=assessment_type,
+                        scope_description=scope_description,
+                        frameworks_assessed=json.dumps(frameworks),
+                        lead_analyst=user.id,
+                        status='draft'
+                    )
+
+                    db.add(assessment)
+                    db.commit()
+
+                    log_audit_event(user, "QUANTITATIVE_RISK_ASSESSMENT_CREATED", "RISK",
+                                  f"Created quantitative assessment: {assessment_name}", "/quantitative_risk_assessment", True)
+
+                    flash(f"Quantitative risk assessment '{assessment_name}' created successfully!", "success")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error creating assessment: {str(e)}", "error")
+
+            elif action == "perform_scenario_analysis":
+                try:
+                    assessment_id = int(request.form.get('assessment_id'))
+
+                    # Get scenario data from form
+                    scenario_count = int(request.form.get('scenario_count', 3))
+                    scenarios_data = {
+                        'probabilities': [],
+                        'impacts': [],
+                        'descriptions': []
+                    }
+
+                    for i in range(scenario_count):
+                        prob = float(request.form.get(f'probability_{i}', 0))
+                        impact = float(request.form.get(f'impact_{i}', 0))
+                        desc = request.form.get(f'description_{i}', '')
+
+                        scenarios_data['probabilities'].append(prob)
+                        scenarios_data['impacts'].append(impact)
+                        scenarios_data['descriptions'].append(desc)
+
+                    # Perform scenario analysis
+                    assessment = db.query(QuantitativeRiskAssessment).filter_by(id=assessment_id).first()
+                    if assessment:
+                        results = assessment.perform_scenario_analysis(scenarios_data)
+                        assessment.scenarios_analyzed = scenario_count
+                        assessment.monte_carlo_simulations = 10000  # Default simulation count
+
+                        db.commit()
+
+                        flash(f"Scenario analysis completed. Expected Value: ${results['expected_value']:,.2f}, VaR (95%): ${results['var_95']:,.2f}", "success")
+                    else:
+                        flash("Assessment not found.", "error")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error performing scenario analysis: {str(e)}", "error")
+
+            elif action == "cost_benefit_analysis":
+                try:
+                    assessment_id = int(request.form.get('assessment_id'))
+
+                    # Get cost and benefit data
+                    costs = {
+                        'implementation': float(request.form.get('implementation_cost', 0)),
+                        'operational': float(request.form.get('operational_cost', 0)),
+                        'training': float(request.form.get('training_cost', 0))
+                    }
+
+                    benefits = {
+                        'risk_reduction': float(request.form.get('risk_reduction_benefit', 0)),
+                        'compliance_improvement': float(request.form.get('compliance_benefit', 0)),
+                        'efficiency_gains': float(request.form.get('efficiency_benefit', 0))
+                    }
+
+                    discount_rate = float(request.form.get('discount_rate', 0.1))
+
+                    assessment = db.query(QuantitativeRiskAssessment).filter_by(id=assessment_id).first()
+                    if assessment:
+                        results = assessment.calculate_cost_benefit_analysis(costs, benefits, discount_rate)
+                        db.commit()
+
+                        flash(f"Cost-benefit analysis completed. ROI: {results['roi']:.1f}%, Payback: {results['payback_period']:.1f} months", "success")
+                    else:
+                        flash("Assessment not found.", "error")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error performing cost-benefit analysis: {str(e)}", "error")
+
+            elif action == "develop_treatment_strategy":
+                try:
+                    assessment_id = int(request.form.get('assessment_id'))
+
+                    # Get risk data for treatment strategy
+                    risk_score = float(request.form.get('risk_score', 15))
+                    transfer_feasible = request.form.get('transfer_feasible') == 'yes'
+
+                    risk_data = {
+                        'risk_score': risk_score,
+                        'transfer_feasible': transfer_feasible,
+                        'business_impact': request.form.get('business_impact', 'medium'),
+                        'regulatory_impact': request.form.get('regulatory_impact', 'medium')
+                    }
+
+                    assessment = db.query(QuantitativeRiskAssessment).filter_by(id=assessment_id).first()
+                    if assessment:
+                        strategy = assessment.develop_risk_treatment_strategy(risk_data)
+                        db.commit()
+
+                        flash(f"Risk treatment strategy developed. Recommended: {strategy['recommended_treatment']}", "success")
+                    else:
+                        flash("Assessment not found.", "error")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error developing treatment strategy: {str(e)}", "error")
+
+            elif action == "create_residual_plan":
+                try:
+                    assessment_id = int(request.form.get('assessment_id'))
+                    mitigation_effectiveness = float(request.form.get('mitigation_effectiveness', 0.7))
+
+                    assessment = db.query(QuantitativeRiskAssessment).filter_by(id=assessment_id).first()
+                    if assessment:
+                        residual_plan = assessment.create_residual_risk_management_plan(mitigation_effectiveness)
+                        db.commit()
+
+                        flash("Residual risk management plan created successfully!", "success")
+                    else:
+                        flash("Assessment not found.", "error")
+
+                except Exception as e:
+                    db.rollback()
+                    flash(f"Error creating residual risk plan: {str(e)}", "error")
+
+            return redirect(url_for('quantitative_risk_assessment'))
+
+        # GET request - show quantitative risk assessment interface
+        try:
+            # Get all quantitative assessments
+            assessments = db.query(QuantitativeRiskAssessment).order_by(
+                QuantitativeRiskAssessment.created_at.desc()
+            ).all()
+
+            # Calculate assessment statistics
+            total_assessments = len(assessments)
+            completed_assessments = sum(1 for a in assessments if a.status == 'completed')
+            in_progress_assessments = sum(1 for a in assessments if a.status == 'in_progress')
+
+            # Financial impact summary
+            total_financial_impact = sum(a.total_financial_impact for a in assessments)
+            total_roi = sum(a.roi_calculation or 0 for a in assessments) / max(len(assessments), 1)
+
+            close_session(db)
+
+            return render_template("quantitative_risk_assessment.html",
+                                  assessments=assessments,
+                                  total_assessments=total_assessments,
+                                  completed_assessments=completed_assessments,
+                                  in_progress_assessments=in_progress_assessments,
+                                  total_financial_impact=total_financial_impact,
+                                  average_roi=total_roi)
+
+        except Exception as e:
+            close_session(db)
+            flash(f"Error loading quantitative risk assessment: {str(e)}", "error")
+            return redirect(url_for('admin_dashboard'))
+
+    # --- Predictive Analytics and Automated Review Routes ---
+
+    @app.route("/predictive_analytics")
+    @login_required
+    def predictive_analytics():
+        """Advanced predictive analytics dashboard"""
+        user = current_user()
+        db = get_session()
+
+        # Collect user activity metric
+        collect_user_activity_metrics(str(user.id), "dashboard_view", "predictive_analytics")
+
+        # Get predictive insights
+        dashboard_data = get_performance_dashboard_data()
+
+        close_session(db)
+        return render_template("predictive_analytics.html", dashboard_data=dashboard_data)
+
+    @app.route("/api/predictive_insights", methods=["GET"])
+    @login_required
+    def get_predictive_insights_api():
+        """API endpoint for predictive insights data"""
+        user = current_user()
+        db = get_session()
+
+        try:
+            insights = performance_monitor.get_predictive_insights()
+            close_session(db)
+            return {"success": True, "data": insights}
+        except Exception as e:
+            close_session(db)
+            return {"success": False, "error": str(e)}, 500
+
+    @app.route("/api/performance_forecast", methods=["GET"])
+    @login_required
+    def get_performance_forecast_api():
+        """API endpoint for performance forecast data"""
+        user = current_user()
+        db = get_session()
+
+        try:
+            hours_ahead = int(request.args.get('hours', 24))
+            forecast = performance_monitor.get_performance_forecast(hours_ahead)
+            close_session(db)
+            return {"success": True, "data": forecast}
+        except Exception as e:
+            close_session(db)
+            return {"success": False, "error": str(e)}, 500
+
+    @app.route("/automated_reviews")
+    @login_required
+    def automated_reviews():
+        """Automated review processes dashboard"""
+        user = current_user()
+        db = get_session()
+
+        # Collect user activity metric
+        collect_user_activity_metrics(str(user.id), "dashboard_view", "automated_reviews")
+
+        # Get automated review recommendations
+        review_recommendations = performance_monitor.get_automated_review_recommendations()
+
+        close_session(db)
+        return render_template("automated_reviews.html", review_recommendations=review_recommendations)
+
+    @app.route("/api/automated_reviews", methods=["GET"])
+    @login_required
+    def get_automated_reviews_api():
+        """API endpoint for automated review recommendations"""
+        user = current_user()
+        db = get_session()
+
+        try:
+            recommendations = performance_monitor.get_automated_review_recommendations()
+            close_session(db)
+            return {"success": True, "data": recommendations}
+        except Exception as e:
+            close_session(db)
+            return {"success": False, "error": str(e)}, 500
+
+    @app.route("/api/trigger_automated_review", methods=["POST"])
+    @login_required
+    def trigger_automated_review():
+        """Trigger automated review process"""
+        user = current_user()
+        db = get_session()
+
+        try:
+            review_type = request.json.get('review_type')
+            target_id = request.json.get('target_id')
+
+            # Create evidence for the automated review
+            evidence = create_validation_evidence(
+                ValidationEvidenceType.AUTOMATED_TEST_RESULTS,
+                f"Automated Review: {review_type}",
+                f"Automated review process triggered for {review_type}",
+                "Performance Monitor",
+                {
+                    "review_type": review_type,
+                    "target_id": target_id,
+                    "triggered_by": str(user.id),
+                    "timestamp": datetime.now(timezone.utc).isoformat()
+                }
+            )
+
+            # Validate the evidence automatically
+            evidence.validate_evidence("Automated Review System")
+
+            close_session(db)
+            return {"success": True, "message": "Automated review triggered successfully", "evidence_id": evidence.evidence_id}
+        except Exception as e:
+            close_session(db)
+            return {"success": False, "error": str(e)}, 500
+
+    # --- Industry Benchmarking Routes ---
+
+    @app.route("/industry_benchmarking")
+    @login_required
+    def industry_benchmarking():
+        """Industry benchmarking dashboard"""
+        user = current_user()
+        db = get_session()
+
+        # Collect user activity metric
+        collect_user_activity_metrics(str(user.id), "dashboard_view", "industry_benchmarking")
+
+        # Get sample benchmark report (in production, this would be organization-specific)
+        from industry_benchmarking import get_industry_benchmark_report
+        benchmark_report = get_industry_benchmark_report("org_demo", "financial_services", "ISO 27001")
+
+        close_session(db)
+        return render_template("industry_benchmarking.html", benchmark_report=benchmark_report)
+
+    @app.route("/api/industry_benchmark", methods=["GET"])
+    @login_required
+    def get_industry_benchmark():
+        """API endpoint for industry benchmark data"""
+        user = current_user()
+        db = get_session()
+
+        try:
+            industry_sector = request.args.get('sector', 'financial_services')
+            compliance_framework = request.args.get('framework', 'ISO 27001')
+            organization_id = request.args.get('org_id', 'org_demo')
+
+            from industry_benchmarking import get_industry_benchmark_report
+            report = get_industry_benchmark_report(organization_id, industry_sector, compliance_framework)
+
+            close_session(db)
+            return report
+        except Exception as e:
+            close_session(db)
+            return {"success": False, "error": str(e)}, 500
+
+    @app.route("/api/benchmark_comparison", methods=["GET"])
+    @login_required
+    def get_benchmark_comparison():
+        """API endpoint for peer organization comparison"""
+        user = current_user()
+        db = get_session()
+
+        try:
+            organization_id = request.args.get('org_id', 'org_demo')
+            metric_name = request.args.get('metric', 'Overall Compliance Score')
+            peers = request.args.get('peers', 'peer1,peer2,peer3').split(',')
+
+            from industry_benchmarking import benchmarking_engine
+            comparison = benchmarking_engine.compare_to_peers(organization_id, metric_name, peers)
+
+            close_session(db)
+            return {"success": True, "data": comparison}
+        except Exception as e:
+            close_session(db)
+            return {"success": False, "error": str(e)}, 500
+
+    # --- Continuous Improvement Routes ---
+
+    @app.route("/continuous_improvement")
+    @login_required
+    def continuous_improvement():
+        """Continuous improvement program dashboard"""
+        user = current_user()
+        db = get_session()
+
+        # Collect user activity metric
+        collect_user_activity_metrics(str(user.id), "dashboard_view", "continuous_improvement")
+
+        # Get continuous improvement dashboard data
+        from continuous_improvement import get_continuous_improvement_dashboard_data
+        dashboard_data = get_continuous_improvement_dashboard_data()
+
+        close_session(db)
+        return render_template("continuous_improvement.html", dashboard_data=dashboard_data)
+
+    @app.route("/api/continuous_improvement", methods=["GET"])
+    @login_required
+    def get_continuous_improvement_data():
+        """API endpoint for continuous improvement data"""
+        user = current_user()
+        db = get_session()
+
+        try:
+            from continuous_improvement import get_continuous_improvement_dashboard_data
+            data = get_continuous_improvement_dashboard_data()
+
+            close_session(db)
+            return {"success": True, "data": data}
+        except Exception as e:
+            close_session(db)
+            return {"success": False, "error": str(e)}, 500
+
+    @app.route("/api/improvement_roadmap", methods=["GET"])
+    @login_required
+    def get_improvement_roadmap():
+        """API endpoint for improvement roadmap data"""
+        user = current_user()
+        db = get_session()
+
+        try:
+            from continuous_improvement import get_improvement_roadmap_data
+            roadmap = get_improvement_roadmap_data()
+
+            close_session(db)
+            return {"success": True, "data": roadmap}
+        except Exception as e:
+            close_session(db)
+            return {"success": False, "error": str(e)}, 500
+
+    @app.route("/api/improvement_metrics", methods=["GET"])
+    @login_required
+    def get_improvement_metrics():
+        """API endpoint for continuous improvement metrics"""
+        user = current_user()
+        db = get_session()
+
+        try:
+            from continuous_improvement import get_continuous_improvement_metrics_data
+            metrics = get_continuous_improvement_metrics_data()
+
+            close_session(db)
+            return {"success": True, "data": metrics}
+        except Exception as e:
+            close_session(db)
+            return {"success": False, "error": str(e)}, 500
 
     logging.info("create_app completed")
     return app

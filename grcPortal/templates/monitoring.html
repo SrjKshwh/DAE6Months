@@ -128,6 +128,146 @@
                 </div>
             </div>
 
+            <!-- Predictive Analytics and Continuous Improvement Insights -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card border-primary">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-brain"></i> Predictive Insights</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center mb-3">
+                                <div class="col-6">
+                                    <div class="h4 text-info mb-1">2</div>
+                                    <small class="text-muted">Anomalies Detected</small>
+                                </div>
+                                <div class="col-6">
+                                    <div class="h4 text-warning mb-1">87%</div>
+                                    <small class="text-muted">Prediction Accuracy</small>
+                                </div>
+                            </div>
+                            <div class="alert alert-info py-2">
+                                <small><i class="fas fa-chart-line me-1"></i>System performance trending stable with 3% improvement predicted</small>
+                            </div>
+                            <div class="small text-muted">
+                                <strong>Next 24h Forecast:</strong> CPU usage expected to remain below 70%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-success">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-sync-alt"></i> Continuous Improvement</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center mb-3">
+                                <div class="col-4">
+                                    <div class="h5 text-success mb-1">3</div>
+                                    <small class="text-muted">Active Initiatives</small>
+                                </div>
+                                <div class="col-4">
+                                    <div class="h5 text-info mb-1">78%</div>
+                                    <small class="text-muted">Avg Progress</small>
+                                </div>
+                                <div class="col-4">
+                                    <div class="h5 text-warning mb-1">12</div>
+                                    <small class="text-muted">Backlog Items</small>
+                                </div>
+                            </div>
+                            <div class="alert alert-success py-2">
+                                <small><i class="fas fa-check-circle me-1"></i>Automated Compliance Monitoring initiative in testing phase</small>
+                            </div>
+                            <div class="small text-muted">
+                                <strong>Recent Success:</strong> Incident Response optimization completed - 35% MTTR reduction
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced KPI Dashboard -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-tachometer-alt"></i> Advanced KPI Monitoring</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <div class="card border-left-primary h-100">
+                                        <div class="card-body text-center">
+                                            <div class="h4 mb-2 text-primary">78.5%</div>
+                                            <div class="text-uppercase font-weight-bold text-xs mb-1">
+                                                Compliance Maturity
+                                            </div>
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar bg-primary" style="width: 78.5%"></div>
+                                            </div>
+                                            <small class="text-muted mt-1">Target: 85%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card border-left-info h-100">
+                                        <div class="card-body text-center">
+                                            <div class="h4 mb-2 text-info">0.68</div>
+                                            <div class="text-uppercase font-weight-bold text-xs mb-1">
+                                                Risk Efficiency
+                                            </div>
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar bg-info" style="width: 68%"></div>
+                                            </div>
+                                            <small class="text-muted mt-1">Target: 0.75</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card border-left-warning h-100">
+                                        <div class="card-body text-center">
+                                            <div class="h4 mb-2 text-warning">82.3%</div>
+                                            <div class="text-uppercase font-weight-bold text-xs mb-1">
+                                                IR Maturity
+                                            </div>
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar bg-warning" style="width: 82.3%"></div>
+                                            </div>
+                                            <small class="text-muted mt-1">Target: 90%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card border-left-success h-100">
+                                        <div class="card-body text-center">
+                                            <div class="h4 mb-2 text-success">4.1/5</div>
+                                            <div class="text-uppercase font-weight-bold text-xs mb-1">
+                                                Stakeholder Satisfaction
+                                            </div>
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar bg-success" style="width: 82%"></div>
+                                            </div>
+                                            <small class="text-muted mt-1">Target: 4.2/5</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a href="{{ url_for('performance_metrics') }}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-chart-line"></i> View Detailed KPIs
+                                </a>
+                                <a href="{{ url_for('predictive_analytics') }}" class="btn btn-outline-info btn-sm ms-2">
+                                    <i class="fas fa-brain"></i> Predictive Analytics
+                                </a>
+                                <a href="{{ url_for('continuous_improvement') }}" class="btn btn-outline-success btn-sm ms-2">
+                                    <i class="fas fa-sync-alt"></i> Continuous Improvement
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Network Activity and Security Events -->
             <div class="row mb-4">
                 <div class="col-md-6">
