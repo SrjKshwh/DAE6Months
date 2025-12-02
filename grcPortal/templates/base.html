@@ -42,7 +42,149 @@
                         </ul>
                     </li>
 
-                    <!-- 2. OPERATIONS & ADMINISTRATION -->
+
+                    <!-- 2. VULNERABILITY & ASSET MANAGEMENT -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-end" href="#" id="vulnerabilityManagementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-search me-1"></i> Vulnerability Mgmt
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="vulnerabilityManagementDropdown">
+                            <!-- Enterprise Vulnerability Management Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-building me-2"></i>Enterprise Vulnerability Management
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <!-- Vulnerability Management Procedures -->
+                                    <li><a class="dropdown-item" href="{{ url_for('vulnerability_management_procedures') }}"><i class="fas fa-file-contract me-2"></i>Vulnerability Procedures</a></li>
+
+                                    <!-- Automated Testing Framework -->
+                                    <li><a class="dropdown-item" href="{{ url_for('automated_testing') }}"><i class="fas fa-robot me-2"></i>Automated Testing</a></li>
+
+                                    <!-- Custom Assessment Tools -->
+                                    <li><a class="dropdown-item" href="{{ url_for('custom_assessment_tools') }}"><i class="fas fa-tools me-2"></i>Custom Assessment Tools</a></li>
+
+                                    <!-- Security Control Assessment -->
+                                    <li><a class="dropdown-item" href="{{ url_for('security_control_assessment') }}"><i class="fas fa-shield-alt me-2"></i>Security Control Assessment</a></li>
+
+                                    <!-- Performance Metrics -->
+                                    <li><a class="dropdown-item" href="{{ url_for('performance_metrics') }}"><i class="fas fa-chart-line me-2"></i>Performance Metrics</a></li>
+                                </ul>
+                            </li>
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li><a class="dropdown-item" href="{{ url_for('vulnerability_assessment') }}"><i class="fas fa-clipboard-list me-2"></i>Vulnerability Assessment</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('vulnerability_scan') }}"><i class="fas fa-search-plus me-2"></i>Vulnerability Scans</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('asset_discovery') }}"><i class="fas fa-network-wired me-2"></i>Asset Discovery</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('asset_register') }}"><i class="fas fa-server me-2"></i>Asset Register</a></li>
+                            <!-- Security Monitoring Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-eye me-2"></i>Security Monitoring
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <li><a class="dropdown-item" href="{{ url_for('add_log_data') }}"><i class="fas fa-plus me-2"></i>Add Log Data</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('collected_logs') }}"><i class="fas fa-list me-2"></i>Collected Logs</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('monitoring') }}"><i class="fas fa-eye me-2"></i>Monitoring Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('security_event_analysis') }}"><i class="fas fa-chart-line me-2"></i>Security Event Analysis</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('security_summary_report') }}"><i class="fas fa-file-alt me-2"></i>Security Summary Report</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('alert_documentation') }}"><i class="fas fa-book me-2"></i>Alert Documentation</a></li>
+                                </ul>
+                            </li>
+                            <li><a class="dropdown-item" href="{{ url_for('monitoring_setup') }}"><i class="fas fa-cogs me-2"></i>Monitoring Setup</a></li>
+                        </ul>
+                    </li>
+                    
+
+                    <!-- 3. RISK MANAGEMENT -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-end" href="#" id="riskManagementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-chart-line me-1"></i> Risk Management
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="riskManagementDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('risks') }}"><i class="fas fa-list me-2"></i>Risk Register</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('risk_programs') }}"><i class="fas fa-tasks me-2"></i>Risk Programs</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('create_program') }}"><i class="fas fa-plus me-2"></i>Create Program</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('risk_identification') }}"><i class="fas fa-search me-2"></i>Risk Identification</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('critical_risks') }}"><i class="fas fa-exclamation-triangle me-2"></i>Critical Risks</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('risk_monitoring') }}"><i class="fas fa-chart-bar me-2"></i>Risk Monitoring</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('risk_indicators') }}"><i class="fas fa-chart-area me-2"></i>Risk Indicators</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('environmental_changes') }}"><i class="fas fa-leaf me-2"></i>Environmental Changes</a></li>
+
+                            <!-- Risk Management & Audit Implementation Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-clipboard-check me-2"></i>Risk Management & Audit Implementation
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <!-- Enterprise Risk Assessment -->
+                                    <li><a class="dropdown-item" href="{{ url_for('risk_dashboard') }}"><i class="fas fa-chart-line me-2"></i>Enterprise Risk Assessment</a></li>
+
+                                    <!-- Security Audit Program -->
+                                    <li><a class="dropdown-item" href="{{ url_for('advanced_audits') }}"><i class="fas fa-clipboard-list me-2"></i>Security Audit Program</a></li>
+
+                                    <!-- Compliance Frameworks -->
+                                    <li><a class="dropdown-item" href="{{ url_for('compliance_architecture') }}"><i class="fas fa-building me-2"></i>Compliance Frameworks</a></li>
+
+                                    <!-- Advanced Control Validation -->
+                                    <li><a class="dropdown-item" href="{{ url_for('security_control_assessment') }}"><i class="fas fa-shield-alt me-2"></i>Advanced Control Validation</a></li>
+
+                                    <!-- Professional Audit Reports -->
+                                    <li><a class="dropdown-item" href="{{ url_for('automated_reporting') }}"><i class="fas fa-file-alt me-2"></i>Professional Audit Reports</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                    <!-- 4. THREAT INTELLIGENCE & ANALYSIS -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-end" href="#" id="threatIntelligenceDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-shield-alt me-1"></i> Threat Intelligence
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="threatIntelligenceDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('threat_analysis') }}"><i class="fas fa-chart-line me-2"></i>Threat Analysis</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('malware_analysis') }}"><i class="fas fa-virus me-2"></i>Malware Analysis</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('ioc_analysis') }}"><i class="fas fa-search-plus me-2"></i>IoC Analysis</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('opencti_integration') }}"><i class="fas fa-plug me-2"></i>OpenCTI Integration</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('apt_campaigns') }}"><i class="fas fa-user-secret me-2"></i>APT Campaigns</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('phishing_templates') }}"><i class="fas fa-envelope me-2"></i>Phishing Templates</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('threat_intelligence') }}"><i class="fas fa-brain me-2"></i>Threat Intelligence</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('forensics') }}"><i class="fas fa-search me-2"></i>Digital Forensics</a></li>
+
+                            <!-- Advanced Threat Intelligence Operations Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-shield-alt me-2"></i>Advanced Threat Intelligence Operations
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <li><a class="dropdown-item" href="{{ url_for('threat_actors') }}"><i class="fas fa-user-secret me-2"></i>Threat Actor Profiles</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('intelligence_fusion') }}"><i class="fas fa-project-diagram me-2"></i>Intelligence Fusion</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- Advanced Threat Analysis Sub-menu -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="fas fa-microscope me-2"></i>Advanced Threat Analysis
+                                </a>
+                                <ul class="dropdown-menu submenu">
+                                    <li><a class="dropdown-item" href="{{ url_for('advanced_apt_analysis') }}"><i class="fas fa-user-secret me-2"></i>APT Campaign Analysis</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('zero_day_research') }}"><i class="fas fa-search me-2"></i>Zero-Day Research</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('supply_chain_assessment') }}"><i class="fas fa-link me-2"></i>Supply Chain Assessment</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('methodology_documentation') }}"><i class="fas fa-book me-2"></i>Methodology Documentation</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('technical_findings') }}"><i class="fas fa-cogs me-2"></i>Technical Findings</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('mitigation_recommendations') }}"><i class="fas fa-shield-alt me-2"></i>Mitigation Recommendations</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('reverse_engineering_outputs') }}"><i class="fas fa-code me-2"></i>Reverse Engineering Outputs</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('attack_pattern_analysis') }}"><i class="fas fa-project-diagram me-2"></i>Attack Pattern Analysis</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                    <!-- 5. OPERATIONS & ADMINISTRATION -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-end" href="#" id="operationsAdminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-cog me-1"></i> Operations & Admin
@@ -194,6 +336,7 @@
                                         </a>
                                         <ul class="dropdown-menu submenu">
                                             <li><a class="dropdown-item" href="{{ url_for('compliance_risk_assessment') }}"><i class="fas fa-chart-line me-2"></i>Risk Assessment</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('quantitative_risk_assessment') }}"><i class="fas fa-calculator me-2"></i>Quantitative Risk Assessment</a></li>
                                             <li><a class="dropdown-item" href="{{ url_for('compliance_obligations') }}"><i class="fas fa-file-contract me-2"></i>Obligations</a></li>
                                             <li><a class="dropdown-item" href="{{ url_for('compliance_incidents') }}"><i class="fas fa-exclamation-circle me-2"></i>Compliance Incidents</a></li>
                                         </ul>
@@ -223,6 +366,19 @@
                                             <li><a class="dropdown-item" href="{{ url_for('evidence_analysis') }}"><i class="fas fa-chart-bar me-2"></i>Evidence Analysis</a></li>
                                             <li><a class="dropdown-item" href="{{ url_for('compliance_analytics') }}"><i class="fas fa-chart-line me-2"></i>Compliance Analytics</a></li>
                                             <li><a class="dropdown-item" href="{{ url_for('automated_reporting') }}"><i class="fas fa-file-alt me-2"></i>Automated Reporting</a></li>
+                                        </ul>
+                                    </li>
+                                    <!-- Performance Management & Continuous Improvement Sub-menu -->
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                            <i class="fas fa-chart-line me-2"></i>Performance Management & Continuous Improvement
+                                        </a>
+                                        <ul class="dropdown-menu submenu">
+                                            <li><a class="dropdown-item" href="{{ url_for('monitoring') }}"><i class="fas fa-eye me-2"></i>Monitoring</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('continuous_improvement') }}"><i class="fas fa-sync-alt me-2"></i>Continuous Improvement</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('predictive_analytics') }}"><i class="fas fa-brain me-2"></i>Predictive Analytics</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('automated_reviews') }}"><i class="fas fa-robot me-2"></i>Automated Reviews</a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('industry_benchmarking') }}"><i class="fas fa-balance-scale me-2"></i>Industry Benchmarking</a></li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -262,143 +418,6 @@
                         </ul>
                     </li>
 
-                    <!-- 3. VULNERABILITY & ASSET MANAGEMENT -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-end" href="#" id="vulnerabilityManagementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-search me-1"></i> Vulnerability Mgmt
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="vulnerabilityManagementDropdown">
-                            <!-- Enterprise Vulnerability Management Sub-menu -->
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                    <i class="fas fa-building me-2"></i>Enterprise Vulnerability Management
-                                </a>
-                                <ul class="dropdown-menu submenu">
-                                    <!-- Vulnerability Management Procedures -->
-                                    <li><a class="dropdown-item" href="{{ url_for('vulnerability_management_procedures') }}"><i class="fas fa-file-contract me-2"></i>Vulnerability Procedures</a></li>
-
-                                    <!-- Automated Testing Framework -->
-                                    <li><a class="dropdown-item" href="{{ url_for('automated_testing') }}"><i class="fas fa-robot me-2"></i>Automated Testing</a></li>
-
-                                    <!-- Custom Assessment Tools -->
-                                    <li><a class="dropdown-item" href="{{ url_for('custom_assessment_tools') }}"><i class="fas fa-tools me-2"></i>Custom Assessment Tools</a></li>
-
-                                    <!-- Security Control Assessment -->
-                                    <li><a class="dropdown-item" href="{{ url_for('security_control_assessment') }}"><i class="fas fa-shield-alt me-2"></i>Security Control Assessment</a></li>
-
-                                    <!-- Performance Metrics -->
-                                    <li><a class="dropdown-item" href="{{ url_for('performance_metrics') }}"><i class="fas fa-chart-line me-2"></i>Performance Metrics</a></li>
-                                </ul>
-                            </li>
-
-                            <li><hr class="dropdown-divider"></li>
-
-                            <li><a class="dropdown-item" href="{{ url_for('vulnerability_assessment') }}"><i class="fas fa-clipboard-list me-2"></i>Vulnerability Assessment</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('vulnerability_scan') }}"><i class="fas fa-search-plus me-2"></i>Vulnerability Scans</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('asset_discovery') }}"><i class="fas fa-network-wired me-2"></i>Asset Discovery</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('asset_register') }}"><i class="fas fa-server me-2"></i>Asset Register</a></li>
-                            <!-- Security Monitoring Sub-menu -->
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                    <i class="fas fa-eye me-2"></i>Security Monitoring
-                                </a>
-                                <ul class="dropdown-menu submenu">
-                                    <li><a class="dropdown-item" href="{{ url_for('add_log_data') }}"><i class="fas fa-plus me-2"></i>Add Log Data</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('collected_logs') }}"><i class="fas fa-list me-2"></i>Collected Logs</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('monitoring') }}"><i class="fas fa-eye me-2"></i>Monitoring Dashboard</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('security_event_analysis') }}"><i class="fas fa-chart-line me-2"></i>Security Event Analysis</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('security_summary_report') }}"><i class="fas fa-file-alt me-2"></i>Security Summary Report</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('alert_documentation') }}"><i class="fas fa-book me-2"></i>Alert Documentation</a></li>
-                                </ul>
-                            </li>
-                            <li><a class="dropdown-item" href="{{ url_for('monitoring_setup') }}"><i class="fas fa-cogs me-2"></i>Monitoring Setup</a></li>
-                        </ul>
-                    </li>
-                    
-                    <!-- 4. RISK MANAGEMENT -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-end" href="#" id="riskManagementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-chart-line me-1"></i> Risk Management
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="riskManagementDropdown">
-                            <li><a class="dropdown-item" href="{{ url_for('risks') }}"><i class="fas fa-list me-2"></i>Risk Register</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('risk_programs') }}"><i class="fas fa-tasks me-2"></i>Risk Programs</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('create_program') }}"><i class="fas fa-plus me-2"></i>Create Program</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('risk_identification') }}"><i class="fas fa-search me-2"></i>Risk Identification</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('critical_risks') }}"><i class="fas fa-exclamation-triangle me-2"></i>Critical Risks</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('risk_monitoring') }}"><i class="fas fa-chart-bar me-2"></i>Risk Monitoring</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('risk_indicators') }}"><i class="fas fa-chart-area me-2"></i>Risk Indicators</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('environmental_changes') }}"><i class="fas fa-leaf me-2"></i>Environmental Changes</a></li>
-
-                            <!-- Risk Management & Audit Implementation Sub-menu -->
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                    <i class="fas fa-clipboard-check me-2"></i>Risk Management & Audit Implementation
-                                </a>
-                                <ul class="dropdown-menu submenu">
-                                    <!-- Enterprise Risk Assessment -->
-                                    <li><a class="dropdown-item" href="{{ url_for('risk_dashboard') }}"><i class="fas fa-chart-line me-2"></i>Enterprise Risk Assessment</a></li>
-
-                                    <!-- Security Audit Program -->
-                                    <li><a class="dropdown-item" href="{{ url_for('advanced_audits') }}"><i class="fas fa-clipboard-list me-2"></i>Security Audit Program</a></li>
-
-                                    <!-- Compliance Frameworks -->
-                                    <li><a class="dropdown-item" href="{{ url_for('compliance_architecture') }}"><i class="fas fa-building me-2"></i>Compliance Frameworks</a></li>
-
-                                    <!-- Advanced Control Validation -->
-                                    <li><a class="dropdown-item" href="{{ url_for('security_control_assessment') }}"><i class="fas fa-shield-alt me-2"></i>Advanced Control Validation</a></li>
-
-                                    <!-- Professional Audit Reports -->
-                                    <li><a class="dropdown-item" href="{{ url_for('automated_reporting') }}"><i class="fas fa-file-alt me-2"></i>Professional Audit Reports</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!-- 5. THREAT INTELLIGENCE & ANALYSIS -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-end" href="#" id="threatIntelligenceDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-shield-alt me-1"></i> Threat Intelligence
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="threatIntelligenceDropdown">
-                            <li><a class="dropdown-item" href="{{ url_for('threat_analysis') }}"><i class="fas fa-chart-line me-2"></i>Threat Analysis</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('malware_analysis') }}"><i class="fas fa-virus me-2"></i>Malware Analysis</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('ioc_analysis') }}"><i class="fas fa-search-plus me-2"></i>IoC Analysis</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('opencti_integration') }}"><i class="fas fa-plug me-2"></i>OpenCTI Integration</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('apt_campaigns') }}"><i class="fas fa-user-secret me-2"></i>APT Campaigns</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('phishing_templates') }}"><i class="fas fa-envelope me-2"></i>Phishing Templates</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('threat_intelligence') }}"><i class="fas fa-brain me-2"></i>Threat Intelligence</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('forensics') }}"><i class="fas fa-search me-2"></i>Digital Forensics</a></li>
-
-                            <!-- Advanced Threat Intelligence Operations Sub-menu -->
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                    <i class="fas fa-shield-alt me-2"></i>Advanced Threat Intelligence Operations
-                                </a>
-                                <ul class="dropdown-menu submenu">
-                                    <li><a class="dropdown-item" href="{{ url_for('threat_actors') }}"><i class="fas fa-user-secret me-2"></i>Threat Actor Profiles</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('intelligence_fusion') }}"><i class="fas fa-project-diagram me-2"></i>Intelligence Fusion</a></li>
-                                </ul>
-                            </li>
-
-                            <!-- Advanced Threat Analysis Sub-menu -->
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                    <i class="fas fa-microscope me-2"></i>Advanced Threat Analysis
-                                </a>
-                                <ul class="dropdown-menu submenu">
-                                    <li><a class="dropdown-item" href="{{ url_for('advanced_apt_analysis') }}"><i class="fas fa-user-secret me-2"></i>APT Campaign Analysis</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('zero_day_research') }}"><i class="fas fa-search me-2"></i>Zero-Day Research</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('supply_chain_assessment') }}"><i class="fas fa-link me-2"></i>Supply Chain Assessment</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('methodology_documentation') }}"><i class="fas fa-book me-2"></i>Methodology Documentation</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('technical_findings') }}"><i class="fas fa-cogs me-2"></i>Technical Findings</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('mitigation_recommendations') }}"><i class="fas fa-shield-alt me-2"></i>Mitigation Recommendations</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('reverse_engineering_outputs') }}"><i class="fas fa-code me-2"></i>Reverse Engineering Outputs</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('attack_pattern_analysis') }}"><i class="fas fa-project-diagram me-2"></i>Attack Pattern Analysis</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
 
                     <!-- User Menu -->
                     <li class="nav-item dropdown">

@@ -82,7 +82,7 @@ from models import BaselineMeasurement, ValidationProcedure, AdvancedAudit, Audi
 from automated_testing_framework import TestType
 from custom_assessment_tools import AssessmentToolType
 from security_control_assessment import ControlFramework
-from performance_metrics import get_performance_dashboard_data, collect_request_metrics, collect_user_activity_metrics, create_validation_evidence, ValidationEvidenceType
+from performance_metrics import get_performance_dashboard_data, collect_request_metrics, collect_user_activity_metrics, create_validation_evidence, ValidationEvidenceType, PerformanceMonitor
 from analytics import perform_evidence_analysis, run_predictive_compliance_model, generate_automated_report
 import pandas as pd
 
@@ -15160,7 +15160,21 @@ def create_app(app=None):
         collect_user_activity_metrics(str(user.id), "dashboard_view", "predictive_analytics")
 
         # Get predictive insights
-        dashboard_data = get_performance_dashboard_data()
+        try:
+            dashboard_data = get_performance_dashboard_data()
+            logging.info(f"DEBUG: dashboard_data type: {type(dashboard_data)}")
+            logging.info(f"DEBUG: dashboard_data keys: {list(dashboard_data.keys()) if isinstance(dashboard_data, dict) else 'Not a dict'}")
+
+            if 'performance_forecast' in dashboard_data:
+                logging.info(f"DEBUG: performance_forecast type: {type(dashboard_data['performance_forecast'])}")
+                logging.info(f"DEBUG: performance_forecast keys: {list(dashboard_data['performance_forecast'].keys()) if isinstance(dashboard_data['performance_forecast'], dict) else 'Not a dict'}")
+                logging.info(f"DEBUG: performance_forecast risk_level value: {dashboard_data['performance_forecast'].get('risk_level', 'NOT_FOUND')}")
+            else:
+                logging.error("DEBUG: performance_forecast not found in dashboard_data")
+
+        except Exception as e:
+            logging.error(f"DEBUG: Error getting dashboard data: {e}")
+            dashboard_data = {}
 
         close_session(db)
         return render_template("predictive_analytics.html", dashboard_data=dashboard_data)

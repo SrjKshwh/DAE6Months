@@ -62,8 +62,8 @@
                                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                         Risk Level</div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        <span class="badge bg-{{ 'danger' if dashboard_data.performance_forecast.risk_level == 'high' else 'warning' if dashboard_data.performance_forecast.risk_level == 'medium' else 'success' }}">
-                                            {{ dashboard_data.performance_forecast.risk_level.title() }}
+                                        <span class="badge bg-{{ 'danger' if dashboard_data.performance_forecast['risk_level'] == 'high' else 'warning' if dashboard_data.performance_forecast['risk_level'] == 'medium' else 'success' }}">
+                                            {{ dashboard_data.performance_forecast['risk_level'].title() }}
                                         </span>
                                     </div>
                                     <div class="text-xs text-muted">Next 24 hours</div>

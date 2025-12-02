@@ -65,9 +65,9 @@ class ImprovementInitiative:
     status: ImprovementStatus
     priority: str  # high, medium, low
     created_date: datetime
+    owner: str
     target_completion_date: Optional[datetime] = None
     actual_completion_date: Optional[datetime] = None
-    owner: str
     stakeholders: List[str] = None
     objectives: List[str] = None
     success_criteria: List[str] = None
@@ -159,9 +159,9 @@ class ImprovementMeasurement:
     metric_name: str
     baseline_value: float
     target_value: float
-    current_value: Optional[float] = None
     measurement_date: datetime
     unit: str
+    current_value: Optional[float] = None
     improvement_percentage: Optional[float] = None
 
     def calculate_improvement(self):
