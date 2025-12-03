@@ -76,13 +76,16 @@ Interactive desktop word search puzzle game with the following features:
 - **Technical Stack**: Python with GUI framework
 - **Learning Outcomes**: String manipulation, file handling, GUI design, game logic
 
-#### 🛡️ GRC Portal (Semester 3, 4, 5)
+#### 🛡️ GRC Portal (Semester 3, 4, 5) - Enhanced Features
 Enterprise-grade Governance, Risk, and Compliance platform featuring:
 - **AI-Powered Risk Intelligence**: Automated document analysis using LLM integration
 - **Multi-Framework Support**: NIST RMF, ISO 31000, COSO ERM, PCI DSS, HIPAA, GDPR, CIS Controls
 - **Advanced Security**: Zero Trust architecture, digital forensics, incident response
 - **Continuous Monitoring**: Risk indicators, KPIs, predictive analytics
 - **Compliance Automation**: Automated gap analysis and remediation tracking
+- **NEW: Advanced Security Control Assessment**: Comprehensive security control evaluation with multi-framework support (NIST SP 800-53, ISO 27001, CIS Controls)
+- **NEW: Enhanced Monitoring System**: Real-time log analysis, alert generation, and health monitoring
+- **NEW: Automated Testing Framework**: Comprehensive test scripts for monitoring functionality validation
 
 ### Supporting Resources
 - **`docs/`**: Jekyll-powered documentation site
@@ -101,6 +104,8 @@ Enterprise-grade Governance, Risk, and Compliance platform featuring:
 
 - **`grcPortal/`**: Complete GRC Portal application
   - Full-stack web application with comprehensive documentation
+  - **NEW**: Advanced monitoring templates and security control assessment tools
+  - **NEW**: Automated testing scripts and sample data generators
 
 ## 🚀 Key Projects
 
@@ -109,20 +114,113 @@ Enterprise-grade Governance, Risk, and Compliance platform featuring:
 - **Demo**: [YouTube Demo](https://youtu.be/hgybL4smxc8)
 - **Features**: Custom word lists, timer, scoring, pause functionality
 
-### GRC Portal
+### GRC Portal - Enhanced Edition
 - **Location**: `grcPortal/`, `secure_software_development_1/grcPortal/`
 - **Demo**: [YouTube Demo](https://youtu.be/cZsnQvWXJZU)
 - **Features**: AI-powered compliance analysis, risk management, incident response, digital forensics
+- **NEW Features**:
+  - **Security Control Assessment**: Multi-framework control evaluation with automated gap analysis
+  - **Enhanced Monitoring**: Real-time log analysis, alert generation, and system health monitoring
+  - **Automated Testing**: Comprehensive test scripts for functionality validation
+  - **Advanced Templates**: 100+ new templates for risk management, compliance, and security operations
 
 ## 📖 Documentation Links
 - [GRC Portal Technical Documentation](grcPortal/README.md)
 - [Personal Portfolio Site](docs/README.md)
 - [Learning Project: Data Archiving](learning/README.md)
+- [Security Control Assessment Documentation](grcPortal/security_control_assessment.py)
+- [Monitoring Functionality Test Script](grcPortal/test_monitoring_functionality.py)
 
 ## 🎓 Academic Journey
 This repository represents my progression from basic programming concepts (Python, Unix) through cybersecurity fundamentals to advanced enterprise application development. Each semester builds upon previous knowledge, culminating in the comprehensive GRC Portal project that demonstrates practical application of security, risk management, and software development principles.
+
+The latest updates include significant enhancements to the GRC Portal with advanced security control assessment capabilities, comprehensive monitoring systems, and automated testing frameworks that demonstrate enterprise-grade security operations.
 
 ## 📞 Contact
 - **LinkedIn**: [Saroj Kushwaha](https://www.linkedin.com/in/saroj-kushwaha-7ba25726a)
 - **GitHub**: [srjkshwh](https://github.com/srjkshwh)
 - **Portfolio Site**: [GitHub Pages](https://srjkshwh.github.io/DAE6Months/)
+
+## 📊 Recent Updates & Enhancements
+
+### GRC Portal v4.0.0 - Major Release
+The GRC Portal has undergone significant enhancements with new features and capabilities:
+
+#### 1. Advanced Security Control Assessment System
+- **Multi-Framework Support**: NIST SP 800-53, ISO 27001, CIS Controls, NIST CSF, COBIT 5
+- **Automated Control Evaluation**: AI-powered assessment with evidence collection
+- **Comprehensive Reporting**: Executive summaries, detailed findings, and remediation guidance
+- **Gap Analysis**: Automated identification of control gaps with risk-based prioritization
+- **Compliance Scoring**: Multi-criteria analysis with visual compliance heat maps
+
+#### 2. Enhanced Monitoring & Analytics
+- **Real-time Log Analysis**: Automated processing of security logs with pattern detection
+- **Alert Generation**: Intelligent alerting based on security events and thresholds
+- **Health Monitoring**: System resource monitoring with automated health checks
+- **Security Event Analysis**: Comprehensive analysis of security events with threat correlation
+
+#### 3. Automated Testing Framework
+- **Functionality Testing**: End-to-end testing of monitoring capabilities
+- **Validation Scripts**: Automated validation of log processing and alert generation
+- **Performance Monitoring**: System health and resource utilization testing
+- **Security Testing**: Comprehensive security control validation
+
+#### 4. New Templates & User Interfaces
+- **100+ New Templates**: Expanded UI components for risk management, compliance, and security operations
+- **Enhanced Dashboards**: Improved visualizations with interactive charts and metrics
+- **Security Operations**: New interfaces for incident response, threat intelligence, and forensic analysis
+
+#### 5. Documentation & Learning Resources
+- **Comprehensive Guides**: Step-by-step documentation for new features
+- **API Reference**: Complete endpoint documentation with usage examples
+- **Troubleshooting**: Enhanced troubleshooting guides with common issue resolution
+
+### Technical Stack Updates
+- **Backend**: Flask 3.0+ with enhanced security middleware
+- **AI Integration**: OpenRouter API with advanced LLM models
+- **Monitoring**: psutil integration for comprehensive system monitoring
+- **Testing**: Bandit security scanning and comprehensive test coverage
+
+### Key Metrics
+- **Codebase**: 500+ files, 20,000+ lines of code
+- **Templates**: 100+ HTML templates for comprehensive UI
+- **Frameworks**: 8+ security and compliance frameworks supported
+- **Testing**: 10+ automated test scripts for functionality validation
+
+## 🚀 Getting Started with Recent Updates
+
+To explore the latest enhancements:
+
+1. **Security Control Assessment**:
+   ```bash
+   cd grcPortal
+   python security_control_assessment.py
+   ```
+
+2. **Monitoring Functionality Test**:
+   ```bash
+   cd grcPortal
+   python test_monitoring_functionality.py
+   ```
+
+3. **Run the Enhanced GRC Portal**:
+   ```bash
+   cd grcPortal
+   python app.py
+   ```
+
+4. **Access New Features**:
+   - Security Control Assessment: `http://localhost:5000/security_control_assessment`
+   - Monitoring Dashboard: `http://localhost:5000/monitoring`
+   - Security Event Analysis: `http://localhost:5000/security_event_analysis`
+
+## 📈 Future Roadmap
+
+The GRC Portal continues to evolve with planned enhancements:
+- **Multi-tenant Architecture**: Organization isolation and role-based access
+- **Advanced AI**: Machine learning for predictive risk analysis
+- **Mobile Application**: On-the-go risk management capabilities
+- **Enhanced Reporting**: Advanced analytics with predictive insights
+- **Integration Hub**: Expanded API integrations with security tools
+
+This repository now represents a comprehensive enterprise-grade security and compliance platform with advanced monitoring, assessment, and automation capabilities.
