@@ -2,6 +2,10 @@
 
 Welcome to my comprehensive academic portfolio repository! This repository showcases my journey through cybersecurity, software development, and related technical disciplines across multiple semesters.
 
+### Resume links
+[One page resume](https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/Saroj_resume_op.pdf)
+[Detailed resume](https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf)
+
 ## 📚 Repository Overview
 
 This repository contains coursework, projects, and learning materials organized by semester and topic. Each folder includes detailed documentation, code implementations, and supporting materials.
