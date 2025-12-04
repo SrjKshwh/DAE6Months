@@ -4,6 +4,7 @@ Welcome to my comprehensive academic portfolio repository! This repository showc
 
 ### Resume links
 [One page resume](https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/Saroj_resume_op.pdf)
+
 [Detailed resume](https://github.com/SrjKshwh/DAE6Months/blob/master/semester_2/sarojResume.pdf)
 
 ## 📚 Repository Overview
