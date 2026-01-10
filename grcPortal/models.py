@@ -80,7 +80,7 @@ def calculate_ale(probability: float, impact: float) -> float:
     ALE = Probability × Impact
 
     Args:
-        probability: Annual probability of occurrence (0-1)
+        probability: Annual probability of occurrence (0-)
         impact: Single loss expectancy (financial impact)
 
     Returns:
